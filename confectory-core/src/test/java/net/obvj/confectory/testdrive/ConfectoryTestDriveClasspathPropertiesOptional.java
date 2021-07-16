@@ -1,18 +1,21 @@
-package net.obvj.confectory;
+package net.obvj.confectory.testdrive;
 
 import java.util.Properties;
 
+import net.obvj.confectory.Configuration;
+import net.obvj.confectory.ConfigurationBuilder;
 import net.obvj.confectory.mapper.PropertiesMapper;
 import net.obvj.confectory.source.ClasspathFileSource;
 
-public class ConfectoryTestDriveProperties
+public class ConfectoryTestDriveClasspathPropertiesOptional
 {
     public static void main(String[] args)
     {
         Configuration<Properties> config = new ConfigurationBuilder<Properties>()
                 .namespace("test")
-                .source(new ClasspathFileSource<>("testfiles/my-props.properties"))
+                .source(new ClasspathFileSource<>("testfiles/nofile.properties"))
                 .mapper(new PropertiesMapper())
+                .optional()
                 .build();
 
         System.out.println(config.getBean());

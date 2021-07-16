@@ -6,7 +6,7 @@ import java.util.Optional;
 import net.obvj.confectory.mapper.Mapper;
 
 /**
- * An abstract configuration source, with preset common infrastructure.
+ * An abstract configuration source, with common infrastructure.
  *
  * @param <T> the configuration data type returned by this {@code Source}
  *

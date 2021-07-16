@@ -37,9 +37,9 @@ public class ConfigurationBuilder<T>
         return this;
     }
 
-    public ConfigurationBuilder<T> optional(boolean optional)
+    public ConfigurationBuilder<T> optional()
     {
-        this.optional = optional;
+        this.optional = true;
         return this;
     }
 

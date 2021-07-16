@@ -37,9 +37,10 @@ public class ClasspathFileSource<T> extends AbstractSource<T> implements Source<
     }
 
     /**
-     * Gets the contents of the specified URL as String using default character encoding.
+     * Gets the contents of the specified URL using default character encoding.
      *
-     * @param url the URL to be loaded
+     * @param url    the URL to be loaded
+     * @param mapper the {@link Mapper} to be applied on the file input stream
      * @return the string content from the specified URL
      */
     private T load(URL url, Mapper<InputStream, T> mapper)

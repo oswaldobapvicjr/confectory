@@ -18,6 +18,7 @@ public interface Source<T>
     /**
      * Applies a specific configuration loading strategy and returns the retrieved data.
      *
+     * @param mapper the {@link Mapper} to be applied on the source input stream
      * @return the loaded configuration data
      */
     T load(Mapper<InputStream, T> mapper);

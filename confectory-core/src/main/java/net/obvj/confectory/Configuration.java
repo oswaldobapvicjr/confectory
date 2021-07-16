@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.Optional;
 
 import net.obvj.confectory.helper.ConfigurationHelper;
+import net.obvj.confectory.helper.NullConfigurationHelper;
 import net.obvj.confectory.mapper.Mapper;
 import net.obvj.confectory.source.Source;
 
@@ -25,17 +26,26 @@ public class Configuration<T>
         this.mapper = builder.mapper;
         this.optional = builder.optional;
         this.bean = load(builder);
-        this.helper = mapper.configurationHelper(bean.get());
+        this.helper = getConfigurationMapper();
     }
 
     private Optional<T> load(ConfigurationBuilder<T> builder)
     {
-        if (builder.optional)
+        if (optional)
         {
             return source.loadQuietly(mapper);
         }
         T value = source.load(mapper);
         return Optional.ofNullable(value);
+    }
+
+    private ConfigurationHelper<T> getConfigurationMapper()
+    {
+        if (optional && !bean.isPresent())
+        {
+            return new NullConfigurationHelper<>();
+        }
+        return mapper.configurationHelper(bean.get());
     }
 
     /**

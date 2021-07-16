@@ -1,9 +1,11 @@
-package net.obvj.confectory;
+package net.obvj.confectory.testdrive;
 
+import net.obvj.confectory.Configuration;
+import net.obvj.confectory.ConfigurationBuilder;
 import net.obvj.confectory.mapper.StringMapper;
 import net.obvj.confectory.source.ClasspathFileSource;
 
-public class ConfectoryTestDriveString
+public class ConfectoryTestDriveClasspathString
 {
     public static void main(String[] args)
     {

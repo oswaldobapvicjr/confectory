@@ -5,27 +5,29 @@ import java.util.Optional;
 import net.obvj.confectory.ConfigurationException;
 
 /**
- * A "no-op" Configuration Helper implementation.
+ * A Configuration Helper implementation for user-defined beans.
  *
- * @param <T> the source type, for exception/reporting purposes
+ * @param <T> the configuration bean type
  *
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 0.1.0
  */
-public class UnsupportedConfigurationHelper<T> extends BasicConfigurationHelper<T>
+public class BeanConfigurationHelper<T> extends BasicConfigurationHelper<T>
 {
     /**
      * Builds a new Configuration Helper instance with a specific source.
      *
      * @param source the source bean, mainly for exception/reporting purposes
      */
-    public UnsupportedConfigurationHelper(T source)
+    public BeanConfigurationHelper(T source)
     {
         super(source);
     }
 
     /**
-     * @throws ConfigurationException always
+     * @param key not used since this method implementation is a "no-op"
+     * @throws ConfigurationException always, since the data for this type of helper should be
+     *                                handled by the user-defined bean
      */
     @Override
     public String getStringProperty(String key)
@@ -35,9 +37,10 @@ public class UnsupportedConfigurationHelper<T> extends BasicConfigurationHelper<
     }
 
     /**
-     * Returns {@link Optional#empty}, always.
+     * Returns {@link Optional#empty}, since the data for this type of helper should be
+     * handled by the user-defined bean
      *
-     * @param key not used since this implementation is a "no-op"
+     * @param key not used since this method implementation is a "no-op"
      * @return {@link Optional#empty}
      */
     @Override

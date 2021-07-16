@@ -2,6 +2,7 @@ package net.obvj.confectory.mapper;
 
 import java.util.function.Function;
 
+import net.obvj.confectory.ConfigurationMappingException;
 import net.obvj.confectory.helper.ConfigurationHelper;
 
 /**
@@ -14,6 +15,17 @@ import net.obvj.confectory.helper.ConfigurationHelper;
  */
 public interface Mapper<I, O> extends Function<I, O>
 {
+    /**
+     * Applies this {@code Mapper} into the given input.
+     *
+     * @param input the input source
+     * @return the mapped object
+     *
+     * @throws ConfigurationMappingException in case of exceptions during the mapping
+     */
+    @Override
+    O apply(I input);
+
     /**
      * Creates a new {@link ConfigurationHelper} instance recommended by this {@code Mapper}.
      *
