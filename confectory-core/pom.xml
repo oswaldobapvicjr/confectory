@@ -2,14 +2,18 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>net.obvj</groupId>
         <artifactId>confectory-base</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>0.1.0-SNAPSHOT</version>
     </parent>
+
     <artifactId>confectory-core</artifactId>
     <name>Confectory core</name>
-    <description>Core part of Confectory that defines the configuration APIs and provides basic funcionality using typically standard Java features</description>
+    <description>
+        Core part of Confectory that defines the base API and provides basic funcionality using standard Java features
+    </description>
 
     <dependencies>
 
@@ -19,14 +23,6 @@
             <artifactId>commons-io</artifactId>
             <version>2.11.0</version>
         </dependency>
-
-        <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>30.1.1-jre</version>
-        </dependency>
-
 
         <!-- Test dependencies -->
         <dependency>

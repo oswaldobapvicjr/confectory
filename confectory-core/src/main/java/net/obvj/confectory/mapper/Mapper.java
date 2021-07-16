@@ -14,5 +14,12 @@ import net.obvj.confectory.helper.ConfigurationHelper;
  */
 public interface Mapper<I, O> extends Function<I, O>
 {
+    /**
+     * Creates a new {@link ConfigurationHelper} instance recommended by this {@code Mapper}.
+     *
+     * @param object the configuration object to be used by the helper
+     * @return a new {@link ConfigurationHelper} instance
+     */
     ConfigurationHelper<O> configurationHelper(O object);
+
 }

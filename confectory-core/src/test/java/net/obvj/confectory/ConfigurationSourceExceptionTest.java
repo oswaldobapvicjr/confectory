@@ -45,7 +45,8 @@ class ConfigurationSourceExceptionTest
     {
         assertThat(() ->
         {
-            throw new ConfigurationSourceException(DETAILED_MESSAGE1, new IllegalArgumentException(ROOT_CAUSE_MESSAGE1));
+            throw new ConfigurationSourceException(new IllegalArgumentException(ROOT_CAUSE_MESSAGE1),
+                    DETAILED_MESSAGE1);
         },
         throwsException(ConfigurationSourceException.class)
                 .withMessage(DETAILED_MESSAGE1)

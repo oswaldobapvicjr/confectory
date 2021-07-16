@@ -13,25 +13,30 @@ public class ConfigurationMappingException extends ConfigurationException
      * Constructs a new exception with the specified detail message. A detail message is a
      * String that describes this particular exception.
      *
-     * @param message the String that contains a detailed message
+     * @param message the detailed message, which is saved for later retrieval by the
+     *                {@link Throwable#getMessage()} method
+     * @param args    arguments to the message format, as in
+     *                {@link String#format(String, Object...)}
      */
-    public ConfigurationMappingException(String message)
+    public ConfigurationMappingException(String message, Object... args)
     {
-        super(message);
+        super(String.format(message, args));
     }
 
     /**
      * Constructs a new exception with the specified detail message and cause.
      *
-     * @param message the detail message, which is saved for later retrieval by the
-     *                {@link Throwable#getMessage()} method.
      * @param cause   the cause, which is saved for later retrieval by the
      *                {@link Throwable#getCause()} method. (A {@code null} value is permitted,
-     *                and indicates that the cause is nonexistent or unknown.)
+     *                and indicates that the cause is nonexistent or unknown)
+     * @param message the detail message, which is saved for later retrieval by the
+     *                {@link Throwable#getMessage()} method
+     * @param args    arguments to the message format, as in
+     *                {@link String#format(String, Object...)}
      */
-    public ConfigurationMappingException(String message, Throwable cause)
+    public ConfigurationMappingException(Throwable cause, String message, Object... args)
     {
-        super(message, cause);
+        super(cause, String.format(message, args));
     }
 
     /**

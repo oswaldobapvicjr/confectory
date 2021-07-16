@@ -6,8 +6,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 import org.junit.jupiter.api.Test;
 
-import net.obvj.confectory.ConfigurationSourceException;
-
 /**
  * Unit tests for the {@link Exceptions} class.
  *
@@ -51,20 +49,6 @@ class ExceptionsTest
     {
         assertException(IllegalStateException.class, EXPECTED_MSG, NullPointerException.class,
                 Exceptions.illegalState(new NullPointerException(), MSG_PATTERN, ARG1, ARG2));
-    }
-
-    @Test
-    void configurationSource_messageAndParams_validMessage()
-    {
-        assertException(ConfigurationSourceException.class, EXPECTED_MSG, null,
-                Exceptions.configurationSource(MSG_PATTERN, ARG1, ARG2));
-    }
-
-    @Test
-    void configurationSource_messageAndParamsAndCause_validMessageAndCause()
-    {
-        assertException(ConfigurationSourceException.class, EXPECTED_MSG, NullPointerException.class,
-                Exceptions.configurationSource(new NullPointerException(), MSG_PATTERN, ARG1, ARG2));
     }
 
 }

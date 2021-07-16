@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
+import net.obvj.confectory.ConfigurationSourceException;
 import net.obvj.confectory.mapper.Mapper;
-import net.obvj.confectory.util.Exceptions;
 
 /**
  * A specialized configuration source implementation for loading a local file resource
@@ -31,7 +31,7 @@ public class ClasspathFileSource<T> extends AbstractSource<T> implements Source<
         URL url = ClasspathFileSource.class.getClassLoader().getResource(super.path);
         if (url == null)
         {
-            throw Exceptions.configurationSource("Classpath resource not found: %s", path);
+            throw new ConfigurationSourceException("Classpath resource not found: %s", super.path);
         }
         return load(url, mapper);
     }
@@ -50,7 +50,7 @@ public class ClasspathFileSource<T> extends AbstractSource<T> implements Source<
         }
         catch (IOException exception)
         {
-            throw Exceptions.configurationSource(exception, "Unable to load classpath resource: %s", super.path);
+            throw new ConfigurationSourceException(exception, "Unable to load classpath resource: %s", super.path);
         }
     }
 

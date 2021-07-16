@@ -1,10 +1,16 @@
 package net.obvj.confectory.helper;
 
 import java.util.Optional;
-import java.util.function.Supplier;
 
-import net.obvj.confectory.ConfigurationException;
-
+/**
+ * An abstact Configuration Helper objects providing common infrastructure for concrete
+ * implementations.
+ *
+ * @param <T> the source type which configuration data is to be retrieved
+ *
+ * @author oswaldo.bapvic.jr (Oswaldo Junior)
+ * @since 0.1.0
+ */
 public abstract class BasicConfigurationHelper<T> implements ConfigurationHelper<T>
 {
     protected final T source;
@@ -21,83 +27,27 @@ public abstract class BasicConfigurationHelper<T> implements ConfigurationHelper
     }
 
     @Override
-    public boolean getBooleanProperty(String path)
+    public boolean getBooleanProperty(String key)
     {
-        return Boolean.parseBoolean(getStringProperty(path));
+        return Boolean.parseBoolean(getStringProperty(key));
     }
 
     @Override
-    public int getIntProperty(String path)
+    public int getIntProperty(String key)
     {
-        return Integer.parseInt(getStringProperty(path));
+        return Integer.parseInt(getStringProperty(key));
     }
 
     @Override
-    public long getLongProperty(String path)
+    public long getLongProperty(String key)
     {
-        return Long.parseLong(getStringProperty(path));
+        return Long.parseLong(getStringProperty(key));
     }
 
     @Override
-    public float getFloatProperty(String path)
+    public double getDoubleProperty(String key)
     {
-        return Float.parseFloat(getStringProperty(path));
+        return Double.parseDouble(getStringProperty(key));
     }
 
-    @Override
-    public double getDoubleProperty(String path)
-    {
-        return Double.parseDouble(getStringProperty(path));
-    }
-
-    /**
-     * Checks that the specified object is not {@code null} and throws a customized
-     * {@link ConfigurationException} if it is. This method is designed primarily for doing
-     * parameter validation as demonstrated below:
-     *
-     * <blockquote>
-     *
-     * <pre>
-     * public Foo(String bar)
-     * {
-     *     this.bar = BasicConfiguration.requireNonNull(bar, "bar must not be null");
-     * }
-     * </pre>
-     *
-     * </blockquote>
-     *
-     * @param object  the string to check for nullity/emptiness
-     * @param message detail message to be used in the event that a {@code
-     *                IllegalArgumentException} is thrown
-     * @return {@code string} if not {@code null}
-     * @throws ConfigurationException if {@code string} is {@code null}
-     */
-    public static String requireNonEmpty(String string, Supplier<String> message)
-    {
-        if (isEmpty(string))
-        {
-            throw new ConfigurationException(message.get());
-        }
-        return string;
-    }
-
-    /**
-     * Checks if a String is empty ("") or {@code null}.
-     * <p>
-     * Examples:
-     *
-     * <pre>
-     * BasicConfiguration.isEmpty(null)  = true
-     * BasicConfiguration.isEmpty("")    = true
-     * BasicConfiguration.isEmpty(" ")   = false
-     * BasicConfiguration.isEmpty("bob") = false
-     * </pre>
-     *
-     * @param string the string to be checked; may be null
-     * @return {@code true} if the string is empty or null
-     */
-    public static boolean isEmpty(String string)
-    {
-        return string == null || string.isEmpty();
-    }
 }

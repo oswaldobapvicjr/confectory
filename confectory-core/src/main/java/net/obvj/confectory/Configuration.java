@@ -6,7 +6,6 @@ import java.util.Optional;
 import net.obvj.confectory.helper.ConfigurationHelper;
 import net.obvj.confectory.mapper.Mapper;
 import net.obvj.confectory.source.Source;
-import net.obvj.confectory.util.Exceptions;
 
 public class Configuration<T>
 {
@@ -72,37 +71,32 @@ public class Configuration<T>
 
     public T getRequiredBean()
     {
-        return bean.orElseThrow(() -> Exceptions.configuration("No configuration object available"));
+        return bean.orElseThrow(() -> new ConfigurationException("No configuration object available"));
     }
 
-    public boolean getBooleanProperty(String path)
+    public boolean getBooleanProperty(String key)
     {
-        return helper.getBooleanProperty(path);
+        return helper.getBooleanProperty(key);
     }
 
-    public int getIntProperty(String path)
+    public int getIntProperty(String key)
     {
-        return helper.getIntProperty(path);
+        return helper.getIntProperty(key);
     }
 
-    public long getLongProperty(String path)
+    public long getLongProperty(String key)
     {
-        return helper.getLongProperty(path);
+        return helper.getLongProperty(key);
     }
 
-    public float getFloatProperty(String path)
+    public double getDoubleProperty(String key)
     {
-        return helper.getFloatProperty(path);
+        return helper.getDoubleProperty(key);
     }
 
-    public double getDoubleProperty(String path)
+    public String getStringProperty(String key)
     {
-        return helper.getDoubleProperty(path);
-    }
-
-    public String getStringProperty(String path)
-    {
-        return helper.getStringProperty(path);
+        return helper.getStringProperty(key);
     }
 
 }
