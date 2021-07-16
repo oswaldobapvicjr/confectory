@@ -13,7 +13,7 @@ public class Configuration<T>
     private final short precedence;
     private final Source<T> source;
     private final Mapper<InputStream, T> mapper;
-
+    private final boolean optional;
     private final Optional<T> bean;
     private final ConfigurationHelper<T> helper;
 
@@ -23,6 +23,7 @@ public class Configuration<T>
         this.precedence = builder.precedence;
         this.source = builder.source;
         this.mapper = builder.mapper;
+        this.optional = builder.optional;
         this.bean = load(builder);
         this.helper = mapper.configurationHelper(bean.get());
     }
@@ -62,16 +63,27 @@ public class Configuration<T>
     }
 
     /**
+     * @return the optional
+     */
+    public boolean isOptional()
+    {
+        return optional;
+    }
+
+    /**
+     * @return the helper
+     */
+    public ConfigurationHelper<T> getHelper()
+    {
+        return helper;
+    }
+
+    /**
      * @return the value
      */
     public Optional<T> getBean()
     {
         return bean;
-    }
-
-    public T getRequiredBean()
-    {
-        return bean.orElseThrow(() -> new ConfigurationException("No configuration object available"));
     }
 
     public boolean getBooleanProperty(String key)
@@ -97,6 +109,11 @@ public class Configuration<T>
     public String getStringProperty(String key)
     {
         return helper.getStringProperty(key);
+    }
+
+    public Optional<String> getOptionalStringProperty(String key)
+    {
+        return helper.getOptionalStringProperty(key);
     }
 
 }

@@ -13,7 +13,7 @@ public class ConfectoryTestDriveString
                 .mapper(new StringMapper())
                 .build();
 
-        System.out.println(config.getRequiredBean());
+        System.out.println(config.getBean());
         System.out.println(config.getBooleanProperty("test"));
     }
 }

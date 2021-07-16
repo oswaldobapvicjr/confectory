@@ -15,7 +15,7 @@ public class ConfectoryTestDriveProperties
                 .mapper(new PropertiesMapper())
                 .build();
 
-        System.out.println(config.getRequiredBean());
+        System.out.println(config.getBean());
         System.out.println(config.getBooleanProperty("web.enable"));
         System.out.println(config.getStringProperty("web.host"));
         System.out.println(config.getIntProperty("web.port"));

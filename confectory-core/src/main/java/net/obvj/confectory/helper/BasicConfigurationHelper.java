@@ -3,7 +3,7 @@ package net.obvj.confectory.helper;
 import java.util.Optional;
 
 /**
- * An abstact Configuration Helper objects providing common infrastructure for concrete
+ * An abstract Configuration Helper objects providing common infrastructure for concrete
  * implementations.
  *
  * @param <T> the source type which configuration data is to be retrieved
