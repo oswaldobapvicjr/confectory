@@ -1,8 +1,7 @@
 package net.obvj.confectory.mapper;
 
-import java.util.function.Function;
+import java.io.IOException;
 
-import net.obvj.confectory.ConfigurationMappingException;
 import net.obvj.confectory.helper.ConfigurationHelper;
 
 /**
@@ -13,7 +12,7 @@ import net.obvj.confectory.helper.ConfigurationHelper;
  *
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  */
-public interface Mapper<I, O> extends Function<I, O>
+public interface Mapper<I, O>
 {
     /**
      * Applies this {@code Mapper} into the given input.
@@ -21,10 +20,10 @@ public interface Mapper<I, O> extends Function<I, O>
      * @param input the input source
      * @return the mapped object
      *
-     * @throws ConfigurationMappingException in case of exceptions during the mapping
+     * @throws IOException if a low-level I/O problem (such and unexpected end-of-input, or
+     *                     network error) occurs
      */
-    @Override
-    O apply(I input);
+    O apply(I input) throws IOException;
 
     /**
      * Creates a new {@link ConfigurationHelper} instance recommended by this {@code Mapper}.

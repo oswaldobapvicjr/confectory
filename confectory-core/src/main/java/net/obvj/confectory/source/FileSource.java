@@ -39,7 +39,7 @@ public class FileSource<T> extends AbstractSource<T> implements Source<T>
         }
         catch (IOException exception)
         {
-            throw new ConfigurationSourceException(exception, "Unable to load file: %s", super.path);
+            throw new ConfigurationSourceException(exception, "Unable to load the file: %s", super.path);
         }
     }
 

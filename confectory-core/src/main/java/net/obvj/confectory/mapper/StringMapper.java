@@ -6,8 +6,6 @@ import java.nio.charset.Charset;
 
 import org.apache.commons.io.IOUtils;
 
-import net.obvj.confectory.ConfigurationMappingException;
-
 /**
  * A specialized {@code Mapper} that loads the contents of an {@link InputStream} as
  * {@code String}, typically for testing/troubleshooting or manual handling purposes.
@@ -19,16 +17,9 @@ public class StringMapper extends AbstractBeanMapper<String> implements Mapper<I
 {
 
     @Override
-    public String apply(InputStream inputStream)
+    public String apply(InputStream inputStream) throws IOException
     {
-        try
-        {
-            return IOUtils.toString(inputStream, Charset.defaultCharset());
-        }
-        catch (IOException exception)
-        {
-            throw new ConfigurationMappingException("Unable to parse the input as string", exception);
-        }
+        return IOUtils.toString(inputStream, Charset.defaultCharset());
     }
 
 }
