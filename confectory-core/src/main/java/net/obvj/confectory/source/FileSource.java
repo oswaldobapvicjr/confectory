@@ -4,6 +4,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.obvj.confectory.ConfigurationSourceException;
 import net.obvj.confectory.mapper.Mapper;
 import net.obvj.confectory.util.StringUtils;
@@ -20,6 +23,8 @@ import net.obvj.confectory.util.StringUtils;
  */
 public class FileSource<T> extends AbstractSource<T> implements Source<T>
 {
+    private static final Logger LOGGER = LoggerFactory.getLogger(FileSource.class);
+
     /**
      * Builds a new configuration source for specific local file from the file system.
      *
@@ -33,13 +38,19 @@ public class FileSource<T> extends AbstractSource<T> implements Source<T>
     @Override
     public T load(Mapper<InputStream, T> mapper)
     {
+        LOGGER.info("Searching file: {}", super.path);
+
         try (InputStream inputStream = new FileInputStream(super.path))
         {
-            return mapper.apply(inputStream);
+            LOGGER.info("Loading file {} with mapper: <{}>", super.path, mapper.getClass().getSimpleName());
+            T mappedObject = mapper.apply(inputStream);
+
+            LOGGER.info("File {} loaded successfully", super.path);
+            return mappedObject;
         }
         catch (IOException exception)
         {
-            throw new ConfigurationSourceException(exception, "Unable to load the file: %s", super.path);
+            throw new ConfigurationSourceException(exception, "Unable to load file: %s", super.path);
         }
     }
 

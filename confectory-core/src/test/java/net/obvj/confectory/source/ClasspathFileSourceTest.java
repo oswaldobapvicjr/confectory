@@ -39,13 +39,13 @@ class ClasspathFileSourceTest
     void load_fileNotFound_configurationSourceException()
     {
         assertThat(() -> TEST_SOURCE_FILE_NOT_FOUND.load(MAPPER), throwsException(ConfigurationSourceException.class)
-                .withMessageContaining("resource not found", FILE_NOT_FOUND_PATH));
+                .withMessage(containsAll("file not found", FILE_NOT_FOUND_PATH).ignoreCase()));
     }
 
     @Test
     void loadQuietly_fileInClassPath_fileContent()
     {
-        Optional<String> content = TEST_SOURCE_FILE1.loadQuietly(MAPPER);
+        Optional<String> content = TEST_SOURCE_FILE1.loadOptionally(MAPPER);
         assertTrue(content.isPresent());
         assertThat(content.get(), containsAll(FILE1_CONTENT));
     }
@@ -53,7 +53,7 @@ class ClasspathFileSourceTest
     @Test
     void loadQuietly_fileNotFound_empty()
     {
-        assertThat(TEST_SOURCE_FILE_NOT_FOUND.loadQuietly(MAPPER), is(Optional.empty()));
+        assertThat(TEST_SOURCE_FILE_NOT_FOUND.loadOptionally(MAPPER), is(Optional.empty()));
     }
 
     @Test

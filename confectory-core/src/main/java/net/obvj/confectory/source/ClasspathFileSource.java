@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.obvj.confectory.ConfigurationSourceException;
 import net.obvj.confectory.mapper.Mapper;
 
@@ -15,6 +18,8 @@ import net.obvj.confectory.mapper.Mapper;
  */
 public class ClasspathFileSource<T> extends AbstractSource<T> implements Source<T>
 {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ClasspathFileSource.class);
+
     /**
      * Builds a new configuration source for specific local file resource in the classpath.
      *
@@ -28,11 +33,16 @@ public class ClasspathFileSource<T> extends AbstractSource<T> implements Source<
     @Override
     public T load(Mapper<InputStream, T> mapper)
     {
+        LOGGER.info("Searching file: {}", super.path);
+
         URL url = ClasspathFileSource.class.getClassLoader().getResource(super.path);
         if (url == null)
         {
-            throw new ConfigurationSourceException("Classpath resource not found: %s", super.path);
+            String message = String.format("File not found: %s", super.path);
+            LOGGER.warn(message);
+            throw new ConfigurationSourceException(message);
         }
+
         return load(url, mapper);
     }
 
@@ -47,7 +57,11 @@ public class ClasspathFileSource<T> extends AbstractSource<T> implements Source<
     {
         try (InputStream inputStream = url.openStream())
         {
-            return mapper.apply(inputStream);
+            LOGGER.info("Loading file {} with mapper: <{}>", super.path, mapper.getClass().getSimpleName());
+            T mappedObject = mapper.apply(inputStream);
+
+            LOGGER.info("File {} loaded successfully", super.path);
+            return mappedObject;
         }
         catch (IOException exception)
         {

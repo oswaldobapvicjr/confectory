@@ -75,7 +75,7 @@ public final class Configuration<T>
     {
         if (optional)
         {
-            return source.loadQuietly(mapper);
+            return source.loadOptionally(mapper);
         }
         T value = source.load(mapper);
         return Optional.ofNullable(value);

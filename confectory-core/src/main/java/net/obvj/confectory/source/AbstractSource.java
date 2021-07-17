@@ -3,6 +3,9 @@ package net.obvj.confectory.source;
 import java.io.InputStream;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.obvj.confectory.mapper.Mapper;
 
 /**
@@ -14,6 +17,8 @@ import net.obvj.confectory.mapper.Mapper;
  */
 public abstract class AbstractSource<T> implements Source<T>
 {
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractSource.class);
+
     protected final String path;
 
     /**
@@ -27,7 +32,7 @@ public abstract class AbstractSource<T> implements Source<T>
     }
 
     @Override
-    public Optional<T> loadQuietly(Mapper<InputStream, T> mapper)
+    public Optional<T> loadOptionally(Mapper<InputStream, T> mapper)
     {
         try
         {
@@ -36,6 +41,8 @@ public abstract class AbstractSource<T> implements Source<T>
         }
         catch (Exception exception)
         {
+            LOGGER.warn("Unable to load optional source: {}", this);
+            LOGGER.debug("Exception details:", exception);
             return Optional.empty();
         }
     }

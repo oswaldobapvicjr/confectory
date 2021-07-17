@@ -30,6 +30,6 @@ public interface Source<T>
      *
      * @return the loaded configuration data, or an empty object if unable to load the source
      */
-    Optional<T> loadQuietly(Mapper<InputStream, T> mapper);
+    Optional<T> loadOptionally(Mapper<InputStream, T> mapper);
 
 }
