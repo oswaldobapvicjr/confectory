@@ -11,7 +11,7 @@ public class ConfectoryTestDriveFileString
     {
         Configuration<String> config = new ConfigurationBuilder<String>()
                 .namespace("test")
-                .source(new FileSource<>("${TEMP}/file.txt"))
+                .source(new FileSource<>("${TEMP}/file1.txt"))
                 .mapper(new StringMapper())
                 .optional()
                 .build();
