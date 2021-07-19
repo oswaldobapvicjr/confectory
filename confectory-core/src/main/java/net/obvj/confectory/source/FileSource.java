@@ -38,20 +38,26 @@ public class FileSource<T> extends AbstractSource<T> implements Source<T>
     @Override
     public T load(Mapper<InputStream, T> mapper)
     {
-        LOGGER.info("Searching file: {}", super.path);
+        LOGGER.info("Searching file: {}", super.source);
 
-        try (InputStream inputStream = new FileInputStream(super.path))
+        try (InputStream inputStream = new FileInputStream(super.source))
         {
-            LOGGER.info("Loading file {} with mapper: <{}>", super.path, mapper.getClass().getSimpleName());
-            T mappedObject = mapper.apply(inputStream);
-
-            LOGGER.info("File {} loaded successfully", super.path);
-            return mappedObject;
+            return load(inputStream, mapper);
         }
         catch (IOException exception)
         {
-            throw new ConfigurationSourceException(exception, "Unable to load file: %s", super.path);
+            throw new ConfigurationSourceException(exception, "Unable to load file: %s", super.source);
         }
+    }
+
+    @Override
+    protected T load(InputStream inputStream, Mapper<InputStream, T> mapper) throws IOException
+    {
+        LOGGER.info("Loading file {} with mapper: <{}>", super.source, mapper.getClass().getSimpleName());
+        T mappedObject = mapper.apply(inputStream);
+
+        LOGGER.info("File {} loaded successfully", super.source);
+        return mappedObject;
     }
 
 }

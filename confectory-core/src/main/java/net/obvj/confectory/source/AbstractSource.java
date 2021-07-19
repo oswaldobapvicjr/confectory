@@ -1,6 +1,8 @@
 package net.obvj.confectory.source;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -19,7 +21,7 @@ public abstract class AbstractSource<T> implements Source<T>
 {
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractSource.class);
 
-    protected final String path;
+    protected final String source;
 
     /**
      * Builds a new configuration source with the specified path.
@@ -28,7 +30,20 @@ public abstract class AbstractSource<T> implements Source<T>
      */
     protected AbstractSource(String path)
     {
-        this.path = path;
+        this.source = Objects.requireNonNull(path, "The source path must not be null");
+    }
+
+    /**
+     * Loads the specified input stream with the specified mapper.
+     *
+     * @param inputStream the input stream to be loaded
+     * @param mapper      the {@link Mapper} to be applied on the input stream
+     * @return the loaded configuration data
+     * @throws IOException in the event of a failure reading from the specified input stream
+     */
+    protected T load(InputStream inputStream, Mapper<InputStream, T> mapper) throws IOException
+    {
+        return mapper.apply(inputStream);
     }
 
     @Override
@@ -50,7 +65,7 @@ public abstract class AbstractSource<T> implements Source<T>
     @Override
     public String toString()
     {
-        return new StringBuilder().append(getClass().getSimpleName()).append("(").append(path).append(")").toString();
+        return new StringBuilder().append(getClass().getSimpleName()).append("(").append(source).append(")").toString();
     }
 
 }

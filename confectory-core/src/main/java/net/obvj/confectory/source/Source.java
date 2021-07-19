@@ -3,6 +3,7 @@ package net.obvj.confectory.source;
 import java.io.InputStream;
 import java.util.Optional;
 
+import net.obvj.confectory.ConfigurationSourceException;
 import net.obvj.confectory.mapper.Mapper;
 
 /**
@@ -20,6 +21,8 @@ public interface Source<T>
      *
      * @param mapper the {@link Mapper} to be applied on the source input stream
      * @return the loaded configuration data
+     * @throws ConfigurationSourceException in the event of a failure loading the
+     *                                      configuration source
      */
     T load(Mapper<InputStream, T> mapper);
 

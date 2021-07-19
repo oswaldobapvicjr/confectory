@@ -20,8 +20,19 @@ public class StringUtils
     }
 
     /**
-     * Replaces all the occurrences of system environment variables with their matching values
-     * from the given source string.
+     * Replaces all the occurrences of system environment variables placed between
+     * <code>"${"</code> and <code>"}"</code> with their matching values from the given source
+     * string.
+     * <p>
+     * For example:
+     * <p>
+     * <blockquote>
+     *
+     * <pre>
+     * StringUtils.expandEnvironmentVariables("${TMPDIR}/file1") = "/tmp/file1"
+     * </pre>
+     *
+     * </blockquote>
      *
      * @param string the string to be expanded; {@code null} returns {@code null}
      * @return the expanded string

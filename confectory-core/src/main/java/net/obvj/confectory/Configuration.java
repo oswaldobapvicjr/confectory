@@ -9,8 +9,8 @@ import net.obvj.confectory.mapper.Mapper;
 import net.obvj.confectory.source.Source;
 
 /**
- * An object that contains configuration data from a specific source, as well as related
- * metadata.
+ * An immutable object that contains configuration data from a specific source, as well as
+ * related metadata.
  * <p>
  * A {@code Configuration} may also be defined as the union of a configuration
  * {@link Source} and a configuration {@link Mapper}, producing either a properties list,
@@ -123,6 +123,14 @@ public final class Configuration<T>
     public Source<T> getSource()
     {
         return source;
+    }
+
+    /**
+     * @return the mapper
+     */
+    protected Mapper<InputStream, T> getMapper()
+    {
+        return mapper;
     }
 
     /**

@@ -5,7 +5,7 @@ import net.obvj.confectory.ConfigurationBuilder;
 import net.obvj.confectory.mapper.StringMapper;
 import net.obvj.confectory.source.ClasspathFileSource;
 
-public class ConfectoryTestDriveClasspathString
+public class ConfectoryTestDriveClasspathPropertiesToString
 {
     public static void main(String[] args)
     {

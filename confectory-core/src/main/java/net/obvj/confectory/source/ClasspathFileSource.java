@@ -33,12 +33,12 @@ public class ClasspathFileSource<T> extends AbstractSource<T> implements Source<
     @Override
     public T load(Mapper<InputStream, T> mapper)
     {
-        LOGGER.info("Searching file: {}", super.path);
+        LOGGER.info("Searching file: {}", super.source);
 
-        URL url = ClasspathFileSource.class.getClassLoader().getResource(super.path);
+        URL url = ClasspathFileSource.class.getClassLoader().getResource(super.source);
         if (url == null)
         {
-            String message = String.format("File not found: %s", super.path);
+            String message = String.format("File not found: %s", super.source);
             LOGGER.warn(message);
             throw new ConfigurationSourceException(message);
         }
@@ -53,19 +53,19 @@ public class ClasspathFileSource<T> extends AbstractSource<T> implements Source<
      * @param mapper the {@link Mapper} to be applied on the file input stream
      * @return the string content from the specified URL
      */
-    private T load(URL url, Mapper<InputStream, T> mapper)
+    protected T load(URL url, Mapper<InputStream, T> mapper)
     {
         try (InputStream inputStream = url.openStream())
         {
-            LOGGER.info("Loading file {} with mapper: <{}>", super.path, mapper.getClass().getSimpleName());
+            LOGGER.info("Loading file {} with mapper: <{}>", super.source, mapper.getClass().getSimpleName());
             T mappedObject = mapper.apply(inputStream);
 
-            LOGGER.info("File {} loaded successfully", super.path);
+            LOGGER.info("File {} loaded successfully", super.source);
             return mappedObject;
         }
         catch (IOException exception)
         {
-            throw new ConfigurationSourceException(exception, "Unable to load classpath resource: %s", super.path);
+            throw new ConfigurationSourceException(exception, "Unable to load classpath resource: %s", super.source);
         }
     }
 
