@@ -58,11 +58,14 @@ public class ConfigurationBuilder<T>
      */
     public ConfigurationBuilder(Configuration<T> sourceConfiguration)
     {
-        namespace = sourceConfiguration.getNamespace();
-        precedence = sourceConfiguration.getPrecedence();
-        source = sourceConfiguration.getSource();
-        mapper = sourceConfiguration.getMapper();
-        optional = sourceConfiguration.isOptional();
+        if (sourceConfiguration != null)
+        {
+            namespace = sourceConfiguration.getNamespace();
+            precedence = sourceConfiguration.getPrecedence();
+            source = sourceConfiguration.getSource();
+            mapper = sourceConfiguration.getMapper();
+            optional = sourceConfiguration.isOptional();
+        }
     }
 
     /**
