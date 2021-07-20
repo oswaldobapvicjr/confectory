@@ -44,17 +44,17 @@ class FileSourceTest
 
 
     @Test
-    void load_fileNotFound_configurationSourceException()
+    void load_fileNotFoundAndOptionalFalse_configurationSourceException()
     {
-        assertThat(() -> TEST_SOURCE_FILE_NOT_FOUND.load(STRING_MAPPER),
+        assertThat(() -> TEST_SOURCE_FILE_NOT_FOUND.load(STRING_MAPPER, false),
                 throwsException(ConfigurationSourceException.class)
                 .withMessage(containsAll(FILE_NOT_FOUND_PATH).ignoreCase()).withCause(FileNotFoundException.class));
     }
 
     @Test
-    void loadOptionally_fileNotFound_empty()
+    void load_fileNotFoundAndOptionalTrue_empty()
     {
-        assertThat(TEST_SOURCE_FILE_NOT_FOUND.loadOptionally(STRING_MAPPER), is(Optional.empty()));
+        assertThat(TEST_SOURCE_FILE_NOT_FOUND.load(STRING_MAPPER, true), is(Optional.empty()));
     }
 
     @Test

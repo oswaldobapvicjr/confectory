@@ -11,6 +11,7 @@ import net.obvj.confectory.helper.ConfigurationHelper;
  * @param <T> the configuration output type
  *
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
+ * @since 0.1.0
  */
 public interface Mapper<T>
 {

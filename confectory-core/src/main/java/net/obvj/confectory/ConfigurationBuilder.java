@@ -32,7 +32,7 @@ import net.obvj.confectory.source.Source;
  *
  * @see Configuration
  */
-public class ConfigurationBuilder<T> implements ConfigurationMetadata<T>
+public class ConfigurationBuilder<T> implements ConfigurationMetadataRetriever<T>
 {
     private String namespace;
     private int precedence;
@@ -70,7 +70,7 @@ public class ConfigurationBuilder<T> implements ConfigurationMetadata<T>
     /**
      * Declares a namespace to be assigned to the new {@code Configuration} object.
      * <p>
-     * <strong>Note:</strong> The namespace is optional, but usally recommended to organize
+     * <strong>Note:</strong> The namespace is optional, but usually recommended to organize
      * the scope of the target object and to prevent key collisions.
      *
      * @param namespace the namespace to set; {@code null} is allowed
@@ -89,11 +89,11 @@ public class ConfigurationBuilder<T> implements ConfigurationMetadata<T>
      * In a common configuration container, the object with the highest precedence level may
      * be selected first in the occurrence of a key collision in the same namespace.
      *
-     * @param precedence a short number representing the order of importance given to the
+     * @param precedence an integer number representing the order of importance given to the
      *                   target configuration
      * @return a reference to this same {@code ConfigurationBuilder} for chained calls
      */
-    public ConfigurationBuilder<T> precedence(short precedence)
+    public ConfigurationBuilder<T> precedence(int precedence)
     {
         this.precedence = precedence;
         return this;

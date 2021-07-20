@@ -16,6 +16,7 @@ import net.obvj.confectory.mapper.Mapper;
  * @param <T> the configuration data type returned by this {@code Source}
  *
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
+ * @since 0.1.0
  */
 public abstract class AbstractSource<T> implements Source<T>
 {
@@ -47,7 +48,7 @@ public abstract class AbstractSource<T> implements Source<T>
     }
 
     @Override
-    public Optional<T> loadOptionally(Mapper<T> mapper)
+    public Optional<T> load(Mapper<T> mapper, boolean optional)
     {
         try
         {
@@ -56,9 +57,13 @@ public abstract class AbstractSource<T> implements Source<T>
         }
         catch (Exception exception)
         {
-            LOGGER.warn("Unable to load optional source: {}", this);
-            LOGGER.debug("Exception details:", exception);
-            return Optional.empty();
+            if (optional)
+            {
+                LOGGER.warn("Unable to load optional source: {}", this);
+                LOGGER.debug("Exception details:", exception);
+                return Optional.empty();
+            }
+            throw exception;
         }
     }
 

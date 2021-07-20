@@ -50,30 +50,31 @@ class ClasspathFileSourceTest
     private ClasspathFileSource<String> classpathFileSource = new ClasspathFileSource<>("");
 
     @Test
-    void load_fileInClassPath_fileContent()
+    void load_fileInClassPathAndOptionalFalse_fileContent()
     {
-        assertThat(TEST_SOURCE_FILE1.load(MAPPER), containsAll(FILE1_CONTENT));
+        assertThat(TEST_SOURCE_FILE1.load(MAPPER, false).get(), containsAll(FILE1_CONTENT));
     }
 
     @Test
-    void load_fileNotFound_configurationSourceException()
+    void load_fileNotFoundAndOptionalFalse_configurationSourceException()
     {
-        assertThat(() -> TEST_SOURCE_FILE_NOT_FOUND.load(MAPPER), throwsException(ConfigurationSourceException.class)
-                .withMessage(containsAll("file not found", FILE_NOT_FOUND_PATH).ignoreCase()));
+        assertThat(() -> TEST_SOURCE_FILE_NOT_FOUND.load(MAPPER, false),
+                throwsException(ConfigurationSourceException.class)
+                        .withMessage(containsAll("file not found", FILE_NOT_FOUND_PATH).ignoreCase()));
     }
 
     @Test
-    void loadOptionally_fileInClassPath_fileContent()
+    void load_fileInClassPathAndOptionalTrue_fileContent()
     {
-        Optional<String> content = TEST_SOURCE_FILE1.loadOptionally(MAPPER);
+        Optional<String> content = TEST_SOURCE_FILE1.load(MAPPER, true);
         assertTrue(content.isPresent());
         assertThat(content.get(), containsAll(FILE1_CONTENT));
     }
 
     @Test
-    void loadOptionally_fileNotFound_empty()
+    void load_fileNotFoundAndOptionalTrue_empty()
     {
-        assertThat(TEST_SOURCE_FILE_NOT_FOUND.loadOptionally(MAPPER), is(Optional.empty()));
+        assertThat(TEST_SOURCE_FILE_NOT_FOUND.load(MAPPER, true), is(Optional.empty()));
     }
 
     @Test

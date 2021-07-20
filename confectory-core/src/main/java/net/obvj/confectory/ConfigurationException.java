@@ -4,6 +4,7 @@ package net.obvj.confectory;
  * A specialized runtime exception for generic configuration handling.
  *
  * @author Oswaldo Junior (oswaldo.bapvic.jr)
+ * @since 0.1.0
  */
 public class ConfigurationException extends RuntimeException
 {

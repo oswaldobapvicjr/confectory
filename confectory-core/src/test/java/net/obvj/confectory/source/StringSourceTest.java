@@ -44,15 +44,15 @@ class StringSourceTest
     }
 
     @Test
-    void load_validString_loadedSuccessfully()
+    void load_validStringAndOptionalFalse_loadedSuccessfully()
     {
-        assertThat(STRING_SOURCE1.load(STRING_MAPPER), equalTo(STRING1));
+        assertThat(STRING_SOURCE1.load(STRING_MAPPER, false).get(), equalTo(STRING1));
     }
 
     @Test
-    void loadOptionally_validString_loadedSuccessfully()
+    void load_validStringAndOptionalTrue_loadedSuccessfully()
     {
-        assertThat(STRING_SOURCE1.loadOptionally(STRING_MAPPER).get(), equalTo(STRING1));
+        assertThat(STRING_SOURCE1.load(STRING_MAPPER, true).get(), equalTo(STRING1));
     }
 
     @Test

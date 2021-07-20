@@ -15,6 +15,7 @@ import net.obvj.confectory.mapper.Mapper;
  * from the classpath.
  *
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
+ * @since 0.1.0
  */
 public class ClasspathFileSource<T> extends AbstractSource<T> implements Source<T>
 {

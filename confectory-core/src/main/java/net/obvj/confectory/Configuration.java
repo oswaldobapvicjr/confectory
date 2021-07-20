@@ -49,7 +49,7 @@ import net.obvj.confectory.source.Source;
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 0.1.0
  */
-public final class Configuration<T> implements ConfigurationData<T>, ConfigurationMetadata<T>
+public final class Configuration<T> implements ConfigurationDataRetriever<T>, ConfigurationMetadataRetriever<T>
 {
     private final String namespace;
     private final int precedence;
@@ -59,6 +59,11 @@ public final class Configuration<T> implements ConfigurationData<T>, Configurati
     private final Optional<T> bean;
     private final ConfigurationHelper<T> helper;
 
+    /**
+     * Builds a new {@code Configuration} from the specified {@link ConfigurationBuilder}.
+     *
+     * @param builder the {@link ConfigurationBuilder} to be built
+     */
     protected Configuration(ConfigurationBuilder<T> builder)
     {
         this.namespace = builder.getNamespace();
@@ -66,27 +71,18 @@ public final class Configuration<T> implements ConfigurationData<T>, Configurati
         this.source = builder.getSource();
         this.mapper = builder.getMapper();
         this.optional = builder.isOptional();
-        this.bean = load();
-        this.helper = getConfigurationHelper();
-    }
 
-    private Optional<T> load()
-    {
-        if (optional)
-        {
-            return source.loadOptionally(mapper);
-        }
-        T value = source.load(mapper);
-        return Optional.ofNullable(value);
+        this.bean = source.load(mapper, optional);
+        this.helper = getConfigurationHelper();
     }
 
     private ConfigurationHelper<T> getConfigurationHelper()
     {
-        if (optional && !bean.isPresent())
+        if (bean.isPresent())
         {
-            return new NullConfigurationHelper<>();
+            return mapper.configurationHelper(bean.get());
         }
-        return mapper.configurationHelper(bean.get());
+        return new NullConfigurationHelper<>();
     }
 
     /**
