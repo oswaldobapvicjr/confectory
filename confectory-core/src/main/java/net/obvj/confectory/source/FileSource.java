@@ -3,7 +3,10 @@ package net.obvj.confectory.source;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.concurrent.TimeUnit;
 
+import net.obvj.performetrics.Counter;
+import net.obvj.performetrics.Stopwatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,9 +57,13 @@ public class FileSource<T> extends AbstractSource<T> implements Source<T>
     protected T load(InputStream inputStream, Mapper<T> mapper) throws IOException
     {
         LOGGER.info("Loading file {} with mapper: <{}>", super.source, mapper.getClass().getSimpleName());
+        Stopwatch stopwatch = Stopwatch.createStarted();
         T mappedObject = mapper.apply(inputStream);
+        stopwatch.stop();
+        double elapsedTime = stopwatch.elapsedTime(Counter.Type.WALL_CLOCK_TIME, TimeUnit.MILLISECONDS);
 
         LOGGER.info("File {} loaded successfully", super.source);
+        LOGGER.info(String.format("File loaded in %d ms", (int)Math.round(elapsedTime)), super.source);
         return mappedObject;
     }
 
