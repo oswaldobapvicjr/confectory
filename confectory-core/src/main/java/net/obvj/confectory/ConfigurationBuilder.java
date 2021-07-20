@@ -1,6 +1,5 @@
 package net.obvj.confectory;
 
-import java.io.InputStream;
 import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
@@ -33,13 +32,13 @@ import net.obvj.confectory.source.Source;
  *
  * @see Configuration
  */
-public class ConfigurationBuilder<T>
+public class ConfigurationBuilder<T> implements ConfigurationMetadata<T>
 {
-    protected String namespace;
-    protected short precedence;
-    protected Source<T> source;
-    protected Mapper<InputStream, T> mapper;
-    protected boolean optional;
+    private String namespace;
+    private int precedence;
+    private Source<T> source;
+    private Mapper<T> mapper;
+    private boolean optional;
 
     /**
      * Creates a new, empty {@code ConfigurationBuilder}.
@@ -118,7 +117,7 @@ public class ConfigurationBuilder<T>
      * @param mapper the {@link Mapper} to be set; <strong>not</strong> null
      * @return a reference to this same {@code ConfigurationBuilder} for chained calls
      */
-    public ConfigurationBuilder<T> mapper(Mapper<InputStream, T> mapper)
+    public ConfigurationBuilder<T> mapper(Mapper<T> mapper)
     {
         this.mapper = mapper;
         return this;
@@ -164,6 +163,36 @@ public class ConfigurationBuilder<T>
         Objects.requireNonNull(mapper, "The configuration mapper must not be null");
         namespace = StringUtils.defaultString(namespace);
         return new Configuration<>(this);
+    }
+
+    @Override
+    public String getNamespace()
+    {
+        return namespace;
+    }
+
+    @Override
+    public int getPrecedence()
+    {
+        return precedence;
+    }
+
+    @Override
+    public Source<T> getSource()
+    {
+        return source;
+    }
+
+    @Override
+    public Mapper<T> getMapper()
+    {
+        return mapper;
+    }
+
+    @Override
+    public boolean isOptional()
+    {
+        return optional;
     }
 
 }

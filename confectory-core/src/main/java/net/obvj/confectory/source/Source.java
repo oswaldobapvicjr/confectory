@@ -1,6 +1,5 @@
 package net.obvj.confectory.source;
 
-import java.io.InputStream;
 import java.util.Optional;
 
 import net.obvj.confectory.ConfigurationSourceException;
@@ -24,7 +23,7 @@ public interface Source<T>
      * @throws ConfigurationSourceException in the event of a failure loading the
      *                                      configuration source
      */
-    T load(Mapper<InputStream, T> mapper);
+    T load(Mapper<T> mapper);
 
     /**
      * Applies a specific configuration loading strategy and returns an {@link Optional},
@@ -33,6 +32,6 @@ public interface Source<T>
      *
      * @return the loaded configuration data, or an empty object if unable to load the source
      */
-    Optional<T> loadOptionally(Mapper<InputStream, T> mapper);
+    Optional<T> loadOptionally(Mapper<T> mapper);
 
 }

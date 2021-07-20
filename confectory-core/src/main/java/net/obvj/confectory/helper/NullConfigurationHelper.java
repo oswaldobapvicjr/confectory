@@ -56,7 +56,7 @@ public class NullConfigurationHelper<T> implements ConfigurationHelper<T>
     @Override
     public double getDoubleProperty(String key)
     {
-        return 0D;
+        return 0.0;
     }
 
     /**

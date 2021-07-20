@@ -32,7 +32,7 @@ class StringSourceTest
     @Mock
     private InputStream inputStream;
     @Mock
-    private Mapper<InputStream, String> mapper;
+    private Mapper<String> mapper;
     @InjectMocks
     private StringSource<String> stringSource = new StringSource<>(STRING1);
 

@@ -27,7 +27,7 @@ public class StringSource<T> extends AbstractSource<T> implements Source<T>
     }
 
     @Override
-    public T load(Mapper<InputStream, T> mapper)
+    public T load(Mapper<T> mapper)
     {
         try
         {

@@ -1,6 +1,5 @@
 package net.obvj.confectory;
 
-import java.io.InputStream;
 import java.util.Optional;
 
 import net.obvj.confectory.helper.ConfigurationHelper;
@@ -50,28 +49,28 @@ import net.obvj.confectory.source.Source;
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 0.1.0
  */
-public final class Configuration<T>
+public final class Configuration<T> implements ConfigurationData<T>, ConfigurationMetadata<T>
 {
     private final String namespace;
-    private final short precedence;
+    private final int precedence;
     private final Source<T> source;
-    private final Mapper<InputStream, T> mapper;
+    private final Mapper<T> mapper;
     private final boolean optional;
     private final Optional<T> bean;
     private final ConfigurationHelper<T> helper;
 
     protected Configuration(ConfigurationBuilder<T> builder)
     {
-        this.namespace = builder.namespace;
-        this.precedence = builder.precedence;
-        this.source = builder.source;
-        this.mapper = builder.mapper;
-        this.optional = builder.optional;
-        this.bean = load(builder);
-        this.helper = getConfigurationMapper();
+        this.namespace = builder.getNamespace();
+        this.precedence = builder.getPrecedence();
+        this.source = builder.getSource();
+        this.mapper = builder.getMapper();
+        this.optional = builder.isOptional();
+        this.bean = load();
+        this.helper = getConfigurationHelper();
     }
 
-    private Optional<T> load(ConfigurationBuilder<T> builder)
+    private Optional<T> load()
     {
         if (optional)
         {
@@ -81,7 +80,7 @@ public final class Configuration<T>
         return Optional.ofNullable(value);
     }
 
-    private ConfigurationHelper<T> getConfigurationMapper()
+    private ConfigurationHelper<T> getConfigurationHelper()
     {
         if (optional && !bean.isPresent())
         {
@@ -91,7 +90,7 @@ public final class Configuration<T>
     }
 
     /**
-     * Creates a configuration builder.
+     * Creates a new configuration builder.
      *
      * @param <T> the target configuration type
      * @return a new {@link ConfigurationBuilder}
@@ -101,87 +100,78 @@ public final class Configuration<T>
         return new ConfigurationBuilder<>();
     }
 
-    /**
-     * @return the namespace
-     */
+    @Override
     public String getNamespace()
     {
         return namespace;
     }
 
-    /**
-     * @return the precedence
-     */
-    public short getPrecedence()
+    @Override
+    public int getPrecedence()
     {
         return precedence;
     }
 
-    /**
-     * @return the source
-     */
+    @Override
     public Source<T> getSource()
     {
         return source;
     }
 
-    /**
-     * @return the mapper
-     */
-    protected Mapper<InputStream, T> getMapper()
+    @Override
+    public Mapper<T> getMapper()
     {
         return mapper;
     }
 
-    /**
-     * @return the optional
-     */
+    @Override
     public boolean isOptional()
     {
         return optional;
     }
 
-    /**
-     * @return the helper
-     */
     public ConfigurationHelper<T> getHelper()
     {
         return helper;
     }
 
-    /**
-     * @return the value
-     */
+    @Override
     public Optional<T> getBean()
     {
         return bean;
     }
 
+    @Override
     public boolean getBooleanProperty(String key)
     {
         return helper.getBooleanProperty(key);
     }
 
+    @Override
     public int getIntProperty(String key)
     {
         return helper.getIntProperty(key);
     }
 
+    @Override
     public long getLongProperty(String key)
     {
         return helper.getLongProperty(key);
     }
 
+    @Override
     public double getDoubleProperty(String key)
     {
         return helper.getDoubleProperty(key);
     }
 
+    @Override
     public String getStringProperty(String key)
     {
         return helper.getStringProperty(key);
     }
 
+    @Override
     public Optional<String> getOptionalStringProperty(String key)
     {
         return helper.getOptionalStringProperty(key);

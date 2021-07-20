@@ -16,7 +16,7 @@ import net.obvj.confectory.helper.BeanConfigurationHelper;
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 0.1.0
  */
-public abstract class AbstractBeanMapper<T> implements Mapper<InputStream, T>
+public abstract class AbstractBeanMapper<T> implements Mapper<T>
 {
 
     /**

@@ -36,7 +36,7 @@ public class FileSource<T> extends AbstractSource<T> implements Source<T>
     }
 
     @Override
-    public T load(Mapper<InputStream, T> mapper)
+    public T load(Mapper<T> mapper)
     {
         LOGGER.info("Searching file: {}", super.source);
 
@@ -51,7 +51,7 @@ public class FileSource<T> extends AbstractSource<T> implements Source<T>
     }
 
     @Override
-    protected T load(InputStream inputStream, Mapper<InputStream, T> mapper) throws IOException
+    protected T load(InputStream inputStream, Mapper<T> mapper) throws IOException
     {
         LOGGER.info("Loading file {} with mapper: <{}>", super.source, mapper.getClass().getSimpleName());
         T mappedObject = mapper.apply(inputStream);

@@ -45,7 +45,7 @@ class ClasspathFileSourceTest
     @Mock
     private InputStream inputStream;
     @Mock
-    private Mapper<InputStream, String> mapper;
+    private Mapper<String> mapper;
     @InjectMocks
     private ClasspathFileSource<String> classpathFileSource = new ClasspathFileSource<>("");
 

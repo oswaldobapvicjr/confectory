@@ -13,7 +13,7 @@ import net.obvj.confectory.helper.PropertiesConfigurationHelper;
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 0.1.0
  */
-public class PropertiesMapper implements Mapper<InputStream, Properties>
+public class PropertiesMapper implements Mapper<Properties>
 {
 
     @Override

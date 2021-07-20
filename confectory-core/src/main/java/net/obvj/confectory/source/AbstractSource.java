@@ -41,13 +41,13 @@ public abstract class AbstractSource<T> implements Source<T>
      * @return the loaded configuration data
      * @throws IOException in the event of a failure reading from the specified input stream
      */
-    protected T load(InputStream inputStream, Mapper<InputStream, T> mapper) throws IOException
+    protected T load(InputStream inputStream, Mapper<T> mapper) throws IOException
     {
         return mapper.apply(inputStream);
     }
 
     @Override
-    public Optional<T> loadOptionally(Mapper<InputStream, T> mapper)
+    public Optional<T> loadOptionally(Mapper<T> mapper)
     {
         try
         {

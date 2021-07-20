@@ -31,7 +31,7 @@ public class ClasspathFileSource<T> extends AbstractSource<T> implements Source<
     }
 
     @Override
-    public T load(Mapper<InputStream, T> mapper)
+    public T load(Mapper<T> mapper)
     {
         LOGGER.info("Searching file: {}", super.source);
 
@@ -53,7 +53,7 @@ public class ClasspathFileSource<T> extends AbstractSource<T> implements Source<
      * @param mapper the {@link Mapper} to be applied on the file input stream
      * @return the string content from the specified URL
      */
-    protected T load(URL url, Mapper<InputStream, T> mapper)
+    protected T load(URL url, Mapper<T> mapper)
     {
         try (InputStream inputStream = url.openStream())
         {

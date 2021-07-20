@@ -13,7 +13,7 @@ import org.apache.commons.io.IOUtils;
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 0.1.0
  */
-public class StringMapper extends AbstractBeanMapper<String> implements Mapper<InputStream, String>
+public class StringMapper extends AbstractBeanMapper<String> implements Mapper<String>
 {
 
     @Override

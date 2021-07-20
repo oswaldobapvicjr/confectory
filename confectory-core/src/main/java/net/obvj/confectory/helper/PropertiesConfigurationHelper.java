@@ -35,7 +35,7 @@ public class PropertiesConfigurationHelper extends BasicConfigurationHelper<Prop
         {
             return value.get();
         }
-        throw new ConfigurationException("Property not found: '%s", key);
+        throw new ConfigurationException("Property not found: '%s'", key);
     }
 
     @Override
