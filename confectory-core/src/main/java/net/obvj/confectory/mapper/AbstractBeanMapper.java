@@ -24,9 +24,9 @@ public abstract class AbstractBeanMapper<T> implements Mapper<T>
      *         type of {@code Mapper} is intended to be retrieved by the user-defined bean.
      */
     @Override
-    public ConfigurationHelper<T> configurationHelper(T source)
+    public ConfigurationHelper<T> configurationHelper(T bean)
     {
-        return new BeanConfigurationHelper<>(source);
+        return new BeanConfigurationHelper<>(bean);
     }
 
 }

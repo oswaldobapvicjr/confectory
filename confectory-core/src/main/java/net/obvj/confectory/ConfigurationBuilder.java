@@ -2,8 +2,11 @@ package net.obvj.confectory;
 
 import java.util.Objects;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import net.obvj.confectory.config.ConfectoryConfiguration;
+import net.obvj.confectory.helper.provider.NullValueProvider;
 import net.obvj.confectory.mapper.Mapper;
 import net.obvj.confectory.source.Source;
 
@@ -39,6 +42,7 @@ public class ConfigurationBuilder<T> implements ConfigurationMetadataRetriever<T
     private Source<T> source;
     private Mapper<T> mapper;
     private boolean optional;
+    private NullValueProvider nullValueProvider;
 
     /**
      * Creates a new, empty {@code ConfigurationBuilder}.
@@ -52,8 +56,8 @@ public class ConfigurationBuilder<T> implements ConfigurationMetadataRetriever<T
      * Creates a new {@code ConfigurationBuilder} filled with the attributes of an existing
      * base {@code Configuration}.
      *
-     * @param source the {@code Configuration} whose attributes are to be copied; {@code null}
-     *               is allowed
+     * @param sourceConfiguration a preset {@code Configuration} object whose attributes are
+     *                            to be copied; {@code null} is allowed
      */
     public ConfigurationBuilder(Configuration<T> sourceConfiguration)
     {
@@ -64,6 +68,7 @@ public class ConfigurationBuilder<T> implements ConfigurationMetadataRetriever<T
             source = sourceConfiguration.getSource();
             mapper = sourceConfiguration.getMapper();
             optional = sourceConfiguration.isOptional();
+            nullValueProvider = sourceConfiguration.getNullValueProvider();
         }
     }
 
@@ -88,6 +93,9 @@ public class ConfigurationBuilder<T> implements ConfigurationMetadataRetriever<T
      * <p>
      * In a common configuration container, the object with the highest precedence level may
      * be selected first in the occurrence of a key collision in the same namespace.
+     * <p>
+     * <strong>Note:</strong> This precedence value is optional and the default value is
+     * {@code 0} (zero).
      *
      * @param precedence an integer number representing the order of importance given to the
      *                   target configuration
@@ -149,6 +157,22 @@ public class ConfigurationBuilder<T> implements ConfigurationMetadataRetriever<T
     }
 
     /**
+     * Defines an optional {@link NullValueProvider} to be used when keys are not found.
+     * <p>
+     * <strong>Note:</strong> This setting is <strong>optional</strong> and a default object
+     * will be applied if no custom provider is specified.
+     *
+     *
+     * @param provider the provider to set; {@code null} is allowed
+     * @return a reference to this same {@code ConfigurationBuilder} for chained calls
+     */
+    public ConfigurationBuilder<T> nullValueProvider(NullValueProvider provider)
+    {
+        this.nullValueProvider = provider;
+        return this;
+    }
+
+    /**
      * Builds the target {@code Configuration}.
      *
      * @returns a new {@link Configuration} object
@@ -161,7 +185,12 @@ public class ConfigurationBuilder<T> implements ConfigurationMetadataRetriever<T
     {
         Objects.requireNonNull(source, "The configuration source must not be null");
         Objects.requireNonNull(mapper, "The configuration mapper must not be null");
+
         namespace = StringUtils.defaultString(namespace);
+
+        nullValueProvider = ObjectUtils.defaultIfNull(nullValueProvider,
+                ConfectoryConfiguration.getInstance().getDefaultNullValueProvider());
+
         return new Configuration<>(this);
     }
 
@@ -193,6 +222,12 @@ public class ConfigurationBuilder<T> implements ConfigurationMetadataRetriever<T
     public boolean isOptional()
     {
         return optional;
+    }
+
+    @Override
+    public NullValueProvider getNullValueProvider()
+    {
+        return nullValueProvider;
     }
 
 }

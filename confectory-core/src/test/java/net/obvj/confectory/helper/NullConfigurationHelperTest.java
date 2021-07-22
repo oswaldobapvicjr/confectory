@@ -55,9 +55,4 @@ class NullConfigurationHelperTest
         assertThat(helper.getStringProperty(KEY1), is(""));
     }
 
-    @Test
-    void getOptionalStringProperty_anyKey_zero()
-    {
-        assertThat(helper.getOptionalStringProperty(KEY1), is(Optional.empty()));
-    }
 }

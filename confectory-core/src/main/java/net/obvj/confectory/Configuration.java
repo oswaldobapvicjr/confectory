@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import net.obvj.confectory.helper.ConfigurationHelper;
 import net.obvj.confectory.helper.NullConfigurationHelper;
+import net.obvj.confectory.helper.provider.NullValueProvider;
 import net.obvj.confectory.mapper.Mapper;
 import net.obvj.confectory.source.Source;
 
@@ -58,6 +59,7 @@ public final class Configuration<T> implements ConfigurationDataRetriever<T>, Co
     private final boolean optional;
     private final Optional<T> bean;
     private final ConfigurationHelper<T> helper;
+    private final NullValueProvider nullValueProvider;
 
     /**
      * Builds a new {@code Configuration} from the specified {@link ConfigurationBuilder}.
@@ -71,18 +73,22 @@ public final class Configuration<T> implements ConfigurationDataRetriever<T>, Co
         this.source = builder.getSource();
         this.mapper = builder.getMapper();
         this.optional = builder.isOptional();
+        this.nullValueProvider = builder.getNullValueProvider();
 
         this.bean = source.load(mapper, optional);
-        this.helper = getConfigurationHelper();
+        this.helper = prepareConfigurationHelper();
     }
 
-    private ConfigurationHelper<T> getConfigurationHelper()
+    private ConfigurationHelper<T> prepareConfigurationHelper()
     {
-        if (bean.isPresent())
+        ConfigurationHelper<T> configurationHelper = bean.isPresent() ? mapper.configurationHelper(bean.get())
+                : new NullConfigurationHelper<>();
+
+        if (nullValueProvider != null)
         {
-            return mapper.configurationHelper(bean.get());
+            configurationHelper.setNullValueProvider(nullValueProvider);
         }
-        return new NullConfigurationHelper<>();
+        return configurationHelper;
     }
 
     /**
@@ -126,6 +132,12 @@ public final class Configuration<T> implements ConfigurationDataRetriever<T>, Co
         return optional;
     }
 
+    @Override
+    public NullValueProvider getNullValueProvider()
+    {
+        return nullValueProvider;
+    }
+
     public ConfigurationHelper<T> getHelper()
     {
         return helper;
@@ -165,12 +177,6 @@ public final class Configuration<T> implements ConfigurationDataRetriever<T>, Co
     public String getStringProperty(String key)
     {
         return helper.getStringProperty(key);
-    }
-
-    @Override
-    public Optional<String> getOptionalStringProperty(String key)
-    {
-        return helper.getOptionalStringProperty(key);
     }
 
 }

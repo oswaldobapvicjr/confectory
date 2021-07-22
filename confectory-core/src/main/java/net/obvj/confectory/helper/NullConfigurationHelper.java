@@ -3,15 +3,15 @@ package net.obvj.confectory.helper;
 import java.util.Optional;
 
 /**
- * A "no-op" Configuration Helper object for situations where an optional configuration
- * object is not available.
+ * A "no-op" Configuration Helper object for situations where an optional
+ * {@code Configuration} object is not available.
  *
  * @param <T> the source type which configuration data is to be retrieved
  *
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 0.1.0
  */
-public class NullConfigurationHelper<T> implements ConfigurationHelper<T>
+public class NullConfigurationHelper<T> extends AbstractBasicConfigurationHelper<T>
 {
 
     /**
@@ -24,57 +24,48 @@ public class NullConfigurationHelper<T> implements ConfigurationHelper<T>
     }
 
     /**
-     * @return {@code false}, always
+     * @return the smart-null value for {@code boolean}, always
      */
     @Override
     public boolean getBooleanProperty(String key)
     {
-        return false;
+        return nullValueProvider.getBooleanValue();
     }
 
     /**
-     * @return {@code 0}, always
+     * @return @return the smart-null value for {@code int}, always
      */
     @Override
     public int getIntProperty(String key)
     {
-        return 0;
+        return nullValueProvider.getIntValue();
     }
 
     /**
-     * @return {@code 0L}, always
+     * @return @return the smart-null value for {@code long}, always
      */
     @Override
     public long getLongProperty(String key)
     {
-        return 0L;
+        return nullValueProvider.getLongValue();
     }
 
     /**
-     * @return {@code 0D}, always
+     * @return the smart-null value for {@code double}, always
      */
     @Override
     public double getDoubleProperty(String key)
     {
-        return 0.0;
+        return nullValueProvider.getDoubleValue();
     }
 
     /**
-     * @return an empty string ({@code ""}), always
+     * @return the smart-null value for {@code String}, always
      */
     @Override
     public String getStringProperty(String key)
     {
-        return "";
-    }
-
-    /**
-     * @return {@link Optional#empty()}, always
-     */
-    @Override
-    public Optional<String> getOptionalStringProperty(String key)
-    {
-        return Optional.empty();
+        return nullValueProvider.getStringValue();
     }
 
 }

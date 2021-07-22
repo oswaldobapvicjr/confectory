@@ -25,9 +25,9 @@ public class PropertiesMapper implements Mapper<Properties>
     }
 
     @Override
-    public ConfigurationHelper<Properties> configurationHelper(Properties source)
+    public ConfigurationHelper<Properties> configurationHelper(Properties properties)
     {
-        return new PropertiesConfigurationHelper(source);
+        return new PropertiesConfigurationHelper(properties);
     }
 
 }

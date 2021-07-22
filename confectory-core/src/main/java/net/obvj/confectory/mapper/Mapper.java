@@ -29,9 +29,9 @@ public interface Mapper<T>
     /**
      * Creates a new {@link ConfigurationHelper} instance recommended by this {@code Mapper}.
      *
-     * @param object the configuration object to be used by the helper
+     * @param bean the configuration object to be used by the helper
      * @return a new {@link ConfigurationHelper} instance
      */
-    ConfigurationHelper<T> configurationHelper(T object);
+    ConfigurationHelper<T> configurationHelper(T bean);
 
 }
