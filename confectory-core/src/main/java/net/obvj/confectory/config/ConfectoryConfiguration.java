@@ -40,7 +40,7 @@ public class ConfectoryConfiguration
     }
 
     /**
-     * @returns a reference to the the current {@link ConfectoryConfiguration} instance.
+     * @return a reference to the the current {@link ConfectoryConfiguration} instance.
      */
     public static ConfectoryConfiguration getInstance()
     {

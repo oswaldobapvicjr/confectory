@@ -175,7 +175,7 @@ public class ConfigurationBuilder<T> implements ConfigurationMetadataRetriever<T
     /**
      * Builds the target {@code Configuration}.
      *
-     * @returns a new {@link Configuration} object
+     * @return a new {@link Configuration} object
      * @throws NullPointerException         if either the {@code Source} or {@code Mapper}
      *                                      configuration parameters are missing
      * @throws ConfigurationSourceException in the event of a failure loading the

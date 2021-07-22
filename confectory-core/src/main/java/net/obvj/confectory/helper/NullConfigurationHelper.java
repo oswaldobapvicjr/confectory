@@ -33,7 +33,7 @@ public class NullConfigurationHelper<T> extends AbstractBasicConfigurationHelper
     }
 
     /**
-     * @return @return the smart-null value for {@code int}, always
+     * @return the smart-null value for {@code int}, always
      */
     @Override
     public int getIntProperty(String key)
@@ -42,7 +42,7 @@ public class NullConfigurationHelper<T> extends AbstractBasicConfigurationHelper
     }
 
     /**
-     * @return @return the smart-null value for {@code long}, always
+     * @return the smart-null value for {@code long}, always
      */
     @Override
     public long getLongProperty(String key)
