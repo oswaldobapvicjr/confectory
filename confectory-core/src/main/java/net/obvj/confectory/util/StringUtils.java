@@ -25,7 +25,6 @@ public class StringUtils
      * string.
      * <p>
      * For example:
-     * <p>
      * <blockquote>
      *
      * <pre>
