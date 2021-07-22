@@ -12,6 +12,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import net.obvj.confectory.helper.provider.NullValueProvider;
 
+/**
+ * Unit tests for the {@link ConfectoryConfiguration}.
+ *
+ * @author oswaldo.bapvic.jr (Oswaldo Junior)
+ * @since 0.1.0
+ */
 @ExtendWith(MockitoExtension.class)
 class ConfectoryConfigurationTest
 {

@@ -1,7 +1,7 @@
 package net.obvj.confectory.helper.provider;
 
 /**
- * An object that provides "smart-nulls" for Java types (especially primitive ones) when a
+ * An object that provides "logic-nulls" for Java types (especially primitive ones) when a
  * configuration key is not found.
  *
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
@@ -50,27 +50,27 @@ public interface NullValueProvider
     boolean isNull(String string);
 
     /**
-     * @return a "smart-null" value for {@code boolean}
+     * @return a custom "logic-null" value for {@code boolean}
      */
     boolean getBooleanValue();
 
     /**
-     * @return a "smart-null" value for {@code int}
+     * @return a custom "logic-null" value for {@code int}
      */
     int getIntValue();
 
     /**
-     * @return a "smart-null" value for {@code long}
+     * @return a custom "logic-null" value for {@code long}
      */
     long getLongValue();
 
     /**
-     * @return a "smart-null" value for {@code double}
+     * @return a custom "logic-null" value for {@code double}
      */
     double getDoubleValue();
 
     /**
-     * @return a "smart-null" value for {@code String}
+     * @return a custom "logic-null" value for {@code String}
      */
     String getStringValue();
 

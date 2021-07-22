@@ -21,30 +21,45 @@ public class StandardNullValueProvider extends AbstractNullValueProvider impleme
         return INSTANCE;
     }
 
+    /**
+     * Returns {@code false}.
+     */
     @Override
     public boolean getBooleanValue()
     {
         return false;
     }
 
+    /**
+     * Returns {@code 0}.
+     */
     @Override
     public int getIntValue()
     {
         return 0;
     }
 
+    /**
+     * Returns {@code 0L}.
+     */
     @Override
     public long getLongValue()
     {
         return 0L;
     }
 
+    /**
+     * Returns {@code 0.0}.
+     */
     @Override
     public double getDoubleValue()
     {
         return 0.0;
     }
 
+    /**
+     * Returns an empty {@code String}.
+     */
     @Override
     public String getStringValue()
     {
