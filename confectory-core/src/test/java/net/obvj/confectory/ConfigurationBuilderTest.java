@@ -13,6 +13,9 @@ import org.mockito.Answers;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import net.obvj.confectory.helper.ConfigurationHelper;
+import net.obvj.confectory.helper.provider.NullValueProvider;
+import net.obvj.confectory.helper.provider.StandardNullValueProvider;
 import net.obvj.confectory.mapper.Mapper;
 import net.obvj.confectory.source.AbstractSource;
 import net.obvj.confectory.source.Source;
@@ -35,29 +38,34 @@ class ConfigurationBuilderTest
     private Source<Object> source = mock(AbstractSource.class, Answers.CALLS_REAL_METHODS);
     @Mock
     private Mapper<Object> mapper;
+    @Mock
+    private ConfigurationHelper<Object> helper;
+    @Mock
+    private NullValueProvider nullValueProvider;
 
     private void assertConfigurationMetadata(ConfigurationMetadataRetriever<Object> configuration, Source<?> source,
-            Mapper<?> mapper, String namespace, int precedence, boolean optional)
+            Mapper<?> mapper, String namespace, int precedence, boolean optional, NullValueProvider nullValueProvider)
     {
         assertThat(configuration.getSource(), equalTo(source));
         assertThat(configuration.getMapper(), equalTo(mapper));
         assertThat(configuration.getNamespace(), equalTo(namespace));
         assertThat(configuration.getPrecedence(), equalTo(precedence));
         assertThat(configuration.isOptional(), equalTo(optional));
+        assertThat(configuration.getNullValueProvider(), equalTo(nullValueProvider));
     }
 
     @Test
     void constructor_noArgument_emptyBuilder()
     {
         ConfigurationBuilder<Object> builder = new ConfigurationBuilder<>();
-        assertConfigurationMetadata(builder, null, null, null, 0, false);
+        assertConfigurationMetadata(builder, null, null, null, 0, false, null);
     }
 
     @Test
     void constructor_null_emptyBuilder()
     {
         ConfigurationBuilder<Object> builder = new ConfigurationBuilder<>(null);
-        assertConfigurationMetadata(builder, null, null, null, 0, false);
+        assertConfigurationMetadata(builder, null, null, null, 0, false, null);
     }
 
     @Test
@@ -68,9 +76,10 @@ class ConfigurationBuilderTest
         when(configuration.getNamespace()).thenReturn(NAMESPACE1);
         when(configuration.getPrecedence()).thenReturn(999);
         when(configuration.isOptional()).thenReturn(true);
+        when(configuration.getNullValueProvider()).thenReturn(nullValueProvider);
 
         ConfigurationBuilder<Object> builder = new ConfigurationBuilder<>(configuration);
-        assertConfigurationMetadata(builder, source, mapper, NAMESPACE1, 999, true);
+        assertConfigurationMetadata(builder, source, mapper, NAMESPACE1, 999, true, nullValueProvider);
     }
 
     @Test
@@ -94,6 +103,7 @@ class ConfigurationBuilderTest
     void build_allMandatoryParametersSet_success()
     {
         when(source.load(mapper)).thenReturn(OBJECT1);
+        when(mapper.configurationHelper(OBJECT1)).thenReturn(helper);
 
         ConfigurationBuilder<Object> builder = new ConfigurationBuilder<>()
                 .source(source)
@@ -101,7 +111,8 @@ class ConfigurationBuilderTest
 
         Configuration<Object> newConfiguration = builder.build();
 
-        assertConfigurationMetadata(newConfiguration, source, mapper, "", 0, false);
+        assertConfigurationMetadata(newConfiguration, source, mapper, "", 0, false,
+                StandardNullValueProvider.instance());
         assertThat(newConfiguration.getBean().get(), equalTo(OBJECT1));
     }
 
@@ -109,17 +120,19 @@ class ConfigurationBuilderTest
     void build_allParametersSet_success()
     {
         when(source.load(mapper)).thenReturn(OBJECT1);
+        when(mapper.configurationHelper(OBJECT1)).thenReturn(helper);
 
         ConfigurationBuilder<Object> builder = new ConfigurationBuilder<>()
                 .source(source)
                 .mapper(mapper)
                 .namespace(NAMESPACE1)
                 .precedence(777)
-                .optional();
+                .optional()
+                .nullValueProvider(nullValueProvider);
 
         Configuration<Object> newConfiguration = builder.build();
 
-        assertConfigurationMetadata(newConfiguration, source, mapper, NAMESPACE1, 777, true);
+        assertConfigurationMetadata(newConfiguration, source, mapper, NAMESPACE1, 777, true, nullValueProvider);
         assertThat(newConfiguration.getBean().get(), equalTo(OBJECT1));
     }
 

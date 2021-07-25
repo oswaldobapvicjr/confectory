@@ -1,9 +1,6 @@
 package net.obvj.confectory.helper;
 
-import java.util.Optional;
 import java.util.Properties;
-
-import net.obvj.confectory.ConfigurationException;
 
 /**
  * A specialized Configuration Helper that retrieves data from a {@link Properties}
@@ -24,24 +21,11 @@ public class PropertiesConfigurationHelper extends BasicConfigurationHelper<Prop
         super(properties);
     }
 
-    /**
-     * @throws ConfigurationException if no property found with the specified key
-     */
     @Override
     public String getStringProperty(String key)
     {
-        Optional<String> value = getOptionalStringProperty(key);
-        if (value.isPresent())
-        {
-            return value.get();
-        }
-        throw new ConfigurationException("Property not found: '%s'", key);
-    }
-
-    @Override
-    public Optional<String> getOptionalStringProperty(String key)
-    {
-        return Optional.ofNullable(super.source.getProperty(key));
+        String value = super.bean.getProperty(key);
+        return value == null ? nullValueProvider.getStringValue() : value;
     }
 
 }

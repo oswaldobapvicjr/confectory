@@ -1,7 +1,5 @@
 package net.obvj.confectory.helper;
 
-import java.util.Optional;
-
 import net.obvj.confectory.ConfigurationException;
 
 /**
@@ -33,20 +31,7 @@ public class BeanConfigurationHelper<T> extends BasicConfigurationHelper<T>
     public String getStringProperty(String key)
     {
         throw new ConfigurationException("Operation not supported for bean of type '%s'",
-                super.source.getClass().getName());
-    }
-
-    /**
-     * Returns {@link Optional#empty}, since the data for this type of helper should be
-     * handled by the user-defined bean
-     *
-     * @param key not used since this method implementation is a "no-op"
-     * @return {@link Optional#empty}
-     */
-    @Override
-    public Optional<String> getOptionalStringProperty(String key)
-    {
-        return Optional.empty();
+                super.bean.getClass().getName());
     }
 
 }

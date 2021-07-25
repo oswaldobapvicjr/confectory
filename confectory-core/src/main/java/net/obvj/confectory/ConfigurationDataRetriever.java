@@ -64,14 +64,4 @@ public interface ConfigurationDataRetriever<T>
      */
     String getStringProperty(String key);
 
-    /**
-     * Returns the {@code String} value associated with the specified {@code key}, or
-     * {@link Optional#empty()} if no value
-     *
-     * @param key the property key
-     * @return an {@link Optional} possibly containing the {@code String} value associated
-     *         with the specified {@code key}
-     */
-    Optional<String> getOptionalStringProperty(String key);
-
 }
