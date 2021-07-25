@@ -7,7 +7,7 @@ The modular configuration framework for Java applications.
 
 ##### Currently under development #####
 
-## Planned releases
+### Planned releases
 
 <table>
   <tr>
@@ -71,3 +71,10 @@ The modular configuration framework for Java applications.
     </td>
   </tr>
 </table>
+
+
+### Contributing
+
+If you want to contribute to the **Confectory** project, check the [issues](http://obvj.net/confectory/issues) page, or write an e-mail to [oswaldo@obvj.net](mailto:oswaldo@obvj.net).
+
+**Confectory** uses [GitHub Actions](https://docs.github.com/actions) for CI/CD.
