@@ -3,9 +3,11 @@
 [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/oswaldobapvicjr/confectory/Java%20CI%20with%20Maven)](https://github.com/oswaldobapvicjr/confectory/actions/workflows/maven.yml)
 [![Coverage](https://img.shields.io/codecov/c/github/oswaldobapvicjr/confectory)](https://codecov.io/gh/oswaldobapvicjr/confectory)
 
-The modular configuration framework for Java applications.
+The modular, multi-format configuration framework for Java applications.
 
-##### Currently under development #####
+![confectory-animation](resources/confectory-animation.gif)
+
+---
 
 ### Planned releases
 
@@ -21,7 +23,7 @@ The modular configuration framework for Java applications.
     <td>2021-08</td>
     <td>confectory-core</td>
     <td>
-      <li>Configuration Builder</li>  
+      <li>Configuration Builder</li>
       <li>Local file sources</li>
       <li><b>Properties</b> format parsing</li>
     </td>
@@ -73,8 +75,12 @@ The modular configuration framework for Java applications.
 </table>
 
 
-### Contributing
+## Contributing
 
 If you want to contribute to the **Confectory** project, check the [issues](http://obvj.net/confectory/issues) page, or write an e-mail to [oswaldo@obvj.net](mailto:oswaldo@obvj.net).
 
 **Confectory** uses [GitHub Actions](https://docs.github.com/actions) for CI/CD.
+
+---
+
+The Confectory logo and the file-factory animation were created with [Inkscape](http://www.inkscape.org) and [Natron](https://natrongithub.github.io), both **free and open-source** Software tools.
