@@ -4,6 +4,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import net.obvj.performetrics.Counter;
+import net.obvj.performetrics.Stopwatch;
+import net.obvj.performetrics.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,9 +57,13 @@ public class FileSource<T> extends AbstractSource<T> implements Source<T>
     protected T load(InputStream inputStream, Mapper<T> mapper) throws IOException
     {
         LOGGER.info("Loading file {} with mapper: <{}>", super.source, mapper.getClass().getSimpleName());
+        Stopwatch stopwatch = Stopwatch.createStarted();
         T mappedObject = mapper.apply(inputStream);
+        stopwatch.stop();
+        Duration elapsedTime = stopwatch.elapsedTime(Counter.Type.WALL_CLOCK_TIME);
 
         LOGGER.info("File {} loaded successfully", super.source);
+        LOGGER.info("File loaded in {}", elapsedTime);
         return mappedObject;
     }
 
