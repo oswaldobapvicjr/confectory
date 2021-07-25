@@ -12,23 +12,23 @@ The modular configuration framework for Java applications.
 <table>
   <tr>
     <th>Version</th>
-    <th>Planned release</th>
-    <th>Module(s)</th>
-    <th>Features</th>
+    <th>Release</th>
+    <th>Main modules</th>
+    <th>Key features</th>
   </tr>
   <tr>
     <td><b>0.1.0</b></td>
-    <td>2021-August</td>
+    <td>2021-08</td>
     <td>confectory-core</td>
     <td>
       <li>Configuration Builder</li>  
-      <li>Local file sources (classpath and file system)</li>
+      <li>Local file sources</li>
       <li><b>Properties</b> format parsing</li>
     </td>
   </tr>
   <tr>
     <td><b>0.2.0</b></td>
-    <td>2021-September</td>
+    <td>2021-09</td>
     <td>
       confectory-datamapper-lite
     </td>
@@ -40,7 +40,7 @@ The modular configuration framework for Java applications.
   </tr>
   <tr>
     <td><b>0.3.0</b></td>
-    <td>2021-October</td>
+    <td>2021-10</td>
     <td>
       confectory-datamapper-jackson2*
     </td>
@@ -51,7 +51,7 @@ The modular configuration framework for Java applications.
   </tr>
   <tr>
     <td><b>0.4.0</b></td>
-    <td>2021-November</td>
+    <td>2021-11</td>
     <td>
       confectory-datamapper-gson2
     </td>
@@ -62,7 +62,7 @@ The modular configuration framework for Java applications.
   </tr>
   <tr>
     <td><b>1.0.0</b></td>
-    <td>2021-December</td>
+    <td>2021-12</td>
     <td>
       *
     </td>
