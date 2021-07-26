@@ -2,6 +2,9 @@ package net.obvj.confectory;
 
 import java.util.Optional;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import net.obvj.confectory.helper.ConfigurationHelper;
 import net.obvj.confectory.helper.NullConfigurationHelper;
 import net.obvj.confectory.helper.provider.NullValueProvider;
@@ -177,6 +180,16 @@ public final class Configuration<T> implements ConfigurationDataRetriever<T>, Co
     public String getStringProperty(String key)
     {
         return helper.getStringProperty(key);
+    }
+
+    @Override
+    public String toString()
+    {
+        return new ToStringBuilder(this, ToStringStyle.JSON_STYLE)
+                .append("namespace", namespace)
+                .append("precedence", precedence)
+                .append("source", source)
+                .toString();
     }
 
 }
