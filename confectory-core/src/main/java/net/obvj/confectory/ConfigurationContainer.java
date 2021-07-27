@@ -297,4 +297,27 @@ public class ConfigurationContainer
         return StringUtils.defaultString(namespace, DEFAULT_NAMESPACE);
     }
 
+    /**
+     * Returns the number of {@code Configuration} objects associated with the specified
+     * {@code namespace} in this container.
+     *
+     * @param namespace the namespace to be tested
+     * @return the number of {@code Configuration} objects associated with the specified
+     *         {@code namespace}
+     */
+    public int size(String namespace)
+    {
+        return getConfigurationList(namespace).size();
+    }
+
+    /**
+     * Returns all of the namespaces defined inside this container.
+     *
+     * @return a set of namespaces
+     */
+    public Collection<String> getNamespaces()
+    {
+        return configMap.keySet();
+    }
+
 }
