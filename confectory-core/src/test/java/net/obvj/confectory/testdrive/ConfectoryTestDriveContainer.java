@@ -13,25 +13,50 @@ public class ConfectoryTestDriveContainer
     {
         Configuration<Properties> config1 = Configuration.<Properties>builder()
                 .namespace("test")
-                .source(new StringSource<>("myFileName=config1 \n myString=cust1"))
+                .source(new StringSource<>("myFileName=config1\n myString=cust1"))
                 .mapper(new PropertiesMapper()).build();
 
         Configuration<Properties> config2 = Configuration.<Properties>builder()
                 .namespace("test")
                 .precedence(100)
-                .source(new StringSource<>("myFileName=config2 \n myInt=2 \n myString=cust2"))
+                .source(new StringSource<>("myFileName=config2\n myLong=20000000200000002\n myString=cust2"))
                 .mapper(new PropertiesMapper()).build();
 
         Configuration<Properties> config3 = Configuration.<Properties>builder()
                 .namespace("test")
                 .precedence(101)
-                .source(new StringSource<>("myFileName=config3 \n"))
+                .source(new StringSource<>("myFileName=config3\n"))
                 .mapper(new PropertiesMapper()).build();
 
-        ConfigurationContainer config = new ConfigurationContainer(config1, config2, config3);
+        ConfigurationContainer container = new ConfigurationContainer(config1, config2, config3);
 
-        System.out.println(config.getStringProperty("test", "myFileName"));
-        System.out.println(config.getStringProperty("test", "myString"));
+        System.out.println(container.getStringProperty("test", "myFileName"));
+        System.out.println(container.getStringProperty("test", "myString"));
+        System.out.println(container.getLongProperty("test", "myLong"));
+        System.out.println(container.getLongProperty("test", "myLong2"));
 
+        System.out.println("*****");
+
+        Configuration<Properties> config4 = Configuration.<Properties>builder()
+                .namespace("test")
+                .precedence(102)
+                .source(new StringSource<>("myString=cust4\n"))
+                .mapper(new PropertiesMapper()).build();
+
+        container.add(config4);
+
+        System.out.println(container.getStringProperty("test", "myFileName"));
+        System.out.println(container.getStringProperty("test", "myString"));
+        System.out.println(container.getLongProperty("test", "myLong"));
+        System.out.println(container.getLongProperty("test", "myLong2"));
+
+        System.out.println("*****");
+
+        container.clear();
+
+        System.out.println(container.getStringProperty("test", "myFileName"));
+        System.out.println(container.getStringProperty("test", "myString"));
+        System.out.println(container.getLongProperty("test", "myLong"));
+        System.out.println(container.getLongProperty("test", "myLong2"));
     }
 }

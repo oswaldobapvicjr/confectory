@@ -1,6 +1,7 @@
 package net.obvj.confectory;
 
 import java.util.*;
+import java.util.function.*;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -14,9 +15,21 @@ import net.obvj.confectory.util.ConfigurationComparator;
  * data seamlessly, by namespace and key.
  * <p>
  * The {@code Configuration} objects are sorted by precedence (from highest to lowest).
- * So, in case of key collision, the object with the highest precedence will be selected.
+ * So, in case of key collision, the object with the highest precedence will be selected
+ * first. The container may still select other lower-precedence {@code Configuration}
+ * objects if a key is not found in the highest-precedence {@code Configuration}.
  * <p>
- * {@code Configuration} objects without a declared namespace can have their data queried
+ * To create a new empty container, use the default constructor
+ * {@code new ConfigurationContainer()}. To create a new container with preset
+ * {@code Configuration} objects, pass them as "var-args".
+ * <p>
+ * Use the {@code add(Configuration)} method at any time to register new objects inside
+ * the container.
+ * <p>
+ * To retrieve {@code Configuration} data, use any of the getter methods, specifying a
+ * namespace and key.
+ * <p>
+ * {@code Configuration} objects without a declared namespace can have their data fetched
  * using the single-argument getter methods.
  *
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
@@ -33,7 +46,7 @@ public class ConfigurationContainer
 
     /**
      * Builds a new {@code ConfigurationContainer} with an arbitrary number of preset
-     * {@code Configuration} objects to be registered,
+     * {@code Configuration} objects to be registered.
      *
      * @param configs an arbitrary number of {@code Configuration} objects (zero or more) to
      *                be registered at constructor time
@@ -56,85 +69,208 @@ public class ConfigurationContainer
 
     public ConfigurationContainer(NullValueProvider nullValueProvider, Configuration<?>... configs)
     {
-        this.nullValueProvider = ObjectUtils.defaultIfNull(nullValueProvider,
-                ConfectoryConfiguration.getInstance().getDefaultNullValueProvider());
+        setNullValueProvider(ObjectUtils.defaultIfNull(nullValueProvider,
+                ConfectoryConfiguration.getInstance().getDefaultNullValueProvider()));
 
         Arrays.stream(configs).forEach(this::add);
     }
 
+    /**
+     * Returns the {@code NullValueProvider} associated with this container.
+     *
+     * @return a {@link NullValueProvider} instance
+     */
+    public NullValueProvider getNullValueProvider()
+    {
+        return nullValueProvider;
+    }
+
+    /**
+     * Defines a custom {@code NullValueProvider}.
+     *
+     * @param provider the {@link NullValueProvider} to set; not null
+     * @throws NullPointerException if the specified {@code provider} is null
+     */
+    public void setNullValueProvider(NullValueProvider provider)
+    {
+        this.nullValueProvider = Objects.requireNonNull(provider, "null is not allowed");
+    }
+
+    /**
+     * Adds the specified {@code Configuration} to this container.
+     *
+     * @param configuration the {@link Configuration} to be added to the container
+     */
     public void add(Configuration<?> configuration)
     {
-        String namespace = safeNamespace(configuration.getNamespace());
+        String namespace = parseNamespace(configuration.getNamespace());
         List<Configuration<?>> configList = configMap.computeIfAbsent(namespace, k -> new ArrayList<>());
         configList.add(configuration);
         configList.sort(new ConfigurationComparator());
     }
 
+    /**
+     * Removes all of the {@code Configuration} objects from this container.
+     */
     public void clear()
     {
         configMap.clear();
     }
 
+    /**
+     * Returns the {@code boolean} value associated with the specified {@code key} in the
+     * default namespace.
+     *
+     * @param key the property key
+     * @return the {@code boolean} value associated with the specified {@code key}
+     */
     public boolean getBooleanProperty(String key)
     {
         return getBooleanProperty(DEFAULT_NAMESPACE, key);
     }
 
+    /**
+     * Returns the {@code boolean} value associated with the specified {@code key} in the
+     * specified {@code namespace}.
+     *
+     * @param namespace the namespace to be used
+     * @param key       the property key
+     * @return the {@code boolean} value associated with the specified {@code key}
+     */
     public boolean getBooleanProperty(String namespace, String key)
     {
-        // TODO Auto-generated method stub
-        return false;
+        return getProperty(namespace, config -> config.getBooleanProperty(key), NullValueProvider::getBooleanValue);
     }
 
+    /**
+     * Returns the {@code int} value associated with the specified {@code key} in the default
+     * namespace.
+     *
+     * @param key the property key
+     * @return the {@code int} value associated with the specified {@code key}
+     */
     public int getIntProperty(String key)
     {
         return getIntProperty(DEFAULT_NAMESPACE, key);
     }
 
+    /**
+     * Returns the {@code int} value associated with the specified {@code key} in the
+     * specified {@code namespace}.
+     *
+     * @param namespace the namespace to be used
+     * @param key       the property key
+     * @return the {@code int} value associated with the specified {@code key}
+     */
     public int getIntProperty(String namespace, String key)
     {
-        // TODO Auto-generated method stub
-        return 0;
+        return getProperty(namespace, config -> config.getIntProperty(key), NullValueProvider::getIntValue);
     }
 
+    /**
+     * Returns the {@code long} value associated with the specified {@code key} in the default
+     * namespace.
+     *
+     * @param key the property key
+     * @return the {@code long} value associated with the specified {@code key}
+     */
     public long getLongProperty(String key)
     {
         return getLongProperty(DEFAULT_NAMESPACE, key);
     }
 
+    /**
+     * Returns the {@code long} value associated with the specified {@code key} in the
+     * specified {@code namespace}.
+     *
+     * @param namespace the namespace to be used
+     * @param key       the property key
+     * @return the {@code long} value associated with the specified {@code key}
+     */
     public long getLongProperty(String namespace, String key)
     {
-        // TODO Auto-generated method stub
-        return 0;
+        return getProperty(namespace, config -> config.getLongProperty(key), NullValueProvider::getLongValue);
     }
 
+    /**
+     * Returns the {@code double} value associated with the specified {@code key} in the
+     * default namespace.
+     *
+     * @param key the property key
+     * @return the {@code double} value associated with the specified {@code key}
+     */
     public double getDoubleProperty(String key)
     {
         return getDoubleProperty(DEFAULT_NAMESPACE, key);
     }
 
+    /**
+     * Returns the {@code double} value associated with the specified {@code key} in the
+     * specified {@code namespace}.
+     *
+     * @param namespace the namespace to be used
+     * @param key       the property key
+     * @return the {@code double} value associated with the specified {@code key}
+     */
     public double getDoubleProperty(String namespace, String key)
     {
-        // TODO Auto-generated method stub
-        return 0;
+        return getProperty(namespace, config -> config.getDoubleProperty(key), NullValueProvider::getDoubleValue);
     }
 
+    /**
+     * Returns the {@code String} value associated with the specified {@code key} in the
+     * default namespace.
+     *
+     * @param key the property key
+     * @return the {@code String} value associated with the specified {@code key}
+     */
     public String getStringProperty(String key)
     {
         return getStringProperty(DEFAULT_NAMESPACE, key);
     }
 
+    /**
+     * Returns the {@code String} value associated with the specified {@code key} in the
+     * specified {@code namespace}.
+     *
+     * @param namespace the namespace to be used
+     * @param key       the property key
+     * @return the {@code String} value associated with the specified {@code key}
+     */
     public String getStringProperty(String namespace, String key)
     {
-        for (Configuration<?> config : getSafely(namespace))
+        return getProperty(namespace, config -> config.getStringProperty(key), NullValueProvider::getStringValue);
+    }
+
+    /**
+     * Template method for retrieving properties from the {@code configMap}.
+     *
+     * @param <T>               the property return type
+     * @param namespace         the namespace which property is to be fetched
+     * @param mainFunction      the main data fetch function; applies a particular method to
+     *                          the {@code Configuration} objects in process
+     * @param nullValueSupplier a null-value supplying function
+     *
+     * @return the value of the property evaluated by the {@code mainFunction}, or the one
+     *         specified by the {@code nullValueFunction} (on top of the instance-level
+     *         {@code nullValueProvider})
+     */
+    private <T> T getProperty(String namespace, Function<Configuration<?>, T> mainFunction,
+            Function<NullValueProvider, T> nullValueSupplier)
+    {
+        for (Configuration<?> config : getConfigurationList(namespace))
         {
-            String value = config.getStringProperty(key);
-            if (!config.getNullValueProvider().isNull(value))
+            T value = mainFunction.apply(config);
+
+            // We use the provider defined at Configuration level to test the value
+            T nullValue = nullValueSupplier.apply(config.getNullValueProvider());
+            if (!nullValue.equals(value))
             {
                 return value;
             }
         }
-        return nullValueProvider.getStringValue();
+        // We use the provider defined at container level to return a default value
+        return nullValueSupplier.apply(nullValueProvider);
     }
 
     /**
@@ -143,9 +279,9 @@ public class ConfigurationContainer
      * @param namespace the namespace to be searched
      * @return a list of {@link Configuration} objects or an empty list, never {@code null}
      */
-    private List<Configuration<?>> getSafely(String namespace)
+    private List<Configuration<?>> getConfigurationList(String namespace)
     {
-        return configMap.getOrDefault(safeNamespace(namespace), Collections.emptyList());
+        return configMap.getOrDefault(parseNamespace(namespace), Collections.emptyList());
     }
 
     /**
@@ -156,7 +292,7 @@ public class ConfigurationContainer
      * @return the passed namespace, or the value of {@code DEFAULT_NAMESPACE}, never
      *         {@code null}
      */
-    private String safeNamespace(String namespace)
+    private String parseNamespace(String namespace)
     {
         return StringUtils.defaultString(namespace, DEFAULT_NAMESPACE);
     }
