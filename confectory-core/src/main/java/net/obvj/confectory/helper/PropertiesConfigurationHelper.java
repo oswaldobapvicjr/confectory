@@ -1,5 +1,6 @@
 package net.obvj.confectory.helper;
 
+import java.util.Objects;
 import java.util.Properties;
 
 /**
@@ -24,6 +25,7 @@ public class PropertiesConfigurationHelper extends BasicConfigurationHelper<Prop
     @Override
     public String getStringProperty(String key)
     {
+        Objects.requireNonNull(key, "The key must not be null");
         String value = super.bean.getProperty(key);
         return value == null ? nullValueProvider.getStringValue() : value;
     }
