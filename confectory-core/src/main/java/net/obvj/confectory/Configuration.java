@@ -185,11 +185,8 @@ public final class Configuration<T> implements ConfigurationDataRetriever<T>, Co
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.JSON_STYLE)
-                .append("namespace", namespace)
-                .append("precedence", precedence)
-                .append("source", source)
-                .toString();
+        return new ToStringBuilder(this, ToStringStyle.JSON_STYLE).append("namespace", namespace)
+                .append("precedence", precedence).append("source", source).toString();
     }
 
 }

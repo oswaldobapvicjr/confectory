@@ -25,6 +25,14 @@ class ConfigurationContainerTest
     private static final String NAMESPACE1 = "namespace1";
     private static final String NAMESPACE2 = "namespace2";
 
+    private static final String KEY_TEST = "test";
+    private static final String KEY_BAD = "bad";
+    private static final String KEY_STRING = "string";
+    private static final String KEY_BOOLEAN = "boolean";
+    private static final String KEY_INT = "int";
+    private static final String KEY_LONG = "long";
+    private static final String KEY_DOUBLE = "double";
+
     private static final Configuration<Properties> CONF_NS1_PROPERTIES_1 = Configuration.<Properties>builder()
             .namespace(NAMESPACE1)
             .precedence(11)
@@ -43,7 +51,14 @@ class ConfigurationContainerTest
             .namespace(NAMESPACE2)
             .precedence(0)
             .mapper(new PropertiesMapper())
-            .source(new StringSource<>(join("test=ok")))
+            .source(new StringSource<>(join("test=ok21")))
+            .build();
+
+    // Configuration without namespace
+    private static final Configuration<Properties> CONF_PROPERTIES_1 = Configuration.<Properties>builder()
+            .precedence(0)
+            .mapper(new PropertiesMapper())
+            .source(new StringSource<>(join("test=ok01", "int=10", "double=10.1", "boolean=true", "long=1010")))
             .build();
 
     private static final NullValueProvider CUSTOM_NVP = new AbstractNullValueProvider()
@@ -143,38 +158,108 @@ class ConfigurationContainerTest
     }
 
     @Test
+    void getStringProperty_keyOnly_configurationWithoutNamespace()
+    {
+        container = new ConfigurationContainer(CONF_NS1_PROPERTIES_1, CONF_NS2_PROPERTIES_1, CONF_PROPERTIES_1);
+        assertThat(container.getStringProperty(KEY_TEST), equalTo("ok01")); // CONF_PROPERTIES1
+    }
+
+    @Test
     void getStringProperty_namespaceAndKey_highestPrecedenceConfiguration()
     {
         container = new ConfigurationContainer(CONF_NS1_PROPERTIES_1, CONF_NS1_PROPERTIES_2, CONF_NS2_PROPERTIES_1);
-        assertThat(container.getStringProperty(NAMESPACE1, "string"), equalTo("string2")); // CONF_NS1_PROPERTIES_2
+        assertThat(container.getStringProperty(NAMESPACE1, KEY_STRING), equalTo("string2")); // CONF_NS1_PROPERTIES_2
+    }
+
+    @Test
+    void getStringProperty_namespaceAndKey_defaultNullValueIfNotFound()
+    {
+        container = new ConfigurationContainer(CUSTOM_NVP);
+        assertThat(container.getStringProperty(NAMESPACE1, KEY_BAD), equalTo(CUSTOM_NVP.getStringValue())); // CUSTOM_NVP
+    }
+
+    @Test
+    void getIntProperty_keyOnly_configurationWithoutNamespace()
+    {
+        container = new ConfigurationContainer(CONF_NS1_PROPERTIES_1, CONF_NS2_PROPERTIES_1, CONF_PROPERTIES_1);
+        assertThat(container.getIntProperty(KEY_INT), equalTo(10)); // CONF_PROPERTIES1
     }
 
     @Test
     void getIntProperty_namespaceAndKey_highestPrecedenceConfiguration()
     {
         container = new ConfigurationContainer(CONF_NS1_PROPERTIES_1, CONF_NS1_PROPERTIES_2, CONF_NS2_PROPERTIES_1);
-        assertThat(container.getIntProperty(NAMESPACE1, "int"), equalTo(2)); // CONF_NS1_PROPERTIES_2
+        assertThat(container.getIntProperty(NAMESPACE1, KEY_INT), equalTo(2)); // CONF_NS1_PROPERTIES_2
+    }
+
+    @Test
+    void getIntProperty_namespaceAndKey_defaultNullValueIfNotFound()
+    {
+        container = new ConfigurationContainer(CUSTOM_NVP);
+        assertThat(container.getIntProperty(NAMESPACE1, KEY_BAD), equalTo(CUSTOM_NVP.getIntValue())); // CUSTOM_NVP
+    }
+
+    @Test
+    void getBooleanProperty_keyOnly_configurationWithoutNamespace()
+    {
+        container = new ConfigurationContainer(CONF_NS1_PROPERTIES_1, CONF_NS2_PROPERTIES_1, CONF_PROPERTIES_1);
+        assertThat(container.getBooleanProperty(KEY_BOOLEAN), equalTo(true)); // CONF_PROPERTIES1
     }
 
     @Test
     void getBooleanProperty_namespaceAndKey_highestPrecedenceConfiguration()
     {
         container = new ConfigurationContainer(CONF_NS1_PROPERTIES_1, CONF_NS1_PROPERTIES_2, CONF_NS2_PROPERTIES_1);
-        assertThat(container.getBooleanProperty(NAMESPACE1, "boolean"), equalTo(true)); // CONF_NS1_PROPERTIES_2
+        assertThat(container.getBooleanProperty(NAMESPACE1, KEY_BOOLEAN), equalTo(true)); // CONF_NS1_PROPERTIES_2
+    }
+
+    @Test
+    void getBooleanProperty_namespaceAndKey_defaultNullValueIfNotFound()
+    {
+        container = new ConfigurationContainer(CUSTOM_NVP);
+        assertThat(container.getBooleanProperty(NAMESPACE1, KEY_BAD), equalTo(CUSTOM_NVP.getBooleanValue())); // CUSTOM_NVP
+    }
+
+    @Test
+    void getDoubleProperty_keyOnly_configurationWithoutNamespace()
+    {
+        container = new ConfigurationContainer(CONF_NS1_PROPERTIES_1, CONF_NS2_PROPERTIES_1, CONF_PROPERTIES_1);
+        assertThat(container.getDoubleProperty(KEY_DOUBLE), equalTo(10.1)); // CONF_PROPERTIES1
     }
 
     @Test
     void getDoubleProperty_namespaceAndKey_highestPrecedenceConfiguration()
     {
         container = new ConfigurationContainer(CONF_NS1_PROPERTIES_1, CONF_NS1_PROPERTIES_2, CONF_NS2_PROPERTIES_1);
-        assertThat(container.getDoubleProperty(NAMESPACE1, "double"), equalTo(2.2)); // CONF_NS1_PROPERTIES_2
+        assertThat(container.getDoubleProperty(NAMESPACE1, KEY_DOUBLE), equalTo(2.2)); // CONF_NS1_PROPERTIES_2
+    }
+
+    @Test
+    void getDoubleProperty_namespaceAndKey_defaultNullValueIfNotFound()
+    {
+        container = new ConfigurationContainer(CUSTOM_NVP);
+        assertThat(container.getDoubleProperty(NAMESPACE1, KEY_BAD), equalTo(CUSTOM_NVP.getDoubleValue())); // CUSTOM_NVP
+    }
+
+    @Test
+    void getLongProperty_keyOnly_configurationWithoutNamespace()
+    {
+        container = new ConfigurationContainer(CONF_NS1_PROPERTIES_1, CONF_NS2_PROPERTIES_1, CONF_PROPERTIES_1);
+        assertThat(container.getLongProperty(KEY_LONG), equalTo(1010L)); // CONF_PROPERTIES1
     }
 
     @Test
     void getLongProperty_namespaceAndKey_highestPrecedenceConfiguration()
     {
         container = new ConfigurationContainer(CONF_NS1_PROPERTIES_1, CONF_NS1_PROPERTIES_2, CONF_NS2_PROPERTIES_1);
-        assertThat(container.getLongProperty(NAMESPACE1, "long"), equalTo(111L)); // CONF_NS1_PROPERTIES_1
+        assertThat(container.getLongProperty(NAMESPACE1, KEY_LONG), equalTo(111L)); // CONF_NS1_PROPERTIES_1
+    }
+
+    @Test
+    void getLongProperty_namespaceAndKey_defaultNullValueIfNotFound()
+    {
+        container = new ConfigurationContainer(CUSTOM_NVP);
+        assertThat(container.getLongProperty(NAMESPACE1, KEY_BAD), equalTo(CUSTOM_NVP.getLongValue())); // CUSTOM_NVP
     }
 
 }
