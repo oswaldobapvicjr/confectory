@@ -4,7 +4,6 @@ import java.util.Properties;
 
 import net.obvj.confectory.Configuration;
 import net.obvj.confectory.mapper.PropertiesMapper;
-import net.obvj.confectory.source.ClasspathFileSource;
 
 public class ConfectoryTestDriveClasspathProperties
 {
@@ -12,7 +11,7 @@ public class ConfectoryTestDriveClasspathProperties
     {
         Configuration<Properties> config = Configuration.<Properties>builder()
                 .namespace("test")
-                .source(new ClasspathFileSource<>("testfiles/my-props.properties"))
+                .source("testfiles/my-props.properties")
                 .mapper(new PropertiesMapper())
                 .build();
 

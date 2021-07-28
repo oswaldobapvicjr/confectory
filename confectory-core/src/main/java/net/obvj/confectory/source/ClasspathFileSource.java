@@ -51,7 +51,7 @@ public class ClasspathFileSource<T> extends AbstractSource<T> implements Source<
     }
 
     /**
-     * Gets the contents of the specified URL using default character encoding.
+     * Gets the contents of the specified URL.
      *
      * @param url    the URL to be loaded
      * @param mapper the {@link Mapper} to be applied on the file input stream
@@ -62,7 +62,8 @@ public class ClasspathFileSource<T> extends AbstractSource<T> implements Source<
         try (InputStream inputStream = url.openStream())
         {
             LOGGER.info("Loading file {} with mapper: <{}>", super.source, mapper.getClass().getSimpleName());
-            Stopwatch stopwatch = Stopwatch.createStarted();
+
+            Stopwatch stopwatch = Stopwatch.createStarted(Counter.Type.WALL_CLOCK_TIME);
             T mappedObject = mapper.apply(inputStream);
             stopwatch.stop();
             Duration elapsedTime = stopwatch.elapsedTime(Counter.Type.WALL_CLOCK_TIME);
