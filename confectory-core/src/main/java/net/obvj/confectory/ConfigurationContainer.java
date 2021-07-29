@@ -1,13 +1,13 @@
 package net.obvj.confectory;
 
 import java.util.*;
-import java.util.function.*;
+import java.util.function.Function;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import net.obvj.confectory.config.ConfectoryConfiguration;
 import net.obvj.confectory.helper.provider.NullValueProvider;
+import net.obvj.confectory.settings.ConfectorySettings;
 import net.obvj.confectory.util.ConfigurationComparator;
 
 /**
@@ -39,9 +39,10 @@ import net.obvj.confectory.util.ConfigurationComparator;
  */
 public class ConfigurationContainer
 {
-    private static final String DEFAULT_NAMESPACE = "";
+    protected static final String DEFAULT_NAMESPACE = "";
 
     private Map<String, List<Configuration<?>>> configMap = new HashMap<>();
+    private DataFetchStrategy dataFetchStrategy;
     private NullValueProvider nullValueProvider;
 
     /**
@@ -53,7 +54,22 @@ public class ConfigurationContainer
      */
     public ConfigurationContainer(Configuration<?>... configs)
     {
-        this(null, configs);
+        this(null, null, configs);
+    }
+
+    /**
+     * Builds a new {@code ConfigurationContainer} with a custom {@link DataFetchStrategy} and
+     * an arbitrary number of preset {@code Configuration} objects.
+     *
+     * @param dataFetchStrategy an optional {@link DataFetchStrategy} to be applied by this
+     *                          container; {@code null} is allowed and means the default
+     *                          strategy will be applied
+     * @param configs           an arbitrary number of {@code Configuration} objects (zero or
+     *                          more) to be registered at constructor time
+     */
+    public ConfigurationContainer(DataFetchStrategy dataFetchStrategy, Configuration<?>... configs)
+    {
+        this(dataFetchStrategy, null, configs);
     }
 
     /**
@@ -69,10 +85,52 @@ public class ConfigurationContainer
 
     public ConfigurationContainer(NullValueProvider nullValueProvider, Configuration<?>... configs)
     {
-        setNullValueProvider(ObjectUtils.defaultIfNull(nullValueProvider,
-                ConfectoryConfiguration.getInstance().getDefaultNullValueProvider()));
+        this(null, nullValueProvider, configs);
+    }
+
+    /**
+     * Builds a new {@code ConfigurationContainer} with custom {@link DataFetchStrategy} and
+     * {@link NullValueProvider} and an arbitrary number of preset {@code Configuration}
+     * objects.
+     *
+     * @param dataFetchStrategy an optional {@link DataFetchStrategy} to be applied by this
+     *                          container; {@code null} is allowed and means the default
+     *                          strategy will be applied
+     * @param nullValueProvider an optional {@link NullValueProvider} to be used when keys are
+     *                          not found; {@code null} is allowed and means the default
+     *                          provider will be applied
+     * @param configs           an arbitrary number of {@code Configuration} objects (zero or
+     *                          more) to be registered at constructor time
+     */
+    public ConfigurationContainer(DataFetchStrategy dataFetchStrategy, NullValueProvider nullValueProvider,
+            Configuration<?>... configs)
+    {
+        ConfectorySettings settings = ConfectorySettings.getInstance();
+        setDataFetchStrategy(ObjectUtils.defaultIfNull(dataFetchStrategy, settings.getDefaultDataFetchStrategy()));
+        setNullValueProvider(ObjectUtils.defaultIfNull(nullValueProvider, settings.getDefaultNullValueProvider()));
 
         Arrays.stream(configs).forEach(this::add);
+    }
+
+    /**
+     * Returns the {@code DataFetchStrategy} associated with this container.
+     *
+     * @return a {@link DataFetchStrategy}
+     */
+    public DataFetchStrategy getDataFetchStrategy()
+    {
+        return dataFetchStrategy;
+    }
+
+    /**
+     * Defines a custom {@code DataFetchStrategy} for this container.
+     *
+     * @param strategy the {@link DataFetchStrategy} to set; not null
+     * @throws NullPointerException if the specified {@code strategy} is null
+     */
+    public void setDataFetchStrategy(DataFetchStrategy strategy)
+    {
+        dataFetchStrategy = Objects.requireNonNull(strategy, "the DataFetchStrategy must not be null");
     }
 
     /**
@@ -86,14 +144,14 @@ public class ConfigurationContainer
     }
 
     /**
-     * Defines a custom {@code NullValueProvider}.
+     * Defines a custom {@code NullValueProvider} for this container.
      *
      * @param provider the {@link NullValueProvider} to set; not null
      * @throws NullPointerException if the specified {@code provider} is null
      */
     public void setNullValueProvider(NullValueProvider provider)
     {
-        this.nullValueProvider = Objects.requireNonNull(provider, "null is not allowed");
+        nullValueProvider = Objects.requireNonNull(provider, "null is not allowed");
     }
 
     /**
@@ -281,7 +339,7 @@ public class ConfigurationContainer
      */
     private List<Configuration<?>> getConfigurationList(String namespace)
     {
-        return configMap.getOrDefault(parseNamespace(namespace), Collections.emptyList());
+        return dataFetchStrategy.getConfigurationList(namespace, configMap);
     }
 
     /**

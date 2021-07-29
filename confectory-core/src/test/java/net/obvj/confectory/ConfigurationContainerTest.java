@@ -8,10 +8,10 @@ import java.util.Properties;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 
-import net.obvj.confectory.config.ConfectoryConfiguration;
 import net.obvj.confectory.helper.provider.AbstractNullValueProvider;
 import net.obvj.confectory.helper.provider.NullValueProvider;
 import net.obvj.confectory.mapper.PropertiesMapper;
+import net.obvj.confectory.settings.ConfectorySettings;
 import net.obvj.confectory.source.StringSource;
 
 /**
@@ -107,7 +107,7 @@ class ConfigurationContainerTest
         container = new ConfigurationContainer();
         assertThat(container.getNamespaces().size(), equalTo(0));
         assertThat(container.getNullValueProvider(),
-                equalTo(ConfectoryConfiguration.getInstance().getDefaultNullValueProvider()));
+                equalTo(ConfectorySettings.getInstance().getDefaultNullValueProvider()));
     }
 
     @Test
@@ -125,7 +125,7 @@ class ConfigurationContainerTest
         assertThat(container.getNamespaces().size(), equalTo(1));
         assertThat(container.size(NAMESPACE1), equalTo(1));
         assertThat(container.getNullValueProvider(),
-                equalTo(ConfectoryConfiguration.getInstance().getDefaultNullValueProvider()));
+                equalTo(ConfectorySettings.getInstance().getDefaultNullValueProvider()));
     }
 
     @Test
@@ -135,7 +135,7 @@ class ConfigurationContainerTest
         assertThat(container.getNamespaces().size(), equalTo(1));
         assertThat(container.size(NAMESPACE1), equalTo(2));
         assertThat(container.getNullValueProvider(),
-                equalTo(ConfectoryConfiguration.getInstance().getDefaultNullValueProvider()));
+                equalTo(ConfectorySettings.getInstance().getDefaultNullValueProvider()));
     }
 
     @Test
