@@ -30,7 +30,7 @@ public enum DataFetchStrategy
     STRICT
     {
         @Override
-        public List<Configuration<?>> getConfigurationList(String namespace,
+        protected List<Configuration<?>> getConfigurationList(String namespace,
                 Map<String, List<Configuration<?>>> configMap)
         {
             return configMap.getOrDefault(parseNamespace(namespace), Collections.emptyList());
@@ -44,7 +44,7 @@ public enum DataFetchStrategy
     LENIENT
     {
         @Override
-        public List<Configuration<?>> getConfigurationList(String namespace,
+        protected List<Configuration<?>> getConfigurationList(String namespace,
                 Map<String, List<Configuration<?>>> configMap)
         {
             if (StringUtils.isEmpty(namespace))
@@ -68,7 +68,7 @@ public enum DataFetchStrategy
      * @return a list of {@link Configuration} objects according to the selected strategy,
      *         never {@code null}
      */
-    public abstract List<Configuration<?>> getConfigurationList(String namespace,
+    protected abstract List<Configuration<?>> getConfigurationList(String namespace,
             Map<String, List<Configuration<?>>> configMap);
 
     /**
