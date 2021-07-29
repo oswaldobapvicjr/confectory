@@ -42,6 +42,18 @@ public class SourceFactory
     }
 
     /**
+     * Creates a new {@link DynamicSource}.
+     *
+     * @param <T>  the target return type
+     * @param path the path to the dynamic resource
+     * @return a {@link DynamicSource}
+     */
+    public static <T> Source<T> dynamicSource(String path)
+    {
+        return new DynamicSource<>(path);
+    }
+
+    /**
      * Creates a new {@link StringSource} for loading contents of a {@code String}.
      *
      * @param <T>    the target return type

@@ -8,8 +8,8 @@ import org.apache.commons.lang3.StringUtils;
 import net.obvj.confectory.config.ConfectoryConfiguration;
 import net.obvj.confectory.helper.provider.NullValueProvider;
 import net.obvj.confectory.mapper.Mapper;
-import net.obvj.confectory.source.DynamicSource;
 import net.obvj.confectory.source.Source;
+import net.obvj.confectory.source.SourceFactory;
 
 /**
  * A mutable object that supports the creation of immutable {@link Configuration} objects.
@@ -129,7 +129,7 @@ public class ConfigurationBuilder<T> implements ConfigurationMetadataRetriever<T
      */
     public ConfigurationBuilder<T> source(String path)
     {
-        this.source = new DynamicSource<>(path);
+        this.source = SourceFactory.dynamicSource(path);
         return this;
     }
 

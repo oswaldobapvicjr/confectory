@@ -1,5 +1,6 @@
 package net.obvj.confectory;
 
+import static net.obvj.junit.utils.matchers.AdvancedMatchers.containsAll;
 import static net.obvj.junit.utils.matchers.AdvancedMatchers.throwsException;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -18,6 +19,7 @@ import net.obvj.confectory.helper.provider.NullValueProvider;
 import net.obvj.confectory.helper.provider.StandardNullValueProvider;
 import net.obvj.confectory.mapper.Mapper;
 import net.obvj.confectory.source.AbstractSource;
+import net.obvj.confectory.source.DynamicSource;
 import net.obvj.confectory.source.Source;
 
 /**
@@ -142,5 +144,14 @@ class ConfigurationBuilderTest
         when(configuration.isOptional()).thenReturn(true);
         ConfigurationBuilder<Object> builder = new ConfigurationBuilder<>(configuration).required();
         assertFalse(builder.isOptional());
+    }
+
+    @Test
+    void source_string_dynamicSource()
+    {
+        ConfigurationBuilder<Object> builder = new ConfigurationBuilder<>().source("path1");
+        Source<Object> source = builder.getSource();
+        assertThat(source.getClass(), equalTo(DynamicSource.class));
+        assertThat(source.toString(), containsAll("DynamicSource", "path1"));
     }
 }
