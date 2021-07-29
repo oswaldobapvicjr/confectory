@@ -42,7 +42,7 @@ public class ClasspathFileSource<T> extends AbstractSource<T> implements Source<
         URL url = ClasspathFileSource.class.getClassLoader().getResource(super.source);
         if (url == null)
         {
-            String message = String.format("File not found: %s", super.source);
+            String message = String.format("Classpath file not found: %s", super.source);
             LOGGER.warn(message);
             throw new ConfigurationSourceException(message);
         }
@@ -51,7 +51,7 @@ public class ClasspathFileSource<T> extends AbstractSource<T> implements Source<
     }
 
     /**
-     * Gets the contents of the specified URL using default character encoding.
+     * Gets the contents of the specified URL.
      *
      * @param url    the URL to be loaded
      * @param mapper the {@link Mapper} to be applied on the file input stream
@@ -61,8 +61,9 @@ public class ClasspathFileSource<T> extends AbstractSource<T> implements Source<
     {
         try (InputStream inputStream = url.openStream())
         {
-            LOGGER.info("Loading file {} with mapper: <{}>", super.source, mapper.getClass().getSimpleName());
-            Stopwatch stopwatch = Stopwatch.createStarted();
+            LOGGER.debug("Loading file {} with mapper: <{}>", super.source, mapper.getClass().getSimpleName());
+
+            Stopwatch stopwatch = Stopwatch.createStarted(Counter.Type.WALL_CLOCK_TIME);
             T mappedObject = mapper.apply(inputStream);
             stopwatch.stop();
             Duration elapsedTime = stopwatch.elapsedTime(Counter.Type.WALL_CLOCK_TIME);

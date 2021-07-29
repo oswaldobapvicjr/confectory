@@ -56,8 +56,9 @@ public class FileSource<T> extends AbstractSource<T> implements Source<T>
     @Override
     protected T load(InputStream inputStream, Mapper<T> mapper) throws IOException
     {
-        LOGGER.info("Loading file {} with mapper: <{}>", super.source, mapper.getClass().getSimpleName());
-        Stopwatch stopwatch = Stopwatch.createStarted();
+        LOGGER.debug("Loading file {} with mapper: <{}>", super.source, mapper.getClass().getSimpleName());
+
+        Stopwatch stopwatch = Stopwatch.createStarted(Counter.Type.WALL_CLOCK_TIME);
         T mappedObject = mapper.apply(inputStream);
         stopwatch.stop();
         Duration elapsedTime = stopwatch.elapsedTime(Counter.Type.WALL_CLOCK_TIME);
