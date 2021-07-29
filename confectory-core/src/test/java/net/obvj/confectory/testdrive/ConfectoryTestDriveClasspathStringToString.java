@@ -3,7 +3,7 @@ package net.obvj.confectory.testdrive;
 import net.obvj.confectory.Configuration;
 import net.obvj.confectory.ConfigurationBuilder;
 import net.obvj.confectory.mapper.StringMapper;
-import net.obvj.confectory.source.StringSource;
+import net.obvj.confectory.source.SourceFactory;
 
 public class ConfectoryTestDriveClasspathStringToString
 {
@@ -11,7 +11,7 @@ public class ConfectoryTestDriveClasspathStringToString
     {
         Configuration<String> config = new ConfigurationBuilder<String>()
                 .namespace("test")
-                .source(new StringSource<>("teststring"))
+                .source(SourceFactory.stringSource("teststring"))
                 .mapper(new StringMapper())
                 .build();
 

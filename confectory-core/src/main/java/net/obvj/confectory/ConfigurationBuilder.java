@@ -5,9 +5,9 @@ import java.util.Objects;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import net.obvj.confectory.config.ConfectoryConfiguration;
 import net.obvj.confectory.helper.provider.NullValueProvider;
 import net.obvj.confectory.mapper.Mapper;
+import net.obvj.confectory.settings.ConfectorySettings;
 import net.obvj.confectory.source.DynamicSource;
 import net.obvj.confectory.source.Source;
 import net.obvj.confectory.source.SourceFactory;
@@ -204,7 +204,7 @@ public class ConfigurationBuilder<T> implements ConfigurationMetadataRetriever<T
         namespace = StringUtils.defaultString(namespace);
 
         nullValueProvider = ObjectUtils.defaultIfNull(nullValueProvider,
-                ConfectoryConfiguration.getInstance().getDefaultNullValueProvider());
+                ConfectorySettings.getInstance().getDefaultNullValueProvider());
 
         return new Configuration<>(this);
     }
