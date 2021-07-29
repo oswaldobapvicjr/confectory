@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import net.obvj.confectory.ConfigurationSourceException;
 import net.obvj.confectory.mapper.Mapper;
 
 /**
@@ -16,8 +17,6 @@ import net.obvj.confectory.mapper.Mapper;
  * {@link FileSource}</li>
  * <li>A path starting with {@code "classpath://"} will be loaded by the
  * {@link ClasspathFileSource}</li>
- * <li>If unable to determine the source, the {@link ClasspathFileSource} will be used as
- * a fallback</li>
  * </ul>
  * <p>
  * For example:
@@ -31,12 +30,19 @@ import net.obvj.confectory.mapper.Mapper;
  * <li>The following instruction creates a dynamic {@code Source} that loads a file
  * resource from the Java classpath:
  *
- * <blockquote><pre>new DynamicSource("classpath://my-file.properties")}</pre></blockquote>
+ * <blockquote><pre>new DynamicSource("classpath://my-file.properties")</pre></blockquote>
  * </li>
  * </ul>
+ * <p>
+ * If unable to determine the source by prefix, the system will do best efforts
+ * to load the object by applying different {@link Source} implementations.
+ * </p>
  *
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 0.1.0
+ *
+ * @see FileSource
+ * @see ClasspathFileSource
  */
 public class DynamicSource<T> extends AbstractSource<T> implements Source<T>
 {
@@ -59,28 +65,55 @@ public class DynamicSource<T> extends AbstractSource<T> implements Source<T>
     public T load(Mapper<T> mapper)
     {
         LOGGER.info("Searching path: {}", super.source);
-        Source<T> source = resolveSource();
-        return source.load(mapper);
+        Source<T> source = resolveSource(super.source);
+        return source != null ? source.load(mapper) : trySources(mapper);
     }
 
-    private Source<T> resolveSource()
+    /**
+     * Try to determine the {@link Source} implementation based on the path contents.
+     *
+     * @param path the path to be checked
+     * @return the {@link Source} to be applied; or {@code null} if unable to be determined
+     */
+    protected static <T> Source<T> resolveSource(String path)
     {
-        if (super.source.startsWith(FILE_PREFIX))
+        if (path.startsWith(CLASSPATH_PREFIX))
         {
-            String path = extractPath(super.source, FILE_PREFIX);
-            return new FileSource<>(path);
+            String pathPart = extractPath(path, CLASSPATH_PREFIX);
+            return SourceFactory.classpathFileSource(pathPart);
         }
-        if (super.source.startsWith(CLASSPATH_PREFIX))
+        if (path.startsWith(FILE_PREFIX))
         {
-            String path = extractPath(super.source, CLASSPATH_PREFIX);
-            return new ClasspathFileSource<>(path);
+            String pathPart = extractPath(path, FILE_PREFIX);
+            return SourceFactory.fileSource(pathPart);
         }
-        return new ClasspathFileSource<>(super.source);
+        return null;
     }
 
-    private String extractPath(String source, String prefix)
+    private static String extractPath(String source, String prefix)
     {
         return StringUtils.substringAfter(source, prefix);
+    }
+
+    /**
+     * Try different sources (best effort in case the {@link Source} can not be determined).
+     *
+     * @param mapper the {@link Mapper} to be applied
+     * @return the mapped object
+     * @throws ConfigurationSourceException if unable to load
+     */
+    private T trySources(Mapper<T> mapper)
+    {
+        LOGGER.debug("Trying to load as ClasspathFileSource...");
+        try
+        {
+            return SourceFactory.<T>classpathFileSource(super.source).load(mapper);
+        }
+        catch (ConfigurationSourceException exception)
+        {
+            LOGGER.debug("Failed to load ClasspathFileSource. Trying as FileSource...");
+            return SourceFactory.<T>fileSource(super.source).load(mapper);
+        }
     }
 
 }
