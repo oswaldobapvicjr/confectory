@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 
+import net.obvj.confectory.util.ConfigurationComparator;
+
 /**
  * Enumerates the supported data-fetch strategies for use with a
  * {@code ConfigurationContainer}.
@@ -47,8 +49,11 @@ public enum DataFetchStrategy
         {
             if (StringUtils.isEmpty(namespace))
             {
-                // Flatten the configuration list
-                return configMap.values().stream().flatMap(Collection::stream).collect(Collectors.toList());
+                // Flatten and re-order the configuration list
+                return configMap.values().stream()
+                        .flatMap(Collection::stream)
+                        .sorted(new ConfigurationComparator())
+                        .collect(Collectors.toList());
             }
             return STRICT.getConfigurationList(namespace, configMap);
         }

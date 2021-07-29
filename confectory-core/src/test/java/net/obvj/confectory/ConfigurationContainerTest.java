@@ -7,6 +7,9 @@ import java.util.Properties;
 
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import net.obvj.confectory.helper.provider.AbstractNullValueProvider;
 import net.obvj.confectory.helper.provider.NullValueProvider;
@@ -49,7 +52,7 @@ class ConfigurationContainerTest
 
     private static final Configuration<Properties> CONF_NS2_PROPERTIES_1 = Configuration.<Properties>builder()
             .namespace(NAMESPACE2)
-            .precedence(0)
+            .precedence(1)
             .mapper(new PropertiesMapper())
             .source(new StringSource<>(join("test=ok21")))
             .build();
@@ -101,13 +104,25 @@ class ConfigurationContainerTest
         return StringUtils.join(lines, "\n");
     }
 
+    private void assertDefaultNullValueProvider()
+    {
+        assertThat(container.getNullValueProvider(),
+                equalTo(ConfectorySettings.getInstance().getDefaultNullValueProvider()));
+    }
+
+    private void assertDefaultDataFetchStrategy()
+    {
+        assertThat(container.getDataFetchStrategy(),
+                equalTo(ConfectorySettings.getInstance().getDefaultDataFetchStrategy()));
+    }
+
     @Test
     void constructor_empty_default()
     {
         container = new ConfigurationContainer();
         assertThat(container.getNamespaces().size(), equalTo(0));
-        assertThat(container.getNullValueProvider(),
-                equalTo(ConfectorySettings.getInstance().getDefaultNullValueProvider()));
+        assertDefaultNullValueProvider();
+        assertDefaultDataFetchStrategy();
     }
 
     @Test
@@ -116,6 +131,17 @@ class ConfigurationContainerTest
         container = new ConfigurationContainer(CUSTOM_NVP);
         assertThat(container.getNamespaces().size(), equalTo(0));
         assertThat(container.getNullValueProvider(), equalTo(CUSTOM_NVP));
+        assertDefaultDataFetchStrategy();
+    }
+
+    @Test
+    void constructor_customDataFetchStrategy_default()
+    {
+        DataFetchStrategy dataFetchStrategy = Mockito.mock(DataFetchStrategy.class);
+        container = new ConfigurationContainer(dataFetchStrategy);
+        assertThat(container.getNamespaces().size(), equalTo(0));
+        assertDefaultNullValueProvider();
+        assertThat(container.getDataFetchStrategy(), equalTo(dataFetchStrategy));
     }
 
     @Test
@@ -124,8 +150,8 @@ class ConfigurationContainerTest
         container = new ConfigurationContainer(CONF_NS1_PROPERTIES_1);
         assertThat(container.getNamespaces().size(), equalTo(1));
         assertThat(container.size(NAMESPACE1), equalTo(1));
-        assertThat(container.getNullValueProvider(),
-                equalTo(ConfectorySettings.getInstance().getDefaultNullValueProvider()));
+        assertDefaultNullValueProvider();
+        assertDefaultDataFetchStrategy();
     }
 
     @Test
@@ -134,8 +160,8 @@ class ConfigurationContainerTest
         container = new ConfigurationContainer(CONF_NS1_PROPERTIES_1, CONF_NS1_PROPERTIES_2);
         assertThat(container.getNamespaces().size(), equalTo(1));
         assertThat(container.size(NAMESPACE1), equalTo(2));
-        assertThat(container.getNullValueProvider(),
-                equalTo(ConfectorySettings.getInstance().getDefaultNullValueProvider()));
+        assertDefaultNullValueProvider();
+        assertDefaultDataFetchStrategy();
     }
 
     @Test
@@ -158,18 +184,35 @@ class ConfigurationContainerTest
     }
 
     @Test
-    void getStringProperty_keyOnly_configurationWithoutNamespace()
+    void getStringProperty_keyOnlyAndStrict_configurationWithoutNamespace()
     {
         container = new ConfigurationContainer(CONF_NS1_PROPERTIES_1, CONF_NS2_PROPERTIES_1, CONF_PROPERTIES_1);
-        assertThat(container.getStringProperty(KEY_TEST), equalTo("ok01")); // CONF_PROPERTIES1
+        assertThat(container.getStringProperty(KEY_TEST), equalTo("ok01")); // CONF_PROPERTIES1 (strict)
+        assertThat(container.getStringProperty(KEY_STRING), equalTo("")); // not found (strict)
     }
 
     @Test
-    void getStringProperty_namespaceAndKey_highestPrecedenceConfiguration()
+    void getStringProperty_keyOnlyAndLenient_configurationWithoutNamespace()
+    {
+        container = new ConfigurationContainer(DataFetchStrategy.LENIENT, CONF_NS1_PROPERTIES_1, CONF_NS1_PROPERTIES_2, CONF_NS2_PROPERTIES_1, CONF_PROPERTIES_1);
+        assertThat(container.getStringProperty(KEY_TEST), equalTo("ok21")); // CONF_NS2_PROPERTIES_1 (lenient)
+        assertThat(container.getStringProperty(KEY_STRING), equalTo("string2")); // CONF_NS1_PROPERTIES_2 (lenient)
+    }
+
+    @Test
+    void getStringProperty_namespaceAndKeyStrict_highestPrecedenceConfiguration()
     {
         container = new ConfigurationContainer(CONF_NS1_PROPERTIES_1, CONF_NS1_PROPERTIES_2, CONF_NS2_PROPERTIES_1);
         assertThat(container.getStringProperty(NAMESPACE1, KEY_STRING), equalTo("string2")); // CONF_NS1_PROPERTIES_2
     }
+
+    @Test
+    void getStringProperty_namespaceAndKeyLenient_sameAsStrict()
+    {
+        container = new ConfigurationContainer(DataFetchStrategy.LENIENT, CONF_NS1_PROPERTIES_1, CONF_NS1_PROPERTIES_2, CONF_NS2_PROPERTIES_1);
+        assertThat(container.getStringProperty(NAMESPACE1, KEY_STRING), equalTo("string2")); // CONF_NS1_PROPERTIES_2
+    }
+
 
     @Test
     void getStringProperty_namespaceAndKey_defaultNullValueIfNotFound()
