@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import net.obvj.confectory.config.ConfectoryConfiguration;
 import net.obvj.confectory.helper.provider.NullValueProvider;
 import net.obvj.confectory.mapper.Mapper;
+import net.obvj.confectory.source.DynamicSource;
 import net.obvj.confectory.source.Source;
 import net.obvj.confectory.source.SourceFactory;
 
