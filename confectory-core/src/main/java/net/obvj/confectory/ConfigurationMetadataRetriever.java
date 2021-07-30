@@ -6,7 +6,7 @@ import net.obvj.confectory.source.Source;
 
 /**
  * A base interface for objects that retrieve configuration metadata, such as
- * Configuration {@code Source}, {@code Mapper}, and other attributes.
+ * {@code Source}, {@code Mapper}, and other attributes.
  *
  * @param <T> the target configuration data type
  *
@@ -25,6 +25,9 @@ public interface ConfigurationMetadataRetriever<T>
 
     /**
      * Returns the precedence value defined for this {@code Configuration} object.
+     * <p>
+     * In a common container, objects with higher-precedence may be selected first in case of
+     * key collision.
      *
      * @return an integer number representing the order of importance given to this
      *         {@code Configuration}
@@ -32,21 +35,24 @@ public interface ConfigurationMetadataRetriever<T>
     int getPrecedence();
 
     /**
-     * Returns the {@code Source} associated with this {@code Configuration} object.
+     * Returns the {@code Source} object associated with this {@code Configuration}.
      *
      * @return a {@link Source} instance
      */
     Source<T> getSource();
 
     /**
-     * Returns the {@code Mapper} associated with this {@code Configuration} object.
+     * Returns the {@code Mapper} object associated with this {@code Configuration}.
      *
      * @return a {@link Mapper} instance
      */
     Mapper<T> getMapper();
 
     /**
-     * Returns a flag indicating whether this {@code Configuration} setup is optional.
+     * Returns a flag indicating whether this {@code Configuration} is optional.
+     * <p>
+     * An optional {@code Configuration} object may behave quietly in the event of a failure
+     * to load the data.
      *
      * @return {@code true} if this {@code Configuration} setup is optional; {@code false},
      *         otherwise

@@ -29,13 +29,22 @@ import net.obvj.confectory.util.ConfigurationComparator;
  * To retrieve {@code Configuration} data, use any of the getter methods, specifying a
  * namespace and key.
  * <p>
- * {@code Configuration} objects without a declared namespace can have their data fetched
- * using the single-argument getter methods.
+ * Single-argument getter methods can be used to retrieve data from {@code Configuration}
+ * objects that do not have a declared namespace. These methods may also retrieve data
+ * from all {@code Configuration} objects if the selected data-fetch strategy is
+ * {@code LENIENT}.
+ * <p>
+ * Each container may have a custom {@link DataFetchStrategy} and
+ * {@link NullValueProvider}. Both objects may be specified at container construction time
+ * and modified using the setter methods at anytime. If not specified, the container uses
+ * the default objects configured via {@link ConfectorySettings}.
+ * <p>
  *
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 0.1.0
  *
  * @see Configuration
+ * @see DataFetchStrategy
  */
 public class ConfigurationContainer
 {
