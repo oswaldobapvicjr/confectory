@@ -12,7 +12,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import net.obvj.confectory.DataFetchStrategy;
-import net.obvj.confectory.helper.provider.NullValueProvider;
+import net.obvj.confectory.helper.nullvalue.NullValueProvider;
 
 /**
  * Unit tests for the {@link ConfectorySettings}.

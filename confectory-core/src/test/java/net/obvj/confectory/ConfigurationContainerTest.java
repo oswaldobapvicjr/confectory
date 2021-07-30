@@ -9,8 +9,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import net.obvj.confectory.helper.provider.AbstractNullValueProvider;
-import net.obvj.confectory.helper.provider.NullValueProvider;
+import net.obvj.confectory.helper.nullvalue.AbstractNullValueProvider;
+import net.obvj.confectory.helper.nullvalue.NullValueProvider;
 import net.obvj.confectory.mapper.PropertiesMapper;
 import net.obvj.confectory.settings.ConfectorySettings;
 import net.obvj.confectory.source.StringSource;

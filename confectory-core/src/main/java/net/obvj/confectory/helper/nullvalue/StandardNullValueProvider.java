@@ -1,4 +1,4 @@
-package net.obvj.confectory.helper.provider;
+package net.obvj.confectory.helper.nullvalue;
 
 /**
  * An object that provides "smart-nulls" for Java types (specially primitive ones) when a

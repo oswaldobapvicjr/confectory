@@ -5,7 +5,7 @@ import java.util.Objects;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import net.obvj.confectory.helper.provider.NullValueProvider;
+import net.obvj.confectory.helper.nullvalue.NullValueProvider;
 import net.obvj.confectory.mapper.Mapper;
 import net.obvj.confectory.settings.ConfectorySettings;
 import net.obvj.confectory.source.DynamicSource;

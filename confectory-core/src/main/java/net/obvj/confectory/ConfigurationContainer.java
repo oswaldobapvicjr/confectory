@@ -6,7 +6,7 @@ import java.util.function.Function;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import net.obvj.confectory.helper.provider.NullValueProvider;
+import net.obvj.confectory.helper.nullvalue.NullValueProvider;
 import net.obvj.confectory.settings.ConfectorySettings;
 import net.obvj.confectory.util.ConfigurationComparator;
 

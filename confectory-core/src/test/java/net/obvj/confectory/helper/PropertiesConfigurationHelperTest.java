@@ -11,8 +11,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import net.obvj.confectory.helper.provider.AbstractNullValueProvider;
-import net.obvj.confectory.helper.provider.NullValueProvider;
+import net.obvj.confectory.helper.nullvalue.AbstractNullValueProvider;
+import net.obvj.confectory.helper.nullvalue.NullValueProvider;
 
 /**
  * Unit tests for the {@link PropertiesConfigurationHelper}.
