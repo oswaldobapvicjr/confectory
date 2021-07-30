@@ -15,7 +15,7 @@ import net.obvj.confectory.source.Source;
  * An immutable object that contains configuration data from a specific source, as well as
  * related metadata.
  * <p>
- * A {@code Configuration} may also be defined as the union of a configuration
+ * A {@code Configuration} may also be defined as a combination a configuration
  * {@link Source} and a configuration {@link Mapper}, producing either a properties list,
  * a JSON object, or a user-defined bean.
  * <p>

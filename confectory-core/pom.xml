@@ -5,14 +5,14 @@
 
     <parent>
         <groupId>net.obvj</groupId>
-        <artifactId>confectory-base</artifactId>
+        <artifactId>confectory</artifactId>
         <version>0.1.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>confectory-core</artifactId>
-    <name>Confectory core</name>
+    <name>Confectory Core</name>
     <description>
-        Core part of Confectory that defines the base API and provides basic funcionality using standard Java features
+        Core part of Confectory that defines the base API and provides basic functionality using standard Java features
     </description>
 
     <dependencies>
