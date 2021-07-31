@@ -64,8 +64,8 @@ public class DynamicSource<T> extends AbstractSource<T> implements Source<T>
     @Override
     public T load(Mapper<T> mapper)
     {
-        LOGGER.info("Searching path: {}", super.source);
-        Source<T> source = resolveSource(super.source);
+        LOGGER.info("Searching path: {}", super.parameter);
+        Source<T> source = resolveSource(super.parameter);
         return source != null ? source.load(mapper) : trySources(mapper);
     }
 
@@ -107,12 +107,12 @@ public class DynamicSource<T> extends AbstractSource<T> implements Source<T>
         LOGGER.debug("Trying to load as ClasspathFileSource...");
         try
         {
-            return SourceFactory.<T>classpathFileSource(super.source).load(mapper);
+            return SourceFactory.<T>classpathFileSource(super.parameter).load(mapper);
         }
         catch (ConfigurationSourceException exception)
         {
             LOGGER.debug("Failed to load ClasspathFileSource. Trying as FileSource...");
-            return SourceFactory.<T>fileSource(super.source).load(mapper);
+            return SourceFactory.<T>fileSource(super.parameter).load(mapper);
         }
     }
 

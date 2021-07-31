@@ -31,12 +31,12 @@ public class StringSource<T> extends AbstractSource<T> implements Source<T>
     {
         try
         {
-            InputStream inputStream = new ByteArrayInputStream(super.source.getBytes());
+            InputStream inputStream = new ByteArrayInputStream(super.parameter.getBytes());
             return load(inputStream, mapper);
         }
         catch (IOException exception)
         {
-            throw new ConfigurationSourceException(exception, "Unable to load string: \"%s\"", super.source);
+            throw new ConfigurationSourceException(exception, "Unable to load string: \"%s\"", super.parameter);
         }
     }
 

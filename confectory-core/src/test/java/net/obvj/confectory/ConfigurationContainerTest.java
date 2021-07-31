@@ -303,4 +303,17 @@ class ConfigurationContainerTest
         assertThat(container.getLongProperty(NAMESPACE1, KEY_BAD), equalTo(CUSTOM_NVP.getLongValue())); // CUSTOM_NVP
     }
 
+    @Test
+    void addAll_null_noExceptionAndNoAction()
+    {
+        ConfigurationContainer source = new ConfigurationContainer(CONF_NS1_PROPERTIES_1, CONF_NS1_PROPERTIES_2,
+                CONF_NS2_PROPERTIES_1);
+
+        container = new ConfigurationContainer();
+        container.addAll(source);
+
+        assertThat(container.size(NAMESPACE1), equalTo(2));
+        assertThat(container.size(NAMESPACE2), equalTo(1));
+    }
+
 }

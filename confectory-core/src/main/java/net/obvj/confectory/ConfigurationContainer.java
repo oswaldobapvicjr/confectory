@@ -177,6 +177,21 @@ public class ConfigurationContainer
     }
 
     /**
+     * Copies all of the {@code Configuration} objects from another container to this
+     * container.
+     *
+     * @param source the source container which {@code Configuration} objects are to be stored
+     *               in this container; {@code null} is allowed
+     */
+    public void addAll(ConfigurationContainer source)
+    {
+        if (source != null)
+        {
+            source.configMap.values().stream().flatMap(Collection::stream).forEach(this::add);
+        }
+    }
+
+    /**
      * Removes all of the {@code Configuration} objects from this container.
      */
     public void clear()
