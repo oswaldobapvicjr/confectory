@@ -30,8 +30,10 @@ import net.obvj.confectory.mapper.StringMapper;
 class FileSourceTest
 {
     private static final String FILE_NOT_FOUND_PATH = "notfound.properties";
+    private static final String FILE_FILE1_TXT = "src/test/resources/testfiles/file1.txt";
 
     private static final FileSource<String> TEST_SOURCE_FILE_NOT_FOUND = new FileSource<>(FILE_NOT_FOUND_PATH);
+    private static final FileSource<String> TEST_SOURCE_FILE_FILE1_TXT = new FileSource<>(FILE_FILE1_TXT);
 
     private static final StringMapper STRING_MAPPER = new StringMapper();
 
@@ -55,6 +57,12 @@ class FileSourceTest
     void load_fileNotFoundAndOptionalTrue_empty()
     {
         assertThat(TEST_SOURCE_FILE_NOT_FOUND.load(STRING_MAPPER, true), is(Optional.empty()));
+    }
+
+    @Test
+    void load_file1_success()
+    {
+        assertThat(TEST_SOURCE_FILE_FILE1_TXT.load(STRING_MAPPER, true).get(), containsAll("line1"));
     }
 
     @Test
