@@ -2,6 +2,7 @@ package net.obvj.confectory;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Properties;
 
@@ -304,7 +305,7 @@ class ConfigurationContainerTest
     }
 
     @Test
-    void addAll_null_noExceptionAndNoAction()
+    void addAll_validSourceOnEmptyContainer_allConfigurationCopied()
     {
         ConfigurationContainer source = new ConfigurationContainer(CONF_NS1_PROPERTIES_1, CONF_NS1_PROPERTIES_2,
                 CONF_NS2_PROPERTIES_1);
@@ -314,6 +315,17 @@ class ConfigurationContainerTest
 
         assertThat(container.size(NAMESPACE1), equalTo(2));
         assertThat(container.size(NAMESPACE2), equalTo(1));
+    }
+
+    @Test
+    void addAll_nullSourceOnEmptyContainer_noCopyAndNoException()
+    {
+        ConfigurationContainer source = null;
+
+        container = new ConfigurationContainer();
+        container.addAll(source);
+
+        assertTrue(container.getNamespaces().isEmpty());
     }
 
 }
