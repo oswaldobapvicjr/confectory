@@ -1,5 +1,7 @@
 package net.obvj.confectory;
 
+import java.util.Objects;
+
 import net.obvj.confectory.settings.ConfectorySettings;
 
 /**
@@ -32,10 +34,10 @@ public final class Confectory
     }
     
     /**
-    * The global settings for the {@code Confectory} project.
-    *
-    * @return a referece to the {@link ConfectorySettings} instance
-    */
+     * The global settings for the {@code Confectory} project.
+     *
+     * @return a referece to the {@link ConfectorySettings} instance
+     */
     public static ConfectorySettings settings()
     {
         return ConfectorySettings.getInstance();
@@ -44,10 +46,15 @@ public final class Confectory
     /**
      * Sets an already existent {@link ConfigurationContainer} as Default
      *
-     * @param configurationContainer the default {@link ConfigurationContainer} to be set
+     * @param configurationContainer the default {@link ConfigurationContainer} to
+     *                               be set
+     * 
+     * @throws NullPointerException if the {@code configurationContainer} parameters
+     *                              is missing
      */
     public static void setDefaultContainer(ConfigurationContainer configurationContainer)
     {
+        Objects.requireNonNull(configurationContainer, "The Configuration Container must not be null.");
         globalConfigurationContainer = configurationContainer;
     }
 
