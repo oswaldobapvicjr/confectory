@@ -1,7 +1,7 @@
 package net.obvj.confectory.helper;
 
 import net.obvj.confectory.ConfigurationDataRetriever;
-import net.obvj.confectory.helper.provider.NullValueProvider;
+import net.obvj.confectory.helper.nullvalue.NullValueProvider;
 
 /**
  * A base interface for Configuration Helper objects providing methods for retrieving

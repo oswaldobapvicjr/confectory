@@ -1,4 +1,4 @@
-package net.obvj.confectory.helper.provider;
+package net.obvj.confectory.helper.nullvalue;
 
 /**
  * An abstract {@link NullValueProvider} with common methods implemented.

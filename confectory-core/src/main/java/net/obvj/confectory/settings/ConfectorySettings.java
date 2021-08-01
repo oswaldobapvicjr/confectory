@@ -3,8 +3,8 @@ package net.obvj.confectory.settings;
 import java.util.Objects;
 
 import net.obvj.confectory.DataFetchStrategy;
-import net.obvj.confectory.helper.provider.NullValueProvider;
-import net.obvj.confectory.helper.provider.StandardNullValueProvider;
+import net.obvj.confectory.helper.nullvalue.NullValueProvider;
+import net.obvj.confectory.helper.nullvalue.StandardNullValueProvider;
 
 /**
  * An object that defines the global settings for the {@code Confectory} project.

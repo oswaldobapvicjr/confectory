@@ -2,6 +2,7 @@ package net.obvj.confectory;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Properties;
 
@@ -9,8 +10,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import net.obvj.confectory.helper.provider.AbstractNullValueProvider;
-import net.obvj.confectory.helper.provider.NullValueProvider;
+import net.obvj.confectory.helper.nullvalue.AbstractNullValueProvider;
+import net.obvj.confectory.helper.nullvalue.NullValueProvider;
 import net.obvj.confectory.mapper.PropertiesMapper;
 import net.obvj.confectory.settings.ConfectorySettings;
 import net.obvj.confectory.source.StringSource;
@@ -147,7 +148,7 @@ class ConfigurationContainerTest
     {
         container = new ConfigurationContainer(CONF_NS1_PROPERTIES_1);
         assertThat(container.getNamespaces().size(), equalTo(1));
-        assertThat(container.size(NAMESPACE1), equalTo(1));
+        assertThat(container.size(NAMESPACE1), equalTo(1L));
         assertDefaultNullValueProvider();
         assertDefaultDataFetchStrategy();
     }
@@ -157,7 +158,7 @@ class ConfigurationContainerTest
     {
         container = new ConfigurationContainer(CONF_NS1_PROPERTIES_1, CONF_NS1_PROPERTIES_2);
         assertThat(container.getNamespaces().size(), equalTo(1));
-        assertThat(container.size(NAMESPACE1), equalTo(2));
+        assertThat(container.size(NAMESPACE1), equalTo(2L));
         assertDefaultNullValueProvider();
         assertDefaultDataFetchStrategy();
     }
@@ -167,8 +168,8 @@ class ConfigurationContainerTest
     {
         container = new ConfigurationContainer(CUSTOM_NVP, CONF_NS1_PROPERTIES_1, CONF_NS2_PROPERTIES_1);
         assertThat(container.getNamespaces().size(), equalTo(2));
-        assertThat(container.size(NAMESPACE1), equalTo(1));
-        assertThat(container.size(NAMESPACE2), equalTo(1));
+        assertThat(container.size(NAMESPACE1), equalTo(1L));
+        assertThat(container.size(NAMESPACE2), equalTo(1L));
         assertThat(container.getNullValueProvider(), equalTo(CUSTOM_NVP));
     }
 
@@ -301,6 +302,48 @@ class ConfigurationContainerTest
     {
         container = new ConfigurationContainer(CUSTOM_NVP);
         assertThat(container.getLongProperty(NAMESPACE1, KEY_BAD), equalTo(CUSTOM_NVP.getLongValue())); // CUSTOM_NVP
+    }
+
+    @Test
+    void addAll_validSourceOnEmptyContainer_allConfigurationCopied()
+    {
+        ConfigurationContainer source = new ConfigurationContainer(CONF_NS1_PROPERTIES_1, CONF_NS1_PROPERTIES_2, CONF_NS2_PROPERTIES_1);
+
+        container = new ConfigurationContainer();
+        container.addAll(source);
+
+        assertThat(container.size(NAMESPACE1), equalTo(2L));
+        assertThat(container.size(NAMESPACE2), equalTo(1L));
+    }
+
+    @Test
+    void addAll_nullSourceOnEmptyContainer_noCopyAndNoException()
+    {
+        ConfigurationContainer source = null;
+
+        container = new ConfigurationContainer();
+        container.addAll(source);
+
+        assertTrue(container.getNamespaces().isEmpty());
+    }
+
+    @Test
+    void addAll_calledTwice_noDuplicateConfigurations()
+    {
+        ConfigurationContainer source1 = new ConfigurationContainer(CONF_NS1_PROPERTIES_1, CONF_NS1_PROPERTIES_2, CONF_NS2_PROPERTIES_1);
+
+        container = new ConfigurationContainer();
+        container.addAll(source1);
+
+        assertThat(container.size(NAMESPACE1), equalTo(2L));
+        assertThat(container.size(NAMESPACE2), equalTo(1L));
+
+        ConfigurationContainer source2 = new ConfigurationContainer(CONF_NS1_PROPERTIES_1, CONF_NS1_PROPERTIES_2, CONF_NS2_PROPERTIES_1);
+
+        container.addAll(source2);
+
+        assertThat(container.size(NAMESPACE1), equalTo(2L)); // No change expected
+        assertThat(container.size(NAMESPACE2), equalTo(1L)); // No change expected
     }
 
 }

@@ -1,4 +1,4 @@
-package net.obvj.confectory.helper.provider;
+package net.obvj.confectory.helper.nullvalue;
 
 /**
  * An object that provides "logic-nulls" for Java types (especially primitive ones) when a

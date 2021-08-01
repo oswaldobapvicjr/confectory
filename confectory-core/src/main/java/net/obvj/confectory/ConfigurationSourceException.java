@@ -1,9 +1,10 @@
 package net.obvj.confectory;
 
 /**
- * A specialized runtime exception for faulty configuration source handling.
+ * A specialized runtime exception to indicate a failure to load a configuration from the
+ * {@code Source}.
  *
- * @author Oswaldo Junior (oswaldo.bapvic.jr)
+ * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 0.1.0
  */
 public class ConfigurationSourceException extends ConfigurationException
@@ -41,13 +42,12 @@ public class ConfigurationSourceException extends ConfigurationException
     }
 
     /**
-     * Constructs a new exception with the specified cause and a detail message of
-     * {@code (cause==null ? null : cause.toString())}. This constructor is useful for
-     * exceptions that are little more than wrappers for other throwables.
+     * Constructs a new exception with the specified cause. This constructor is useful for
+     * exceptions that are wrappers for other throwables.
      *
      * @param cause the cause (which is saved for later retrieval by the
-     *              {@link Throwable#getCause()} method). (A {@code null} value is permitted,
-     *              and indicates that the cause is nonexistent or unknown.)
+     *              {@link Throwable#getCause()} method). A {@code null} value is permitted,
+     *              and indicates that the cause is nonexistent or unknown.
      */
     public ConfigurationSourceException(Throwable cause)
     {

@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>net.obvj</groupId>
-    <artifactId>confectory-base</artifactId>
+    <artifactId>confectory</artifactId>
     <version>0.1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>Confectory base</name>
+    <name>Confectory</name>
     <description>Base POM for all Confectory modules</description>
     <url>http://obvj.net/confectory</url>
 
@@ -136,6 +136,7 @@
                     <encoding>UTF-8</encoding>
                     <show>public</show>
                     <aggregate>false</aggregate>
+                    <stylesheetfile>${project.basedir}/src/main/javadoc/stylesheet.css</stylesheetfile>
                 </configuration>
                 <executions>
                     <execution>

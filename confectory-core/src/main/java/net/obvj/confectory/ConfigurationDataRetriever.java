@@ -5,7 +5,7 @@ import java.util.Optional;
 /**
  * A base interface for objects that retrieve configuration data.
  *
- * @param <T> the source type which configuration data is to be retrieved
+ * @param <T> the target type which configuration data is to be retrieved
  *
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 0.1.0
@@ -14,10 +14,10 @@ public interface ConfigurationDataRetriever<T>
 {
 
     /**
-     * Returns the source configuration object used by this helper object, typically for
+     * Returns the target configuration object used by this data retriever, typically for
      * manual handling and/or troubleshooting purposes.
      *
-     * @return an {@link Optional}, possibly containing the source configuration object
+     * @return an {@link Optional}, possibly containing the target configuration object
      */
     Optional<T> getBean();
 

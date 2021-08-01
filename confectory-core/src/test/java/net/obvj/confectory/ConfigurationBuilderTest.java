@@ -15,8 +15,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import net.obvj.confectory.helper.ConfigurationHelper;
-import net.obvj.confectory.helper.provider.NullValueProvider;
-import net.obvj.confectory.helper.provider.StandardNullValueProvider;
+import net.obvj.confectory.helper.nullvalue.NullValueProvider;
+import net.obvj.confectory.helper.nullvalue.StandardNullValueProvider;
 import net.obvj.confectory.mapper.Mapper;
 import net.obvj.confectory.source.AbstractSource;
 import net.obvj.confectory.source.DynamicSource;

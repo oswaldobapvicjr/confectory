@@ -1,5 +1,6 @@
 package net.obvj.confectory;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -7,7 +8,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import net.obvj.confectory.helper.ConfigurationHelper;
 import net.obvj.confectory.helper.NullConfigurationHelper;
-import net.obvj.confectory.helper.provider.NullValueProvider;
+import net.obvj.confectory.helper.nullvalue.NullValueProvider;
 import net.obvj.confectory.mapper.Mapper;
 import net.obvj.confectory.source.Source;
 
@@ -15,9 +16,9 @@ import net.obvj.confectory.source.Source;
  * An immutable object that contains configuration data from a specific source, as well as
  * related metadata.
  * <p>
- * A {@code Configuration} may also be defined as the union of a configuration
- * {@link Source} and a configuration {@link Mapper}, producing either a properties list,
- * a JSON object, or a user-defined bean.
+ * A {@code Configuration} may also be defined as a combination of a {@link Source} and a
+ * {@link Mapper}, producing either a properties list, a JSON object, or a user-defined
+ * bean.
  * <p>
  * Each {@code Configuration} may be assigned a namespace and precedence number, which
  * determines an order of importance. So, once stored in a common configuration container,
@@ -180,6 +181,43 @@ public final class Configuration<T> implements ConfigurationDataRetriever<T>, Co
     public String getStringProperty(String key)
     {
         return helper.getStringProperty(key);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(namespace, source);
+    }
+
+    /**
+     * Indicates whether some other object is "equal to" this one.
+     * <p>
+     * Two {@code Configuration} objects can be considered equal if both share the same
+     * {@code namespace} and {@code Source}.
+     *
+     * @param other the other object with which to compare
+     *
+     * @return {@code true} if this object is the same as the one specified in the argument;
+     *         {@code false} otherwise.
+     */
+    @Override
+    public boolean equals(Object other)
+    {
+        if (this == other)
+        {
+            return true;
+        }
+        if (other == null)
+        {
+            return false;
+        }
+        if (getClass() != other.getClass())
+        {
+            return false;
+        }
+        Configuration<?> otherConfiguration = (Configuration<?>) other;
+        return Objects.equals(namespace, otherConfiguration.namespace)
+                && Objects.equals(source, otherConfiguration.source);
     }
 
     @Override

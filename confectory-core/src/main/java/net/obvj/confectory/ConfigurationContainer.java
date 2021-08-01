@@ -2,13 +2,13 @@ package net.obvj.confectory;
 
 import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import net.obvj.confectory.helper.provider.NullValueProvider;
+import net.obvj.confectory.helper.nullvalue.NullValueProvider;
 import net.obvj.confectory.settings.ConfectorySettings;
-import net.obvj.confectory.util.ConfigurationComparator;
 
 /**
  * An object that holds multiple {@code Configuration} objects and retrieves configuration
@@ -29,19 +29,28 @@ import net.obvj.confectory.util.ConfigurationComparator;
  * To retrieve {@code Configuration} data, use any of the getter methods, specifying a
  * namespace and key.
  * <p>
- * {@code Configuration} objects without a declared namespace can have their data fetched
- * using the single-argument getter methods.
+ * Single-argument getter methods can be used to retrieve data from {@code Configuration}
+ * objects that do not have a declared namespace. These methods may also retrieve data
+ * from all {@code Configuration} objects if the selected data-fetch strategy is
+ * {@code LENIENT}.
+ * <p>
+ * Each container may have a custom {@link DataFetchStrategy} and
+ * {@link NullValueProvider}. Both objects may be specified at container construction time
+ * and modified using the setter methods at anytime. If not specified, the container uses
+ * the default objects configured via {@link ConfectorySettings}.
+ * <p>
  *
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 0.1.0
  *
  * @see Configuration
+ * @see DataFetchStrategy
  */
 public class ConfigurationContainer
 {
     protected static final String DEFAULT_NAMESPACE = "";
 
-    private Map<String, List<Configuration<?>>> configMap = new HashMap<>();
+    private Map<String, Set<Configuration<?>>> configMap = new HashMap<>();
     private DataFetchStrategy dataFetchStrategy;
     private NullValueProvider nullValueProvider;
 
@@ -162,9 +171,23 @@ public class ConfigurationContainer
     public void add(Configuration<?> configuration)
     {
         String namespace = parseNamespace(configuration.getNamespace());
-        List<Configuration<?>> configList = configMap.computeIfAbsent(namespace, k -> new ArrayList<>());
-        configList.add(configuration);
-        configList.sort(new ConfigurationComparator());
+        Set<Configuration<?>> configSet = configMap.computeIfAbsent(namespace, k -> new HashSet<>());
+        configSet.add(configuration);
+    }
+
+    /**
+     * Copies all of the {@code Configuration} objects from another container to this
+     * container.
+     *
+     * @param source the source container which {@code Configuration} objects are to be stored
+     *               in this container; {@code null} is allowed
+     */
+    public void addAll(ConfigurationContainer source)
+    {
+        if (source != null)
+        {
+            source.configMap.values().stream().flatMap(Collection::stream).forEach(this::add);
+        }
     }
 
     /**
@@ -316,8 +339,10 @@ public class ConfigurationContainer
     private <T> T getProperty(String namespace, Function<Configuration<?>, T> mainFunction,
             Function<NullValueProvider, T> nullValueSupplier)
     {
-        for (Configuration<?> config : getConfigurationList(namespace))
+        Iterator<Configuration<?>> iterator = getConfigurationStream(namespace).iterator();
+        while (iterator.hasNext())
         {
+            Configuration<?> config = iterator.next();
             T value = mainFunction.apply(config);
 
             // We use the provider defined at Configuration level to test the value
@@ -332,14 +357,15 @@ public class ConfigurationContainer
     }
 
     /**
-     * Retrieves a list of {@link Configuration} objects on a given namespace.
+     * Retrieves a stream of {@link Configuration} objects on a given namespace.
      *
      * @param namespace the namespace to be searched
-     * @return a list of {@link Configuration} objects or an empty list, never {@code null}
+     * @return a stream of {@link Configuration} objects or an empty stream, never
+     *         {@code null}
      */
-    private List<Configuration<?>> getConfigurationList(String namespace)
+    private Stream<Configuration<?>> getConfigurationStream(String namespace)
     {
-        return dataFetchStrategy.getConfigurationList(namespace, configMap);
+        return dataFetchStrategy.getConfigurationStream(namespace, configMap);
     }
 
     /**
@@ -363,9 +389,9 @@ public class ConfigurationContainer
      * @return the number of {@code Configuration} objects associated with the specified
      *         {@code namespace}
      */
-    public int size(String namespace)
+    public long size(String namespace)
     {
-        return getConfigurationList(namespace).size();
+        return getConfigurationStream(namespace).count();
     }
 
     /**

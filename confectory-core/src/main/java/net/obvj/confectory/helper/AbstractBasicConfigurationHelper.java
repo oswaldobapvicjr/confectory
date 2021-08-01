@@ -2,7 +2,7 @@ package net.obvj.confectory.helper;
 
 import java.util.Objects;
 
-import net.obvj.confectory.helper.provider.NullValueProvider;
+import net.obvj.confectory.helper.nullvalue.NullValueProvider;
 import net.obvj.confectory.settings.ConfectorySettings;
 
 /**

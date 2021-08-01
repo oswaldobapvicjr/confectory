@@ -22,16 +22,17 @@ public abstract class AbstractSource<T> implements Source<T>
 {
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractSource.class);
 
-    protected final String source;
+    protected final String parameter;
 
     /**
      * Builds a new configuration source with the specified path.
      *
-     * @param path the path of the the configuration source to be loaded
+     * @param parameter the source parameter (the meaning varies depending on the concrete
+     *                  implementation)
      */
-    protected AbstractSource(String path)
+    protected AbstractSource(String parameter)
     {
-        this.source = Objects.requireNonNull(path, "The source path must not be null");
+        this.parameter = Objects.requireNonNull(parameter, "The source parameter must not be null");
     }
 
     /**
@@ -68,9 +69,45 @@ public abstract class AbstractSource<T> implements Source<T>
     }
 
     @Override
+    public int hashCode()
+    {
+        return Objects.hash(getClass(), parameter);
+    }
+
+    /**
+     * Indicates whether some other object is "equal to" this one.
+     * <p>
+     * Two {@code Source} objects can be considered equal if both share the same
+     * implementation and parameter/path.
+     *
+     * @param other the other object with which to compare
+     *
+     * @return {@code true} if this object is the same as the one specified in the argument;
+     *         {@code false} otherwise.
+     */
+    @Override
+    public boolean equals(Object other)
+    {
+        if (this == other)
+        {
+            return true;
+        }
+        if (other == null)
+        {
+            return false;
+        }
+        if (getClass() != other.getClass())
+        {
+            return false;
+        }
+        AbstractSource<?> otherSource = (AbstractSource<?>) other;
+        return Objects.equals(parameter, otherSource.parameter);
+    }
+
+    @Override
     public String toString()
     {
-        return new StringBuilder().append(getClass().getSimpleName()).append("(").append(source).append(")").toString();
+        return new StringBuilder().append(getClass().getSimpleName()).append("(").append(parameter).append(")").toString();
     }
 
 }
