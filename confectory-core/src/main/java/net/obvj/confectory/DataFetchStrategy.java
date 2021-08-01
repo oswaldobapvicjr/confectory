@@ -2,9 +2,9 @@ package net.obvj.confectory;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.Set;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -30,10 +30,11 @@ public enum DataFetchStrategy
     STRICT
     {
         @Override
-        protected List<Configuration<?>> getConfigurationList(String namespace,
-                Map<String, List<Configuration<?>>> configMap)
+        protected Stream<Configuration<?>> getConfigurationStream(String namespace,
+                Map<String, Set<Configuration<?>>> configMap)
         {
-            return configMap.getOrDefault(parseNamespace(namespace), Collections.emptyList());
+            return configMap.getOrDefault(parseNamespace(namespace), Collections.emptySet()).stream()
+                    .sorted(new ConfigurationComparator());
         }
     },
 
@@ -44,32 +45,33 @@ public enum DataFetchStrategy
     LENIENT
     {
         @Override
-        protected List<Configuration<?>> getConfigurationList(String namespace,
-                Map<String, List<Configuration<?>>> configMap)
+        protected Stream<Configuration<?>> getConfigurationStream(String namespace,
+                Map<String, Set<Configuration<?>>> configMap)
         {
             if (StringUtils.isEmpty(namespace))
             {
                 // Flatten and re-order the configuration list
                 return configMap.values().stream()
                         .flatMap(Collection::stream)
-                        .sorted(new ConfigurationComparator())
-                        .collect(Collectors.toList());
+                        .sorted(new ConfigurationComparator());
             }
-            return STRICT.getConfigurationList(namespace, configMap);
+            return STRICT.getConfigurationStream(namespace, configMap);
         }
     };
 
     /**
-     * Retrieves a list of {@link Configuration} objects based on the specified
+     * Retrieves a stream of sorted {@link Configuration} objects based on the specified
      * {@code namespace}.
+     * <p>
+     * The {@link Configuration} objects may be sorted by precedence (highest to lowest).
      *
      * @param namespace the namespace to be searched
      * @param configMap the source map
-     * @return a list of {@link Configuration} objects according to the selected strategy,
+     * @return a stream of {@link Configuration} objects according to the selected strategy,
      *         never {@code null}
      */
-    protected abstract List<Configuration<?>> getConfigurationList(String namespace,
-            Map<String, List<Configuration<?>>> configMap);
+    protected abstract Stream<Configuration<?>> getConfigurationStream(String namespace,
+            Map<String, Set<Configuration<?>>> configMap);
 
     /**
      * Returns either the passed namespace, or a default value, if the passed argument is

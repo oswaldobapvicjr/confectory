@@ -2,13 +2,13 @@ package net.obvj.confectory;
 
 import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import net.obvj.confectory.helper.nullvalue.NullValueProvider;
 import net.obvj.confectory.settings.ConfectorySettings;
-import net.obvj.confectory.util.ConfigurationComparator;
 
 /**
  * An object that holds multiple {@code Configuration} objects and retrieves configuration
@@ -50,7 +50,7 @@ public class ConfigurationContainer
 {
     protected static final String DEFAULT_NAMESPACE = "";
 
-    private Map<String, List<Configuration<?>>> configMap = new HashMap<>();
+    private Map<String, Set<Configuration<?>>> configMap = new HashMap<>();
     private DataFetchStrategy dataFetchStrategy;
     private NullValueProvider nullValueProvider;
 
@@ -171,9 +171,8 @@ public class ConfigurationContainer
     public void add(Configuration<?> configuration)
     {
         String namespace = parseNamespace(configuration.getNamespace());
-        List<Configuration<?>> configList = configMap.computeIfAbsent(namespace, k -> new ArrayList<>());
-        configList.add(configuration);
-        configList.sort(new ConfigurationComparator());
+        Set<Configuration<?>> configSet = configMap.computeIfAbsent(namespace, k -> new HashSet<>());
+        configSet.add(configuration);
     }
 
     /**
@@ -340,8 +339,10 @@ public class ConfigurationContainer
     private <T> T getProperty(String namespace, Function<Configuration<?>, T> mainFunction,
             Function<NullValueProvider, T> nullValueSupplier)
     {
-        for (Configuration<?> config : getConfigurationList(namespace))
+        Iterator<Configuration<?>> iterator = getConfigurationStream(namespace).iterator();
+        while (iterator.hasNext())
         {
+            Configuration<?> config = iterator.next();
             T value = mainFunction.apply(config);
 
             // We use the provider defined at Configuration level to test the value
@@ -356,14 +357,14 @@ public class ConfigurationContainer
     }
 
     /**
-     * Retrieves a list of {@link Configuration} objects on a given namespace.
+     * Retrieves a stream of {@link Configuration} objects on a given namespace.
      *
      * @param namespace the namespace to be searched
-     * @return a list of {@link Configuration} objects or an empty list, never {@code null}
+     * @return a stream of {@link Configuration} objects or an empty set, never {@code null}
      */
-    private List<Configuration<?>> getConfigurationList(String namespace)
+    private Stream<Configuration<?>> getConfigurationStream(String namespace)
     {
-        return dataFetchStrategy.getConfigurationList(namespace, configMap);
+        return dataFetchStrategy.getConfigurationStream(namespace, configMap);
     }
 
     /**
@@ -387,9 +388,9 @@ public class ConfigurationContainer
      * @return the number of {@code Configuration} objects associated with the specified
      *         {@code namespace}
      */
-    public int size(String namespace)
+    public long size(String namespace)
     {
-        return getConfigurationList(namespace).size();
+        return getConfigurationStream(namespace).count();
     }
 
     /**
