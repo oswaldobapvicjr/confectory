@@ -1,5 +1,7 @@
 package net.obvj.confectory;
 
+import net.obvj.confectory.settings.ConfectorySettings;
+
 /**
  * A Facade for common operations in the {@code Confectory} project.
  * 
@@ -27,6 +29,16 @@ public final class Confectory
     public static ConfigurationContainer container()
     {
         return globalConfigurationContainer;
+    }
+    
+    /**
+    * The global settings for the {@code Confectory} project.
+    *
+    * @return a referece to the {@link ConfectorySettings} instance
+    */
+    public static ConfectorySettings settings()
+    {
+        return ConfectorySettings.getInstance();
     }
 
     /**
