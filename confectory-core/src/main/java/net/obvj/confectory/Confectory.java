@@ -1,39 +1,22 @@
 package net.obvj.confectory;
 
 /**
- * A default {@link ConfigurationContainer}
+ * A Facade for common operations in the {@code Confectory} project.
  * 
- * @author @Dautomne (Fernando Tiannamen)
+ * @author FernandoNSC (Fernando Tiannamen)
  * @since 0.1.0
  */
 public final class Confectory
 {
 
     /**
-     * The initial {@link ConfigurationContainer} to be loaded as default
+     * The current {@link ConfigurationContainer} to be loaded as default
      */
-    protected static ConfigurationContainer DEFAULT_CONFIGURATION_CONTAINER;
+    private static ConfigurationContainer globalConfigurationContainer = new ConfigurationContainer();
 
+    private Confectory()
     {
-        DEFAULT_CONFIGURATION_CONTAINER = new ConfigurationContainer();
-    }
-
-    /**
-     * Sets an already existent {@link ConfigurationContainer} as Default
-     *
-     * @param pConfigurationContainer the default {@link ConfigurationContainer} to be set
-     */
-    public Confectory(ConfigurationContainer pConfigurationContainer)
-    {
-        DEFAULT_CONFIGURATION_CONTAINER = pConfigurationContainer;
-    }
-
-    /**
-     * Reset {@link ConfigurationContainer} configuration
-     */
-    public static void resetContainer()
-    {
-        DEFAULT_CONFIGURATION_CONTAINER = new ConfigurationContainer();
+        throw new IllegalStateException("Instantiation not allowed");
     }
 
     /**
@@ -43,7 +26,17 @@ public final class Confectory
      */
     public static ConfigurationContainer container()
     {
-        return DEFAULT_CONFIGURATION_CONTAINER;
+        return globalConfigurationContainer;
+    }
+
+    /**
+     * Sets an already existent {@link ConfigurationContainer} as Default
+     *
+     * @param configurationContainer the default {@link ConfigurationContainer} to be set
+     */
+    public static void setDefaultContainer(ConfigurationContainer configurationContainer)
+    {
+        globalConfigurationContainer = configurationContainer;
     }
 
 }
