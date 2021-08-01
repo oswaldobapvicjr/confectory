@@ -360,7 +360,8 @@ public class ConfigurationContainer
      * Retrieves a stream of {@link Configuration} objects on a given namespace.
      *
      * @param namespace the namespace to be searched
-     * @return a stream of {@link Configuration} objects or an empty set, never {@code null}
+     * @return a stream of {@link Configuration} objects or an empty stream, never
+     *         {@code null}
      */
     private Stream<Configuration<?>> getConfigurationStream(String namespace)
     {
