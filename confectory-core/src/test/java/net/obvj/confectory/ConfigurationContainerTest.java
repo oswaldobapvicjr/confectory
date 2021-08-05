@@ -199,6 +199,14 @@ class ConfigurationContainerTest
     }
 
     @Test
+    void getUnsortedStringProperty_keyOnlyAndLenient_configurationWithoutNamespace() {
+        container = new ConfigurationContainer(DataFetchStrategy.UNSORTED_LENIENT, CONF_NS1_PROPERTIES_1, CONF_NS1_PROPERTIES_2,
+                CONF_NS2_PROPERTIES_1, CONF_PROPERTIES_1);
+        assertThat(container.getStringProperty(KEY_TEST), equalTo("ok01")); // CONF_NS2_PROPERTIES_1 (lenient)
+        assertThat(container.getStringProperty(KEY_STRING), equalTo("string1")); // CONF_NS1_PROPERTIES_2 (lenient)
+    }
+
+    @Test
     void getStringProperty_namespaceAndKeyStrict_highestPrecedenceConfiguration()
     {
         container = new ConfigurationContainer(CONF_NS1_PROPERTIES_1, CONF_NS1_PROPERTIES_2, CONF_NS2_PROPERTIES_1);
@@ -212,6 +220,12 @@ class ConfigurationContainerTest
         assertThat(container.getStringProperty(NAMESPACE1, KEY_STRING), equalTo("string2")); // CONF_NS1_PROPERTIES_2
     }
 
+    @Test
+    void getUnsortedStringProperty_namespaceAndKeyLenient_sameAsStrict() {
+        container = new ConfigurationContainer(DataFetchStrategy.UNSORTED_LENIENT, CONF_NS1_PROPERTIES_1, CONF_NS1_PROPERTIES_2,
+                CONF_NS2_PROPERTIES_1);
+        assertThat(container.getStringProperty(NAMESPACE1, KEY_STRING), equalTo("string2")); // CONF_NS1_PROPERTIES_2
+    }
 
     @Test
     void getStringProperty_namespaceAndKey_defaultNullValueIfNotFound()
