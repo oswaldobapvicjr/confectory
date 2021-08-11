@@ -1,12 +1,10 @@
 package net.obvj.confectory;
 
-import java.util.Objects;
-
 import net.obvj.confectory.settings.ConfectorySettings;
 
 /**
  * A Facade for common operations in the {@code Confectory} project.
- * 
+ *
  * @author FernandoNSC (Fernando Tiannamen)
  * @since 0.1.0
  */
@@ -24,38 +22,39 @@ public final class Confectory
     }
 
     /**
-     * Retrives the default {@link ConfigurationContainer}
+     * Retrieves a {@link ConfigurationContainer} instance that can be accessed statically for
+     * holding global configuration data.
+     * <p>
+     * It is possible to copy objects from an existing {@code ConfigurationContainer} into the
+     * global instance by calling:
      *
-     * @return the default {@link ConfigurationContainer}
+     * <blockquote>
+     *
+     * <pre>
+     * {@code Confectory.container().addAll(otherContainer);}
+     * </pre>
+     *
+     * </blockquote>
+     *
+     * <p>
+     * <strong>Note:</strong> {@code Configuration} data stored in the global container may be
+     * shared by other applications loaded in the same classpath.
+     *
+     * @return the global {@link ConfigurationContainer} instance
      */
     public static ConfigurationContainer container()
     {
         return globalConfigurationContainer;
     }
-    
+
     /**
-     * The global settings for the {@code Confectory} project.
+     * Returns an object containing global settings for the {@code Confectory} project.
      *
-     * @return a referece to the {@link ConfectorySettings} instance
+     * @return a reference to the current {@link ConfectorySettings} instance
      */
     public static ConfectorySettings settings()
     {
         return ConfectorySettings.getInstance();
-    }
-
-    /**
-     * Sets an already existent {@link ConfigurationContainer} as Default
-     *
-     * @param configurationContainer the default {@link ConfigurationContainer} to
-     *                               be set
-     * 
-     * @throws NullPointerException if the {@code configurationContainer} parameters
-     *                              is missing
-     */
-    public static void setDefaultContainer(ConfigurationContainer configurationContainer)
-    {
-        Objects.requireNonNull(configurationContainer, "The Configuration Container must not be null.");
-        globalConfigurationContainer = configurationContainer;
     }
 
 }

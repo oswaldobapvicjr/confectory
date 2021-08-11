@@ -142,6 +142,11 @@ public final class Configuration<T> implements ConfigurationDataRetriever<T>, Co
         return nullValueProvider;
     }
 
+    /**
+     * Returns the {@link ConfigurationHelper} associated with this {@code Configuration}.
+     *
+     * @return the {@link ConfigurationHelper}
+     */
     public ConfigurationHelper<T> getHelper()
     {
         return helper;

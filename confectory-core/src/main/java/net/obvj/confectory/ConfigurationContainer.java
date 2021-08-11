@@ -114,7 +114,7 @@ public class ConfigurationContainer
     public ConfigurationContainer(DataFetchStrategy dataFetchStrategy, NullValueProvider nullValueProvider,
             Configuration<?>... configs)
     {
-        ConfectorySettings settings = ConfectorySettings.getInstance();
+        ConfectorySettings settings = Confectory.settings();
         setDataFetchStrategy(ObjectUtils.defaultIfNull(dataFetchStrategy, settings.getDefaultDataFetchStrategy()));
         setNullValueProvider(ObjectUtils.defaultIfNull(nullValueProvider, settings.getDefaultNullValueProvider()));
 

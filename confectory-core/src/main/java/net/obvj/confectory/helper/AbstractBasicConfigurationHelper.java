@@ -2,8 +2,8 @@ package net.obvj.confectory.helper;
 
 import java.util.Objects;
 
+import net.obvj.confectory.Confectory;
 import net.obvj.confectory.helper.nullvalue.NullValueProvider;
-import net.obvj.confectory.settings.ConfectorySettings;
 
 /**
  * An abstract Configuration Helper object providing common infrastructure for concrete
@@ -16,7 +16,7 @@ import net.obvj.confectory.settings.ConfectorySettings;
  */
 public abstract class AbstractBasicConfigurationHelper<T> implements ConfigurationHelper<T>
 {
-    protected NullValueProvider nullValueProvider = ConfectorySettings.getInstance().getDefaultNullValueProvider();
+    protected NullValueProvider nullValueProvider = Confectory.settings().getDefaultNullValueProvider();
 
     @Override
     public void setNullValueProvider(NullValueProvider provider)
