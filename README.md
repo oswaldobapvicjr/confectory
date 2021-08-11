@@ -2,6 +2,9 @@
 
 [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/oswaldobapvicjr/confectory/Java%20CI%20with%20Maven)](https://github.com/oswaldobapvicjr/confectory/actions/workflows/maven.yml)
 [![Coverage](https://img.shields.io/codecov/c/github/oswaldobapvicjr/confectory)](https://codecov.io/gh/oswaldobapvicjr/confectory)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/net.obvj/confectory-core/badge.svg)](https://maven-badges.herokuapp.com/maven-central/net.obvj/confectory-core)
+[![Javadoc](https://javadoc.io/badge2/net.obvj/confectory-core/javadoc.svg)](https://javadoc.io/doc/net.obvj/confectory-core)
+
 
 The modular, multi-format configuration framework for Java applications.
 
@@ -9,7 +12,40 @@ The modular, multi-format configuration framework for Java applications.
 
 ---
 
-### Planned releases
+## Overview
+
+**Confectory** provides a comprehensive API for handling system configuration data. Use it to accept and combine configuration data from multiple **sources** and **formats**.
+
+## Examples
+
+#### Loading configuration data from a local Properties file in the classpath:
+
+````java
+Configuration<Properties> config = Configuration.<Properties>builder()
+        .source(SourceFactory.classpathFileSource("myapp.properties"))
+        .mapper(new PropertiesMapper())
+        .build();
+````
+
+#### Loading configuration data from a JSON resource in an HTTP server (planned release):
+
+````java
+Configuration<JSONObject> config = Configuration.<JSONObject>builder()
+        .source(SourceFactory.httpSource("http://myserver:8080/config"))
+        .mapper(new JSONObjectMapper())
+        .build();
+````
+
+## Features
+
+- Easy configuration setup
+- Seamless data query using **JSONPath** or user-defined beans
+- Support for the **best providers** available in the community (e.g.: Jackson, GSON)
+- Accept **multiple configuration choices** (e.g.: XML, JSON, or YAML) and define **precedence levels** for each one
+
+---
+
+## Planned releases
 
 <table>
   <tr>
@@ -19,7 +55,7 @@ The modular, multi-format configuration framework for Java applications.
     <th>Key features</th>
   </tr>
   <tr>
-    <td><b>0.1.0</b></td>
+    <td><b>0.1.0 :heavy_check_mark:</b></td>
     <td>2021-08</td>
     <td>confectory-core</td>
     <td>
@@ -29,7 +65,7 @@ The modular, multi-format configuration framework for Java applications.
     </td>
   </tr>
   <tr>
-    <td><b>0.2.0</b></td>
+    <td><b>0.2.0 :construction:</b></td>
     <td>2021-09</td>
     <td>
       confectory-datamapper-lite
@@ -41,7 +77,7 @@ The modular, multi-format configuration framework for Java applications.
     </td>
   </tr>
   <tr>
-    <td><b>0.3.0</b></td>
+    <td><b>0.3.0 :calendar:</b></td>
     <td>2021-10</td>
     <td>
       confectory-datamapper-jackson2*
@@ -52,7 +88,7 @@ The modular, multi-format configuration framework for Java applications.
     </td>
   </tr>
   <tr>
-    <td><b>0.4.0</b></td>
+    <td><b>0.4.0 :calendar:</b></td>
     <td>2021-11</td>
     <td>
       confectory-datamapper-gson2
@@ -60,16 +96,6 @@ The modular, multi-format configuration framework for Java applications.
     <td>
       <li>JSON files parsing using GSON</li>
       <li><b>HTTP/1.1</b> file source</li>
-    </td>
-  </tr>
-  <tr>
-    <td><b>1.0.0</b></td>
-    <td>2021-12</td>
-    <td>
-      *
-    </td>
-    <td>
-      <li>First G.A. release</li>
     </td>
   </tr>
 </table>
