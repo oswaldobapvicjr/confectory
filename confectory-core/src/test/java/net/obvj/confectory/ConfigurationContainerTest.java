@@ -1,6 +1,6 @@
 package net.obvj.confectory;
 
-import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertTrue;
 
@@ -199,6 +199,14 @@ class ConfigurationContainerTest
     }
 
     @Test
+    void getStringProperty_keyOnlyAndLenientUnsorted_anyOfTheConfigurationsWithoutNamespace() {
+        container = new ConfigurationContainer(DataFetchStrategy.LENIENT_UNSORTED, CONF_NS1_PROPERTIES_1, CONF_NS1_PROPERTIES_2,
+                CONF_NS2_PROPERTIES_1, CONF_PROPERTIES_1);
+        assertThat(container.getStringProperty(KEY_TEST), equalTo("ok01")); // CONF_NS2_PROPERTIES_1 (lenient)
+        assertThat(container.getStringProperty(KEY_STRING), either(equalTo("string1")).or(equalTo("string2")));
+    }
+
+    @Test
     void getStringProperty_namespaceAndKeyStrict_highestPrecedenceConfiguration()
     {
         container = new ConfigurationContainer(CONF_NS1_PROPERTIES_1, CONF_NS1_PROPERTIES_2, CONF_NS2_PROPERTIES_1);
@@ -212,6 +220,12 @@ class ConfigurationContainerTest
         assertThat(container.getStringProperty(NAMESPACE1, KEY_STRING), equalTo("string2")); // CONF_NS1_PROPERTIES_2
     }
 
+    @Test
+    void getStringProperty_namespaceAndKeyLenientUnsorted_sameAsStrictUnsorted() {
+        container = new ConfigurationContainer(DataFetchStrategy.LENIENT_UNSORTED, CONF_NS1_PROPERTIES_1, CONF_NS1_PROPERTIES_2,
+                CONF_NS2_PROPERTIES_1);
+        assertThat(container.getStringProperty(NAMESPACE1, KEY_STRING), either(equalTo("string1")).or(equalTo("string2")));
+    }
 
     @Test
     void getStringProperty_namespaceAndKey_defaultNullValueIfNotFound()

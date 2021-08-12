@@ -15,6 +15,7 @@ import net.obvj.confectory.util.ConfigurationComparator;
  * {@code ConfigurationContainer}.
  *
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
+ * @author FernandoNSC (Fernando Tiannamen)
  * @since 0.1.0
  *
  * @see ConfigurationContainer
@@ -22,10 +23,11 @@ import net.obvj.confectory.util.ConfigurationComparator;
 public enum DataFetchStrategy
 {
     /**
-     * Retrieves data from {@code Configuration} objects declared with a specific namespace.
+     * Retrieves <b>sorted</b> data from {@code Configuration} objects declared
+     * with a specific namespace.
      * <p>
-     * If no namespace is specified during data fetch, only {@link Configuration} objects
-     * <b>without a namespace defined</b> will be searched.
+     * If no namespace is specified during data fetch, only {@link Configuration}
+     * objects <b>without a namespace defined</b> will be searched.
      */
     STRICT
     {
@@ -33,14 +35,32 @@ public enum DataFetchStrategy
         protected Stream<Configuration<?>> getConfigurationStream(String namespace,
                 Map<String, Set<Configuration<?>>> configMap)
         {
-            return configMap.getOrDefault(parseNamespace(namespace), Collections.emptySet()).stream()
-                    .sorted(new ConfigurationComparator());
+            return STRICT_UNSORTED.getConfigurationStream(namespace, configMap).sorted(new ConfigurationComparator());
         }
     },
 
     /**
-     * Retrieves data from all {@code Configuration} objects regardless of their namespaces
-     * <b>when no namespace specified</b> during data fetch.
+     * Retrieves <b>unsorted</b> data from {@code Configuration} objects declared
+     * with a specific namespace.
+     * <p>
+     * If no namespace is specified during data fetch, only {@link Configuration}
+     * objects <b>without a namespace defined</b> will be searched.
+     *
+     * @since 0.2.0
+     */
+    STRICT_UNSORTED
+    {
+        @Override
+        protected Stream<Configuration<?>> getConfigurationStream(String namespace,
+                Map<String, Set<Configuration<?>>> configMap) {
+            return configMap.getOrDefault(parseNamespace(namespace), Collections.emptySet()).stream();
+        }
+    },
+
+    /**
+     * Retrieves <b>sorted</b> data from all {@code Configuration} objects
+     * regardless of their namespaces <b>when no namespace specified</b> during data
+     * fetch.
      */
     LENIENT
     {
@@ -51,13 +71,37 @@ public enum DataFetchStrategy
             if (StringUtils.isEmpty(namespace))
             {
                 // Flatten and re-order the configuration list
-                return configMap.values().stream()
-                        .flatMap(Collection::stream)
+                return  LENIENT_UNSORTED.getConfigurationStream(namespace, configMap)
                         .sorted(new ConfigurationComparator());
             }
             return STRICT.getConfigurationStream(namespace, configMap);
         }
+    },
+
+    /**
+     * Retrieves <b>unsorted</b> data from all {@code Configuration} objects
+     * regardless of their namespaces <b>when no namespace specified</b> during data
+     * fetch.
+     *
+     * @since 0.2.0
+     */
+    LENIENT_UNSORTED
+    {
+        @Override
+        protected Stream<Configuration<?>> getConfigurationStream(String namespace,
+                Map<String, Set<Configuration<?>>> configMap)
+        {
+            if (StringUtils.isEmpty(namespace))
+            {
+                // Flatten and re-order the configuration list
+                return configMap.values().stream()
+                        .flatMap(Collection::stream);
+            }
+            return STRICT_UNSORTED.getConfigurationStream(namespace, configMap);
+        }
     };
+
+
 
     /**
      * Retrieves a stream of sorted {@link Configuration} objects based on the specified
