@@ -199,11 +199,11 @@ class ConfigurationContainerTest
     }
 
     @Test
-    void getUnsortedStringProperty_keyOnlyAndLenient_configurationWithoutNamespace() {
+    void getStringProperty_keyOnlyAndLenientUnsorted_anyOfTheConfigurationsWithoutNamespace() {
         container = new ConfigurationContainer(DataFetchStrategy.LENIENT_UNSORTED, CONF_NS1_PROPERTIES_1, CONF_NS1_PROPERTIES_2,
                 CONF_NS2_PROPERTIES_1, CONF_PROPERTIES_1);
         assertThat(container.getStringProperty(KEY_TEST), equalTo("ok01")); // CONF_NS2_PROPERTIES_1 (lenient)
-        assertThat(container.getStringProperty(KEY_STRING), either(containsString("string1")).or(containsString("string2"))); // CONF_NS1_PROPERTIES_2 (lenient)
+        assertThat(container.getStringProperty(KEY_STRING), either(equalTo("string1")).or(equalTo("string2")));
     }
 
     @Test
@@ -221,10 +221,10 @@ class ConfigurationContainerTest
     }
 
     @Test
-    void getUnsortedStringProperty_namespaceAndKeyLenient_sameAsStrict() {
+    void getStringProperty_namespaceAndKeyLenientUnsorted_sameAsStrictUnsorted() {
         container = new ConfigurationContainer(DataFetchStrategy.LENIENT_UNSORTED, CONF_NS1_PROPERTIES_1, CONF_NS1_PROPERTIES_2,
                 CONF_NS2_PROPERTIES_1);
-        assertThat(container.getStringProperty(NAMESPACE1, KEY_STRING), either(containsString("string1")).or(containsString("string2")));
+        assertThat(container.getStringProperty(NAMESPACE1, KEY_STRING), either(equalTo("string1")).or(equalTo("string2")));
     }
 
     @Test
