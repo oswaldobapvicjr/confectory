@@ -81,7 +81,7 @@ class PropertiesConfigurationHelperTest
     }
 
     @Test
-    void getBooleanProperty_exisitngKey_true()
+    void getBooleanProperty_existingKey_true()
     {
         assertThat(HELPER.getBooleanProperty("prop.boolean"), is(true));
     }
@@ -105,7 +105,7 @@ class PropertiesConfigurationHelperTest
     }
 
     @Test
-    void getLongProperty_anyKey_zero()
+    void getLongProperty_existingKey_zero()
     {
         assertThat(HELPER.getLongProperty("prop.long"), is(9876543210L));
     }
@@ -117,7 +117,7 @@ class PropertiesConfigurationHelperTest
     }
 
     @Test
-    void getDoubleProperty_anyKey_zero()
+    void getDoubleProperty_existingKey_zero()
     {
         assertThat(HELPER.getDoubleProperty("prop.double"), is(3.333));
     }
@@ -129,7 +129,7 @@ class PropertiesConfigurationHelperTest
     }
 
     @Test
-    void getSringProperty_exisingKey_empty()
+    void getSringProperty_existingKey_empty()
     {
         assertThat(HELPER.getStringProperty("prop.string"), is("stringValue"));
     }
