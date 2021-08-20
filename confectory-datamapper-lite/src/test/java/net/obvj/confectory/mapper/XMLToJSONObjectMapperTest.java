@@ -21,14 +21,14 @@ import net.obvj.confectory.helper.JSONObjectHelper;
 class XMLToJSONObjectMapperTest
 {
     private static final String TEST_XML_SAMPLE1
-            = "<root>"
-            + "  <intValue>9</intValue>"
-            + "  <booleanValue>true</booleanValue>"
-            + "  <array>"
-            + "    <element>string1</element>"
-            + "    <element>string2</element>"
-            + "  </array>"
-            + "</root>";
+            = "<root>\n"
+            + "  <intValue>9</intValue>\n"
+            + "  <booleanValue>true</booleanValue>\n"
+            + "  <array>\n"
+            + "    <element>string1</element>\n"
+            + "    <element>string2</element>\n"
+            + "  </array>\n"
+            + "</root>\n";
 
 
     private XMLToJSONObjectMapper mapper = new XMLToJSONObjectMapper();
