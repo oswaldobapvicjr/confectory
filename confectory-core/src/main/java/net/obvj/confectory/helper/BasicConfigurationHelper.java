@@ -43,30 +43,30 @@ public abstract class BasicConfigurationHelper<T> extends AbstractBasicConfigura
     }
 
     @Override
-    public boolean getBooleanProperty(String key)
+    public boolean getBoolean(String key)
     {
-        String value = getStringProperty(key);
+        String value = getString(key);
         return nullValueProvider.isNull(value) ? nullValueProvider.getBooleanValue() : Boolean.parseBoolean(value);
     }
 
     @Override
-    public int getIntProperty(String key)
+    public int getInt(String key)
     {
-        String value = getStringProperty(key);
+        String value = getString(key);
         return nullValueProvider.isNull(value) ? nullValueProvider.getIntValue() : Integer.parseInt(value);
     }
 
     @Override
-    public long getLongProperty(String key)
+    public long getLong(String key)
     {
-        String value = getStringProperty(key);
+        String value = getString(key);
         return nullValueProvider.isNull(value) ? nullValueProvider.getLongValue() : Long.parseLong(value);
     }
 
     @Override
-    public double getDoubleProperty(String key)
+    public double getDouble(String key)
     {
-        String value = getStringProperty(key);
+        String value = getString(key);
         return nullValueProvider.isNull(value) ? nullValueProvider.getDoubleValue() : Double.parseDouble(value);
     }
 

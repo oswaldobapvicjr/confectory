@@ -83,61 +83,61 @@ class PropertiesConfigurationHelperTest
     @Test
     void getBooleanProperty_existingKey_true()
     {
-        assertThat(HELPER.getBooleanProperty("prop.boolean"), is(true));
+        assertThat(HELPER.getBoolean("prop.boolean"), is(true));
     }
 
     @Test
     void getBooleanProperty_unknownKey_false()
     {
-        assertThat(HELPER.getBooleanProperty(PROP_UNKNOWN), is(false));
+        assertThat(HELPER.getBoolean(PROP_UNKNOWN), is(false));
     }
 
     @Test
     void getIntProperty_existingKey_zero()
     {
-        assertThat(HELPER.getIntProperty("prop.int"), is(2015));
+        assertThat(HELPER.getInt("prop.int"), is(2015));
     }
 
     @Test
     void getIntProperty_unknownKey_zero()
     {
-        assertThat(HELPER.getIntProperty(PROP_UNKNOWN), is(CUSTOM_NULL_VALUE_PROVIDER.getIntValue()));
+        assertThat(HELPER.getInt(PROP_UNKNOWN), is(CUSTOM_NULL_VALUE_PROVIDER.getIntValue()));
     }
 
     @Test
     void getLongProperty_existingKey_zero()
     {
-        assertThat(HELPER.getLongProperty("prop.long"), is(9876543210L));
+        assertThat(HELPER.getLong("prop.long"), is(9876543210L));
     }
 
     @Test
     void getLongProperty_unknownKey_zero()
     {
-        assertThat(HELPER.getLongProperty(PROP_UNKNOWN), is(CUSTOM_NULL_VALUE_PROVIDER.getLongValue()));
+        assertThat(HELPER.getLong(PROP_UNKNOWN), is(CUSTOM_NULL_VALUE_PROVIDER.getLongValue()));
     }
 
     @Test
     void getDoubleProperty_existingKey_zero()
     {
-        assertThat(HELPER.getDoubleProperty("prop.double"), is(3.333));
+        assertThat(HELPER.getDouble("prop.double"), is(3.333));
     }
 
     @Test
     void getDoubleProperty_unknownKey_zero()
     {
-        assertThat(HELPER.getDoubleProperty(PROP_UNKNOWN), is(CUSTOM_NULL_VALUE_PROVIDER.getDoubleValue()));
+        assertThat(HELPER.getDouble(PROP_UNKNOWN), is(CUSTOM_NULL_VALUE_PROVIDER.getDoubleValue()));
     }
 
     @Test
     void getSringProperty_existingKey_empty()
     {
-        assertThat(HELPER.getStringProperty("prop.string"), is("stringValue"));
+        assertThat(HELPER.getString("prop.string"), is("stringValue"));
     }
 
     @Test
     void getSringProperty_unknownKey_empty()
     {
-        assertThat(HELPER.getStringProperty(PROP_UNKNOWN), is(CUSTOM_NULL_VALUE_PROVIDER.getStringValue()));
+        assertThat(HELPER.getString(PROP_UNKNOWN), is(CUSTOM_NULL_VALUE_PROVIDER.getStringValue()));
     }
 
 }

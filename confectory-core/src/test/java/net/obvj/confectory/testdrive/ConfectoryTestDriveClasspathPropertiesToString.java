@@ -16,6 +16,6 @@ public class ConfectoryTestDriveClasspathPropertiesToString
                 .build();
 
         System.out.println(config.getBean());
-        System.out.println(config.getBooleanProperty("test"));
+        System.out.println(config.getBoolean("test"));
     }
 }

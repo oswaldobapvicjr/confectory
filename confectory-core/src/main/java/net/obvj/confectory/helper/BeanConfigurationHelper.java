@@ -44,7 +44,7 @@ public class BeanConfigurationHelper<T> extends BasicConfigurationHelper<T>
      *                                handled by the user-defined bean
      */
     @Override
-    public String getStringProperty(String key)
+    public String getString(String key)
     {
         throw new ConfigurationException("Operation not supported for bean of type '%s'",
                 super.bean.getClass().getName());

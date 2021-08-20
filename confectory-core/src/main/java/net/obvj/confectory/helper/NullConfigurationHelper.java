@@ -43,7 +43,7 @@ public class NullConfigurationHelper<T> extends AbstractBasicConfigurationHelper
      * @return the smart-null value for {@code boolean}, always
      */
     @Override
-    public boolean getBooleanProperty(String key)
+    public boolean getBoolean(String key)
     {
         return nullValueProvider.getBooleanValue();
     }
@@ -52,7 +52,7 @@ public class NullConfigurationHelper<T> extends AbstractBasicConfigurationHelper
      * @return the smart-null value for {@code int}, always
      */
     @Override
-    public int getIntProperty(String key)
+    public int getInt(String key)
     {
         return nullValueProvider.getIntValue();
     }
@@ -61,7 +61,7 @@ public class NullConfigurationHelper<T> extends AbstractBasicConfigurationHelper
      * @return the smart-null value for {@code long}, always
      */
     @Override
-    public long getLongProperty(String key)
+    public long getLong(String key)
     {
         return nullValueProvider.getLongValue();
     }
@@ -70,7 +70,7 @@ public class NullConfigurationHelper<T> extends AbstractBasicConfigurationHelper
      * @return the smart-null value for {@code double}, always
      */
     @Override
-    public double getDoubleProperty(String key)
+    public double getDouble(String key)
     {
         return nullValueProvider.getDoubleValue();
     }
@@ -79,7 +79,7 @@ public class NullConfigurationHelper<T> extends AbstractBasicConfigurationHelper
      * @return the smart-null value for {@code String}, always
      */
     @Override
-    public String getStringProperty(String key)
+    public String getString(String key)
     {
         return nullValueProvider.getStringValue();
     }

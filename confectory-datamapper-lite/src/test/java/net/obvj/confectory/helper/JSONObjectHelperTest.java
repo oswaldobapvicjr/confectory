@@ -56,49 +56,49 @@ class JSONObjectHelperTest
     void getBooleanProperty_existingKey_properValue()
     {
         // TODO #13 result should be true
-        assertThat(() -> HELPER.getBooleanProperty("$.booleanValue"), throwsException(UnsupportedOperationException.class));
+        assertThat(() -> HELPER.getBoolean("$.booleanValue"), throwsException(UnsupportedOperationException.class));
     }
 
     @Test
     void getBooleanProperty_unknownKey_false()
     {
         // TODO #13 should be false
-        assertThat(() -> HELPER.getBooleanProperty("$.unknown"), throwsException(UnsupportedOperationException.class));
+        assertThat(() -> HELPER.getBoolean("$.unknown"), throwsException(UnsupportedOperationException.class));
     }
 
     @Test
     void getIntProperty_existingKey_zero()
     {
         // TODO #13 should be 9
-        assertThat(() -> HELPER.getIntProperty("$.intValue"), throwsException(UnsupportedOperationException.class));
+        assertThat(() -> HELPER.getInt("$.intValue"), throwsException(UnsupportedOperationException.class));
     }
 
     @Test
     void getIntProperty_unknownKey_zero()
     {
         // TODO #13 should be 0
-        assertThat(() -> HELPER.getIntProperty("$.unknown"), throwsException(UnsupportedOperationException.class));
+        assertThat(() -> HELPER.getInt("$.unknown"), throwsException(UnsupportedOperationException.class));
     }
 
     @Test
     void getLongProperty_existingKey_zero()
     {
         // TODO #13 should be 9876543210L
-        assertThat(() -> HELPER.getLongProperty("$.longValue"), throwsException(UnsupportedOperationException.class));
+        assertThat(() -> HELPER.getLong("$.longValue"), throwsException(UnsupportedOperationException.class));
     }
 
     @Test
     void getLongProperty_unknownKey_zero()
     {
         // TODO #13 should be 0L
-        assertThat(() -> HELPER.getLongProperty("$.unknown"), throwsException(UnsupportedOperationException.class));
+        assertThat(() -> HELPER.getLong("$.unknown"), throwsException(UnsupportedOperationException.class));
     }
 
     @Test
     void getDoubleProperty_existingKey_zero()
     {
         // TODO #13 should be 8.99
-        assertThat(() -> HELPER.getDoubleProperty("$.store.books[?(@.title=='The Gruffalo')].price"),
+        assertThat(() -> HELPER.getDouble("$.store.books[?(@.title=='The Gruffalo')].price"),
                 throwsException(UnsupportedOperationException.class));
     }
 
@@ -106,14 +106,14 @@ class JSONObjectHelperTest
     void getDoubleProperty_unknownKey_zero()
     {
         // TODO #13 should be 0.0
-        assertThat(() -> HELPER.getDoubleProperty("$.unknown"), throwsException(UnsupportedOperationException.class));
+        assertThat(() -> HELPER.getDouble("$.unknown"), throwsException(UnsupportedOperationException.class));
     }
 
     @Test
     void getSringProperty_existingKey_empty()
     {
         // TODO #13 should be yellow
-        assertThat(() -> HELPER.getStringProperty("$.store.attributes.collor"),
+        assertThat(() -> HELPER.getString("$.store.attributes.collor"),
                 throwsException(UnsupportedOperationException.class));
     }
 
@@ -121,7 +121,7 @@ class JSONObjectHelperTest
     void getSringProperty_unknownKey_empty()
     {
         // TODO #13 should be ""
-        assertThat(() -> HELPER.getStringProperty("$.unknown"), throwsException(UnsupportedOperationException.class));
+        assertThat(() -> HELPER.getString("$.unknown"), throwsException(UnsupportedOperationException.class));
     }
 
 }

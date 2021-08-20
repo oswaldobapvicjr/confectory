@@ -43,7 +43,7 @@ public interface ConfigurationDataRetriever<T>
      * @param key the property key
      * @return the {@code boolean} value associated with the specified {@code key}
      */
-    boolean getBooleanProperty(String key);
+    boolean getBoolean(String key);
 
     /**
      * Returns the {@code int} value associated with the specified {@code key}.
@@ -52,7 +52,7 @@ public interface ConfigurationDataRetriever<T>
      * @return the {@code int} value associated with the specified {@code key}
      * @throws NumberFormatException if the value is not a parsable {@code int}.
      */
-    int getIntProperty(String key);
+    int getInt(String key);
 
     /**
      * Returns the {@code long} value associated with the specified {@code key}.
@@ -61,7 +61,7 @@ public interface ConfigurationDataRetriever<T>
      * @return the {@code long} value associated with the specified {@code key}
      * @throws NumberFormatException if the value is not a parsable {@code long}.
      */
-    long getLongProperty(String key);
+    long getLong(String key);
 
     /**
      * Returns the {@code double} value associated with the specified {@code key}.
@@ -70,7 +70,7 @@ public interface ConfigurationDataRetriever<T>
      * @return the {@code double} value associated with the specified {@code key}
      * @throws NumberFormatException if the value is not a parsable {@code double}.
      */
-    double getDoubleProperty(String key);
+    double getDouble(String key);
 
     /**
      * Returns the {@code String} value associated with the specified {@code key}.
@@ -78,6 +78,6 @@ public interface ConfigurationDataRetriever<T>
      * @param key the property key
      * @return the {@code String} value associated with the specified {@code key}
      */
-    String getStringProperty(String key);
+    String getString(String key);
 
 }

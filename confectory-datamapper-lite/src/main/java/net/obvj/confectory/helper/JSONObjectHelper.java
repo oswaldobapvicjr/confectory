@@ -42,31 +42,31 @@ public class JSONObjectHelper extends AbstractBasicConfigurationHelper<JSONObjec
     }
 
     @Override
-    public boolean getBooleanProperty(String key)
+    public boolean getBoolean(String key)
     {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
     @Override
-    public int getIntProperty(String key)
+    public int getInt(String key)
     {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
     @Override
-    public long getLongProperty(String key)
+    public long getLong(String key)
     {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
     @Override
-    public double getDoubleProperty(String key)
+    public double getDouble(String key)
     {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
     @Override
-    public String getStringProperty(String key)
+    public String getString(String key)
     {
         throw new UnsupportedOperationException("Not yet implemented");
     }

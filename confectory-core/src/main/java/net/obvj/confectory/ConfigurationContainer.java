@@ -236,7 +236,7 @@ public class ConfigurationContainer
      */
     public boolean getBooleanProperty(String namespace, String key)
     {
-        return getProperty(namespace, config -> config.getBooleanProperty(key), NullValueProvider::getBooleanValue);
+        return getProperty(namespace, config -> config.getBoolean(key), NullValueProvider::getBooleanValue);
     }
 
     /**
@@ -261,7 +261,7 @@ public class ConfigurationContainer
      */
     public int getIntProperty(String namespace, String key)
     {
-        return getProperty(namespace, config -> config.getIntProperty(key), NullValueProvider::getIntValue);
+        return getProperty(namespace, config -> config.getInt(key), NullValueProvider::getIntValue);
     }
 
     /**
@@ -286,7 +286,7 @@ public class ConfigurationContainer
      */
     public long getLongProperty(String namespace, String key)
     {
-        return getProperty(namespace, config -> config.getLongProperty(key), NullValueProvider::getLongValue);
+        return getProperty(namespace, config -> config.getLong(key), NullValueProvider::getLongValue);
     }
 
     /**
@@ -311,7 +311,7 @@ public class ConfigurationContainer
      */
     public double getDoubleProperty(String namespace, String key)
     {
-        return getProperty(namespace, config -> config.getDoubleProperty(key), NullValueProvider::getDoubleValue);
+        return getProperty(namespace, config -> config.getDouble(key), NullValueProvider::getDoubleValue);
     }
 
     /**
@@ -336,7 +336,7 @@ public class ConfigurationContainer
      */
     public String getStringProperty(String namespace, String key)
     {
-        return getProperty(namespace, config -> config.getStringProperty(key), NullValueProvider::getStringValue);
+        return getProperty(namespace, config -> config.getString(key), NullValueProvider::getStringValue);
     }
 
     /**

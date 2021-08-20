@@ -175,33 +175,33 @@ public final class Configuration<T> implements ConfigurationDataRetriever<T>, Co
     }
 
     @Override
-    public boolean getBooleanProperty(String key)
+    public boolean getBoolean(String key)
     {
-        return helper.getBooleanProperty(key);
+        return helper.getBoolean(key);
     }
 
     @Override
-    public int getIntProperty(String key)
+    public int getInt(String key)
     {
-        return helper.getIntProperty(key);
+        return helper.getInt(key);
     }
 
     @Override
-    public long getLongProperty(String key)
+    public long getLong(String key)
     {
-        return helper.getLongProperty(key);
+        return helper.getLong(key);
     }
 
     @Override
-    public double getDoubleProperty(String key)
+    public double getDouble(String key)
     {
-        return helper.getDoubleProperty(key);
+        return helper.getDouble(key);
     }
 
     @Override
-    public String getStringProperty(String key)
+    public String getString(String key)
     {
-        return helper.getStringProperty(key);
+        return helper.getString(key);
     }
 
     @Override

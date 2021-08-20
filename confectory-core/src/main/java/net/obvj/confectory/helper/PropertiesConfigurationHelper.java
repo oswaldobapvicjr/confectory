@@ -39,7 +39,7 @@ public class PropertiesConfigurationHelper extends BasicConfigurationHelper<Prop
     }
 
     @Override
-    public String getStringProperty(String key)
+    public String getString(String key)
     {
         Objects.requireNonNull(key, "The key must not be null");
         String value = super.bean.getProperty(key);

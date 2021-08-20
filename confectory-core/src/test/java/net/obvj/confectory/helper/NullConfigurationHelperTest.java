@@ -28,31 +28,31 @@ class NullConfigurationHelperTest
     @Test
     void getBooleanProperty_anyKey_false()
     {
-        assertThat(helper.getBooleanProperty(KEY1), is(false));
+        assertThat(helper.getBoolean(KEY1), is(false));
     }
 
     @Test
     void getIntProperty_anyKey_zero()
     {
-        assertThat(helper.getIntProperty(KEY1), is(0));
+        assertThat(helper.getInt(KEY1), is(0));
     }
 
     @Test
     void getLongProperty_anyKey_zero()
     {
-        assertThat(helper.getLongProperty(KEY1), is(0L));
+        assertThat(helper.getLong(KEY1), is(0L));
     }
 
     @Test
     void getDoubleProperty_anyKey_zero()
     {
-        assertThat(helper.getDoubleProperty(KEY1), is(0.0));
+        assertThat(helper.getDouble(KEY1), is(0.0));
     }
 
     @Test
     void getSringProperty_anyKey_empty()
     {
-        assertThat(helper.getStringProperty(KEY1), is(""));
+        assertThat(helper.getString(KEY1), is(""));
     }
 
 }
