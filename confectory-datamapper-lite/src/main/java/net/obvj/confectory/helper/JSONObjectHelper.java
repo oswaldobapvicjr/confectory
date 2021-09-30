@@ -16,9 +16,18 @@
 
 package net.obvj.confectory.helper;
 
+import java.math.BigDecimal;
 import java.util.Optional;
+import java.util.function.Supplier;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
+
+import com.jayway.jsonpath.*;
+import com.jayway.jsonpath.spi.json.JsonOrgJsonProvider;
+import com.jayway.jsonpath.spi.mapper.JsonOrgMappingProvider;
+
+import net.obvj.confectory.ConfigurationException;
 
 /**
  * A specialized Configuration Helper that retrieves data from a {@link JSONObject}.
@@ -28,11 +37,21 @@ import org.json.JSONObject;
  */
 public class JSONObjectHelper extends AbstractBasicConfigurationHelper<JSONObject>
 {
-    protected final JSONObject jsonObject;
+    private final JSONObject jsonObject;
+
+    private final JsonOrgMappingProvider mappingProvider;
+    private final Configuration jsonPathConfiguration;
+    private final ParseContext jsonPathContext;
+    private final DocumentContext documentContext;
 
     public JSONObjectHelper(JSONObject jsonObject)
     {
         this.jsonObject = jsonObject;
+        mappingProvider = new JsonOrgMappingProvider();
+        jsonPathConfiguration = Configuration.builder().jsonProvider(new JsonOrgJsonProvider())
+                .mappingProvider(mappingProvider).options(Option.SUPPRESS_EXCEPTIONS, Option.ALWAYS_RETURN_LIST).build();
+        jsonPathContext = JsonPath.using(jsonPathConfiguration);
+        documentContext = jsonPathContext.parse(jsonObject);
     }
 
     @Override
@@ -44,30 +63,46 @@ public class JSONObjectHelper extends AbstractBasicConfigurationHelper<JSONObjec
     @Override
     public boolean getBoolean(String key)
     {
-        throw new UnsupportedOperationException("Not yet implemented");
+        return getValue(key, boolean.class, () -> nullValueProvider.getBooleanValue());
     }
 
     @Override
     public int getInt(String key)
     {
-        throw new UnsupportedOperationException("Not yet implemented");
+        return getValue(key, int.class, () -> nullValueProvider.getIntValue());
     }
 
     @Override
     public long getLong(String key)
     {
-        throw new UnsupportedOperationException("Not yet implemented");
+        return getValue(key, long.class, () -> nullValueProvider.getLongValue());
     }
 
     @Override
     public double getDouble(String key)
     {
-        throw new UnsupportedOperationException("Not yet implemented");
+        return getValue(key, BigDecimal.class, () -> BigDecimal.valueOf(nullValueProvider.getDoubleValue()))
+                .doubleValue();
     }
 
     @Override
     public String getString(String key)
     {
-        throw new UnsupportedOperationException("Not yet implemented");
+        return getValue(key, String.class, () -> nullValueProvider.getStringValue());
+    }
+
+    private <T> T getValue(String jsonPath, Class<T> clazz, Supplier<T> defaultSupplier)
+    {
+        JSONArray result = documentContext.read(jsonPath);
+        switch (result.length())
+        {
+        case 0:
+            return defaultSupplier.get();
+        case 1:
+            return mappingProvider.map(result.get(0), clazz, jsonPathConfiguration);
+        default:
+            throw new ConfigurationException("The specified JSONPath returned more than one element: %s", jsonPath);
+        }
+
     }
 }
