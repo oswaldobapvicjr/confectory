@@ -1,5 +1,6 @@
 package net.obvj.confectory.helper;
 
+import static net.obvj.junit.utils.matchers.AdvancedMatchers.*;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.sameInstance;
@@ -9,6 +10,8 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import net.obvj.confectory.ConfigurationException;
 
 /**
  * Unit tests for the {@link JSONObjectHelper}.
@@ -89,9 +92,16 @@ class JSONObjectHelperTest
     }
 
     @Test
-    void getDoubleProperty_existingKey_success()
+    void getDoubleProperty_existingKeyAndSingleton_success()
     {
         assertThat(HELPER.getDouble("$.store.books[?(@.title=='The Gruffalo')].price"), equalTo(8.99));
+    }
+
+    @Test
+    void getDoubleProperty_existingKeyAndMultipleElements_configurationException()
+    {
+        assertThat(() -> HELPER.getDouble("$.store.books[?(@.price>5)].price"),
+                throwsException(ConfigurationException.class).withMessageContaining("more than one element"));
     }
 
     @Test

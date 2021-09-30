@@ -61,34 +61,34 @@ public class JSONObjectHelper extends AbstractBasicConfigurationHelper<JSONObjec
     }
 
     @Override
-    public boolean getBoolean(String key)
+    public boolean getBoolean(String jsonPath)
     {
-        return getValue(key, boolean.class, () -> nullValueProvider.getBooleanValue());
+        return getValue(jsonPath, boolean.class, () -> nullValueProvider.getBooleanValue());
     }
 
     @Override
-    public int getInt(String key)
+    public int getInt(String jsonPath)
     {
-        return getValue(key, int.class, () -> nullValueProvider.getIntValue());
+        return getValue(jsonPath, int.class, () -> nullValueProvider.getIntValue());
     }
 
     @Override
-    public long getLong(String key)
+    public long getLong(String jsonPath)
     {
-        return getValue(key, long.class, () -> nullValueProvider.getLongValue());
+        return getValue(jsonPath, long.class, () -> nullValueProvider.getLongValue());
     }
 
     @Override
-    public double getDouble(String key)
+    public double getDouble(String jsonPath)
     {
-        return getValue(key, BigDecimal.class, () -> BigDecimal.valueOf(nullValueProvider.getDoubleValue()))
+        return getValue(jsonPath, BigDecimal.class, () -> BigDecimal.valueOf(nullValueProvider.getDoubleValue()))
                 .doubleValue();
     }
 
     @Override
-    public String getString(String key)
+    public String getString(String jsonPath)
     {
-        return getValue(key, String.class, () -> nullValueProvider.getStringValue());
+        return getValue(jsonPath, String.class, () -> nullValueProvider.getStringValue());
     }
 
     private <T> T getValue(String jsonPath, Class<T> clazz, Supplier<T> defaultSupplier)
@@ -103,6 +103,5 @@ public class JSONObjectHelper extends AbstractBasicConfigurationHelper<JSONObjec
         default:
             throw new ConfigurationException("The specified JSONPath returned more than one element: %s", jsonPath);
         }
-
     }
 }
