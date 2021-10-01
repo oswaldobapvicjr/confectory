@@ -1,6 +1,7 @@
 package net.obvj.confectory.helper;
 
-import static net.obvj.junit.utils.matchers.AdvancedMatchers.throwsException;
+import static net.obvj.junit.utils.matchers.AdvancedMatchers.*;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -9,6 +10,8 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import net.obvj.confectory.ConfigurationException;
 
 /**
  * Unit tests for the {@link JSONObjectHelper}.
@@ -53,75 +56,70 @@ class JSONObjectHelperTest
     }
 
     @Test
-    void getBooleanProperty_existingKey_properValue()
+    void getBooleanProperty_existingKey_success()
     {
-        // TODO #13 result should be true
-        assertThat(() -> HELPER.getBoolean("$.booleanValue"), throwsException(UnsupportedOperationException.class));
+        assertThat(HELPER.getBoolean("$.booleanValue"), equalTo(true));
     }
 
     @Test
     void getBooleanProperty_unknownKey_false()
     {
-        // TODO #13 should be false
-        assertThat(() -> HELPER.getBoolean("$.unknown"), throwsException(UnsupportedOperationException.class));
+        assertThat(HELPER.getBoolean("$.unknown"), equalTo(false));
     }
 
     @Test
-    void getIntProperty_existingKey_zero()
+    void getIntProperty_existingKey_success()
     {
-        // TODO #13 should be 9
-        assertThat(() -> HELPER.getInt("$.intValue"), throwsException(UnsupportedOperationException.class));
+        assertThat(HELPER.getInt("$.intValue"), equalTo(9));
     }
 
     @Test
     void getIntProperty_unknownKey_zero()
     {
-        // TODO #13 should be 0
-        assertThat(() -> HELPER.getInt("$.unknown"), throwsException(UnsupportedOperationException.class));
+        assertThat(HELPER.getInt("$.unknown"), equalTo(0));
     }
 
     @Test
-    void getLongProperty_existingKey_zero()
+    void getLongProperty_existingKey_success()
     {
-        // TODO #13 should be 9876543210L
-        assertThat(() -> HELPER.getLong("$.longValue"), throwsException(UnsupportedOperationException.class));
+        assertThat(HELPER.getLong("$.longValue"), equalTo(9876543210L));
     }
 
     @Test
     void getLongProperty_unknownKey_zero()
     {
-        // TODO #13 should be 0L
-        assertThat(() -> HELPER.getLong("$.unknown"), throwsException(UnsupportedOperationException.class));
+        assertThat(HELPER.getLong("$.unknown"), equalTo(0L));
     }
 
     @Test
-    void getDoubleProperty_existingKey_zero()
+    void getDoubleProperty_existingKeyAndSingleton_success()
     {
-        // TODO #13 should be 8.99
-        assertThat(() -> HELPER.getDouble("$.store.books[?(@.title=='The Gruffalo')].price"),
-                throwsException(UnsupportedOperationException.class));
+        assertThat(HELPER.getDouble("$.store.books[?(@.title=='The Gruffalo')].price"), equalTo(8.99));
+    }
+
+    @Test
+    void getDoubleProperty_existingKeyAndMultipleElements_configurationException()
+    {
+        assertThat(() -> HELPER.getDouble("$.store.books[?(@.price>5)].price"),
+                throwsException(ConfigurationException.class).withMessageContaining("more than one element"));
     }
 
     @Test
     void getDoubleProperty_unknownKey_zero()
     {
-        // TODO #13 should be 0.0
-        assertThat(() -> HELPER.getDouble("$.unknown"), throwsException(UnsupportedOperationException.class));
+        assertThat(HELPER.getDouble("$.unknown"), equalTo(0.0));
     }
 
     @Test
-    void getSringProperty_existingKey_empty()
+    void getSringProperty_existingKey_success()
     {
-        // TODO #13 should be yellow
-        assertThat(() -> HELPER.getString("$.store.attributes.collor"),
-                throwsException(UnsupportedOperationException.class));
+        assertThat(HELPER.getString("$.store.attributes.color"), equalTo("yellow"));
     }
 
     @Test
     void getSringProperty_unknownKey_empty()
     {
-        // TODO #13 should be ""
-        assertThat(() -> HELPER.getString("$.unknown"), throwsException(UnsupportedOperationException.class));
+        assertThat(HELPER.getString("$.unknown"), equalTo(""));
     }
 
 }
