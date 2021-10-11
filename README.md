@@ -27,12 +27,26 @@ Configuration<Properties> config = Configuration.<Properties>builder()
         .build();
 ````
 
-#### Loading configuration data from a JSON resource in an HTTP server (planned release):
+#### Loading configuration data from a JSON document in the file system:
+
+````java
+Configuration<JSONObject> config = Configuration.<JSONObject>builder()
+        .source(SourceFactory.fileSource("${HOME}/myapp/myconf.json"))
+        .mapper(new JSONObjectMapper())
+        .build();
+````
+
+> Then access document data using [JSONPath expressions](https://goessner.net/articles/JsonPath/index.html#e2):
+> ````java
+> String value = config.getString("$.store.name");
+> ````
+
+#### Loading XML document from an HTTP server as JSON (planned release):
 
 ````java
 Configuration<JSONObject> config = Configuration.<JSONObject>builder()
         .source(SourceFactory.httpSource("http://myserver:8080/config"))
-        .mapper(new JSONObjectMapper())
+        .mapper(new XmlToJSONObjectMapper())
         .build();
 ````
 
@@ -65,7 +79,7 @@ Configuration<JSONObject> config = Configuration.<JSONObject>builder()
     </td>
   </tr>
   <tr>
-    <td><b>0.2.0 :construction:</b></td>
+    <td><b>0.2.0 :heavy_check_mark:</b></td>
     <td>2021-09</td>
     <td>
       confectory-datamapper-lite
@@ -73,11 +87,10 @@ Configuration<JSONObject> config = Configuration.<JSONObject>builder()
     <td>
       <li><b>XML and JSON</b> files parsing</li>
       <li>Data fetch using JSONPath</li>
-      <li>Configuration Merger</li>
     </td>
   </tr>
   <tr>
-    <td><b>0.3.0 :calendar:</b></td>
+    <td><b>0.3.0 :construction:</b></td>
     <td>2021-10</td>
     <td>
       confectory-datamapper-jackson2*
@@ -96,6 +109,7 @@ Configuration<JSONObject> config = Configuration.<JSONObject>builder()
     <td>
       <li>JSON files parsing using GSON</li>
       <li><b>HTTP/1.1</b> file source</li>
+      <li>Configuration Merger</li>
     </td>
   </tr>
 </table>
