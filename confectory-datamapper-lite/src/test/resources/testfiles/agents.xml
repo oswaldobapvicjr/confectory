@@ -10,5 +10,9 @@
             <class>Agent2</class>
             <interval>10s</interval>
         </agent>
+        <agent>
+            <class>Agent3</class>
+            <interval>1h</interval>
+        </agent>
     </agents>
 </conf>

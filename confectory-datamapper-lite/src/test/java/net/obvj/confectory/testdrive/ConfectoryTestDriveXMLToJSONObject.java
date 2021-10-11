@@ -11,9 +11,12 @@ public class ConfectoryTestDriveXMLToJSONObject
     {
         Configuration<JSONObject> config = Configuration.<JSONObject>builder()
                 .namespace("test")
-                .source("testfiles/agents.xml").mapper(new XMLToJSONObjectMapper())
-                .build();
+                .source("testfiles/agents.xml")
+                .mapper(new XMLToJSONObjectMapper()).build();
 
         System.out.println(config.getBean().get().toString(2));
+        System.out.println(config.getBoolean("conf.enabled"));
+        System.out.println(config.getString("**.agent[0].interval"));
+        System.out.println(config.getString("$.conf.agents.agent[?(@.class=='Agent2')].interval"));
     }
 }
