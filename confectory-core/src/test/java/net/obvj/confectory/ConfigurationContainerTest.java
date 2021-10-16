@@ -183,139 +183,141 @@ class ConfigurationContainerTest
     }
 
     @Test
-    void getStringProperty_keyOnlyAndStrict_configurationWithoutNamespace()
+    void getString_keyOnlyAndStrict_configurationWithoutNamespace()
     {
         container = new ConfigurationContainer(CONF_NS1_PROPERTIES_1, CONF_NS2_PROPERTIES_1, CONF_PROPERTIES_1);
-        assertThat(container.getStringProperty(KEY_TEST), equalTo("ok01")); // CONF_PROPERTIES1 (strict)
-        assertThat(container.getStringProperty(KEY_STRING), equalTo("")); // not found (strict)
+        assertThat(container.getString(KEY_TEST), equalTo("ok01")); // CONF_PROPERTIES1 (strict)
+        assertThat(container.getString(KEY_STRING), equalTo("")); // not found (strict)
     }
 
     @Test
-    void getStringProperty_keyOnlyAndLenient_configurationWithoutNamespace()
+    void getString_keyOnlyAndLenient_configurationWithoutNamespace()
     {
         container = new ConfigurationContainer(DataFetchStrategy.LENIENT, CONF_NS1_PROPERTIES_1, CONF_NS1_PROPERTIES_2, CONF_NS2_PROPERTIES_1, CONF_PROPERTIES_1);
-        assertThat(container.getStringProperty(KEY_TEST), equalTo("ok21")); // CONF_NS2_PROPERTIES_1 (lenient)
-        assertThat(container.getStringProperty(KEY_STRING), equalTo("string2")); // CONF_NS1_PROPERTIES_2 (lenient)
+        assertThat(container.getString(KEY_TEST), equalTo("ok21")); // CONF_NS2_PROPERTIES_1 (lenient)
+        assertThat(container.getString(KEY_STRING), equalTo("string2")); // CONF_NS1_PROPERTIES_2 (lenient)
     }
 
     @Test
-    void getStringProperty_keyOnlyAndLenientUnsorted_anyOfTheConfigurationsWithoutNamespace() {
+    void getString_keyOnlyAndLenientUnsorted_anyOfTheConfigurationsWithoutNamespace()
+    {
         container = new ConfigurationContainer(DataFetchStrategy.LENIENT_UNSORTED, CONF_NS1_PROPERTIES_1, CONF_NS1_PROPERTIES_2,
                 CONF_NS2_PROPERTIES_1, CONF_PROPERTIES_1);
-        assertThat(container.getStringProperty(KEY_TEST), equalTo("ok01")); // CONF_NS2_PROPERTIES_1 (lenient)
-        assertThat(container.getStringProperty(KEY_STRING), either(equalTo("string1")).or(equalTo("string2")));
+        assertThat(container.getString(KEY_TEST), equalTo("ok01")); // CONF_NS2_PROPERTIES_1 (lenient)
+        assertThat(container.getString(KEY_STRING), either(equalTo("string1")).or(equalTo("string2")));
     }
 
     @Test
-    void getStringProperty_namespaceAndKeyStrict_highestPrecedenceConfiguration()
+    void getString_namespaceAndKeyStrict_highestPrecedenceConfiguration()
     {
         container = new ConfigurationContainer(CONF_NS1_PROPERTIES_1, CONF_NS1_PROPERTIES_2, CONF_NS2_PROPERTIES_1);
-        assertThat(container.getStringProperty(NAMESPACE1, KEY_STRING), equalTo("string2")); // CONF_NS1_PROPERTIES_2
+        assertThat(container.getString(NAMESPACE1, KEY_STRING), equalTo("string2")); // CONF_NS1_PROPERTIES_2
     }
 
     @Test
-    void getStringProperty_namespaceAndKeyLenient_sameAsStrict()
+    void getString_namespaceAndKeyLenient_sameAsStrict()
     {
         container = new ConfigurationContainer(DataFetchStrategy.LENIENT, CONF_NS1_PROPERTIES_1, CONF_NS1_PROPERTIES_2, CONF_NS2_PROPERTIES_1);
-        assertThat(container.getStringProperty(NAMESPACE1, KEY_STRING), equalTo("string2")); // CONF_NS1_PROPERTIES_2
+        assertThat(container.getString(NAMESPACE1, KEY_STRING), equalTo("string2")); // CONF_NS1_PROPERTIES_2
     }
 
     @Test
-    void getStringProperty_namespaceAndKeyLenientUnsorted_sameAsStrictUnsorted() {
+    void getString_namespaceAndKeyLenientUnsorted_sameAsStrictUnsorted()
+    {
         container = new ConfigurationContainer(DataFetchStrategy.LENIENT_UNSORTED, CONF_NS1_PROPERTIES_1, CONF_NS1_PROPERTIES_2,
                 CONF_NS2_PROPERTIES_1);
-        assertThat(container.getStringProperty(NAMESPACE1, KEY_STRING), either(equalTo("string1")).or(equalTo("string2")));
+        assertThat(container.getString(NAMESPACE1, KEY_STRING), either(equalTo("string1")).or(equalTo("string2")));
     }
 
     @Test
-    void getStringProperty_namespaceAndKey_defaultNullValueIfNotFound()
+    void getString_namespaceAndKey_defaultNullValueIfNotFound()
     {
         container = new ConfigurationContainer(CUSTOM_NVP);
-        assertThat(container.getStringProperty(NAMESPACE1, KEY_BAD), equalTo(CUSTOM_NVP.getStringValue())); // CUSTOM_NVP
+        assertThat(container.getString(NAMESPACE1, KEY_BAD), equalTo(CUSTOM_NVP.getStringValue())); // CUSTOM_NVP
     }
 
     @Test
-    void getIntProperty_keyOnly_configurationWithoutNamespace()
+    void getInt_keyOnly_configurationWithoutNamespace()
     {
         container = new ConfigurationContainer(CONF_NS1_PROPERTIES_1, CONF_NS2_PROPERTIES_1, CONF_PROPERTIES_1);
-        assertThat(container.getIntProperty(KEY_INT), equalTo(10)); // CONF_PROPERTIES1
+        assertThat(container.getInt(KEY_INT), equalTo(10)); // CONF_PROPERTIES1
     }
 
     @Test
-    void getIntProperty_namespaceAndKey_highestPrecedenceConfiguration()
+    void getInt_namespaceAndKey_highestPrecedenceConfiguration()
     {
         container = new ConfigurationContainer(CONF_NS1_PROPERTIES_1, CONF_NS1_PROPERTIES_2, CONF_NS2_PROPERTIES_1);
-        assertThat(container.getIntProperty(NAMESPACE1, KEY_INT), equalTo(2)); // CONF_NS1_PROPERTIES_2
+        assertThat(container.getInt(NAMESPACE1, KEY_INT), equalTo(2)); // CONF_NS1_PROPERTIES_2
     }
 
     @Test
-    void getIntProperty_namespaceAndKey_defaultNullValueIfNotFound()
+    void getInt_namespaceAndKey_defaultNullValueIfNotFound()
     {
         container = new ConfigurationContainer(CUSTOM_NVP);
-        assertThat(container.getIntProperty(NAMESPACE1, KEY_BAD), equalTo(CUSTOM_NVP.getIntValue())); // CUSTOM_NVP
+        assertThat(container.getInt(NAMESPACE1, KEY_BAD), equalTo(CUSTOM_NVP.getIntValue())); // CUSTOM_NVP
     }
 
     @Test
-    void getBooleanProperty_keyOnly_configurationWithoutNamespace()
+    void getBoolean_keyOnly_configurationWithoutNamespace()
     {
         container = new ConfigurationContainer(CONF_NS1_PROPERTIES_1, CONF_NS2_PROPERTIES_1, CONF_PROPERTIES_1);
-        assertThat(container.getBooleanProperty(KEY_BOOLEAN), equalTo(true)); // CONF_PROPERTIES1
+        assertThat(container.getBoolean(KEY_BOOLEAN), equalTo(true)); // CONF_PROPERTIES1
     }
 
     @Test
-    void getBooleanProperty_namespaceAndKey_highestPrecedenceConfiguration()
+    void getBoolean_namespaceAndKey_highestPrecedenceConfiguration()
     {
         container = new ConfigurationContainer(CONF_NS1_PROPERTIES_1, CONF_NS1_PROPERTIES_2, CONF_NS2_PROPERTIES_1);
-        assertThat(container.getBooleanProperty(NAMESPACE1, KEY_BOOLEAN), equalTo(true)); // CONF_NS1_PROPERTIES_2
+        assertThat(container.getBoolean(NAMESPACE1, KEY_BOOLEAN), equalTo(true)); // CONF_NS1_PROPERTIES_2
     }
 
     @Test
-    void getBooleanProperty_namespaceAndKey_defaultNullValueIfNotFound()
+    void getBoolean_namespaceAndKey_defaultNullValueIfNotFound()
     {
         container = new ConfigurationContainer(CUSTOM_NVP);
-        assertThat(container.getBooleanProperty(NAMESPACE1, KEY_BAD), equalTo(CUSTOM_NVP.getBooleanValue())); // CUSTOM_NVP
+        assertThat(container.getBoolean(NAMESPACE1, KEY_BAD), equalTo(CUSTOM_NVP.getBooleanValue())); // CUSTOM_NVP
     }
 
     @Test
-    void getDoubleProperty_keyOnly_configurationWithoutNamespace()
+    void getDouble_keyOnly_configurationWithoutNamespace()
     {
         container = new ConfigurationContainer(CONF_NS1_PROPERTIES_1, CONF_NS2_PROPERTIES_1, CONF_PROPERTIES_1);
-        assertThat(container.getDoubleProperty(KEY_DOUBLE), equalTo(10.1)); // CONF_PROPERTIES1
+        assertThat(container.getDouble(KEY_DOUBLE), equalTo(10.1)); // CONF_PROPERTIES1
     }
 
     @Test
-    void getDoubleProperty_namespaceAndKey_highestPrecedenceConfiguration()
+    void getDouble_namespaceAndKey_highestPrecedenceConfiguration()
     {
         container = new ConfigurationContainer(CONF_NS1_PROPERTIES_1, CONF_NS1_PROPERTIES_2, CONF_NS2_PROPERTIES_1);
-        assertThat(container.getDoubleProperty(NAMESPACE1, KEY_DOUBLE), equalTo(2.2)); // CONF_NS1_PROPERTIES_2
+        assertThat(container.getDouble(NAMESPACE1, KEY_DOUBLE), equalTo(2.2)); // CONF_NS1_PROPERTIES_2
     }
 
     @Test
-    void getDoubleProperty_namespaceAndKey_defaultNullValueIfNotFound()
+    void getDouble_namespaceAndKey_defaultNullValueIfNotFound()
     {
         container = new ConfigurationContainer(CUSTOM_NVP);
-        assertThat(container.getDoubleProperty(NAMESPACE1, KEY_BAD), equalTo(CUSTOM_NVP.getDoubleValue())); // CUSTOM_NVP
+        assertThat(container.getDouble(NAMESPACE1, KEY_BAD), equalTo(CUSTOM_NVP.getDoubleValue())); // CUSTOM_NVP
     }
 
     @Test
-    void getLongProperty_keyOnly_configurationWithoutNamespace()
+    void getLong_keyOnly_configurationWithoutNamespace()
     {
         container = new ConfigurationContainer(CONF_NS1_PROPERTIES_1, CONF_NS2_PROPERTIES_1, CONF_PROPERTIES_1);
-        assertThat(container.getLongProperty(KEY_LONG), equalTo(1010L)); // CONF_PROPERTIES1
+        assertThat(container.getLong(KEY_LONG), equalTo(1010L)); // CONF_PROPERTIES1
     }
 
     @Test
-    void getLongProperty_namespaceAndKey_highestPrecedenceConfiguration()
+    void getLong_namespaceAndKey_highestPrecedenceConfiguration()
     {
         container = new ConfigurationContainer(CONF_NS1_PROPERTIES_1, CONF_NS1_PROPERTIES_2, CONF_NS2_PROPERTIES_1);
-        assertThat(container.getLongProperty(NAMESPACE1, KEY_LONG), equalTo(111L)); // CONF_NS1_PROPERTIES_1
+        assertThat(container.getLong(NAMESPACE1, KEY_LONG), equalTo(111L)); // CONF_NS1_PROPERTIES_1
     }
 
     @Test
-    void getLongProperty_namespaceAndKey_defaultNullValueIfNotFound()
+    void getLong_namespaceAndKey_defaultNullValueIfNotFound()
     {
         container = new ConfigurationContainer(CUSTOM_NVP);
-        assertThat(container.getLongProperty(NAMESPACE1, KEY_BAD), equalTo(CUSTOM_NVP.getLongValue())); // CUSTOM_NVP
+        assertThat(container.getLong(NAMESPACE1, KEY_BAD), equalTo(CUSTOM_NVP.getLongValue())); // CUSTOM_NVP
     }
 
     @Test

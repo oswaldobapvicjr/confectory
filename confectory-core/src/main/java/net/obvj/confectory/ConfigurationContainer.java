@@ -216,14 +216,17 @@ public class ConfigurationContainer
 
     /**
      * Returns the {@code boolean} value associated with the specified {@code key} in the
-     * default namespace.
+     * default namespace (or in all namespaces depending on the {@link DataFetchStrategy} in
+     * scope).
      *
      * @param key the property key
      * @return the {@code boolean} value associated with the specified {@code key}
+     *
+     * @see DataFetchStrategy
      */
-    public boolean getBooleanProperty(String key)
+    public boolean getBoolean(String key)
     {
-        return getBooleanProperty(DEFAULT_NAMESPACE, key);
+        return getBoolean(DEFAULT_NAMESPACE, key);
     }
 
     /**
@@ -234,21 +237,23 @@ public class ConfigurationContainer
      * @param key       the property key
      * @return the {@code boolean} value associated with the specified {@code key}
      */
-    public boolean getBooleanProperty(String namespace, String key)
+    public boolean getBoolean(String namespace, String key)
     {
         return getProperty(namespace, config -> config.getBoolean(key), NullValueProvider::getBooleanValue);
     }
 
     /**
      * Returns the {@code int} value associated with the specified {@code key} in the default
-     * namespace.
+     * namespace (or in all namespaces depending on the {@link DataFetchStrategy} in scope).
      *
      * @param key the property key
      * @return the {@code int} value associated with the specified {@code key}
+     *
+     * @see DataFetchStrategy
      */
-    public int getIntProperty(String key)
+    public int getInt(String key)
     {
-        return getIntProperty(DEFAULT_NAMESPACE, key);
+        return getInt(DEFAULT_NAMESPACE, key);
     }
 
     /**
@@ -259,21 +264,23 @@ public class ConfigurationContainer
      * @param key       the property key
      * @return the {@code int} value associated with the specified {@code key}
      */
-    public int getIntProperty(String namespace, String key)
+    public int getInt(String namespace, String key)
     {
         return getProperty(namespace, config -> config.getInt(key), NullValueProvider::getIntValue);
     }
 
     /**
      * Returns the {@code long} value associated with the specified {@code key} in the default
-     * namespace.
+     * namespace (or in all namespaces depending on the {@link DataFetchStrategy} in scope).
      *
      * @param key the property key
      * @return the {@code long} value associated with the specified {@code key}
+     *
+     * @see DataFetchStrategy
      */
-    public long getLongProperty(String key)
+    public long getLong(String key)
     {
-        return getLongProperty(DEFAULT_NAMESPACE, key);
+        return getLong(DEFAULT_NAMESPACE, key);
     }
 
     /**
@@ -284,21 +291,24 @@ public class ConfigurationContainer
      * @param key       the property key
      * @return the {@code long} value associated with the specified {@code key}
      */
-    public long getLongProperty(String namespace, String key)
+    public long getLong(String namespace, String key)
     {
         return getProperty(namespace, config -> config.getLong(key), NullValueProvider::getLongValue);
     }
 
     /**
      * Returns the {@code double} value associated with the specified {@code key} in the
-     * default namespace.
+     * default namespace (or in all namespaces depending on the {@link DataFetchStrategy} in
+     * scope).
      *
      * @param key the property key
      * @return the {@code double} value associated with the specified {@code key}
+     *
+     * @see DataFetchStrategy
      */
-    public double getDoubleProperty(String key)
+    public double getDouble(String key)
     {
-        return getDoubleProperty(DEFAULT_NAMESPACE, key);
+        return getDouble(DEFAULT_NAMESPACE, key);
     }
 
     /**
@@ -309,21 +319,24 @@ public class ConfigurationContainer
      * @param key       the property key
      * @return the {@code double} value associated with the specified {@code key}
      */
-    public double getDoubleProperty(String namespace, String key)
+    public double getDouble(String namespace, String key)
     {
         return getProperty(namespace, config -> config.getDouble(key), NullValueProvider::getDoubleValue);
     }
 
     /**
      * Returns the {@code String} value associated with the specified {@code key} in the
-     * default namespace.
+     * default namespace (or in all namespaces depending on the {@link DataFetchStrategy} in
+     * scope).
      *
      * @param key the property key
      * @return the {@code String} value associated with the specified {@code key}
+     *
+     * @see DataFetchStrategy
      */
-    public String getStringProperty(String key)
+    public String getString(String key)
     {
-        return getStringProperty(DEFAULT_NAMESPACE, key);
+        return getString(DEFAULT_NAMESPACE, key);
     }
 
     /**
@@ -334,7 +347,7 @@ public class ConfigurationContainer
      * @param key       the property key
      * @return the {@code String} value associated with the specified {@code key}
      */
-    public String getStringProperty(String namespace, String key)
+    public String getString(String namespace, String key)
     {
         return getProperty(namespace, config -> config.getString(key), NullValueProvider::getStringValue);
     }

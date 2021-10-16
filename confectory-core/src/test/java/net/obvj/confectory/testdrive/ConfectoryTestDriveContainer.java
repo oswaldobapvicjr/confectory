@@ -30,10 +30,10 @@ public class ConfectoryTestDriveContainer
 
         ConfigurationContainer container = new ConfigurationContainer(config1, config2, config3);
 
-        System.out.println(container.getStringProperty("test", "myFileName"));
-        System.out.println(container.getStringProperty("test", "myString"));
-        System.out.println(container.getLongProperty("test", "myLong"));
-        System.out.println(container.getLongProperty("test", "myLong2"));
+        System.out.println(container.getString("test", "myFileName"));
+        System.out.println(container.getString("test", "myString"));
+        System.out.println(container.getLong("test", "myLong"));
+        System.out.println(container.getLong("test", "myLong2"));
 
         System.out.println("*****");
 
@@ -45,18 +45,18 @@ public class ConfectoryTestDriveContainer
 
         container.add(config4);
 
-        System.out.println(container.getStringProperty("test", "myFileName"));
-        System.out.println(container.getStringProperty("test", "myString"));
-        System.out.println(container.getLongProperty("test", "myLong"));
-        System.out.println(container.getLongProperty("test", "myLong2"));
+        System.out.println(container.getString("test", "myFileName"));
+        System.out.println(container.getString("test", "myString"));
+        System.out.println(container.getLong("test", "myLong"));
+        System.out.println(container.getLong("test", "myLong2"));
 
         System.out.println("*****");
 
         container.clear();
 
-        System.out.println(container.getStringProperty("test", "myFileName"));
-        System.out.println(container.getStringProperty("test", "myString"));
-        System.out.println(container.getLongProperty("test", "myLong"));
-        System.out.println(container.getLongProperty("test", "myLong2"));
+        System.out.println(container.getString("test", "myFileName"));
+        System.out.println(container.getString("test", "myString"));
+        System.out.println(container.getLong("test", "myLong"));
+        System.out.println(container.getLong("test", "myLong2"));
     }
 }

@@ -34,10 +34,10 @@ public class ConfectoryTestDriveContainerLenient
 
         ConfigurationContainer container = new ConfigurationContainer(config1, config2, config3);
 
-        System.out.println(container.getStringProperty("myFileName"));
-        System.out.println(container.getStringProperty("myString"));
-        System.out.println(container.getLongProperty("myLong"));
-        System.out.println(container.getLongProperty("myLong2"));
+        System.out.println(container.getString("myFileName"));
+        System.out.println(container.getString("myString"));
+        System.out.println(container.getLong("myLong"));
+        System.out.println(container.getLong("myLong2"));
 
     }
 }
