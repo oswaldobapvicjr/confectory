@@ -43,7 +43,7 @@ class JacksonJsonNodeMapperTest
     }
 
     @Test
-    void apply_validInputStream_validJSONObject() throws IOException
+    void apply_validInputStream_validJsonNode() throws IOException
     {
         JsonNode result = mapper.apply(toInputStream(TEST_JSON_SAMPLE1));
         assertThat(result.size(), equalTo(3));
