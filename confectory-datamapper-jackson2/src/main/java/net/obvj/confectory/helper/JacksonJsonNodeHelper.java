@@ -31,7 +31,7 @@ import net.obvj.confectory.ConfigurationException;
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 0.3.0
  */
-public class JacksonJsonNodeHelper extends AbstractJsonPathHelper<JsonNode>
+public class JacksonJsonNodeHelper extends AbstractJsonConfigurationHelper<JsonNode>
 {
 
     /**
@@ -47,13 +47,13 @@ public class JacksonJsonNodeHelper extends AbstractJsonPathHelper<JsonNode>
     @Override
     protected <T> T getValue(String jsonPath, Class<T> targetType, Supplier<T> defaultSupplier)
     {
-        JsonNode result = documentContext.read(jsonPath);
+        JsonNode result = super.documentContext.read(jsonPath);
         switch (result.size())
         {
         case 0:
             return defaultSupplier.get();
         case 1:
-            return mappingProvider.map(result.get(0), targetType, jsonPathConfiguration);
+            return super.mappingProvider.map(result.get(0), targetType, super.jsonPathConfiguration);
         default:
             throw new ConfigurationException("The specified JSONPath returned more than one element: %s", jsonPath);
         }

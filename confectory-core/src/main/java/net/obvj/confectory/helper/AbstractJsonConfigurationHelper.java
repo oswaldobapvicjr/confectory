@@ -33,7 +33,7 @@ import net.obvj.confectory.ConfigurationException;
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 0.3.0
  */
-public abstract class AbstractJsonPathHelper<J> extends AbstractBasicConfigurationHelper<J>
+public abstract class AbstractJsonConfigurationHelper<J> extends AbstractBasicConfigurationHelper<J>
 {
     protected final J json;
     protected final MappingProvider mappingProvider;
@@ -48,7 +48,7 @@ public abstract class AbstractJsonPathHelper<J> extends AbstractBasicConfigurati
      * @param jsonProvider    the {@link JsonProvider} to set
      * @param mappingProvider the JSON {@link MappingProvider} to set
      */
-    protected AbstractJsonPathHelper(J json, JsonProvider jsonProvider, MappingProvider mappingProvider)
+    protected AbstractJsonConfigurationHelper(J json, JsonProvider jsonProvider, MappingProvider mappingProvider)
     {
         this.json = json;
         this.mappingProvider = mappingProvider;

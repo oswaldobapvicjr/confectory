@@ -34,7 +34,7 @@ import net.obvj.confectory.ConfigurationException;
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 0.2.0
  */
-public class JSONObjectHelper extends AbstractJsonPathHelper<JSONObject>
+public class JSONObjectHelper extends AbstractJsonConfigurationHelper<JSONObject>
 {
 
     /**
@@ -64,7 +64,7 @@ public class JSONObjectHelper extends AbstractJsonPathHelper<JSONObject>
     public double getDouble(String jsonPath)
     {
         BigDecimal bigDecimal = getValue(jsonPath, BigDecimal.class,
-                () -> BigDecimal.valueOf(nullValueProvider.getDoubleValue()));
+                () -> BigDecimal.valueOf(super.nullValueProvider.getDoubleValue()));
         return bigDecimal.doubleValue();
     }
 
@@ -85,13 +85,13 @@ public class JSONObjectHelper extends AbstractJsonPathHelper<JSONObject>
     @Override
     protected <T> T getValue(String jsonPath, Class<T> targetType, Supplier<T> defaultSupplier)
     {
-        JSONArray result = documentContext.read(jsonPath);
+        JSONArray result = super.documentContext.read(jsonPath);
         switch (result.length())
         {
         case 0:
             return defaultSupplier.get();
         case 1:
-            return mappingProvider.map(result.get(0), targetType, jsonPathConfiguration);
+            return super.mappingProvider.map(result.get(0), targetType, super.jsonPathConfiguration);
         default:
             throw new ConfigurationException("The specified JSONPath returned more than one element: %s", jsonPath);
         }

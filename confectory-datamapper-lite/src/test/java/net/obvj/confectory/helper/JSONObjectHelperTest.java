@@ -50,7 +50,7 @@ class JSONObjectHelperTest
 
 
     @Test
-    void getBean_empty()
+    void getBean_notEmpty()
     {
         assertThat(HELPER.getBean().get(), is(sameInstance(TEST_JSON_SAMPLE1)));
     }
