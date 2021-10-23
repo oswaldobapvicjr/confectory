@@ -1,0 +1,13 @@
+{
+  "enabled": true,
+  "agents": [
+    {
+      "class": "Agent1",
+      "interval": "*/2 * * * *"
+    },
+    {
+      "class": "Agent2",
+      "interval": "10s"
+    }
+  ]
+}

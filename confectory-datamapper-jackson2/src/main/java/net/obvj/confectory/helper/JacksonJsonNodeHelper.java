@@ -20,26 +20,24 @@ import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
+import com.fasterxml.jackson.databind.JsonNode;
 import com.jayway.jsonpath.*;
-import com.jayway.jsonpath.spi.json.JsonOrgJsonProvider;
-import com.jayway.jsonpath.spi.mapper.JsonOrgMappingProvider;
+import com.jayway.jsonpath.spi.json.JacksonJsonNodeJsonProvider;
+import com.jayway.jsonpath.spi.mapper.JacksonMappingProvider;
 import com.jayway.jsonpath.spi.mapper.MappingProvider;
 
 import net.obvj.confectory.ConfigurationException;
 
 /**
- * A specialized Configuration Helper that retrieves data from JSON.org's
- * {@link JSONObject}, with JSONPath capabilities.
+ * A specialized Configuration Helper that retrieves data from Jackson's {@link JsonNode},
+ * with JSONPath capabilities.
  *
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
- * @since 0.2.0
+ * @since 0.3.0
  */
-public class JSONObjectHelper extends AbstractBasicConfigurationHelper<JSONObject>
+public class JacksonJsonNodeHelper extends AbstractBasicConfigurationHelper<JsonNode>
 {
-    private final JSONObject jsonObject;
+    private final JsonNode jsonNode;
 
     private final MappingProvider mappingProvider;
     private final Configuration jsonPathConfiguration;
@@ -47,34 +45,34 @@ public class JSONObjectHelper extends AbstractBasicConfigurationHelper<JSONObjec
     private final DocumentContext documentContext;
 
     /**
-     * Creates a new helper for the given {@link JSONObject}.
+     * Creates a new helper for the given {@link JsonNode}.
      *
-     * @param jsonObject the JSON object to be set
+     * @param jsonNode the JSON document to be set
      */
-    public JSONObjectHelper(JSONObject jsonObject)
+    public JacksonJsonNodeHelper(JsonNode jsonNode)
     {
-        this.jsonObject = jsonObject;
-        mappingProvider = new JsonOrgMappingProvider();
-        jsonPathConfiguration = Configuration.builder().jsonProvider(new JsonOrgJsonProvider())
+        this.jsonNode = jsonNode;
+        mappingProvider = new JacksonMappingProvider();
+        jsonPathConfiguration = Configuration.builder().jsonProvider(new JacksonJsonNodeJsonProvider())
                 .mappingProvider(mappingProvider).options(Option.SUPPRESS_EXCEPTIONS, Option.ALWAYS_RETURN_LIST)
                 .build();
         jsonPathContext = JsonPath.using(jsonPathConfiguration);
-        documentContext = jsonPathContext.parse(jsonObject);
+        documentContext = jsonPathContext.parse(jsonNode);
     }
 
     /**
      * @return the JSON.org's {@code JSONObject} in context
      */
     @Override
-    public Optional<JSONObject> getBean()
+    public Optional<JsonNode> getBean()
     {
-        return Optional.ofNullable(jsonObject);
+        return Optional.ofNullable(jsonNode);
     }
 
     /**
      * Returns the {@code boolean} value associated with the specified {@code jsonPath} in the
-     * {@code JSONObject} in context, provided that the expression returns a single element
-     * that can be mapped to {@code boolean}.
+     * {@code JsonNode} in context, provided that the expression returns a single element that
+     * can be mapped to {@code boolean}.
      *
      * @param jsonPath the path to read
      * @return the {@code boolean} value associated with the specified {@code jsonPath}
@@ -92,8 +90,8 @@ public class JSONObjectHelper extends AbstractBasicConfigurationHelper<JSONObjec
 
     /**
      * Returns the {@code int} value associated with the specified {@code jsonPath} in the
-     * {@code JSONObject} in context, provided that the expression returns a single element
-     * that can be mapped to {@code int}.
+     * {@code JsonNode} in context, provided that the expression returns a single element that
+     * can be mapped to {@code int}.
      *
      * @param jsonPath the path to read
      * @return the {@code int} value associated with the specified {@code jsonPath}
@@ -111,8 +109,8 @@ public class JSONObjectHelper extends AbstractBasicConfigurationHelper<JSONObjec
 
     /**
      * Returns the {@code long} value associated with the specified {@code jsonPath} in the
-     * {@code JSONObject} in context, provided that the expression returns a single element
-     * that can be mapped to {@code long}.
+     * {@code JsonNode} in context, provided that the expression returns a single element that
+     * can be mapped to {@code long}.
      *
      * @param jsonPath the path to read
      * @return the {@code long} value associated with the specified {@code jsonPath}
@@ -130,8 +128,8 @@ public class JSONObjectHelper extends AbstractBasicConfigurationHelper<JSONObjec
 
     /**
      * Returns the {@code double} value associated with the specified {@code jsonPath} in the
-     * {@code JSONObject} in context, provided that the expression returns a single element
-     * that can be mapped to {@code double}.
+     * {@code JsonNode} in context, provided that the expression returns a single element that
+     * can be mapped to {@code double}.
      *
      * @param jsonPath the path to read
      * @return the {@code double} value associated with the specified {@code jsonPath}
@@ -151,7 +149,7 @@ public class JSONObjectHelper extends AbstractBasicConfigurationHelper<JSONObjec
 
     /**
      * Returns the {@code String} value associated with the specified {@code jsonPath} in the
-     * {@code JSONObject} in context, provided that the expression returns a single element.
+     * {@code JsonNode} in context, provided that the expression returns a single element.
      *
      * @param jsonPath the path to read
      * @return the {@code String} value associated with the specified {@code jsonPath}
@@ -167,8 +165,8 @@ public class JSONObjectHelper extends AbstractBasicConfigurationHelper<JSONObjec
 
     /**
      * Returns the value associated with the specified {@code jsonPath} in the
-     * {@code JSONObject} in context, provided that the expression returns a single element
-     * that can be mapped to the specified class type.
+     * {@code JsonNode} in context, provided that the expression returns a single element that
+     * can be mapped to the specified class type.
      *
      * @param jsonPath   the path to read
      * @param targetType the type the expression result should be mapped to
@@ -181,8 +179,8 @@ public class JSONObjectHelper extends AbstractBasicConfigurationHelper<JSONObjec
      */
     private <T> T getValue(String jsonPath, Class<T> targetType, Supplier<T> defaultSupplier)
     {
-        JSONArray result = documentContext.read(jsonPath);
-        switch (result.length())
+        JsonNode result = documentContext.read(jsonPath);
+        switch (result.size())
         {
         case 0:
             return defaultSupplier.get();
