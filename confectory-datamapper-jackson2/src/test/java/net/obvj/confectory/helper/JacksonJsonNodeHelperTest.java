@@ -1,28 +1,32 @@
 package net.obvj.confectory.helper;
 
-import static net.obvj.junit.utils.matchers.AdvancedMatchers.*;
+import static net.obvj.junit.utils.matchers.AdvancedMatchers.throwsException;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
+import net.obvj.confectory.ConfigurationBuilder;
 import net.obvj.confectory.ConfigurationException;
+import net.obvj.confectory.mapper.JacksonJsonNodeMapper;
+import net.obvj.confectory.source.StringSource;
 
 /**
- * Unit tests for the {@link JSONObjectHelper}.
+ * Unit tests for the {@link JacksonJsonNodeHelper}.
  *
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
- * @since 0.2.0
+ * @since 0.3.0
  */
 @ExtendWith(MockitoExtension.class)
-class JSONObjectHelperTest
+class JacksonJsonNodeHelperTest
 {
-    private static final JSONObject TEST_JSON_SAMPLE1 = new JSONObject("{\r\n"
+    private static final String STR_TEST_JSON_SAMPLE1 = "{\r\n"
             + "  \"intValue\": 9,\r\n"
             + "  \"longValue\": 9876543210,\r\n"
             + "  \"booleanValue\": true,\r\n"
@@ -44,9 +48,14 @@ class JSONObjectHelperTest
             + "      \"shape\": \"square\"\r\n"
             + "    }\r\n"
             + "  }\r\n"
-            + "}");
+            + "}";
 
-    private static final JSONObjectHelper HELPER = new JSONObjectHelper(TEST_JSON_SAMPLE1);
+    private static final JsonNode TEST_JSON_SAMPLE1 = new ConfigurationBuilder<JsonNode>()
+            .source(new StringSource<JsonNode>(STR_TEST_JSON_SAMPLE1))
+            .mapper(new JacksonJsonNodeMapper())
+            .build().getBean().get();
+
+    private static final JacksonJsonNodeHelper HELPER = new JacksonJsonNodeHelper(TEST_JSON_SAMPLE1);
 
 
     @Test
