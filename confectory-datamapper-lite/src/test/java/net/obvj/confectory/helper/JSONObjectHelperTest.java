@@ -56,68 +56,68 @@ class JSONObjectHelperTest
     }
 
     @Test
-    void getBooleanProperty_existingKey_success()
+    void getBoolean_existingKey_success()
     {
         assertThat(HELPER.getBoolean("$.booleanValue"), equalTo(true));
     }
 
     @Test
-    void getBooleanProperty_unknownKey_false()
+    void getBoolean_unknownKey_false()
     {
         assertThat(HELPER.getBoolean("$.unknown"), equalTo(false));
     }
 
     @Test
-    void getIntProperty_existingKey_success()
+    void getInt_existingKey_success()
     {
         assertThat(HELPER.getInt("$.intValue"), equalTo(9));
     }
 
     @Test
-    void getIntProperty_unknownKey_zero()
+    void getInt_unknownKey_zero()
     {
         assertThat(HELPER.getInt("$.unknown"), equalTo(0));
     }
 
     @Test
-    void getLongProperty_existingKey_success()
+    void getLong_existingKey_success()
     {
         assertThat(HELPER.getLong("$.longValue"), equalTo(9876543210L));
     }
 
     @Test
-    void getLongProperty_unknownKey_zero()
+    void getLong_unknownKey_zero()
     {
         assertThat(HELPER.getLong("$.unknown"), equalTo(0L));
     }
 
     @Test
-    void getDoubleProperty_existingKeyAndSingleton_success()
+    void getDouble_existingKeyAndSingleton_success()
     {
         assertThat(HELPER.getDouble("$.store.books[?(@.title=='The Gruffalo')].price"), equalTo(8.99));
     }
 
     @Test
-    void getDoubleProperty_existingKeyAndMultipleElements_configurationException()
+    void getDouble_existingKeyAndMultipleElements_configurationException()
     {
         assertThat(() -> HELPER.getDouble("$.store.books[?(@.price>5)].price"),
                 throwsException(ConfigurationException.class).withMessageContaining("more than one element"));
     }
 
     @Test
-    void getDoubleProperty_unknownKey_zero()
+    void getDouble_unknownKey_zero()
     {
         assertThat(HELPER.getDouble("$.unknown"), equalTo(0.0));
     }
 
     @Test
-    void getSringProperty_existingKey_success()
+    void getSring_existingKey_success()
     {
         assertThat(HELPER.getString("$.store.attributes.color"), equalTo("yellow"));
     }
 
     @Test
-    void getSringProperty_unknownKey_empty()
+    void getSring_unknownKey_empty()
     {
         assertThat(HELPER.getString("$.unknown"), equalTo(""));
     }

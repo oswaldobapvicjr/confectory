@@ -42,9 +42,7 @@ class GenericJsonConfigurationHelperTest
         TEST_JSON_SAMPLE1.put("array", array);
     }
 
-    /*
-     * Simple concrete helper only for testing purposes.
-     */
+    // Simple concrete helper for testing purposes
     private static final GenericJsonConfigurationHelper<JSONObject> HELPER = new GenericJsonConfigurationHelper<JSONObject>(
             TEST_JSON_SAMPLE1, new JsonSmartJsonProvider(), new JsonSmartMappingProvider());
 
@@ -55,73 +53,73 @@ class GenericJsonConfigurationHelperTest
     }
 
     @Test
-    void getBooleanProperty_existingKey_success()
+    void getBoolean_existingKey_success()
     {
         assertThat(HELPER.getBoolean("$.booleanValue"), equalTo(true));
     }
 
     @Test
-    void getBooleanProperty_unknownKey_false()
+    void getBoolean_unknownKey_false()
     {
         assertThat(HELPER.getBoolean("$.unknown"), equalTo(false));
     }
 
     @Test
-    void getIntProperty_existingKey_success()
+    void getInt_existingKey_success()
     {
         assertThat(HELPER.getInt("$.intValue"), equalTo(9));
     }
 
     @Test
-    void getIntProperty_unknownKey_zero()
+    void getInt_unknownKey_zero()
     {
         assertThat(HELPER.getInt("$.unknown"), equalTo(0));
     }
 
     @Test
-    void getLongProperty_existingKey_success()
+    void getLong_existingKey_success()
     {
         assertThat(HELPER.getLong("$.longValue"), equalTo(9876543210L));
     }
 
     @Test
-    void getLongProperty_unknownKey_zero()
+    void getLong_unknownKey_zero()
     {
         assertThat(HELPER.getLong("$.unknown"), equalTo(0L));
     }
 
     @Test
-    void getDoubleProperty_existingKey_success()
+    void getDouble_existingKey_success()
     {
         assertThat(HELPER.getDouble("$.doubleValue"), equalTo(7.89));
     }
 
     @Test
-    void getDoubleProperty_unknownKey_zero()
+    void getDouble_unknownKey_zero()
     {
         assertThat(HELPER.getDouble("$.unknown"), equalTo(0.0));
     }
 
     @Test
-    void getSringProperty_existingKey_success()
+    void getSring_existingKey_success()
     {
         assertThat(HELPER.getString("$.stringValue"), equalTo("test"));
     }
 
     @Test
-    void getSringProperty_unknownKey_empty()
+    void getSring_unknownKey_empty()
     {
         assertThat(HELPER.getString("$.unknown"), equalTo(""));
     }
 
     @Test
-    void getStringProperty_singleElement_success()
+    void getString_singleElement_success()
     {
         assertThat(HELPER.getString("$.array[0]"), equalTo("element1"));
     }
 
     @Test
-    void getStringProperty_multipleElements_configurationException()
+    void getString_multipleElements_configurationException()
     {
         assertThat(() -> HELPER.getString("$.array[*]"),
                 throwsException(ConfigurationException.class).withMessageContaining("more than one element"));

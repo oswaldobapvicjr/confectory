@@ -78,6 +78,7 @@ public class GenericJsonConfigurationHelper<J> extends AbstractBasicConfiguratio
      * @param jsonPath the path to read
      * @return the {@code boolean} value associated with the specified {@code jsonPath}
      *
+     * @throws InvalidPathException   if the {@code jsonPath} expression is not valid
      * @throws ConfigurationException if the {@code jsonPath} expression returns more than a
      *                                single element
      * @throws ClassCastException     if the {@code jsonPath} result cannot be assigned to
@@ -97,6 +98,7 @@ public class GenericJsonConfigurationHelper<J> extends AbstractBasicConfiguratio
      * @param jsonPath the path to read
      * @return the {@code int} value associated with the specified {@code jsonPath}
      *
+     * @throws InvalidPathException   if the {@code jsonPath} expression is not valid
      * @throws ConfigurationException if the {@code jsonPath} expression returns more than a
      *                                single element
      * @throws ClassCastException     if the {@code jsonPath} result cannot be assigned to
@@ -116,6 +118,7 @@ public class GenericJsonConfigurationHelper<J> extends AbstractBasicConfiguratio
      * @param jsonPath the path to read
      * @return the {@code long} value associated with the specified {@code jsonPath}
      *
+     * @throws InvalidPathException   if the {@code jsonPath} expression is not valid
      * @throws ConfigurationException if the {@code jsonPath} expression returns more than a
      *                                single element
      * @throws ClassCastException     if the {@code jsonPath} result cannot be assigned to
@@ -135,6 +138,7 @@ public class GenericJsonConfigurationHelper<J> extends AbstractBasicConfiguratio
      * @param jsonPath the path to read
      * @return the {@code double} value associated with the specified {@code jsonPath}
      *
+     * @throws InvalidPathException   if the {@code jsonPath} expression is not valid
      * @throws ConfigurationException if the {@code jsonPath} expression returns more than a
      *                                single element
      * @throws ClassCastException     if the {@code jsonPath} result cannot be assigned to
@@ -153,6 +157,7 @@ public class GenericJsonConfigurationHelper<J> extends AbstractBasicConfiguratio
      * @param jsonPath the path to read
      * @return the {@code String} value associated with the specified {@code jsonPath}
      *
+     * @throws InvalidPathException   if the {@code jsonPath} expression is not valid
      * @throws ConfigurationException if the {@code jsonPath} expression returns more than a
      *                                single element
      */
@@ -169,10 +174,11 @@ public class GenericJsonConfigurationHelper<J> extends AbstractBasicConfiguratio
      *
      * @param jsonPath        the path to read
      * @param targetType      the type the expression result should be mapped to
-     * @param defaultSupplier the supplier to be used if no element retrieved by the JSON path
+     * @param defaultSupplier the supplier to be used if JSONPath not found
      *
      * @return the mapped value associated with the specified {@code jsonPath}
      *
+     * @throws InvalidPathException   if the {@code jsonPath} expression is not valid
      * @throws ConfigurationException if the {@code jsonPath} expression returns more than a
      *                                single element
      * @throws ClassCastException     if the {@code jsonPath} result cannot be assigned to
