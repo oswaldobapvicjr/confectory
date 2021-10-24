@@ -17,15 +17,11 @@
 package net.obvj.confectory.helper;
 
 import java.math.BigDecimal;
-import java.util.function.Supplier;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.jayway.jsonpath.spi.json.JsonOrgJsonProvider;
 import com.jayway.jsonpath.spi.mapper.JsonOrgMappingProvider;
-
-import net.obvj.confectory.ConfigurationException;
 
 /**
  * A specialized Configuration Helper that retrieves data from JSON.org's
@@ -47,53 +43,13 @@ public class JSONObjectHelper extends AbstractJsonConfigurationHelper<JSONObject
         super(jsonObject, new JsonOrgJsonProvider(), new JsonOrgMappingProvider());
     }
 
-    /**
-     * Returns the {@code double} value associated with the specified {@code jsonPath} in the
-     * {@code JSONObject} in context, provided that the expression returns a single element
-     * that can be mapped to {@code double}.
-     *
-     * @param jsonPath the path to read
-     * @return the {@code double} value associated with the specified {@code jsonPath}
-     *
-     * @throws ConfigurationException if the {@code jsonPath} expression returns more than a
-     *                                single element
-     * @throws ClassCastException     if the {@code jsonPath} result cannot be assigned to
-     *                                {@code double}
-     */
     @Override
     public double getDouble(String jsonPath)
     {
+        // JSON-Java parses double values as BigDecimals by default
         BigDecimal bigDecimal = getValue(jsonPath, BigDecimal.class,
                 () -> BigDecimal.valueOf(super.nullValueProvider.getDoubleValue()));
         return bigDecimal.doubleValue();
     }
 
-    /**
-     * Returns the value associated with the specified {@code jsonPath} in the
-     * {@code JSONObject} in context, provided that the expression returns a single element
-     * that can be mapped to the specified class type.
-     *
-     * @param jsonPath   the path to read
-     * @param targetType the type the expression result should be mapped to
-     * @return the mapped value associated with the specified {@code jsonPath}
-     *
-     * @throws ConfigurationException if the {@code jsonPath} expression returns more than a
-     *                                single element
-     * @throws ClassCastException     if the {@code jsonPath} result cannot be assigned to
-     *                                {@code double}
-     */
-    @Override
-    protected <T> T getValue(String jsonPath, Class<T> targetType, Supplier<T> defaultSupplier)
-    {
-        JSONArray result = super.documentContext.read(jsonPath);
-        switch (result.length())
-        {
-        case 0:
-            return defaultSupplier.get();
-        case 1:
-            return super.mappingProvider.map(result.get(0), targetType, super.jsonPathConfiguration);
-        default:
-            throw new ConfigurationException("The specified JSONPath returned more than one element: %s", jsonPath);
-        }
-    }
 }

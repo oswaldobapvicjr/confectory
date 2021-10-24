@@ -16,13 +16,9 @@
 
 package net.obvj.confectory.helper;
 
-import java.util.function.Supplier;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.jayway.jsonpath.spi.json.JacksonJsonNodeJsonProvider;
 import com.jayway.jsonpath.spi.mapper.JacksonMappingProvider;
-
-import net.obvj.confectory.ConfigurationException;
 
 /**
  * A specialized Configuration Helper that retrieves data from Jackson's {@link JsonNode},
@@ -42,21 +38,6 @@ public class JacksonJsonNodeHelper extends AbstractJsonConfigurationHelper<JsonN
     public JacksonJsonNodeHelper(JsonNode jsonNode)
     {
         super(jsonNode, new JacksonJsonNodeJsonProvider(), new JacksonMappingProvider());
-    }
-
-    @Override
-    protected <T> T getValue(String jsonPath, Class<T> targetType, Supplier<T> defaultSupplier)
-    {
-        JsonNode result = super.documentContext.read(jsonPath);
-        switch (result.size())
-        {
-        case 0:
-            return defaultSupplier.get();
-        case 1:
-            return super.mappingProvider.map(result.get(0), targetType, super.jsonPathConfiguration);
-        default:
-            throw new ConfigurationException("The specified JSONPath returned more than one element: %s", jsonPath);
-        }
     }
 
 }

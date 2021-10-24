@@ -17,7 +17,7 @@
 package net.obvj.confectory.helper;
 
 import java.util.Optional;
-import java.util.function.Supplier;
+import java.util.function.*;
 
 import com.jayway.jsonpath.*;
 import com.jayway.jsonpath.internal.filter.ValueNodes.JsonNode;
@@ -33,9 +33,10 @@ import net.obvj.confectory.ConfigurationException;
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 0.3.0
  */
-public abstract class AbstractJsonConfigurationHelper<J> extends AbstractBasicConfigurationHelper<J>
+public class AbstractJsonConfigurationHelper<J> extends AbstractBasicConfigurationHelper<J>
 {
     protected final J json;
+    protected final JsonProvider jsonProvider;
     protected final MappingProvider mappingProvider;
     protected final Configuration jsonPathConfiguration;
     protected final ParseContext jsonPathContext;
@@ -51,7 +52,9 @@ public abstract class AbstractJsonConfigurationHelper<J> extends AbstractBasicCo
     protected AbstractJsonConfigurationHelper(J json, JsonProvider jsonProvider, MappingProvider mappingProvider)
     {
         this.json = json;
+        this.jsonProvider = jsonProvider;
         this.mappingProvider = mappingProvider;
+
         jsonPathConfiguration = Configuration.builder().jsonProvider(jsonProvider).mappingProvider(mappingProvider)
                 .options(Option.SUPPRESS_EXCEPTIONS, Option.ALWAYS_RETURN_LIST).build();
         jsonPathContext = JsonPath.using(jsonPathConfiguration);
@@ -160,12 +163,14 @@ public abstract class AbstractJsonConfigurationHelper<J> extends AbstractBasicCo
     }
 
     /**
-     * Returns the value associated with the specified {@code jsonPath} in the
-     * {@code JsonNode} in context, provided that the expression returns a single element that
-     * can be mapped to the specified class type.
+     * Returns the value associated with the specified {@code jsonPath} in the JSON document
+     * in context, provided that the expression returns a single element that can be mapped to
+     * the specified class type.
      *
-     * @param jsonPath   the path to read
-     * @param targetType the type the expression result should be mapped to
+     * @param jsonPath        the path to read
+     * @param targetType      the type the expression result should be mapped to
+     * @param defaultSupplier the supplier to be used if no element retrieved by the JSON path
+     *
      * @return the mapped value associated with the specified {@code jsonPath}
      *
      * @throws ConfigurationException if the {@code jsonPath} expression returns more than a
@@ -173,5 +178,18 @@ public abstract class AbstractJsonConfigurationHelper<J> extends AbstractBasicCo
      * @throws ClassCastException     if the {@code jsonPath} result cannot be assigned to
      *                                {@code double}
      */
-    protected abstract <T> T getValue(String jsonPath, Class<T> targetType, Supplier<T> defaultSupplier);
+    protected <T> T getValue(String jsonPath, Class<T> targetType, Supplier<T> defaultSupplier)
+    {
+        Object result = documentContext.read(jsonPath);
+        switch (jsonProvider.length(result))
+        {
+        case 0:
+            return defaultSupplier.get();
+        case 1:
+            Object element = jsonProvider.getArrayIndex(result, 0);
+            return mappingProvider.map(element, targetType, jsonPathConfiguration);
+        default:
+            throw new ConfigurationException("The specified JSONPath returned more than one element: %s", jsonPath);
+        }
+    }
 }
