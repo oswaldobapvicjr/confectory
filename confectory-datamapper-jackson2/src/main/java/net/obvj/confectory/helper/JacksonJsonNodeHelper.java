@@ -27,7 +27,7 @@ import com.jayway.jsonpath.spi.mapper.JacksonMappingProvider;
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 0.3.0
  */
-public class JacksonJsonNodeHelper extends AbstractJsonConfigurationHelper<JsonNode>
+public class JacksonJsonNodeHelper extends GenericJsonConfigurationHelper<JsonNode>
 {
 
     /**

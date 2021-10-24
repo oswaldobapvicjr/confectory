@@ -27,13 +27,13 @@ import com.jayway.jsonpath.spi.mapper.MappingProvider;
 import net.obvj.confectory.ConfigurationException;
 
 /**
- * A specialized Configuration Helper that retrieves data from a JSON document, with
- * JSONPath capabilities.
+ * A generic Configuration Helper that retrieves data from a JSON document, with JSONPath
+ * capabilities.
  *
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 0.3.0
  */
-public class AbstractJsonConfigurationHelper<J> extends AbstractBasicConfigurationHelper<J>
+public class GenericJsonConfigurationHelper<J> extends AbstractBasicConfigurationHelper<J>
 {
     protected final J json;
     protected final JsonProvider jsonProvider;
@@ -49,7 +49,7 @@ public class AbstractJsonConfigurationHelper<J> extends AbstractBasicConfigurati
      * @param jsonProvider    the {@link JsonProvider} to set
      * @param mappingProvider the JSON {@link MappingProvider} to set
      */
-    protected AbstractJsonConfigurationHelper(J json, JsonProvider jsonProvider, MappingProvider mappingProvider)
+    protected GenericJsonConfigurationHelper(J json, JsonProvider jsonProvider, MappingProvider mappingProvider)
     {
         this.json = json;
         this.jsonProvider = jsonProvider;

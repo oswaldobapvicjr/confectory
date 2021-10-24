@@ -30,7 +30,7 @@ import com.jayway.jsonpath.spi.mapper.JsonOrgMappingProvider;
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 0.2.0
  */
-public class JSONObjectHelper extends AbstractJsonConfigurationHelper<JSONObject>
+public class JSONObjectHelper extends GenericJsonConfigurationHelper<JSONObject>
 {
 
     /**
