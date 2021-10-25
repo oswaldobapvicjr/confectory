@@ -13,6 +13,10 @@
         Confectory module that adds support to JSON and XML using JSON-Java and JsonPath
     </description>
 
+    <properties>
+        <json-org.version>20210307</json-org.version>
+    </properties>
+
     <dependencies>
 
         <dependency>
@@ -24,7 +28,7 @@
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
-            <version>20210307</version>
+            <version>${json-org.version}</version>
         </dependency>
 
     </dependencies>

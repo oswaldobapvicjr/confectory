@@ -13,10 +13,6 @@
         Confectory module that adds support to JSON deserialization using Jackson 2 as provider
     </description>
 
-    <properties>
-        <jackson2.version>2.13.0</jackson2.version>
-    </properties>
-
     <dependencies>
 
         <dependency>
