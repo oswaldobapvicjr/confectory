@@ -52,7 +52,8 @@
     <modules>
         <module>confectory-core</module>
         <module>confectory-datamapper-lite</module>
-		<module>confectory-datamapper-jackson2</module>
+		<module>confectory-datamapper-jackson2-json</module>
+		<module>confectory-datamapper-jackson2-xml</module>
     </modules>
 
     <dependencies>
