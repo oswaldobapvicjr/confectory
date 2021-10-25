@@ -7,15 +7,11 @@
         <version>0.3.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>confectory-datamapper-jackson2</artifactId>
-    <name>Confectory Data Mapper - Jackson 2</name>
+    <artifactId>confectory-datamapper-jackson2-json</artifactId>
+    <name>Confectory Data Mapper - Jackson 2 (JSON)</name>
     <description>
-        Confectory module that adds support to JSON using Jackson 2 as provider
+        Confectory module that adds support to JSON deserialization using Jackson 2 as provider
     </description>
-
-    <properties>
-        <jackson2.version>2.13.0</jackson2.version>
-    </properties>
 
     <dependencies>
 
