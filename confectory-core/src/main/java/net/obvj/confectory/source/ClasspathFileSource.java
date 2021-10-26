@@ -16,18 +16,19 @@
 
 package net.obvj.confectory.source;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
-import net.obvj.performetrics.Counter;
-import net.obvj.performetrics.Stopwatch;
-import net.obvj.performetrics.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.obvj.confectory.ConfigurationSourceException;
 import net.obvj.confectory.mapper.Mapper;
+import net.obvj.performetrics.Counter;
+import net.obvj.performetrics.Stopwatch;
+import net.obvj.performetrics.util.Duration;
 
 /**
  * A specialized configuration source implementation for loading a local file resource
@@ -60,7 +61,7 @@ public class ClasspathFileSource<T> extends AbstractSource<T> implements Source<
         {
             String message = String.format("Classpath file not found: %s", super.parameter);
             LOGGER.warn(message);
-            throw new ConfigurationSourceException(message);
+            throw new ConfigurationSourceException(new FileNotFoundException(message));
         }
 
         return load(url, mapper);

@@ -16,6 +16,8 @@
 
 package net.obvj.confectory.source;
 
+import java.io.FileNotFoundException;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -127,9 +129,21 @@ public class DynamicSource<T> extends AbstractSource<T> implements Source<T>
         }
         catch (ConfigurationSourceException exception)
         {
-            LOGGER.debug("Failed to load ClasspathFileSource. Trying as FileSource...");
-            return SourceFactory.<T>fileSource(super.parameter).load(mapper);
+            if (isFileNotFound(exception))
+            {
+                LOGGER.debug("Not found in classpath. Trying as FileSource...");
+                return SourceFactory.<T>fileSource(super.parameter).load(mapper);
+            }
+            // The exception was raised due to problems in the mapping part,
+            // so we do not need to try a different source.
+            throw exception;
         }
+    }
+
+    private static boolean isFileNotFound(ConfigurationSourceException exception)
+    {
+        Throwable cause = exception.getCause();
+        return cause != null && cause.getClass().isAssignableFrom(FileNotFoundException.class);
     }
 
 }
