@@ -1,10 +1,13 @@
 package net.obvj.confectory.source;
 
-import static org.mockito.Mockito.*;
 import static net.obvj.junit.utils.matchers.AdvancedMatchers.containsAll;
+import static net.obvj.junit.utils.matchers.AdvancedMatchers.throwsException;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.*;
+
+import java.io.FileNotFoundException;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -92,12 +95,31 @@ class DynamicSourceTest
         {
             mocked.when(() -> SourceFactory.<String>classpathFileSource("mockedfile")).thenReturn(delegateSource1);
             mocked.when(() -> SourceFactory.<String>fileSource("mockedfile")).thenReturn(delegateSource2);
-            when(delegateSource1.load(STRING_MAPPER)).thenThrow(new ConfigurationSourceException("mocked exception"));
+
+            when(delegateSource1.load(STRING_MAPPER)).thenThrow(
+                    new ConfigurationSourceException(new FileNotFoundException("mocked file not found exception")));
             when(delegateSource2.load(STRING_MAPPER)).thenReturn(OK);
 
             assertThat(source.load(STRING_MAPPER), equalTo(OK));
             verify(delegateSource1, times(1)).load(STRING_MAPPER);
             verify(delegateSource2, times(1)).load(STRING_MAPPER);
+        }
+    }
+
+    @Test
+    void load_mockedFileFoundInClasspathButExceptionDuringMapping_exception()
+    {
+        source = new DynamicSource<>("mockedfile");
+        try (MockedStatic<SourceFactory> mocked = mockStatic(SourceFactory.class))
+        {
+            mocked.when(() -> SourceFactory.<String>classpathFileSource("mockedfile")).thenReturn(delegateSource1);
+
+            when(delegateSource1.load(STRING_MAPPER))
+                    .thenThrow(new ConfigurationSourceException("file found but exception raised"));
+
+            assertThat(() -> source.load(STRING_MAPPER), throwsException(ConfigurationSourceException.class));
+            verify(delegateSource1, times(1)).load(STRING_MAPPER);
+            verify(delegateSource2, never()).load(STRING_MAPPER);
         }
     }
 
