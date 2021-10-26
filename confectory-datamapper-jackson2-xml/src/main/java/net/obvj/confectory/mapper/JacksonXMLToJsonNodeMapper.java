@@ -16,12 +16,9 @@
 
 package net.obvj.confectory.mapper;
 
-import java.io.IOException;
 import java.io.InputStream;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 
 /**
  * A specialized {@code Mapper} that deserializes a XML from an {@link InputStream} and
@@ -30,14 +27,11 @@ import com.fasterxml.jackson.dataformat.xml.XmlMapper;
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 0.3.0
  */
-public class JacksonXMLToJsonNodeMapper extends JacksonJsonNodeMapper implements Mapper<JsonNode>
+public class JacksonXMLToJsonNodeMapper extends JacksonXMLToObjectMapper<JsonNode> implements Mapper<JsonNode>
 {
-
-    @Override
-    public JsonNode apply(InputStream inputStream) throws IOException
+    public JacksonXMLToJsonNodeMapper()
     {
-        ObjectMapper mapper = new XmlMapper();
-        return mapper.readValue(inputStream, JsonNode.class);
+        super(JsonNode.class);
     }
 
 }

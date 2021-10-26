@@ -16,30 +16,31 @@
 
 package net.obvj.confectory.mapper;
 
+import java.io.IOException;
 import java.io.InputStream;
 
-import com.fasterxml.jackson.databind.JsonNode;
-
-import net.obvj.confectory.helper.ConfigurationHelper;
-import net.obvj.confectory.helper.JacksonJsonNodeHelper;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 
 /**
- * A specialized {@code Mapper} that loads a {@link JsonNode} from an {@link InputStream}.
+ * A specialized {@code Mapper} that loads a XML document from an {@link InputStream} into
+ * a user-defined object using Jackson object mapper.
  *
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 0.3.0
  */
-public class JacksonJsonNodeMapper extends JacksonJsonToObjectMapper<JsonNode> implements Mapper<JsonNode>
+public class JacksonXMLToObjectMapper<T> extends JacksonJsonToObjectMapper<T> implements Mapper<T>
 {
-    public JacksonJsonNodeMapper()
+    public JacksonXMLToObjectMapper(Class<T> targetType)
     {
-        super(JsonNode.class);
+        super(targetType);
     }
 
     @Override
-    public ConfigurationHelper<JsonNode> configurationHelper(JsonNode jsonNode)
+    public T apply(InputStream inputStream) throws IOException
     {
-        return new JacksonJsonNodeHelper(jsonNode);
+        ObjectMapper mapper = new XmlMapper();
+        return mapper.readValue(inputStream, super.targetType);
     }
 
 }

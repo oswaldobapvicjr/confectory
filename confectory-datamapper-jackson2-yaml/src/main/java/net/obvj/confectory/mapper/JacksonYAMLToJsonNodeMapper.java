@@ -16,12 +16,9 @@
 
 package net.obvj.confectory.mapper;
 
-import java.io.IOException;
 import java.io.InputStream;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 
 /**
  * A specialized {@code Mapper} that deserializes a YAML document from an
@@ -30,14 +27,11 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 0.3.0
  */
-public class JacksonYAMLToJsonNodeMapper extends JacksonJsonNodeMapper implements Mapper<JsonNode>
+public class JacksonYAMLToJsonNodeMapper extends JacksonYAMLToObjectMapper<JsonNode> implements Mapper<JsonNode>
 {
-
-    @Override
-    public JsonNode apply(InputStream inputStream) throws IOException
+    public JacksonYAMLToJsonNodeMapper()
     {
-        ObjectMapper mapper = new YAMLMapper();
-        return mapper.readValue(inputStream, JsonNode.class);
+        super(JsonNode.class);
     }
 
 }
