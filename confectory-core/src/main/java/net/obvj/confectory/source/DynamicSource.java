@@ -140,10 +140,10 @@ public class DynamicSource<T> extends AbstractSource<T> implements Source<T>
         }
     }
 
-    private static boolean isFileNotFound(ConfigurationSourceException exception)
+    protected static boolean isFileNotFound(ConfigurationSourceException exception)
     {
         Throwable cause = exception.getCause();
-        return cause != null && cause.getClass().isAssignableFrom(FileNotFoundException.class);
+        return cause != null && FileNotFoundException.class.isAssignableFrom(cause.getClass());
     }
 
 }

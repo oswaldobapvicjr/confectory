@@ -4,10 +4,11 @@ import static net.obvj.junit.utils.matchers.AdvancedMatchers.containsAll;
 import static net.obvj.junit.utils.matchers.AdvancedMatchers.throwsException;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -88,7 +89,7 @@ class DynamicSourceTest
     }
 
     @Test
-    void load_mockedFileWithoutPrefix_success()
+    void load_mockedFileWithoutPrefixAndNotFoundInClasspathButFoundInFileSystem_success()
     {
         source = new DynamicSource<>("mockedfile");
         try (MockedStatic<SourceFactory> mocked = mockStatic(SourceFactory.class))
@@ -107,7 +108,7 @@ class DynamicSourceTest
     }
 
     @Test
-    void load_mockedFileFoundInClasspathButExceptionDuringMapping_exception()
+    void load_mockedFileWithoutPrefixAndFoundInClasspathButExceptionDuringMapping_exception()
     {
         source = new DynamicSource<>("mockedfile");
         try (MockedStatic<SourceFactory> mocked = mockStatic(SourceFactory.class))
@@ -121,6 +122,26 @@ class DynamicSourceTest
             verify(delegateSource1, times(1)).load(STRING_MAPPER);
             verify(delegateSource2, never()).load(STRING_MAPPER);
         }
+    }
+
+
+    @Test
+    void isFileNotFound_exceptionWithFileNotFoundAsCause_true()
+    {
+        assertTrue(DynamicSource.isFileNotFound(new ConfigurationSourceException(new FileNotFoundException())));
+    }
+
+    @Test
+    void isFileNotFound_exceptionWithUnknownCause_false()
+    {
+        assertFalse(DynamicSource.isFileNotFound(new ConfigurationSourceException(new IOException())));
+    }
+
+
+    @Test
+    void isFileNotFound_exceptionWithNoCause_false()
+    {
+        assertFalse(DynamicSource.isFileNotFound(new ConfigurationSourceException("testMessage")));
     }
 
 }
