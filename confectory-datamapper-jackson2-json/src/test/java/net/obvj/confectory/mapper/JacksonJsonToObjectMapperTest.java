@@ -30,7 +30,7 @@ class JacksonJsonToObjectMapperTest
                                                   + "  ]"
                                                   + "}";
 
-    private JacksonJsonToObjectMapper<MyBean> mapper = new JacksonJsonToObjectMapper<>(MyBean.class);
+    private Mapper<MyBean> mapper = new JacksonJsonToObjectMapper<>(MyBean.class);
 
     private ByteArrayInputStream toInputStream(String content)
     {

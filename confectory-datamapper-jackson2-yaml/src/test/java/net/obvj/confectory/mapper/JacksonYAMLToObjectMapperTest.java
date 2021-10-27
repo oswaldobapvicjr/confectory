@@ -28,7 +28,7 @@ class JacksonYAMLToObjectMapperTest
             + "  - string1\r\n"
             + "  - string2";
 
-    private JacksonYAMLToObjectMapper<MyBean> mapper = new JacksonYAMLToObjectMapper<>(MyBean.class);
+    private Mapper<MyBean> mapper = new JacksonYAMLToObjectMapper<>(MyBean.class);
 
     private ByteArrayInputStream toInputStream(String content)
     {

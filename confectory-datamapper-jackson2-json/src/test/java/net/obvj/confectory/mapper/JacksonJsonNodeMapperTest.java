@@ -35,7 +35,7 @@ class JacksonJsonNodeMapperTest
     @Mock
     private JsonNode jsonNode;
 
-    private JacksonJsonNodeMapper mapper = new JacksonJsonNodeMapper();
+    private Mapper<JsonNode> mapper = new JacksonJsonNodeMapper();
 
     private ByteArrayInputStream toInputStream(String content)
     {

@@ -31,7 +31,7 @@ class JacksonXMLToObjectMapperTest
             + "  </array>\n"
             + "</root>\n";
 
-    private JacksonXMLToObjectMapper<MyBean> mapper = new JacksonXMLToObjectMapper<>(MyBean.class);
+    private Mapper<MyBean> mapper = new JacksonXMLToObjectMapper<>(MyBean.class);
 
     private ByteArrayInputStream toInputStream(String content)
     {

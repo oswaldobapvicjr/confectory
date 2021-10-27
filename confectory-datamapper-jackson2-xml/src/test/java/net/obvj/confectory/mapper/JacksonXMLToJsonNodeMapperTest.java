@@ -28,7 +28,7 @@ class JacksonXMLToJsonNodeMapperTest
             + "  </array>\n"
             + "</root>\n";
 
-    private JacksonXMLToJsonNodeMapper mapper = new JacksonXMLToJsonNodeMapper();
+    private Mapper<JsonNode> mapper = new JacksonXMLToJsonNodeMapper();
 
     private ByteArrayInputStream toInputStream(String content)
     {
