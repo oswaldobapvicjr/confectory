@@ -26,7 +26,7 @@ class JacksonYAMLToJsonNodeMapperTest
             + "  - string1\r\n"
             + "  - string2";
 
-    private JacksonYAMLToJsonNodeMapper mapper = new JacksonYAMLToJsonNodeMapper();
+    private Mapper<JsonNode> mapper = new JacksonYAMLToJsonNodeMapper();
 
     private ByteArrayInputStream toInputStream(String content)
     {

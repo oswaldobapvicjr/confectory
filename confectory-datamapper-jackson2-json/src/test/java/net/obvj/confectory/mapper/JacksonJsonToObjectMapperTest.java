@@ -5,24 +5,21 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.fasterxml.jackson.databind.JsonNode;
-
-import net.obvj.confectory.helper.JacksonJsonNodeHelper;
+import net.obvj.confectory.helper.BeanConfigurationHelper;
+import net.obvj.confectory.mapper.model.MyBean;
 
 /**
- * Unit tests for the {@link JacksonJsonNodeMapper} class.
+ * Unit tests for the {@link JacksonJsonToObjectMapper} class.
  *
  * @author oswaldo.bapvic.jr
  * @since 0.3.0
  */
-@ExtendWith(MockitoExtension.class)
-class JacksonJsonNodeMapperTest
+class JacksonJsonToObjectMapperTest
 {
     private static final String TEST_JSON_SAMPLE1 = "{"
                                                   + "  \"intValue\": 9,"
@@ -32,10 +29,8 @@ class JacksonJsonNodeMapperTest
                                                   + "    \"string2\""
                                                   + "  ]"
                                                   + "}";
-    @Mock
-    private JsonNode jsonNode;
 
-    private Mapper<JsonNode> mapper = new JacksonJsonNodeMapper();
+    private Mapper<MyBean> mapper = new JacksonJsonToObjectMapper<>(MyBean.class);
 
     private ByteArrayInputStream toInputStream(String content)
     {
@@ -45,21 +40,17 @@ class JacksonJsonNodeMapperTest
     @Test
     void apply_validInputStream_validJsonNode() throws IOException
     {
-        JsonNode result = mapper.apply(toInputStream(TEST_JSON_SAMPLE1));
-        assertThat(result.size(), equalTo(3));
-        assertThat(result.get("intValue").asInt(), equalTo(9));
-        assertThat(result.get("booleanValue").asBoolean(), equalTo(true));
-
-        JsonNode array = result.get("array");
+        MyBean result = mapper.apply(toInputStream(TEST_JSON_SAMPLE1));
+        assertThat(result.intValue, equalTo(9));
+        assertThat(result.booleanValue, equalTo(true));
+        List<String> array = result.array;
         assertThat(array.size(), equalTo(2));
-        assertThat(array.get(0).asText(), equalTo("string1"));
-        assertThat(array.get(1).asText(), equalTo("string2"));
+        assertThat(array.containsAll(Arrays.asList("string1", "string2")), equalTo(true));
     }
 
     @Test
-    void configurationHelper_jsonObjectConfigurationHelper()
+    void configurationHelper_beanConfigurationHelper()
     {
-        assertThat(mapper.configurationHelper(jsonNode).getClass(), equalTo(JacksonJsonNodeHelper.class));
+        assertThat(mapper.configurationHelper(new MyBean()).getClass(), equalTo(BeanConfigurationHelper.class));
     }
-
 }
