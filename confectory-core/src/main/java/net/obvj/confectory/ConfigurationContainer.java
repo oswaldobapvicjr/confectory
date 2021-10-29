@@ -54,7 +54,6 @@ import net.obvj.confectory.settings.ConfectorySettings;
  * {@link NullValueProvider}. Both objects may be specified at container construction time
  * and modified using the setter methods at anytime. If not specified, the container uses
  * the default objects configured via {@link ConfectorySettings}.
- * <p>
  *
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 0.1.0

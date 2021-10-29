@@ -26,8 +26,8 @@ import net.obvj.confectory.helper.ConfigurationHelper;
 import net.obvj.confectory.helper.JSONObjectHelper;
 
 /**
- * A specialized {@code Mapper} that loads a {@link JSONObject} from an
- * {@link InputStream}.
+ * A specialized {@code Mapper} that loads the contents of a valid JSON {@code Source}
+ * (e.g.: file, URL) as a {@link JSONObject} ({@code json.org} reference implementation).
  *
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 0.2.0

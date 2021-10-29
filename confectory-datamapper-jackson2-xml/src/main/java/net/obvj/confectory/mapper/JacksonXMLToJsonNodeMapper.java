@@ -16,19 +16,33 @@
 
 package net.obvj.confectory.mapper;
 
-import java.io.InputStream;
-
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 
 /**
- * A specialized {@code Mapper} that deserializes a XML from an {@link InputStream} and
- * parses as a {@link JsonNode} using the Jackson provider.
+ * A specialized {@code Mapper} that loads the contents of a valid XML {@code Source}
+ * (e.g.: file, URL, string) and converts it into a {@link JsonNode}, using Jackson's
+ * {@link XmlMapper}.
+ * <p>
+ * Because of differences between XML and JSON formats, the document structure may suffer
+ * modifications in this transformation. XML uses elements, attributes, and content text,
+ * while JSON uses unordered collections of name/value pairs and arrays of values. JSON
+ * does not distinguish between elements and attributes.
+ * <p>
+ * Additional details may be found at Jackson's official documentation.
+ * <p>
+ * <strong>Note:</strong> Conversion from XML to JSON may vary depending on the
+ * {@link Mapper} implementation.
  *
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 0.3.0
  */
 public class JacksonXMLToJsonNodeMapper extends JacksonXMLToObjectMapper<JsonNode> implements Mapper<JsonNode>
 {
+
+    /**
+     * Builds a new XML-to-JSON mapper.
+     */
     public JacksonXMLToJsonNodeMapper()
     {
         super(JsonNode.class);

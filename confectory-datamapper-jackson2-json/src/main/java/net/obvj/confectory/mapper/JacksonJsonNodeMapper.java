@@ -16,21 +16,27 @@
 
 package net.obvj.confectory.mapper;
 
-import java.io.InputStream;
-
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 
 import net.obvj.confectory.helper.ConfigurationHelper;
 import net.obvj.confectory.helper.JacksonJsonNodeHelper;
 
 /**
- * A specialized {@code Mapper} that loads a {@link JsonNode} from an {@link InputStream}.
+ * A specialized {@code Mapper} that loads the contents of a valid JSON {@code Source}
+ * (e.g.: file, URL, string) as a {@link JsonNode}, using Jackson's {@link JsonMapper}.
+ * <p>
+ * Additional details may be found at Jackson's official documentation.
  *
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 0.3.0
  */
 public class JacksonJsonNodeMapper extends JacksonJsonToObjectMapper<JsonNode> implements Mapper<JsonNode>
 {
+
+    /**
+     * Builds a new JSON mapper.
+     */
     public JacksonJsonNodeMapper()
     {
         super(JsonNode.class);

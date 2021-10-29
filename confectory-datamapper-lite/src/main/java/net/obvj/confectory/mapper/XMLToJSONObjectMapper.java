@@ -24,17 +24,29 @@ import java.io.Reader;
 import org.json.JSONObject;
 import org.json.XML;
 
-import net.obvj.confectory.helper.ConfigurationHelper;
-import net.obvj.confectory.helper.JSONObjectHelper;
-
 /**
- * A specialized {@code Mapper} that loads XML data from a given {@link InputStream} and
- * converts it into a {@link JSONObject}.
+ * A specialized {@code Mapper} that loads the contents of a valid XML {@code Source}
+ * (e.g.: file, URL) and converts it into a {@link JSONObject} (using {@code json.org}
+ * reference implementation).
+ * <p>
+ * Because of differences between XML and JSON formats, the document structure may suffer
+ * modifications in this transformation:
+ * <ul>
+ * <li>XML uses elements, attributes, and content text, while JSON uses unordered
+ * collections of name/value pairs and arrays of values.</li>
+ * <li>JSON does not distinguish between elements and attributes.</li>
+ * <li>Sequences of similar elements are represented as {@code JSONArray}.</li>
+ * <li>Content text may be placed in a "content" member.</li>
+ * <li>Comments, prologs, DTDs, are ignored.</li>
+ * </ul>
+ * <p>
+ * <strong>Note:</strong> Conversion from XML to JSON may vary depending on the
+ * {@link Mapper} implementation.
  *
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 0.2.0
  */
-public class XMLToJSONObjectMapper implements Mapper<JSONObject>
+public class XMLToJSONObjectMapper extends JSONObjectMapper implements Mapper<JSONObject>
 {
 
     @Override
@@ -42,12 +54,6 @@ public class XMLToJSONObjectMapper implements Mapper<JSONObject>
     {
         Reader reader = new InputStreamReader(inputStream);
         return XML.toJSONObject(reader);
-    }
-
-    @Override
-    public ConfigurationHelper<JSONObject> configurationHelper(JSONObject jsonObject)
-    {
-        return new JSONObjectHelper(jsonObject);
     }
 
 }

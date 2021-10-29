@@ -26,8 +26,15 @@ import net.obvj.confectory.helper.BeanConfigurationHelper;
 import net.obvj.confectory.helper.ConfigurationHelper;
 
 /**
- * A specialized {@code Mapper} that loads a JSON document from an {@link InputStream}
- * into a user-defined object using Jackson object mapper.
+ * A specialized {@code Mapper} that loads the contents of a valid JSON {@code Source}
+ * (e.g.: file, URL, string) into POJO (Plain Old Java Object), using Jackson's
+ * {@link JsonMapper}.
+ * <p>
+ * Additional details may be found at Jackson's official documentation.
+ *
+ * @param <T> the target type to be produced by this {@code Mapper} (the target class may
+ *            contain Jackson annotations for due mapping -- e.g.:
+ *            {@code @JsonProperty, @JsonIgnore})
  *
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 0.3.0
@@ -36,6 +43,11 @@ public class JacksonJsonToObjectMapper<T> implements Mapper<T>
 {
     protected Class<T> targetType;
 
+    /**
+     * Builds a new JSON mapper with the specified target type.
+     *
+     * @param targetType the target type to be produced by this {@code Mapper}
+     */
     public JacksonJsonToObjectMapper(Class<T> targetType)
     {
         this.targetType = targetType;

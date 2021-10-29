@@ -23,17 +23,15 @@ import java.util.Properties;
 import org.json.JSONObject;
 import org.json.Property;
 
-import net.obvj.confectory.helper.ConfigurationHelper;
-import net.obvj.confectory.helper.JSONObjectHelper;
-
 /**
- * A specialized {@code Mapper} that loads Properties from a given {@link InputStream} and
- * converts it into a {@link JSONObject}.
+ * A specialized {@code Mapper} that loads the contents of a {@code Source} (e.g.: file,
+ * URL) in the {@code Properties} format (a sequence of key-value pairs) and converts it
+ * into a {@link JSONObject} ({@code json.org} reference implementation).
  *
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 0.2.0
  */
-public class PropertiesToJSONObjectMapper implements Mapper<JSONObject>
+public class PropertiesToJSONObjectMapper extends JSONObjectMapper implements Mapper<JSONObject>
 {
 
     @Override
@@ -41,12 +39,6 @@ public class PropertiesToJSONObjectMapper implements Mapper<JSONObject>
     {
         Properties properties = new PropertiesMapper().apply(inputStream);
         return Property.toJSONObject(properties);
-    }
-
-    @Override
-    public ConfigurationHelper<JSONObject> configurationHelper(JSONObject jsonObject)
-    {
-        return new JSONObjectHelper(jsonObject);
     }
 
 }

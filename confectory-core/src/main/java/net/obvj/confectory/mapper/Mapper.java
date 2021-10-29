@@ -33,6 +33,9 @@ public interface Mapper<T>
 {
     /**
      * Applies this {@code Mapper} into the given input.
+     * <p>
+     * <strong>Note:</strong>The input stream must be closed by the caller after the mapping
+     * operation.
      *
      * @param input the input stream to be mapped
      * @return the mapped object

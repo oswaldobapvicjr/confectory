@@ -24,7 +24,8 @@ import net.obvj.confectory.helper.ConfigurationHelper;
 import net.obvj.confectory.helper.PropertiesConfigurationHelper;
 
 /**
- * A specialized {@code Mapper} that loads {@link Properties} from an {@link InputStream}.
+ * A specialized {@code Mapper} that loads the contents of a {@code Source} (e.g.: file,
+ * URL) as {@link Properties} (a table of key-value pairs).
  *
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 0.1.0
