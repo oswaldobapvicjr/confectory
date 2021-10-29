@@ -66,13 +66,11 @@ Configuration<JSONObject> config = Configuration.<JSONObject>builder()
   <tr>
     <th>Version</th>
     <th>Release</th>
-    <th>Main modules</th>
     <th>Key features</th>
   </tr>
   <tr>
     <td><b>0.1.0 :heavy_check_mark:</b></td>
     <td>2021-08</td>
-    <td>confectory-core</td>
     <td>
       <li>Configuration Builder</li>
       <li>Local file sources</li>
@@ -83,19 +81,13 @@ Configuration<JSONObject> config = Configuration.<JSONObject>builder()
     <td><b>0.2.0 :heavy_check_mark:</b></td>
     <td>2021-09</td>
     <td>
-      confectory-datamapper-lite
-    </td>
-    <td>
       <li><b>XML and JSON</b> files parsing</li>
       <li>Data fetch using JSONPath</li>
     </td>
   </tr>
   <tr>
-    <td><b>0.3.0 :construction:</b></td>
+    <td><b>0.3.0 :heavy_check_mark:</b></td>
     <td>2021-10</td>
-    <td>
-      confectory-datamapper-jackson2*
-    </td>
     <td>
       <li><b>XML, JSON and YAML</b> files parsing</li>
       <li>Bean mapping using Jackson 2</li>
@@ -104,9 +96,6 @@ Configuration<JSONObject> config = Configuration.<JSONObject>builder()
   <tr>
     <td><b>0.4.0 :calendar:</b></td>
     <td>2021-11</td>
-    <td>
-      confectory-datamapper-gson2
-    </td>
     <td>
       <li>JSON files parsing using GSON</li>
       <li><b>HTTP/1.1</b> file source</li>
