@@ -19,6 +19,9 @@ package net.obvj.confectory.mapper;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 
+import net.obvj.confectory.helper.ConfigurationHelper;
+import net.obvj.confectory.helper.JacksonJsonNodeHelper;
+
 /**
  * A specialized {@code Mapper} that loads the contents of a valid YAML {@code Source}
  * (e.g.: file, URL, string) and converts it into a {@link JsonNode}, using Jackson's
@@ -38,6 +41,12 @@ public class JacksonYAMLToJsonNodeMapper extends JacksonYAMLToObjectMapper<JsonN
     public JacksonYAMLToJsonNodeMapper()
     {
         super(JsonNode.class);
+    }
+
+    @Override
+    public ConfigurationHelper<JsonNode> configurationHelper(JsonNode jsonNode)
+    {
+        return new JacksonJsonNodeHelper(jsonNode);
     }
 
 }

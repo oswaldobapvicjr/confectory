@@ -19,17 +19,27 @@ package net.obvj.confectory.mapper;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 
+import net.obvj.confectory.helper.ConfigurationHelper;
+import net.obvj.confectory.helper.JacksonJsonNodeHelper;
+
 /**
  * A specialized {@code Mapper} that loads the contents of a valid XML {@code Source}
  * (e.g.: file, URL, string) and converts it into a {@link JsonNode}, using Jackson's
  * {@link XmlMapper}.
  * <p>
- * Because of differences between XML and JSON formats, the document structure may suffer
- * modifications in this transformation. XML uses elements, attributes, and content text,
- * while JSON uses unordered collections of name/value pairs and arrays of values. JSON
- * does not distinguish between elements and attributes.
+ * Because of differences between XML and JSON formats, there are certain limitations with
+ * Jackson's XML tree traversal support:
+ * <ul>
+ * <li>Jackson cannot differentiate between an Object and an Array. Since XML lacks native
+ * structures to distinguish an object from a list of objects, Jackson will simply collate
+ * repeated elements into a single value.</li>
+ * <li>Since Jackson maps each XML element to a JSON node, it doesn't support mixed
+ * content (elements/attributes and text in same element).</li>
+ * </ul>
  * <p>
- * Additional details may be found at Jackson's official documentation.
+ * Additional details can be found at
+ * <a href="https://github.com/FasterXML/jackson-dataformat-xml#known-limitations">
+ * Jackson's official documentation</a>.
  * <p>
  * <strong>Note:</strong> Conversion from XML to JSON may vary depending on the
  * {@link Mapper} implementation.
@@ -46,6 +56,12 @@ public class JacksonXMLToJsonNodeMapper extends JacksonXMLToObjectMapper<JsonNod
     public JacksonXMLToJsonNodeMapper()
     {
         super(JsonNode.class);
+    }
+
+    @Override
+    public ConfigurationHelper<JsonNode> configurationHelper(JsonNode jsonNode)
+    {
+        return new JacksonJsonNodeHelper(jsonNode);
     }
 
 }

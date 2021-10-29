@@ -7,8 +7,13 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.fasterxml.jackson.databind.JsonNode;
+
+import net.obvj.confectory.helper.JacksonJsonNodeHelper;
 
 /**
  * Unit tests for the {@link JacksonYAMLToJsonNodeMapper} class.
@@ -16,6 +21,7 @@ import com.fasterxml.jackson.databind.JsonNode;
  * @author oswaldo.bapvic.jr
  * @since 0.3.0
  */
+@ExtendWith(MockitoExtension.class)
 class JacksonYAMLToJsonNodeMapperTest
 {
     private static final String TEST_YAML_SAMPLE1
@@ -25,6 +31,9 @@ class JacksonYAMLToJsonNodeMapperTest
             + "array:\r\n"
             + "  - string1\r\n"
             + "  - string2";
+
+    @Mock
+    private JsonNode jsonNode;
 
     private Mapper<JsonNode> mapper = new JacksonYAMLToJsonNodeMapper();
 
@@ -46,6 +55,12 @@ class JacksonYAMLToJsonNodeMapperTest
         assertThat(array.size(), equalTo(2));
         assertThat(array.get(0).asText(), equalTo("string1"));
         assertThat(array.get(1).asText(), equalTo("string2"));
+    }
+
+    @Test
+    void configurationHelper_jsonObjectConfigurationHelper()
+    {
+        assertThat(mapper.configurationHelper(jsonNode).getClass(), equalTo(JacksonJsonNodeHelper.class));
     }
 
 }
