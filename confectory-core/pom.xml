@@ -17,7 +17,7 @@
         <commons-io.version>2.11.0</commons-io.version>
         <commons-text.version>1.9</commons-text.version>
         <json-path.version>2.6.0</json-path.version>
-        <performetrics.version>2.2.3</performetrics.version>
+        <performetrics.version>2.2.4</performetrics.version>
     </properties>
 
     <dependencies>
