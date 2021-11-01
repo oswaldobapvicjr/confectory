@@ -1,0 +1,36 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>net.obvj</groupId>
+        <artifactId>confectory</artifactId>
+        <version>0.4.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>confectory-datamapper-gson</artifactId>
+    <name>Confectory Data Mapper - Gson</name>
+    <description>
+        Confectory module that adds support to JSON deserialization using Gson as provider
+    </description>
+
+    <properties>
+        <gson.version>2.8.9</gson.version>
+    </properties>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>net.obvj</groupId>
+            <artifactId>confectory-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>${gson.version}</version>
+        </dependency>
+
+    </dependencies>
+
+</project>
