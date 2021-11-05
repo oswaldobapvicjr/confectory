@@ -42,7 +42,7 @@ Configuration<JSONObject> config = Configuration.<JSONObject>builder()
 > String value = config.getString("$.store.name");
 > ````
 
-#### Loading XML document from an HTTP server as JSON (planned release):
+#### Loading XML document from an HTTP server as JSON:
 
 ````java
 Configuration<JSONObject> config = Configuration.<JSONObject>builder()
@@ -99,7 +99,6 @@ Configuration<JSONObject> config = Configuration.<JSONObject>builder()
     <td>
       <li>JSON files parsing using GSON</li>
       <li><b>HTTP/1.1</b> file source</li>
-      <li>Configuration Merger</li>
     </td>
   </tr>
 </table>
