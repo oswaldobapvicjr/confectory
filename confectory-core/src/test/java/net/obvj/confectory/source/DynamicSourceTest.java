@@ -43,9 +43,15 @@ class DynamicSourceTest
     private DynamicSource<String> source;
 
     @Test
-    void resolveSource_stringWithFilePrefix_fileSource()
+    void resolveSource_stringWithFilePrefix_urlSource()
     {
-        assertThat(DynamicSource.resolveSource("file://").getClass(), equalTo(FileSource.class));
+        assertThat(DynamicSource.resolveSource("file://").getClass(), equalTo(URLSource.class));
+    }
+
+    @Test
+    void resolveSource_stringWithHttpPrefix_urlSource()
+    {
+        assertThat(DynamicSource.resolveSource("http://").getClass(), equalTo(URLSource.class));
     }
 
     @Test
@@ -75,12 +81,13 @@ class DynamicSourceTest
     }
 
     @Test
-    void load_mockedFileWithFilePrefix_success()
+    void load_mockedWithFilePrefix_success()
     {
-        source = new DynamicSource<>("file://mockedfile");
+        source = new DynamicSource<>("file:///mockedfile");
         try (MockedStatic<SourceFactory> mocked = mockStatic(SourceFactory.class))
         {
-            mocked.when(() -> SourceFactory.<String>fileSource("mockedfile")).thenReturn(delegateSource1);
+            // The URLSource will be selected directly based on the "file://" prefix
+            mocked.when(() -> SourceFactory.<String>urlSource("file:///mockedfile")).thenReturn(delegateSource1);
             when(delegateSource1.load(STRING_MAPPER)).thenReturn(OK);
 
             assertThat(source.load(STRING_MAPPER), equalTo(OK));
@@ -89,11 +96,30 @@ class DynamicSourceTest
     }
 
     @Test
-    void load_mockedFileWithoutPrefixAndNotFoundInClasspathButFoundInFileSystem_success()
+    void load_mockedWithHttpPrefix_success()
+    {
+        source = new DynamicSource<>("http://myhost");
+        try (MockedStatic<SourceFactory> mocked = mockStatic(SourceFactory.class))
+        {
+            // The URLSource will be selected directly based on the "http://" prefix
+            mocked.when(() -> SourceFactory.<String>urlSource("http://myhost")).thenReturn(delegateSource1);
+            when(delegateSource1.load(STRING_MAPPER)).thenReturn(OK);
+
+            assertThat(source.load(STRING_MAPPER), equalTo(OK));
+            verify(delegateSource1, times(1)).load(STRING_MAPPER);
+        }
+    }
+
+    @Test
+    void load_mockedWithoutPrefixAndNotFoundInClasspathButFoundInFileSystem_success()
     {
         source = new DynamicSource<>("mockedfile");
         try (MockedStatic<SourceFactory> mocked = mockStatic(SourceFactory.class))
         {
+            /*
+             * Since no prefix was specified, the system will try class path and file system. It's not
+             * required to try the URL source, since URL must always contain the prefix
+             */
             mocked.when(() -> SourceFactory.<String>classpathFileSource("mockedfile")).thenReturn(delegateSource1);
             mocked.when(() -> SourceFactory.<String>fileSource("mockedfile")).thenReturn(delegateSource2);
 

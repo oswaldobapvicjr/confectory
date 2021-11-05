@@ -31,8 +31,8 @@ import net.obvj.confectory.mapper.Mapper;
  * contingent on the path contents.
  * </p>
  * <ul>
- * <li>A path starting with {@code "file://"} will be loaded by the
- * {@link FileSource}</li>
+ * <li>A path starting with {@code "file://"} or {@code "http://"} will be loaded by the
+ * {@link URLSource}</li>
  * <li>A path starting with {@code "classpath://"} will be loaded by the
  * {@link ClasspathFileSource}</li>
  * </ul>
@@ -42,7 +42,7 @@ import net.obvj.confectory.mapper.Mapper;
  * <li>The following instruction creates a dynamic {@code Source} that loads files from
  * the file system:
  *
- * <blockquote><pre>new DynamicSource("file://${TMP}/my-file.properties")</pre></blockquote>
+ * <blockquote><pre>new DynamicSource("file:///path/my-file.properties")</pre></blockquote>
  * </li>
  *
  * <li>The following instruction creates a dynamic {@code Source} that loads a file
@@ -68,6 +68,7 @@ public class DynamicSource<T> extends AbstractSource<T> implements Source<T>
 
     private static final String CLASSPATH_PREFIX = "classpath://";
     private static final String FILE_PREFIX = "file://";
+    private static final String HTTP_PREFIX = "http://";
 
     /**
      * Builds a new dynamic configuration source from a specific path.
@@ -100,10 +101,9 @@ public class DynamicSource<T> extends AbstractSource<T> implements Source<T>
             String pathPart = extractPath(path, CLASSPATH_PREFIX);
             return SourceFactory.classpathFileSource(pathPart);
         }
-        if (path.startsWith(FILE_PREFIX))
+        if (StringUtils.startsWithAny(path, FILE_PREFIX, HTTP_PREFIX))
         {
-            String pathPart = extractPath(path, FILE_PREFIX);
-            return SourceFactory.fileSource(pathPart);
+            return SourceFactory.urlSource(path);
         }
         return null;
     }

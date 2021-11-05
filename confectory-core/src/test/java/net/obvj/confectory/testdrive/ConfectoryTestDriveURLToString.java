@@ -3,19 +3,18 @@ package net.obvj.confectory.testdrive;
 import net.obvj.confectory.Configuration;
 import net.obvj.confectory.ConfigurationBuilder;
 import net.obvj.confectory.mapper.StringMapper;
+import net.obvj.confectory.source.URLSource;
 
-public class ConfectoryTestDriveFileString
+public class ConfectoryTestDriveURLToString
 {
     public static void main(String[] args)
     {
         Configuration<String> config = new ConfigurationBuilder<String>()
                 .namespace("test")
-                .source("${TEMP}/file1.txt")
+                .source(new URLSource<>("http://date.jsontest.com"))
                 .mapper(new StringMapper())
-                .optional()
                 .build();
 
-        System.out.println(config.getSource());
-        System.out.println(config.getBean());
+        System.out.println(config.getBean().get());
     }
 }

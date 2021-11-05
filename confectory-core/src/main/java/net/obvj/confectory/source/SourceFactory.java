@@ -80,4 +80,18 @@ public class SourceFactory
     {
         return new StringSource<>(string);
     }
+
+    /**
+     * Creates a new {@link URLSource} for loading contents of a URL.
+     *
+     * @param <T> the target return type
+     * @param url the URL to be parsed
+     * @return a {@link URLSource}
+     * @since 0.4.0
+     */
+    public static <T> Source<T> urlSource(String url)
+    {
+        return new URLSource<>(url);
+    }
+
 }
