@@ -59,29 +59,23 @@ public class FileSource<T> extends AbstractSource<T> implements Source<T>
     {
         LOGGER.info("Searching file: {}", super.parameter);
 
+        Stopwatch stopwatch = Stopwatch.createStarted(Counter.Type.WALL_CLOCK_TIME);
         try (InputStream inputStream = new FileInputStream(super.parameter))
         {
-            return load(inputStream, mapper);
+            LOGGER.debug("Appplying mapper {}", mapper.getClass());
+            T mappedObject = load(inputStream, mapper);
+
+            stopwatch.stop();
+            Duration elapsedTime = stopwatch.elapsedTime();
+
+            LOGGER.info("File {} loaded successfully", super.parameter);
+            LOGGER.info("File loaded in {}", elapsedTime);
+            return mappedObject;
         }
         catch (IOException exception)
         {
             throw new ConfigurationSourceException(exception, "Unable to load file: %s", super.parameter);
         }
-    }
-
-    @Override
-    protected T load(InputStream inputStream, Mapper<T> mapper) throws IOException
-    {
-        LOGGER.debug("Loading file {} with mapper: <{}>", super.parameter, mapper.getClass().getSimpleName());
-
-        Stopwatch stopwatch = Stopwatch.createStarted(Counter.Type.WALL_CLOCK_TIME);
-        T mappedObject = mapper.apply(inputStream);
-        stopwatch.stop();
-        Duration elapsedTime = stopwatch.elapsedTime();
-
-        LOGGER.info("File {} loaded successfully", super.parameter);
-        LOGGER.info("File loaded in {}", elapsedTime);
-        return mappedObject;
     }
 
 }
