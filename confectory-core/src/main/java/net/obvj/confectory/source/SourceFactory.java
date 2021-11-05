@@ -82,7 +82,7 @@ public class SourceFactory
     }
 
     /**
-     * Creates a new {@link URLFileSource} for loading contents of a URL.
+     * Creates a new {@link URLSource} for loading contents of a URL.
      *
      * @param <T> the target return type
      * @param url the URL to be parsed
