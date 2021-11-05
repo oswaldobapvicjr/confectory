@@ -60,7 +60,7 @@ class ClasspathFileSourceTest
     {
         assertThat(() -> TEST_SOURCE_FILE_NOT_FOUND.load(MAPPER, false),
                 throwsException(ConfigurationSourceException.class)
-                        .withMessage(containsAll("file not found", FILE_NOT_FOUND_PATH).ignoreCase()));
+                        .withMessage(containsAll("resource not found", FILE_NOT_FOUND_PATH).ignoreCase()));
     }
 
     @Test

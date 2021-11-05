@@ -77,7 +77,7 @@ public class FileSource<T> extends AbstractSource<T> implements Source<T>
         Stopwatch stopwatch = Stopwatch.createStarted(Counter.Type.WALL_CLOCK_TIME);
         T mappedObject = mapper.apply(inputStream);
         stopwatch.stop();
-        Duration elapsedTime = stopwatch.elapsedTime(Counter.Type.WALL_CLOCK_TIME);
+        Duration elapsedTime = stopwatch.elapsedTime();
 
         LOGGER.info("File {} loaded successfully", super.parameter);
         LOGGER.info("File loaded in {}", elapsedTime);
