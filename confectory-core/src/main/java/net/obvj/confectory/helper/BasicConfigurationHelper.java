@@ -50,10 +50,24 @@ public abstract class BasicConfigurationHelper<T> extends AbstractBasicConfigura
     }
 
     @Override
+    public boolean getMandatoryBoolean(String key)
+    {
+        String string = getMandatoryString(key);
+        return Boolean.parseBoolean(string);
+    }
+
+    @Override
     public int getInt(String key)
     {
         String value = getString(key);
         return nullValueProvider.isNull(value) ? nullValueProvider.getIntValue() : Integer.parseInt(value);
+    }
+
+    @Override
+    public int getMandatoryInt(String key)
+    {
+        String string = getMandatoryString(key);
+        return Integer.parseInt(string);
     }
 
     @Override
@@ -64,10 +78,24 @@ public abstract class BasicConfigurationHelper<T> extends AbstractBasicConfigura
     }
 
     @Override
+    public long getMandatoryLong(String key)
+    {
+        String string = getMandatoryString(key);
+        return Long.parseLong(string);
+    }
+
+    @Override
     public double getDouble(String key)
     {
         String value = getString(key);
         return nullValueProvider.isNull(value) ? nullValueProvider.getDoubleValue() : Double.parseDouble(value);
+    }
+
+    @Override
+    public double getMandatoryDouble(String key)
+    {
+        String string = getMandatoryString(key);
+        return Double.parseDouble(string);
     }
 
 }

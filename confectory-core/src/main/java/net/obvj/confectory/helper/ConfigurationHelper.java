@@ -32,8 +32,11 @@ public interface ConfigurationHelper<T> extends ConfigurationDataRetriever<T>
 {
     /**
      * Defines a {@link NullValueProvider} for invalid keys.
+     *
      * @param provider the {@link NullValueProvider} to set; not null
+     *
      * @throws NullPointerException if the specified provider is null
      */
     void setNullValueProvider(NullValueProvider provider);
+
 }

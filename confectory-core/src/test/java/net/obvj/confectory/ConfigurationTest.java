@@ -1,17 +1,25 @@
 package net.obvj.confectory;
 
 import static net.obvj.junit.utils.matchers.AdvancedMatchers.containsAll;
+import static net.obvj.junit.utils.matchers.AdvancedMatchers.throwsException;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Properties;
 import java.util.Set;
 
+import org.hamcrest.Matcher;
 import org.junit.jupiter.api.Test;
 
+import net.obvj.confectory.helper.BeanConfigurationHelper;
+import net.obvj.confectory.helper.PropertiesConfigurationHelper;
+import net.obvj.confectory.mapper.PropertiesMapper;
 import net.obvj.confectory.mapper.StringMapper;
+import net.obvj.confectory.source.Source;
 import net.obvj.confectory.source.StringSource;
 
 /**
@@ -22,12 +30,17 @@ import net.obvj.confectory.source.StringSource;
  */
 class ConfigurationTest
 {
+
+    private static final Matcher<Runnable> CONFIGURATION_EXCEPTION_NO_VALUE_FOUND = throwsException(
+            ConfigurationException.class).withMessageContaining("No value found");
+
+    private static final String UNKNOWN = "unknown";
     private static final String NAMESPACE1 = "namespace1";
     private static final String NAMESPACE2 = "namespace2";
     private static final String STRING1 = "string1";
     private static final String STRING2 = "string2";
-    private static final StringSource<String> SOURCE_STRING1 = new StringSource<>(STRING1);
-    private static final StringSource<String> SOURCE_STRING2 = new StringSource<>(STRING2);
+    private static final Source<String> SOURCE_STRING1 = new StringSource<>(STRING1);
+    private static final Source<String> SOURCE_STRING2 = new StringSource<>(STRING2);
 
     private static final Configuration<String> CONFIG_NS1_STRING_1 = Configuration.<String>builder()
             .namespace(NAMESPACE1).precedence(1).required().source(SOURCE_STRING1).mapper(new StringMapper()).build();
@@ -41,6 +54,10 @@ class ConfigurationTest
 
     private static final Configuration<String> CONFIG_NS2_STRING_1 = Configuration.<String>builder()
             .namespace(NAMESPACE2).source(SOURCE_STRING1).mapper(new StringMapper()).build();
+
+    private static final Configuration<Properties> CONFIG_PROPERTIES_1 = Configuration.<Properties>builder()
+            .source(new StringSource<>("myKey=myValue\nmyBool=true\nmyInt=9\nmyLong=9876543210\nmyDouble=7.89"))
+            .mapper(new PropertiesMapper()).build();
 
     @Test
     void equals_sameObjectAndSimilarObject_true()
@@ -87,4 +104,135 @@ class ConfigurationTest
                 containsAll("namespace:" + NAMESPACE1, "source:" + SOURCE_STRING1, "precedence:2"));
     }
 
+    @Test
+    void getString_validKey_value()
+    {
+        assertThat(CONFIG_PROPERTIES_1.getString("myKey"), equalTo("myValue"));
+    }
+
+    @Test
+    void getString_invalidKey_defaultValue()
+    {
+        assertThat(CONFIG_PROPERTIES_1.getString(UNKNOWN), equalTo(""));
+    }
+
+    @Test
+    void getMandatoryString_validKey_value()
+    {
+        assertThat(CONFIG_PROPERTIES_1.getMandatoryString("myKey"), equalTo("myValue"));
+    }
+
+    @Test
+    void getMandatoryString_invalidKey_configurationException()
+    {
+        assertThat(() -> CONFIG_PROPERTIES_1.getMandatoryString(UNKNOWN), CONFIGURATION_EXCEPTION_NO_VALUE_FOUND);
+    }
+
+    @Test
+    void getBoolean_validKey_value()
+    {
+        assertThat(CONFIG_PROPERTIES_1.getBoolean("myBool"), equalTo(true));
+    }
+
+    @Test
+    void getBoolean_invalidKey_defaultValue()
+    {
+        assertThat(CONFIG_PROPERTIES_1.getBoolean(UNKNOWN), equalTo(false));
+    }
+
+    @Test
+    void getMandatoryBoolean_validKey_value()
+    {
+        assertThat(CONFIG_PROPERTIES_1.getMandatoryBoolean("myBool"), equalTo(true));
+    }
+
+    @Test
+    void getMandatoryBoolean_invalidKey_configurationException()
+    {
+        assertThat(() -> CONFIG_PROPERTIES_1.getMandatoryBoolean(UNKNOWN), CONFIGURATION_EXCEPTION_NO_VALUE_FOUND);
+    }
+
+    @Test
+    void getInt_validKey_value()
+    {
+        assertThat(CONFIG_PROPERTIES_1.getInt("myInt"), equalTo(9));
+    }
+
+    @Test
+    void getInt_invalidKey_defaultValue()
+    {
+        assertThat(CONFIG_PROPERTIES_1.getInt(UNKNOWN), equalTo(0));
+    }
+
+    @Test
+    void getMandatoryInt_validKey_value()
+    {
+        assertThat(CONFIG_PROPERTIES_1.getMandatoryInt("myInt"), equalTo(9));
+    }
+
+    @Test
+    void getMandatoryInt_invalidKey_configurationException()
+    {
+        assertThat(() -> CONFIG_PROPERTIES_1.getMandatoryInt(UNKNOWN), CONFIGURATION_EXCEPTION_NO_VALUE_FOUND);
+    }
+
+    @Test
+    void getLong_validKey_value()
+    {
+        assertThat(CONFIG_PROPERTIES_1.getLong("myLong"), equalTo(9876543210L));
+    }
+
+    @Test
+    void getLong_invalidKey_defaultValue()
+    {
+        assertThat(CONFIG_PROPERTIES_1.getLong(UNKNOWN), equalTo(0L));
+    }
+
+    @Test
+    void getMandatoryLong_validKey_value()
+    {
+        assertThat(CONFIG_PROPERTIES_1.getMandatoryLong("myLong"), equalTo(9876543210L));
+    }
+
+    @Test
+    void getMandatoryLong_invalidKey_configurationException()
+    {
+        assertThat(() -> CONFIG_PROPERTIES_1.getMandatoryLong(UNKNOWN), CONFIGURATION_EXCEPTION_NO_VALUE_FOUND);
+    }
+
+    @Test
+    void getDouble_validKey_value()
+    {
+        assertThat(CONFIG_PROPERTIES_1.getDouble("myDouble"), equalTo(7.89));
+    }
+
+    @Test
+    void getDouble_invalidKey_defaultValue()
+    {
+        assertThat(CONFIG_PROPERTIES_1.getDouble(UNKNOWN), equalTo(0.0));
+    }
+
+    @Test
+    void getMandatoryDouble_validKey_value()
+    {
+        assertThat(CONFIG_PROPERTIES_1.getMandatoryDouble("myDouble"), equalTo(7.89));
+    }
+
+    @Test
+    void getMandatoryDouble_invalidKey_configurationException()
+    {
+        assertThat(() -> CONFIG_PROPERTIES_1.getMandatoryDouble(UNKNOWN), CONFIGURATION_EXCEPTION_NO_VALUE_FOUND);
+    }
+
+    @Test
+    void getHelper_string_beanConfigurationHelper()
+    {
+        assertThat(CONFIG_NS1_STRING_1.getHelper().getClass(), equalTo(BeanConfigurationHelper.class));
+    }
+
+    @Test
+    void getHelper_properties_propertiesConfigurationHelper()
+    {
+        assertThat(CONFIG_PROPERTIES_1.getHelper().getClass(), equalTo(PropertiesConfigurationHelper.class));
+    }
 }

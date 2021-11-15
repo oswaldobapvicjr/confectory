@@ -84,4 +84,34 @@ public class NullConfigurationHelper<T> extends AbstractBasicConfigurationHelper
         return nullValueProvider.getStringValue();
     }
 
+    @Override
+    public boolean getMandatoryBoolean(String key)
+    {
+        return getBoolean(key);
+    }
+
+    @Override
+    public int getMandatoryInt(String key)
+    {
+        return getInt(key);
+    }
+
+    @Override
+    public long getMandatoryLong(String key)
+    {
+        return getLong(key);
+    }
+
+    @Override
+    public double getMandatoryDouble(String key)
+    {
+        return getDouble(key);
+    }
+
+    @Override
+    public String getMandatoryString(String key)
+    {
+        return getString(key);
+    }
+
 }

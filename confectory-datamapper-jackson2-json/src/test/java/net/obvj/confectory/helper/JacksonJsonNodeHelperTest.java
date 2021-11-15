@@ -110,7 +110,7 @@ class JacksonJsonNodeHelperTest
     void getDouble_existingKeyAndMultipleElements_configurationException()
     {
         assertThat(() -> HELPER.getDouble("$.store.books[?(@.price>5)].price"),
-                throwsException(ConfigurationException.class).withMessageContaining("more than one element"));
+                throwsException(ConfigurationException.class).withMessageContaining("Multiple values found for path"));
     }
 
     @Test

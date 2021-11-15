@@ -40,7 +40,9 @@ public interface ConfigurationDataRetriever<T>
     /**
      * Returns the {@code boolean} value associated with the specified {@code key}.
      *
-     * @param key the property key
+     * @param key the property key (some implementations may also accept a path expression,
+     *            e.g: {@code JSONPath})
+     *
      * @return the {@code boolean} value associated with the specified {@code key}
      */
     boolean getBoolean(String key);
@@ -48,7 +50,9 @@ public interface ConfigurationDataRetriever<T>
     /**
      * Returns the {@code int} value associated with the specified {@code key}.
      *
-     * @param key the property key
+     * @param key the property key (some implementations may also accept a path expression,
+     *            e.g: {@code JSONPath}
+     *
      * @return the {@code int} value associated with the specified {@code key}
      * @throws NumberFormatException if the value is not a parsable {@code int}.
      */
@@ -57,7 +61,9 @@ public interface ConfigurationDataRetriever<T>
     /**
      * Returns the {@code long} value associated with the specified {@code key}.
      *
-     * @param key the property key
+     * @param key the property key (some implementations may also accept a path expression,
+     *            e.g: {@code JSONPath}
+     *
      * @return the {@code long} value associated with the specified {@code key}
      * @throws NumberFormatException if the value is not a parsable {@code long}.
      */
@@ -66,7 +72,9 @@ public interface ConfigurationDataRetriever<T>
     /**
      * Returns the {@code double} value associated with the specified {@code key}.
      *
-     * @param key the property key
+     * @param key the property key (some implementations may also accept a path expression,
+     *            e.g: {@code JSONPath}
+     *
      * @return the {@code double} value associated with the specified {@code key}
      * @throws NumberFormatException if the value is not a parsable {@code double}.
      */
@@ -75,9 +83,84 @@ public interface ConfigurationDataRetriever<T>
     /**
      * Returns the {@code String} value associated with the specified {@code key}.
      *
-     * @param key the property key
+     * @param key the property key (some implementations may also accept a path expression,
+     *            e.g: {@code JSONPath})
+     *
      * @return the {@code String} value associated with the specified {@code key}
      */
     String getString(String key);
+
+    /**
+     * Returns the {@code boolean} value associated with the specified {@code key}.
+     *
+     * @param key the property key (some implementations may also accept a path expression,
+     *            e.g: {@code JSONPath})
+     *
+     * @return the {@code boolean} value associated with the specified {@code key}
+     *
+     * @throws ConfigurationException if the specified key (or path) is not found.
+     *
+     * @since 0.4.0
+     */
+    boolean getMandatoryBoolean(String key);
+
+    /**
+     * Returns the {@code int} value associated with the specified {@code key}.
+     *
+     * @param key the property key (some implementations may also accept a path expression,
+     *            e.g: {@code JSONPath})
+     *
+     * @return the {@code int} value associated with the specified {@code key}
+     *
+     * @throws ConfigurationException if the specified key (or path) is not found.
+     * @throws NumberFormatException  if the value is not a parsable {@code int}.
+     *
+     * @since 0.4.0
+     */
+    int getMandatoryInt(String key);
+
+    /**
+     * Returns the {@code long} value associated with the specified {@code key}.
+     *
+     * @param key the property key (some implementations may also accept a path expression,
+     *            e.g: {@code JSONPath})
+     *
+     * @return the {@code long} value associated with the specified {@code key}
+     *
+     * @throws ConfigurationException if the specified key (or path) is not found.
+     * @throws NumberFormatException  if the value is not a parsable {@code long}.
+     *
+     * @since 0.4.0
+     */
+    long getMandatoryLong(String key);
+
+    /**
+     * Returns the {@code double} value associated with the specified {@code key}.
+     *
+     * @param key the property key (some implementations may also accept a path expression,
+     *            e.g: {@code JSONPath})
+     *
+     * @return the {@code double} value associated with the specified {@code key}
+     *
+     * @throws ConfigurationException if the specified key (or path) is not found.
+     * @throws NumberFormatException  if the value is not a parsable {@code double}.
+     *
+     * @since 0.4.0
+     */
+    double getMandatoryDouble(String key);
+
+    /**
+     * Returns the {@code String} value associated with the specified {@code key}.
+     *
+     * @param key the property key (some implementations may also accept a path expression,
+     *            e.g: {@code JSONPath})
+     *
+     * @return the {@code String} value associated with the specified {@code key}
+     *
+     * @throws ConfigurationException if the specified key (or path) is not found.
+     *
+     * @since 0.4.0
+     */
+    String getMandatoryString(String key);
 
 }
