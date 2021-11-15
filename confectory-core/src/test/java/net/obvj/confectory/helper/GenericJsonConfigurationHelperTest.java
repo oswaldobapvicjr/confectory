@@ -16,6 +16,7 @@ import com.jayway.jsonpath.spi.mapper.JsonSmartMappingProvider;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import net.obvj.confectory.ConfigurationException;
+import net.obvj.junit.utils.matchers.ExceptionMatcher;
 
 /**
  * Unit tests for the {@link GenericJsonConfigurationHelper}.
@@ -46,6 +47,10 @@ class GenericJsonConfigurationHelperTest
     private static final GenericJsonConfigurationHelper<JSONObject> HELPER = new GenericJsonConfigurationHelper<JSONObject>(
             TEST_JSON_SAMPLE1, new JsonSmartJsonProvider(), new JsonSmartMappingProvider());
 
+    private static final String PATH_UNKNOWN = "$.unknown";
+    private static final ExceptionMatcher EXCEPTION_NO_VALUE_FOUND_PATH_UNKNOWN = throwsException(
+            ConfigurationException.class).withMessageContaining("No value found", PATH_UNKNOWN);
+
     @Test
     void getBean_notEmpty()
     {
@@ -61,7 +66,19 @@ class GenericJsonConfigurationHelperTest
     @Test
     void getBoolean_unknownKey_false()
     {
-        assertThat(HELPER.getBoolean("$.unknown"), equalTo(false));
+        assertThat(HELPER.getBoolean(PATH_UNKNOWN), equalTo(false));
+    }
+
+    @Test
+    void getMandatoryBoolean_existingKey_success()
+    {
+        assertThat(HELPER.getMandatoryBoolean("$.booleanValue"), equalTo(true));
+    }
+
+    @Test
+    void getMandatoryBoolean_unknownKey_false()
+    {
+        assertThat(() -> HELPER.getMandatoryBoolean(PATH_UNKNOWN), EXCEPTION_NO_VALUE_FOUND_PATH_UNKNOWN);
     }
 
     @Test
@@ -73,7 +90,19 @@ class GenericJsonConfigurationHelperTest
     @Test
     void getInt_unknownKey_zero()
     {
-        assertThat(HELPER.getInt("$.unknown"), equalTo(0));
+        assertThat(HELPER.getInt(PATH_UNKNOWN), equalTo(0));
+    }
+
+    @Test
+    void getMandatoryInt_existingKey_success()
+    {
+        assertThat(HELPER.getMandatoryInt("$.intValue"), equalTo(9));
+    }
+
+    @Test
+    void getMandatoryInt_unknownKey_zero()
+    {
+        assertThat(() -> HELPER.getMandatoryInt(PATH_UNKNOWN), EXCEPTION_NO_VALUE_FOUND_PATH_UNKNOWN);
     }
 
     @Test
@@ -85,7 +114,19 @@ class GenericJsonConfigurationHelperTest
     @Test
     void getLong_unknownKey_zero()
     {
-        assertThat(HELPER.getLong("$.unknown"), equalTo(0L));
+        assertThat(HELPER.getLong(PATH_UNKNOWN), equalTo(0L));
+    }
+
+    @Test
+    void getMandatoryLong_existingKey_success()
+    {
+        assertThat(HELPER.getMandatoryLong("$.longValue"), equalTo(9876543210L));
+    }
+
+    @Test
+    void getMandatoryLong_unknownKey_zero()
+    {
+        assertThat(() -> HELPER.getMandatoryLong(PATH_UNKNOWN), EXCEPTION_NO_VALUE_FOUND_PATH_UNKNOWN);
     }
 
     @Test
@@ -97,7 +138,19 @@ class GenericJsonConfigurationHelperTest
     @Test
     void getDouble_unknownKey_zero()
     {
-        assertThat(HELPER.getDouble("$.unknown"), equalTo(0.0));
+        assertThat(HELPER.getDouble(PATH_UNKNOWN), equalTo(0.0));
+    }
+
+    @Test
+    void getMandatoryDouble_existingKey_success()
+    {
+        assertThat(HELPER.getMandatoryDouble("$.doubleValue"), equalTo(7.89));
+    }
+
+    @Test
+    void getMandatoryDouble_unknownKey_zero()
+    {
+        assertThat(() -> HELPER.getMandatoryDouble(PATH_UNKNOWN), EXCEPTION_NO_VALUE_FOUND_PATH_UNKNOWN);
     }
 
     @Test
@@ -109,7 +162,7 @@ class GenericJsonConfigurationHelperTest
     @Test
     void getSring_unknownKey_empty()
     {
-        assertThat(HELPER.getString("$.unknown"), equalTo(""));
+        assertThat(HELPER.getString(PATH_UNKNOWN), equalTo(""));
     }
 
     @Test
@@ -122,7 +175,19 @@ class GenericJsonConfigurationHelperTest
     void getString_multipleElements_configurationException()
     {
         assertThat(() -> HELPER.getString("$.array[*]"),
-                throwsException(ConfigurationException.class).withMessageContaining("more than one element"));
+                throwsException(ConfigurationException.class).withMessageContaining("Multiple values found"));
+    }
+
+    @Test
+    void getMandatorySring_existingKey_success()
+    {
+        assertThat(HELPER.getMandatoryString("$.stringValue"), equalTo("test"));
+    }
+
+    @Test
+    void getMandatorySring_unknownKey_empty()
+    {
+        assertThat(() -> HELPER.getMandatoryDouble(PATH_UNKNOWN), EXCEPTION_NO_VALUE_FOUND_PATH_UNKNOWN);
     }
 
 }

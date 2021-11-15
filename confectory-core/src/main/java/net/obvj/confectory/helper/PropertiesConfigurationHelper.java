@@ -19,6 +19,8 @@ package net.obvj.confectory.helper;
 import java.util.Objects;
 import java.util.Properties;
 
+import net.obvj.confectory.ConfigurationException;
+
 /**
  * A specialized Configuration Helper that retrieves data from a {@link Properties}
  * object.
@@ -41,9 +43,25 @@ public class PropertiesConfigurationHelper extends BasicConfigurationHelper<Prop
     @Override
     public String getString(String key)
     {
-        Objects.requireNonNull(key, "The key must not be null");
-        String value = super.bean.getProperty(key);
+        String value = getValue(key);
         return value == null ? nullValueProvider.getStringValue() : value;
+    }
+
+    @Override
+    public String getMandatoryString(String key)
+    {
+        String value = getValue(key);
+        if (value == null)
+        {
+            throw new ConfigurationException("No value found for the key: %s", key);
+        }
+        return value;
+    }
+
+    protected String getValue(String key)
+    {
+        Objects.requireNonNull(key, "The key must not be null");
+        return super.bean.getProperty(key);
     }
 
 }

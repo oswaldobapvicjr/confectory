@@ -54,6 +54,12 @@ import net.obvj.confectory.settings.ConfectorySettings;
  * {@link NullValueProvider}. Both objects may be specified at container construction time
  * and modified using the setter methods at anytime. If not specified, the container uses
  * the default objects configured via {@link ConfectorySettings}.
+ * <p>
+ * <strong>IMPORTANT:</strong> This class works only with map-based {@code Configuration}
+ * objects (e.g.: {@code Properties}, {@code JSONObject}, {@code JsonNode}, etc.). In
+ * other words, only objects which values can be accessed using a key or JSONPath.
+ * POJO-based {@code Configuration} objects are <strong>not</strong> supported inside a
+ * the {@link ConfigurationContainer}.
  *
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 0.1.0

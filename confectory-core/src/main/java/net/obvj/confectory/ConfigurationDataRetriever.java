@@ -18,6 +18,8 @@ package net.obvj.confectory;
 
 import java.util.Optional;
 
+import javax.naming.ConfigurationException;
+
 /**
  * A base interface for objects that retrieve configuration data.
  *
@@ -79,5 +81,68 @@ public interface ConfigurationDataRetriever<T>
      * @return the {@code String} value associated with the specified {@code key}
      */
     String getString(String key);
+
+    /**
+     * Returns the {@code boolean} value associated with the specified {@code key}.
+     *
+     * @param key the property key
+     * @return the {@code boolean} value associated with the specified {@code key}
+     *
+     * @throws ConfigurationException if the specified key is not found.
+     *
+     * @since 0.4.0
+     */
+    boolean getMandatoryBoolean(String key);
+
+    /**
+     * Returns the {@code int} value associated with the specified {@code key}.
+     *
+     * @param key the property key
+     * @return the {@code int} value associated with the specified {@code key}
+     *
+     * @throws ConfigurationException if the specified key is not found.
+     * @throws NumberFormatException  if the value is not a parsable {@code int}.
+     *
+     * @since 0.4.0
+     */
+    int getMandatoryInt(String key);
+
+    /**
+     * Returns the {@code long} value associated with the specified {@code key}.
+     *
+     * @param key the property key
+     * @return the {@code long} value associated with the specified {@code key}
+     *
+     * @throws ConfigurationException if the specified key is not found.
+     * @throws NumberFormatException  if the value is not a parsable {@code long}.
+     *
+     * @since 0.4.0
+     */
+    long getMandatoryLong(String key);
+
+    /**
+     * Returns the {@code double} value associated with the specified {@code key}.
+     *
+     * @param key the property key
+     * @return the {@code double} value associated with the specified {@code key}
+     *
+     * @throws ConfigurationException if the specified key is not found.
+     * @throws NumberFormatException  if the value is not a parsable {@code double}.
+     *
+     * @since 0.4.0
+     */
+    double getMandatoryDouble(String key);
+
+    /**
+     * Returns the {@code String} value associated with the specified {@code key}.
+     *
+     * @param key the property key
+     * @return the {@code String} value associated with the specified {@code key}
+     *
+     * @throws ConfigurationException if the specified key is not found.
+     *
+     * @since 0.4.0
+     */
+    String getMandatoryString(String key);
 
 }

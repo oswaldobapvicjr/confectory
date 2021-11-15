@@ -248,4 +248,34 @@ public final class Configuration<T> implements ConfigurationDataRetriever<T>, Co
                 .append("precedence", precedence).append("source", source).toString();
     }
 
+    @Override
+    public boolean getMandatoryBoolean(String key)
+    {
+        return helper.getMandatoryBoolean(key);
+    }
+
+    @Override
+    public int getMandatoryInt(String key)
+    {
+        return helper.getMandatoryInt(key);
+    }
+
+    @Override
+    public long getMandatoryLong(String key)
+    {
+        return helper.getMandatoryLong(key);
+    }
+
+    @Override
+    public double getMandatoryDouble(String key)
+    {
+        return helper.getMandatoryDouble(key);
+    }
+
+    @Override
+    public String getMandatoryString(String key)
+    {
+        return helper.getMandatoryString(key);
+    }
+
 }

@@ -26,33 +26,63 @@ class NullConfigurationHelperTest
     }
 
     @Test
-    void getBooleanProperty_anyKey_false()
+    void getBoolean_anyKey_false()
     {
         assertThat(helper.getBoolean(KEY1), is(false));
     }
 
     @Test
-    void getIntProperty_anyKey_zero()
+    void getInt_anyKey_zero()
     {
         assertThat(helper.getInt(KEY1), is(0));
     }
 
     @Test
-    void getLongProperty_anyKey_zero()
+    void getLong_anyKey_zero()
     {
         assertThat(helper.getLong(KEY1), is(0L));
     }
 
     @Test
-    void getDoubleProperty_anyKey_zero()
+    void getDouble_anyKey_zero()
     {
         assertThat(helper.getDouble(KEY1), is(0.0));
     }
 
     @Test
-    void getSringProperty_anyKey_empty()
+    void getSring_anyKey_empty()
     {
         assertThat(helper.getString(KEY1), is(""));
+    }
+
+    @Test
+    void getMandatoryBoolean_anyKey_false()
+    {
+        assertThat(helper.getMandatoryBoolean(KEY1), is(false));
+    }
+
+    @Test
+    void getMandatoryInt_anyKey_zero()
+    {
+        assertThat(helper.getMandatoryInt(KEY1), is(0));
+    }
+
+    @Test
+    void getMandatoryLong_anyKey_zero()
+    {
+        assertThat(helper.getMandatoryLong(KEY1), is(0L));
+    }
+
+    @Test
+    void getMandatoryDouble_anyKey_zero()
+    {
+        assertThat(helper.getMandatoryDouble(KEY1), is(0.0));
+    }
+
+    @Test
+    void getMandatorySring_anyKey_empty()
+    {
+        assertThat(helper.getMandatoryString(KEY1), is(""));
     }
 
 }
