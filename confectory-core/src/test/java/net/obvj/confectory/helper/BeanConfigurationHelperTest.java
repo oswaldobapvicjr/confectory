@@ -5,10 +5,10 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.MatcherAssert.assertThat;
 
+import org.hamcrest.Matcher;
 import org.junit.jupiter.api.Test;
 
 import net.obvj.confectory.ConfigurationException;
-import net.obvj.junit.utils.matchers.ExceptionMatcher;
 
 /**
  * Unit tests for the {@link BeanConfigurationHelper}.
@@ -22,7 +22,7 @@ class BeanConfigurationHelperTest
     private static final String OBJECT = "test";
     private static final ConfigurationHelper<String> HELPER = new BeanConfigurationHelper<>(OBJECT);
 
-    private static final ExceptionMatcher CONFIGURATION_EXCEPTION_TYPE_NOT_SUPPORTED = throwsException(
+    private static final Matcher<Runnable> CONFIGURATION_EXCEPTION_TYPE_NOT_SUPPORTED = throwsException(
             ConfigurationException.class).withMessage("Operation not supported for bean of type 'java.lang.String'");
 
     @Test

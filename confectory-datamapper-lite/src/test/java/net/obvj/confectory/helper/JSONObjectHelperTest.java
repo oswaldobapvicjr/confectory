@@ -22,6 +22,8 @@ import net.obvj.confectory.ConfigurationException;
 @ExtendWith(MockitoExtension.class)
 class JSONObjectHelperTest
 {
+    private static final String PATH_UNKNOWN = "$.unknown";
+
     private static final JSONObject TEST_JSON_SAMPLE1 = new JSONObject("{\r\n"
             + "  \"intValue\": 9,\r\n"
             + "  \"longValue\": 9876543210,\r\n"
@@ -64,7 +66,7 @@ class JSONObjectHelperTest
     @Test
     void getBoolean_unknownKey_false()
     {
-        assertThat(HELPER.getBoolean("$.unknown"), equalTo(false));
+        assertThat(HELPER.getBoolean(PATH_UNKNOWN), equalTo(false));
     }
 
     @Test
@@ -76,7 +78,7 @@ class JSONObjectHelperTest
     @Test
     void getInt_unknownKey_zero()
     {
-        assertThat(HELPER.getInt("$.unknown"), equalTo(0));
+        assertThat(HELPER.getInt(PATH_UNKNOWN), equalTo(0));
     }
 
     @Test
@@ -88,7 +90,7 @@ class JSONObjectHelperTest
     @Test
     void getLong_unknownKey_zero()
     {
-        assertThat(HELPER.getLong("$.unknown"), equalTo(0L));
+        assertThat(HELPER.getLong(PATH_UNKNOWN), equalTo(0L));
     }
 
     @Test
@@ -101,13 +103,13 @@ class JSONObjectHelperTest
     void getDouble_existingKeyAndMultipleElements_configurationException()
     {
         assertThat(() -> HELPER.getDouble("$.store.books[?(@.price>5)].price"),
-                throwsException(ConfigurationException.class).withMessageContaining("more than one element"));
+                throwsException(ConfigurationException.class).withMessageContaining("Multiple values found for path"));
     }
 
     @Test
     void getDouble_unknownKey_zero()
     {
-        assertThat(HELPER.getDouble("$.unknown"), equalTo(0.0));
+        assertThat(HELPER.getDouble(PATH_UNKNOWN), equalTo(0.0));
     }
 
     @Test
@@ -119,7 +121,7 @@ class JSONObjectHelperTest
     @Test
     void getSring_unknownKey_empty()
     {
-        assertThat(HELPER.getString("$.unknown"), equalTo(""));
+        assertThat(HELPER.getString(PATH_UNKNOWN), equalTo(""));
     }
 
 }

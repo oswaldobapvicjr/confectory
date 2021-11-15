@@ -6,6 +6,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.MatcherAssert.assertThat;
 
+import org.hamcrest.Matcher;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -16,7 +17,6 @@ import com.jayway.jsonpath.spi.mapper.JsonSmartMappingProvider;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import net.obvj.confectory.ConfigurationException;
-import net.obvj.junit.utils.matchers.ExceptionMatcher;
 
 /**
  * Unit tests for the {@link GenericJsonConfigurationHelper}.
@@ -48,7 +48,7 @@ class GenericJsonConfigurationHelperTest
             TEST_JSON_SAMPLE1, new JsonSmartJsonProvider(), new JsonSmartMappingProvider());
 
     private static final String PATH_UNKNOWN = "$.unknown";
-    private static final ExceptionMatcher EXCEPTION_NO_VALUE_FOUND_PATH_UNKNOWN = throwsException(
+    private static final Matcher<Runnable> EXCEPTION_NO_VALUE_FOUND_PATH_UNKNOWN = throwsException(
             ConfigurationException.class).withMessageContaining("No value found", PATH_UNKNOWN);
 
     @Test

@@ -9,7 +9,7 @@ import net.obvj.confectory.mapper.JacksonJsonNodeMapper;
 import net.obvj.confectory.mapper.JacksonJsonToObjectMapper;
 import net.obvj.confectory.testdrive.model.MyBean;
 
-public class ConfectoryTestDriveJacksonConfigurationFactory
+public class ConfectoryTestDriveJacksonConfigurationContainer
 {
     public static void main(String[] args)
     {

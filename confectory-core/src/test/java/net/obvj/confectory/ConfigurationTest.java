@@ -1,6 +1,7 @@
 package net.obvj.confectory;
 
-import static net.obvj.junit.utils.matchers.AdvancedMatchers.*;
+import static net.obvj.junit.utils.matchers.AdvancedMatchers.containsAll;
+import static net.obvj.junit.utils.matchers.AdvancedMatchers.throwsException;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -11,6 +12,7 @@ import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 
+import org.hamcrest.Matcher;
 import org.junit.jupiter.api.Test;
 
 import net.obvj.confectory.helper.BeanConfigurationHelper;
@@ -19,7 +21,6 @@ import net.obvj.confectory.mapper.PropertiesMapper;
 import net.obvj.confectory.mapper.StringMapper;
 import net.obvj.confectory.source.Source;
 import net.obvj.confectory.source.StringSource;
-import net.obvj.junit.utils.matchers.ExceptionMatcher;
 
 /**
  * Unit tests for the {@link Configuration} class.
@@ -29,7 +30,9 @@ import net.obvj.junit.utils.matchers.ExceptionMatcher;
  */
 class ConfigurationTest
 {
-    private static final ExceptionMatcher CONFIGURATION_EXCEPTION_NO_VALUE_FOUND = throwsException(
+    private static final String INVALID = "invalid";
+
+    private static final Matcher<Runnable> CONFIGURATION_EXCEPTION_NO_VALUE_FOUND = throwsException(
             ConfigurationException.class).withMessageContaining("No value found");
 
     private static final String UNKNOWN = "unknown";
@@ -111,7 +114,7 @@ class ConfigurationTest
     @Test
     void getString_invalidKey_defaultValue()
     {
-        assertThat(CONFIG_PROPERTIES_1.getString("invalid"), equalTo(""));
+        assertThat(CONFIG_PROPERTIES_1.getString(INVALID), equalTo(""));
     }
 
     @Test
@@ -135,7 +138,7 @@ class ConfigurationTest
     @Test
     void getBoolean_invalidKey_defaultValue()
     {
-        assertThat(CONFIG_PROPERTIES_1.getBoolean("invalid"), equalTo(false));
+        assertThat(CONFIG_PROPERTIES_1.getBoolean(INVALID), equalTo(false));
     }
 
     @Test
@@ -159,7 +162,7 @@ class ConfigurationTest
     @Test
     void getInt_invalidKey_defaultValue()
     {
-        assertThat(CONFIG_PROPERTIES_1.getInt("invalid"), equalTo(0));
+        assertThat(CONFIG_PROPERTIES_1.getInt(INVALID), equalTo(0));
     }
 
     @Test
@@ -183,7 +186,7 @@ class ConfigurationTest
     @Test
     void getLong_invalidKey_defaultValue()
     {
-        assertThat(CONFIG_PROPERTIES_1.getLong("invalid"), equalTo(0L));
+        assertThat(CONFIG_PROPERTIES_1.getLong(INVALID), equalTo(0L));
     }
 
     @Test

@@ -44,7 +44,6 @@ import net.obvj.performetrics.util.Duration;
  * <li>{@code http://www.server.com:1080/myservice/config.json}</li>
  * <li>{@code http://192.168.0.10:1080/config?field1=value1&field2=value2}</li>
  * </ul>
- * <p>
  *
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 0.4.0

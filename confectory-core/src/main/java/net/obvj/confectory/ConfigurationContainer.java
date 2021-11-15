@@ -57,9 +57,9 @@ import net.obvj.confectory.settings.ConfectorySettings;
  * <p>
  * <strong>IMPORTANT:</strong> This class works only with map-based {@code Configuration}
  * objects (e.g.: {@code Properties}, {@code JSONObject}, {@code JsonNode}, etc.). In
- * other words, only objects which values can be accessed using a key or JSONPath.
- * POJO-based {@code Configuration} objects are <strong>not</strong> supported inside a
- * the {@link ConfigurationContainer}.
+ * other words, only "container" objects which values can be accessed using either a key
+ * or path expression (e.g. {@code JSONPath}). POJO-based {@code Configuration} objects
+ * are <strong>not</strong> supported inside a the {@link ConfigurationContainer}.
  *
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 0.1.0
