@@ -132,18 +132,18 @@ public class GenericJsonConfigurationHelper<J> extends AbstractBasicConfiguratio
     }
 
     /**
-     * Returns the {@code boolean} value associated with the specified {@code jsonPath} in the
+     * Returns the {@code int} value associated with the specified {@code jsonPath} in the
      * {@code JsonNode} in context, provided that the expression returns a single element that
-     * can be mapped to {@code boolean}.
+     * can be mapped to {@code int}.
      *
      * @param jsonPath the path to read
-     * @return the {@code boolean} value associated with the specified {@code jsonPath}
+     * @return the {@code int} value associated with the specified {@code jsonPath}
      *
      * @throws InvalidPathException   if the {@code jsonPath} expression is not valid
      * @throws ConfigurationException if not value found or the {@code jsonPath} expression
      *                                returns more than a single element
      * @throws ClassCastException     if the {@code jsonPath} result cannot be assigned to
-     *                                {@code boolean}
+     *                                {@code int}
      * @since 0.4.0
      */
     @Override
@@ -173,18 +173,18 @@ public class GenericJsonConfigurationHelper<J> extends AbstractBasicConfiguratio
     }
 
     /**
-     * Returns the {@code boolean} value associated with the specified {@code jsonPath} in the
+     * Returns the {@code long} value associated with the specified {@code jsonPath} in the
      * {@code JsonNode} in context, provided that the expression returns a single element that
-     * can be mapped to {@code boolean}.
+     * can be mapped to {@code long}.
      *
      * @param jsonPath the path to read
-     * @return the {@code boolean} value associated with the specified {@code jsonPath}
+     * @return the {@code long} value associated with the specified {@code jsonPath}
      *
      * @throws InvalidPathException   if the {@code jsonPath} expression is not valid
      * @throws ConfigurationException if not value found or the {@code jsonPath} expression
      *                                returns more than a single element
      * @throws ClassCastException     if the {@code jsonPath} result cannot be assigned to
-     *                                {@code boolean}
+     *                                {@code long}
      * @since 0.4.0
      */
     @Override
@@ -214,18 +214,18 @@ public class GenericJsonConfigurationHelper<J> extends AbstractBasicConfiguratio
     }
 
     /**
-     * Returns the {@code boolean} value associated with the specified {@code jsonPath} in the
+     * Returns the {@code double} value associated with the specified {@code jsonPath} in the
      * {@code JsonNode} in context, provided that the expression returns a single element that
-     * can be mapped to {@code boolean}.
+     * can be mapped to {@code double}.
      *
      * @param jsonPath the path to read
-     * @return the {@code boolean} value associated with the specified {@code jsonPath}
+     * @return the {@code double} value associated with the specified {@code jsonPath}
      *
      * @throws InvalidPathException   if the {@code jsonPath} expression is not valid
      * @throws ConfigurationException if not value found or the {@code jsonPath} expression
      *                                returns more than a single element
      * @throws ClassCastException     if the {@code jsonPath} result cannot be assigned to
-     *                                {@code boolean}
+     *                                {@code double}
      * @since 0.4.0
      */
     @Override
@@ -252,18 +252,15 @@ public class GenericJsonConfigurationHelper<J> extends AbstractBasicConfiguratio
     }
 
     /**
-     * Returns the {@code boolean} value associated with the specified {@code jsonPath} in the
-     * {@code JsonNode} in context, provided that the expression returns a single element that
-     * can be mapped to {@code boolean}.
+     * Returns the {@code String} value associated with the specified {@code jsonPath} in the
+     * {@code JsonNode} in context, provided that the expression returns a single element.
      *
      * @param jsonPath the path to read
-     * @return the {@code boolean} value associated with the specified {@code jsonPath}
+     * @return the {@code String} value associated with the specified {@code jsonPath}
      *
      * @throws InvalidPathException   if the {@code jsonPath} expression is not valid
      * @throws ConfigurationException if not value found or the {@code jsonPath} expression
      *                                returns more than a single element
-     * @throws ClassCastException     if the {@code jsonPath} result cannot be assigned to
-     *                                {@code boolean}
      * @since 0.4.0
      */
     @Override

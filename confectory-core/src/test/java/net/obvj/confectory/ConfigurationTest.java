@@ -30,7 +30,6 @@ import net.obvj.confectory.source.StringSource;
  */
 class ConfigurationTest
 {
-    private static final String INVALID = "invalid";
 
     private static final Matcher<Runnable> CONFIGURATION_EXCEPTION_NO_VALUE_FOUND = throwsException(
             ConfigurationException.class).withMessageContaining("No value found");
@@ -114,7 +113,7 @@ class ConfigurationTest
     @Test
     void getString_invalidKey_defaultValue()
     {
-        assertThat(CONFIG_PROPERTIES_1.getString(INVALID), equalTo(""));
+        assertThat(CONFIG_PROPERTIES_1.getString(UNKNOWN), equalTo(""));
     }
 
     @Test
@@ -138,7 +137,7 @@ class ConfigurationTest
     @Test
     void getBoolean_invalidKey_defaultValue()
     {
-        assertThat(CONFIG_PROPERTIES_1.getBoolean(INVALID), equalTo(false));
+        assertThat(CONFIG_PROPERTIES_1.getBoolean(UNKNOWN), equalTo(false));
     }
 
     @Test
@@ -162,7 +161,7 @@ class ConfigurationTest
     @Test
     void getInt_invalidKey_defaultValue()
     {
-        assertThat(CONFIG_PROPERTIES_1.getInt(INVALID), equalTo(0));
+        assertThat(CONFIG_PROPERTIES_1.getInt(UNKNOWN), equalTo(0));
     }
 
     @Test
@@ -186,7 +185,7 @@ class ConfigurationTest
     @Test
     void getLong_invalidKey_defaultValue()
     {
-        assertThat(CONFIG_PROPERTIES_1.getLong(INVALID), equalTo(0L));
+        assertThat(CONFIG_PROPERTIES_1.getLong(UNKNOWN), equalTo(0L));
     }
 
     @Test
