@@ -22,8 +22,6 @@ import java.util.Optional;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import net.obvj.confectory.helper.ConfigurationHelper;
-import net.obvj.confectory.helper.NullConfigurationHelper;
 import net.obvj.confectory.helper.nullvalue.NullValueProvider;
 import net.obvj.confectory.mapper.Mapper;
 import net.obvj.confectory.source.Source;
@@ -72,14 +70,16 @@ import net.obvj.confectory.source.Source;
  */
 public final class Configuration<T> implements ConfigurationDataRetriever<T>, ConfigurationMetadataRetriever<T>
 {
+    private final ConfigurationBuilder<T> builder;
     private final String namespace;
     private final int precedence;
     private final Source<T> source;
     private final Mapper<T> mapper;
     private final boolean optional;
-    private final Optional<T> bean;
-    private final ConfigurationHelper<T> helper;
+    private final boolean lazy;
     private final NullValueProvider nullValueProvider;
+
+    private ConfigurationDataRetriever<T> service;
 
     /**
      * Builds a new {@code Configuration} from the specified {@link ConfigurationBuilder}.
@@ -88,27 +88,20 @@ public final class Configuration<T> implements ConfigurationDataRetriever<T>, Co
      */
     protected Configuration(ConfigurationBuilder<T> builder)
     {
+        this.builder = builder;
+
         this.namespace = builder.getNamespace();
         this.precedence = builder.getPrecedence();
         this.source = builder.getSource();
         this.mapper = builder.getMapper();
         this.optional = builder.isOptional();
+        this.lazy = builder.isLazy();
         this.nullValueProvider = builder.getNullValueProvider();
 
-        this.bean = source.load(mapper, optional);
-        this.helper = prepareConfigurationHelper();
-    }
-
-    private ConfigurationHelper<T> prepareConfigurationHelper()
-    {
-        ConfigurationHelper<T> configurationHelper = bean.isPresent() ? mapper.configurationHelper(bean.get())
-                : new NullConfigurationHelper<>();
-
-        if (nullValueProvider != null)
+        if (!lazy)
         {
-            configurationHelper.setNullValueProvider(nullValueProvider);
+            getService();
         }
-        return configurationHelper;
     }
 
     /**
@@ -153,55 +146,51 @@ public final class Configuration<T> implements ConfigurationDataRetriever<T>, Co
     }
 
     @Override
+    public boolean isLazy()
+    {
+        return lazy;
+    }
+
+    @Override
     public NullValueProvider getNullValueProvider()
     {
         return nullValueProvider;
     }
 
-    /**
-     * Returns the {@link ConfigurationHelper} associated with this {@code Configuration}.
-     *
-     * @return the {@link ConfigurationHelper}
-     */
-    public ConfigurationHelper<T> getHelper()
-    {
-        return helper;
-    }
-
     @Override
     public Optional<T> getBean()
     {
-        return bean;
+        return getService().getBean();
     }
 
     @Override
     public boolean getBoolean(String key)
     {
-        return helper.getBoolean(key);
+        return getService().getBoolean(key);
     }
 
     @Override
     public int getInt(String key)
     {
-        return helper.getInt(key);
+        return getService().getInt(key);
     }
 
     @Override
     public long getLong(String key)
     {
-        return helper.getLong(key);
+        return getService().getLong(key);
     }
 
     @Override
     public double getDouble(String key)
     {
-        return helper.getDouble(key);
+        return getService().getDouble(key);
     }
 
     @Override
     public String getString(String key)
     {
-        return helper.getString(key);
+        return getService().getString(key);
     }
 
     @Override
@@ -251,31 +240,40 @@ public final class Configuration<T> implements ConfigurationDataRetriever<T>, Co
     @Override
     public boolean getMandatoryBoolean(String key)
     {
-        return helper.getMandatoryBoolean(key);
+        return getService().getMandatoryBoolean(key);
     }
 
     @Override
     public int getMandatoryInt(String key)
     {
-        return helper.getMandatoryInt(key);
+        return getService().getMandatoryInt(key);
     }
 
     @Override
     public long getMandatoryLong(String key)
     {
-        return helper.getMandatoryLong(key);
+        return getService().getMandatoryLong(key);
     }
 
     @Override
     public double getMandatoryDouble(String key)
     {
-        return helper.getMandatoryDouble(key);
+        return getService().getMandatoryDouble(key);
     }
 
     @Override
     public String getMandatoryString(String key)
     {
-        return helper.getMandatoryString(key);
+        return getService().getMandatoryString(key);
+    }
+
+    private ConfigurationDataRetriever<T> getService()
+    {
+        if (service == null)
+        {
+            service = new ConfigurationService<>(builder);
+        }
+        return service;
     }
 
 }

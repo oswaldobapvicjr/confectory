@@ -76,6 +76,16 @@ public interface ConfigurationMetadataRetriever<T>
     boolean isOptional();
 
     /**
+     * Returns a flag indicating whether this {@code Configuration} is lazy, i.e., not loaded
+     * until needed.
+     *
+     * @return {@code true} if this {@code Configuration} is lazy; {@code false}, otherwise
+     *
+     * @since 0.4.0
+     */
+    boolean isLazy();
+
+    /**
      * Returns the {@code NullValueProvider} associated with this {@code Configuration}.
      *
      * @return a {@link NullValueProvider} instance
