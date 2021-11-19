@@ -86,6 +86,7 @@ public class ConfigurationBuilder<T> implements ConfigurationMetadataRetriever<T
             source = sourceConfiguration.getSource();
             mapper = sourceConfiguration.getMapper();
             optional = sourceConfiguration.isOptional();
+            lazy = sourceConfiguration.isLazy();
             nullValueProvider = sourceConfiguration.getNullValueProvider();
         }
     }

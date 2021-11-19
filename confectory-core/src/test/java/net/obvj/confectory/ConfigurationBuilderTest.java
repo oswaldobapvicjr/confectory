@@ -46,13 +46,15 @@ class ConfigurationBuilderTest
     private NullValueProvider nullValueProvider;
 
     private void assertConfigurationMetadata(ConfigurationMetadataRetriever<Object> configuration, Source<?> source,
-            Mapper<?> mapper, String namespace, int precedence, boolean optional, NullValueProvider nullValueProvider)
+            Mapper<?> mapper, String namespace, int precedence, boolean optional, boolean lazy,
+            NullValueProvider nullValueProvider)
     {
         assertThat(configuration.getSource(), equalTo(source));
         assertThat(configuration.getMapper(), equalTo(mapper));
         assertThat(configuration.getNamespace(), equalTo(namespace));
         assertThat(configuration.getPrecedence(), equalTo(precedence));
         assertThat(configuration.isOptional(), equalTo(optional));
+        assertThat(configuration.isLazy(), equalTo(lazy));
         assertThat(configuration.getNullValueProvider(), equalTo(nullValueProvider));
     }
 
@@ -60,14 +62,14 @@ class ConfigurationBuilderTest
     void constructor_noArgument_emptyBuilder()
     {
         ConfigurationBuilder<Object> builder = new ConfigurationBuilder<>();
-        assertConfigurationMetadata(builder, null, null, null, 0, false, null);
+        assertConfigurationMetadata(builder, null, null, null, 0, false, false, null);
     }
 
     @Test
     void constructor_null_emptyBuilder()
     {
         ConfigurationBuilder<Object> builder = new ConfigurationBuilder<>(null);
-        assertConfigurationMetadata(builder, null, null, null, 0, false, null);
+        assertConfigurationMetadata(builder, null, null, null, 0, false, false, null);
     }
 
     @Test
@@ -78,10 +80,11 @@ class ConfigurationBuilderTest
         when(configuration.getNamespace()).thenReturn(NAMESPACE1);
         when(configuration.getPrecedence()).thenReturn(999);
         when(configuration.isOptional()).thenReturn(true);
+        when(configuration.isLazy()).thenReturn(true);
         when(configuration.getNullValueProvider()).thenReturn(nullValueProvider);
 
         ConfigurationBuilder<Object> builder = new ConfigurationBuilder<>(configuration);
-        assertConfigurationMetadata(builder, source, mapper, NAMESPACE1, 999, true, nullValueProvider);
+        assertConfigurationMetadata(builder, source, mapper, NAMESPACE1, 999, true, true, nullValueProvider);
     }
 
     @Test
@@ -113,7 +116,7 @@ class ConfigurationBuilderTest
 
         Configuration<Object> newConfiguration = builder.build();
 
-        assertConfigurationMetadata(newConfiguration, source, mapper, "", 0, false,
+        assertConfigurationMetadata(newConfiguration, source, mapper, "", 0, false, false,
                 StandardNullValueProvider.instance());
         assertThat(newConfiguration.getBean().get(), equalTo(OBJECT1));
     }
@@ -130,20 +133,29 @@ class ConfigurationBuilderTest
                 .namespace(NAMESPACE1)
                 .precedence(777)
                 .optional()
+                .lazy()
                 .nullValueProvider(nullValueProvider);
 
         Configuration<Object> newConfiguration = builder.build();
 
-        assertConfigurationMetadata(newConfiguration, source, mapper, NAMESPACE1, 777, true, nullValueProvider);
+        assertConfigurationMetadata(newConfiguration, source, mapper, NAMESPACE1, 777, true, true, nullValueProvider);
         assertThat(newConfiguration.getBean().get(), equalTo(OBJECT1));
     }
 
     @Test
-    void required_existingOptionalConfiguration_required()
+    void required_existingOptionalConfiguration_notOptional()
     {
         when(configuration.isOptional()).thenReturn(true);
         ConfigurationBuilder<Object> builder = new ConfigurationBuilder<>(configuration).required();
         assertFalse(builder.isOptional());
+    }
+
+    @Test
+    void eager_existingOptionalConfiguration_notLazy()
+    {
+        when(configuration.isLazy()).thenReturn(true);
+        ConfigurationBuilder<Object> builder = new ConfigurationBuilder<>(configuration).eager();
+        assertFalse(builder.isLazy());
     }
 
     @Test

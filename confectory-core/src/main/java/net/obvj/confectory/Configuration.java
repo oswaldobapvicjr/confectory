@@ -22,6 +22,8 @@ import java.util.Optional;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import net.obvj.confectory.helper.ConfigurationHelper;
+import net.obvj.confectory.helper.NullConfigurationHelper;
 import net.obvj.confectory.helper.nullvalue.NullValueProvider;
 import net.obvj.confectory.mapper.Mapper;
 import net.obvj.confectory.source.Source;
@@ -267,6 +269,10 @@ public final class Configuration<T> implements ConfigurationDataRetriever<T>, Co
         return getService().getMandatoryString(key);
     }
 
+    /**
+     * @return the actual implementation (the Service part in the Proxy Design Pattern)
+     * @since 0.4.0
+     */
     private ConfigurationDataRetriever<T> getService()
     {
         if (service == null)
@@ -274,6 +280,116 @@ public final class Configuration<T> implements ConfigurationDataRetriever<T>, Co
             service = new ConfigurationService<>(builder);
         }
         return service;
+    }
+
+}
+
+/**
+ * Actual implementation (the Service part in the Proxy Design Pattern).
+ *
+ * @param <T> the target configuration type
+ *
+ * @author oswaldo.bapvic.jr (Oswaldo Junior)
+ * @since 0.4.0
+ */
+final class ConfigurationService<T> implements ConfigurationDataRetriever<T>
+{
+    private final Optional<T> bean;
+    private final ConfigurationHelper<T> helper;
+
+    /**
+     * Builds a new {@code ConfigurationService} from the specified
+     * {@link ConfigurationBuilder}.
+     *
+     * @param builder the {@link ConfigurationBuilder} to be built
+     */
+    ConfigurationService(ConfigurationBuilder<T> builder)
+    {
+        Source<T> source = builder.getSource();
+        Mapper<T> mapper = builder.getMapper();
+        boolean optional = builder.isOptional();
+        NullValueProvider nullValueProvider = builder.getNullValueProvider();
+
+        this.bean = source.load(mapper, optional);
+        this.helper = prepareConfigurationHelper(mapper, nullValueProvider);
+    }
+
+    private ConfigurationHelper<T> prepareConfigurationHelper(Mapper<T> mapper, NullValueProvider nullValueProvider)
+    {
+        ConfigurationHelper<T> configurationHelper = bean.isPresent() ? mapper.configurationHelper(bean.get())
+                : new NullConfigurationHelper<>();
+
+        if (nullValueProvider != null)
+        {
+            configurationHelper.setNullValueProvider(nullValueProvider);
+        }
+        return configurationHelper;
+    }
+
+    @Override
+    public Optional<T> getBean()
+    {
+        return bean;
+    }
+
+    @Override
+    public boolean getBoolean(String key)
+    {
+        return helper.getBoolean(key);
+    }
+
+    @Override
+    public int getInt(String key)
+    {
+        return helper.getInt(key);
+    }
+
+    @Override
+    public long getLong(String key)
+    {
+        return helper.getLong(key);
+    }
+
+    @Override
+    public double getDouble(String key)
+    {
+        return helper.getDouble(key);
+    }
+
+    @Override
+    public String getString(String key)
+    {
+        return helper.getString(key);
+    }
+
+    @Override
+    public boolean getMandatoryBoolean(String key)
+    {
+        return helper.getMandatoryBoolean(key);
+    }
+
+    @Override
+    public int getMandatoryInt(String key)
+    {
+        return helper.getMandatoryInt(key);
+    }
+
+    @Override
+    public long getMandatoryLong(String key)
+    {
+        return helper.getMandatoryLong(key);
+    }
+
+    @Override
+    public double getMandatoryDouble(String key)
+    {
+        return helper.getMandatoryDouble(key);
+    }
+
+    @Override
+    public String getMandatoryString(String key)
+    {
+        return helper.getMandatoryString(key);
     }
 
 }
