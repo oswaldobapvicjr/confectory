@@ -140,4 +140,10 @@ class PropertiesConfigurationHelperTest
         assertThat(HELPER.getString(PROP_UNKNOWN), is(CUSTOM_NULL_VALUE_PROVIDER.getStringValue()));
     }
 
+    @Test
+    void getNullValueProvider_custom()
+    {
+        assertThat(HELPER.getNullValueProvider(), is(CUSTOM_NULL_VALUE_PROVIDER));
+    }
+
 }

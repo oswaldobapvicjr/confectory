@@ -15,8 +15,6 @@ import java.util.Set;
 import org.hamcrest.Matcher;
 import org.junit.jupiter.api.Test;
 
-import net.obvj.confectory.helper.BeanConfigurationHelper;
-import net.obvj.confectory.helper.PropertiesConfigurationHelper;
 import net.obvj.confectory.mapper.PropertiesMapper;
 import net.obvj.confectory.mapper.StringMapper;
 import net.obvj.confectory.source.Source;
@@ -224,15 +222,4 @@ class ConfigurationTest
         assertThat(() -> CONFIG_PROPERTIES_1.getMandatoryDouble(UNKNOWN), CONFIGURATION_EXCEPTION_NO_VALUE_FOUND);
     }
 
-    @Test
-    void getHelper_string_beanConfigurationHelper()
-    {
-        assertThat(CONFIG_NS1_STRING_1.getHelper().getClass(), equalTo(BeanConfigurationHelper.class));
-    }
-
-    @Test
-    void getHelper_properties_propertiesConfigurationHelper()
-    {
-        assertThat(CONFIG_PROPERTIES_1.getHelper().getClass(), equalTo(PropertiesConfigurationHelper.class));
-    }
 }

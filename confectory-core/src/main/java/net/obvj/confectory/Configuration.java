@@ -29,8 +29,8 @@ import net.obvj.confectory.mapper.Mapper;
 import net.obvj.confectory.source.Source;
 
 /**
- * An immutable object that contains configuration data from a specific source, as well as
- * related metadata.
+ * An object that contains configuration data from a specific source, as well as related
+ * metadata.
  * <p>
  * A {@code Configuration} may also be defined as a combination of a {@link Source} and a
  * {@link Mapper}, producing either a properties list, a JSON object, or a user-defined
@@ -41,10 +41,16 @@ import net.obvj.confectory.source.Source;
  * the object with the highest precedence value will be chosen first, taking precedence
  * over the other ones in the same namespace.
  * <p>
- * A {@code Configuration} may also be optional, which means that the configuration will
- * be loaded quietly.
+ * A {@code Configuration} object is <b>eager</b> by default, that is, the resource will
+ * be loaded directly during {@code build()} time. Optionally, a {@code Configuration} may
+ * be created with the <b>lazy</b> flag, indicating that the resource shall not be loaded
+ * until really needed.
  * <p>
- * <strong>Note:</strong> Use a {@link ConfigurationBuilder} to create a
+ * A {@code Configuration} may also be marked as <b>optional</b>, indicating that the
+ * configuration shall be loaded quietly, that is, an "empty" {@code Configuration} object
+ * will be instantiated even if the resource cannot be loaded (not default behavior).
+ * <p>
+ * <strong>IMPORTANT:</strong> Use a {@link ConfigurationBuilder} to create a
  * {@code Configuration} object. A builder instance can be retrieved by calling
  * {@link Configuration#builder()}. For example:
  *
@@ -54,7 +60,7 @@ import net.obvj.confectory.source.Source;
  * {@code Configuration<Properties> config = Configuration.<Properties>builder()}
  * {@code         .source(new ClasspathFileSource<>("my.properties"))}
  * {@code         .mapper(new PropertiesMapper())}
- * {@code         .namespace("my-properties")}
+ * {@code         .namespace("default")}
  * {@code         .precedence(10)}
  * {@code         .build();}
  * </pre>
@@ -77,9 +83,10 @@ public final class Configuration<T> implements ConfigurationDataRetriever<T>, Co
     private final Source<T> source;
     private final Mapper<T> mapper;
     private final boolean optional;
-    private final Optional<T> bean;
-    private final ConfigurationHelper<T> helper;
+    private final boolean lazy;
     private final NullValueProvider nullValueProvider;
+
+    private ConfigurationDataRetriever<T> service;
 
     /**
      * Builds a new {@code Configuration} from the specified {@link ConfigurationBuilder}.
@@ -93,22 +100,13 @@ public final class Configuration<T> implements ConfigurationDataRetriever<T>, Co
         this.source = builder.getSource();
         this.mapper = builder.getMapper();
         this.optional = builder.isOptional();
+        this.lazy = builder.isLazy();
         this.nullValueProvider = builder.getNullValueProvider();
 
-        this.bean = source.load(mapper, optional);
-        this.helper = prepareConfigurationHelper();
-    }
-
-    private ConfigurationHelper<T> prepareConfigurationHelper()
-    {
-        ConfigurationHelper<T> configurationHelper = bean.isPresent() ? mapper.configurationHelper(bean.get())
-                : new NullConfigurationHelper<>();
-
-        if (nullValueProvider != null)
+        if (!lazy)
         {
-            configurationHelper.setNullValueProvider(nullValueProvider);
+            getService();
         }
-        return configurationHelper;
     }
 
     /**
@@ -153,55 +151,51 @@ public final class Configuration<T> implements ConfigurationDataRetriever<T>, Co
     }
 
     @Override
+    public boolean isLazy()
+    {
+        return lazy;
+    }
+
+    @Override
     public NullValueProvider getNullValueProvider()
     {
         return nullValueProvider;
     }
 
-    /**
-     * Returns the {@link ConfigurationHelper} associated with this {@code Configuration}.
-     *
-     * @return the {@link ConfigurationHelper}
-     */
-    public ConfigurationHelper<T> getHelper()
-    {
-        return helper;
-    }
-
     @Override
     public Optional<T> getBean()
     {
-        return bean;
+        return getService().getBean();
     }
 
     @Override
     public boolean getBoolean(String key)
     {
-        return helper.getBoolean(key);
+        return getService().getBoolean(key);
     }
 
     @Override
     public int getInt(String key)
     {
-        return helper.getInt(key);
+        return getService().getInt(key);
     }
 
     @Override
     public long getLong(String key)
     {
-        return helper.getLong(key);
+        return getService().getLong(key);
     }
 
     @Override
     public double getDouble(String key)
     {
-        return helper.getDouble(key);
+        return getService().getDouble(key);
     }
 
     @Override
     public String getString(String key)
     {
-        return helper.getString(key);
+        return getService().getString(key);
     }
 
     @Override
@@ -246,6 +240,123 @@ public final class Configuration<T> implements ConfigurationDataRetriever<T>, Co
     {
         return new ToStringBuilder(this, ToStringStyle.JSON_STYLE).append("namespace", namespace)
                 .append("precedence", precedence).append("source", source).toString();
+    }
+
+    @Override
+    public boolean getMandatoryBoolean(String key)
+    {
+        return getService().getMandatoryBoolean(key);
+    }
+
+    @Override
+    public int getMandatoryInt(String key)
+    {
+        return getService().getMandatoryInt(key);
+    }
+
+    @Override
+    public long getMandatoryLong(String key)
+    {
+        return getService().getMandatoryLong(key);
+    }
+
+    @Override
+    public double getMandatoryDouble(String key)
+    {
+        return getService().getMandatoryDouble(key);
+    }
+
+    @Override
+    public String getMandatoryString(String key)
+    {
+        return getService().getMandatoryString(key);
+    }
+
+    /**
+     * @return the actual implementation (the Service part in the Proxy Design Pattern)
+     * @since 0.4.0
+     */
+    private ConfigurationDataRetriever<T> getService()
+    {
+        if (service == null)
+        {
+            service = new ConfigurationService<>(source, mapper, optional, nullValueProvider);
+        }
+        return service;
+    }
+
+}
+
+/**
+ * Actual implementation (the Service part in the Proxy Design Pattern).
+ *
+ * @param <T> the target configuration type
+ *
+ * @author oswaldo.bapvic.jr (Oswaldo Junior)
+ * @since 0.4.0
+ */
+final class ConfigurationService<T> implements ConfigurationDataRetriever<T>
+{
+    private final Optional<T> bean;
+    private final ConfigurationHelper<T> helper;
+
+    ConfigurationService(Source<T> source, Mapper<T> mapper, boolean optional, NullValueProvider nullValueProvider)
+    {
+        this.bean = source.load(mapper, optional);
+        this.helper = prepareConfigurationHelper(bean, mapper, nullValueProvider);
+    }
+
+    protected static <T> ConfigurationHelper<T> prepareConfigurationHelper(Optional<T> bean, Mapper<T> mapper,
+            NullValueProvider nullValueProvider)
+    {
+        ConfigurationHelper<T> configurationHelper = getConfigurationHelper(bean, mapper);
+
+        if (nullValueProvider != null)
+        {
+            configurationHelper.setNullValueProvider(nullValueProvider);
+        }
+        return configurationHelper;
+    }
+
+    private static <T> ConfigurationHelper<T> getConfigurationHelper(Optional<T> bean, Mapper<T> mapper)
+    {
+        return bean.isPresent() ? mapper.configurationHelper(bean.get()) : new NullConfigurationHelper<>();
+    }
+
+    @Override
+    public Optional<T> getBean()
+    {
+        return bean;
+    }
+
+    @Override
+    public boolean getBoolean(String key)
+    {
+        return helper.getBoolean(key);
+    }
+
+    @Override
+    public int getInt(String key)
+    {
+        return helper.getInt(key);
+    }
+
+    @Override
+    public long getLong(String key)
+    {
+        return helper.getLong(key);
+    }
+
+    @Override
+    public double getDouble(String key)
+    {
+        return helper.getDouble(key);
+    }
+
+    @Override
+    public String getString(String key)
+    {
+        return helper.getString(key);
     }
 
     @Override

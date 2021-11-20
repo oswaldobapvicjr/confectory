@@ -38,8 +38,9 @@ import net.obvj.confectory.source.SourceFactory;
  * {@code Configuration<Properties> config = new ConfigurationBuilder<Properties>()}
  * {@code         .source(new ClasspathFileSource<>("my.properties"))}
  * {@code         .mapper(new PropertiesMapper())}
- * {@code         .namespace("my-properties")}
+ * {@code         .namespace("default")}
  * {@code         .precedence(10)}
+ * {@code         .lazy()}
  * {@code         .build();}
  * </pre>
  *
@@ -59,6 +60,7 @@ public class ConfigurationBuilder<T> implements ConfigurationMetadataRetriever<T
     private Source<T> source;
     private Mapper<T> mapper;
     private boolean optional;
+    private boolean lazy;
     private NullValueProvider nullValueProvider;
 
     /**
@@ -85,6 +87,7 @@ public class ConfigurationBuilder<T> implements ConfigurationMetadataRetriever<T
             source = sourceConfiguration.getSource();
             mapper = sourceConfiguration.getMapper();
             optional = sourceConfiguration.isOptional();
+            lazy = sourceConfiguration.isLazy();
             nullValueProvider = sourceConfiguration.getNullValueProvider();
         }
     }
@@ -168,6 +171,7 @@ public class ConfigurationBuilder<T> implements ConfigurationMetadataRetriever<T
      * source is not found or not loaded successfully.
      *
      * @return a reference to this same {@code ConfigurationBuilder} for chained calls
+     * @see #required()
      */
     public ConfigurationBuilder<T> optional()
     {
@@ -179,10 +183,43 @@ public class ConfigurationBuilder<T> implements ConfigurationMetadataRetriever<T
      * Marks the new {@code Configuration} as required (default).
      *
      * @return a reference to this same {@code ConfigurationBuilder} for chained calls
+     * @see #optional()
      */
     public ConfigurationBuilder<T> required()
     {
         this.optional = false;
+        return this;
+    }
+
+    /**
+     * Marks the new {@code Configuration} as lazy.
+     * <p>
+     * The configuration source will not be loaded until needed.
+     *
+     * @return a reference to this same {@code ConfigurationBuilder} for chained calls
+     * @see #eager()
+     *
+     * @since 0.4.0
+     */
+    public ConfigurationBuilder<T> lazy()
+    {
+        this.lazy = true;
+        return this;
+    }
+
+    /**
+     * Marks the new {@code Configuration} as eager.
+     * <p>
+     * The configuration source will loaded directly during {@code build()} time (default).
+     *
+     * @return a reference to this same {@code ConfigurationBuilder} for chained calls
+     * @see #lazy()
+     *
+     * @since 0.4.0
+     */
+    public ConfigurationBuilder<T> eager()
+    {
+        this.lazy = false;
         return this;
     }
 
@@ -252,6 +289,12 @@ public class ConfigurationBuilder<T> implements ConfigurationMetadataRetriever<T
     public boolean isOptional()
     {
         return optional;
+    }
+
+    @Override
+    public boolean isLazy()
+    {
+        return lazy;
     }
 
     @Override

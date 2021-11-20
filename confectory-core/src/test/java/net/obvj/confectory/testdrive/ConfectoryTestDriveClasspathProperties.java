@@ -13,6 +13,7 @@ public class ConfectoryTestDriveClasspathProperties
                 .namespace("test")
                 .source("testfiles/my-props.properties")
                 .mapper(new PropertiesMapper())
+                .lazy()
                 .build();
 
         System.out.println(config.getBean());

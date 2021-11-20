@@ -39,4 +39,9 @@ public interface ConfigurationHelper<T> extends ConfigurationDataRetriever<T>
      */
     void setNullValueProvider(NullValueProvider provider);
 
+    /**
+     * @return the {@link NullValueProvider} associated with this helper.
+     */
+    NullValueProvider getNullValueProvider();
+
 }
