@@ -98,7 +98,8 @@ Configuration<JSONObject> config = Configuration.<JSONObject>builder()
     <td>2021-11</td>
     <td>
       <li>JSON files parsing using GSON</li>
-      <li><b>HTTP/1.1</b> file source</li>
+      <li><b>URL</b> file source</li>
+      <li>Lazy loading</li>
     </td>
   </tr>
 </table>
