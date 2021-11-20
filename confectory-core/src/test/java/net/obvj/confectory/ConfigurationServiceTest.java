@@ -40,13 +40,6 @@ class ConfigurationServiceTest
     private Optional<String> bean = Optional.of("test");
 
     @Test
-    void getConfigurationHelper_Empty_nullConfigurationHelper()
-    {
-        assertThat(ConfigurationService.getConfigurationHelper(Optional.empty(), mapper).getClass(),
-                equalTo(NullConfigurationHelper.class));
-    }
-
-    @Test
     void prepareConfigurationHelper_success_validObjectWithNullValueProvider()
     {
         when(mapper.configurationHelper(bean.get())).thenReturn(helper);

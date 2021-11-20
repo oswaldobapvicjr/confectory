@@ -318,7 +318,7 @@ final class ConfigurationService<T> implements ConfigurationDataRetriever<T>
         return configurationHelper;
     }
 
-    protected static <T> ConfigurationHelper<T> getConfigurationHelper(Optional<T> bean, Mapper<T> mapper)
+    private static <T> ConfigurationHelper<T> getConfigurationHelper(Optional<T> bean, Mapper<T> mapper)
     {
         return bean.isPresent() ? mapper.configurationHelper(bean.get()) : new NullConfigurationHelper<>();
     }
