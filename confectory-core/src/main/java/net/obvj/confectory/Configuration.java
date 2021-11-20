@@ -29,8 +29,8 @@ import net.obvj.confectory.mapper.Mapper;
 import net.obvj.confectory.source.Source;
 
 /**
- * An immutable object that contains configuration data from a specific source, as well as
- * related metadata.
+ * An object that contains configuration data from a specific source, as well as related
+ * metadata.
  * <p>
  * A {@code Configuration} may also be defined as a combination of a {@link Source} and a
  * {@link Mapper}, producing either a properties list, a JSON object, or a user-defined
@@ -41,10 +41,16 @@ import net.obvj.confectory.source.Source;
  * the object with the highest precedence value will be chosen first, taking precedence
  * over the other ones in the same namespace.
  * <p>
- * A {@code Configuration} may also be optional, which means that the configuration will
- * be loaded quietly.
+ * A {@code Configuration} object is <b>eager</b> by default, that is, the resource will
+ * be loaded directly during {@code build()} time. Optionally, a {@code Configuration} may
+ * be created with the <b>lazy</b> flag, indicating that the resource shall not be loaded
+ * until really needed.
  * <p>
- * <strong>Note:</strong> Use a {@link ConfigurationBuilder} to create a
+ * A {@code Configuration} may also be marked as <b>optional</b>, indicating that the
+ * configuration shall be loaded quietly, that is, an "empty" {@code Configuration} object
+ * will be instantiated even if the resource cannot be loaded (not default behavior).
+ * <p>
+ * <strong>IMPORTANT:</strong> Use a {@link ConfigurationBuilder} to create a
  * {@code Configuration} object. A builder instance can be retrieved by calling
  * {@link Configuration#builder()}. For example:
  *
@@ -54,7 +60,7 @@ import net.obvj.confectory.source.Source;
  * {@code Configuration<Properties> config = Configuration.<Properties>builder()}
  * {@code         .source(new ClasspathFileSource<>("my.properties"))}
  * {@code         .mapper(new PropertiesMapper())}
- * {@code         .namespace("my-properties")}
+ * {@code         .namespace("default")}
  * {@code         .precedence(10)}
  * {@code         .build();}
  * </pre>
@@ -72,7 +78,6 @@ import net.obvj.confectory.source.Source;
  */
 public final class Configuration<T> implements ConfigurationDataRetriever<T>, ConfigurationMetadataRetriever<T>
 {
-    private final ConfigurationBuilder<T> builder;
     private final String namespace;
     private final int precedence;
     private final Source<T> source;
@@ -90,8 +95,6 @@ public final class Configuration<T> implements ConfigurationDataRetriever<T>, Co
      */
     protected Configuration(ConfigurationBuilder<T> builder)
     {
-        this.builder = builder;
-
         this.namespace = builder.getNamespace();
         this.precedence = builder.getPrecedence();
         this.source = builder.getSource();
@@ -277,7 +280,7 @@ public final class Configuration<T> implements ConfigurationDataRetriever<T>, Co
     {
         if (service == null)
         {
-            service = new ConfigurationService<>(builder);
+            service = new ConfigurationService<>(source, mapper, optional, nullValueProvider);
         }
         return service;
     }
@@ -297,33 +300,27 @@ final class ConfigurationService<T> implements ConfigurationDataRetriever<T>
     private final Optional<T> bean;
     private final ConfigurationHelper<T> helper;
 
-    /**
-     * Builds a new {@code ConfigurationService} from the specified
-     * {@link ConfigurationBuilder}.
-     *
-     * @param builder the {@link ConfigurationBuilder} to be built
-     */
-    ConfigurationService(ConfigurationBuilder<T> builder)
+    ConfigurationService(Source<T> source, Mapper<T> mapper, boolean optional, NullValueProvider nullValueProvider)
     {
-        Source<T> source = builder.getSource();
-        Mapper<T> mapper = builder.getMapper();
-        boolean optional = builder.isOptional();
-        NullValueProvider nullValueProvider = builder.getNullValueProvider();
-
         this.bean = source.load(mapper, optional);
-        this.helper = prepareConfigurationHelper(mapper, nullValueProvider);
+        this.helper = prepareConfigurationHelper(bean, mapper, nullValueProvider);
     }
 
-    private ConfigurationHelper<T> prepareConfigurationHelper(Mapper<T> mapper, NullValueProvider nullValueProvider)
+    protected static <T> ConfigurationHelper<T> prepareConfigurationHelper(Optional<T> bean, Mapper<T> mapper,
+            NullValueProvider nullValueProvider)
     {
-        ConfigurationHelper<T> configurationHelper = bean.isPresent() ? mapper.configurationHelper(bean.get())
-                : new NullConfigurationHelper<>();
+        ConfigurationHelper<T> configurationHelper = getConfigurationHelper(bean, mapper);
 
         if (nullValueProvider != null)
         {
             configurationHelper.setNullValueProvider(nullValueProvider);
         }
         return configurationHelper;
+    }
+
+    protected static <T> ConfigurationHelper<T> getConfigurationHelper(Optional<T> bean, Mapper<T> mapper)
+    {
+        return bean.isPresent() ? mapper.configurationHelper(bean.get()) : new NullConfigurationHelper<>();
     }
 
     @Override

@@ -40,4 +40,10 @@ public abstract class AbstractBasicConfigurationHelper<T> implements Configurati
         this.nullValueProvider = Objects.requireNonNull(provider, "null is not allowed");
     }
 
+    @Override
+    public NullValueProvider getNullValueProvider()
+    {
+        return nullValueProvider;
+    }
+
 }

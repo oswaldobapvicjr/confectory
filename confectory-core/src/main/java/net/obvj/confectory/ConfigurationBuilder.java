@@ -38,8 +38,9 @@ import net.obvj.confectory.source.SourceFactory;
  * {@code Configuration<Properties> config = new ConfigurationBuilder<Properties>()}
  * {@code         .source(new ClasspathFileSource<>("my.properties"))}
  * {@code         .mapper(new PropertiesMapper())}
- * {@code         .namespace("my-properties")}
+ * {@code         .namespace("default")}
  * {@code         .precedence(10)}
+ * {@code         .lazy()}
  * {@code         .build();}
  * </pre>
  *
