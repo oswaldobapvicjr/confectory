@@ -94,7 +94,7 @@ Configuration<JSONObject> config = Configuration.<JSONObject>builder()
     </td>
   </tr>
   <tr>
-    <td><b>0.4.0 :calendar:</b></td>
+    <td><b>0.4.0 :heavy_check_mark:</b></td>
     <td>2021-11</td>
     <td>
       <li>JSON files parsing using GSON</li>
