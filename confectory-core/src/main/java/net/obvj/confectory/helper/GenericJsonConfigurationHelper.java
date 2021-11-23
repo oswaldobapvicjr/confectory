@@ -17,7 +17,6 @@
 package net.obvj.confectory.helper;
 
 import java.util.Optional;
-import java.util.function.*;
 
 import com.jayway.jsonpath.*;
 import com.jayway.jsonpath.internal.filter.ValueNodes.JsonNode;
@@ -33,7 +32,7 @@ import net.obvj.confectory.ConfigurationException;
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 0.3.0
  */
-public class GenericJsonConfigurationHelper<J> extends AbstractBasicConfigurationHelper<J>
+public class GenericJsonConfigurationHelper<J> implements ConfigurationHelper<J>
 {
     protected final J json;
     protected final JsonProvider jsonProvider;
@@ -85,9 +84,9 @@ public class GenericJsonConfigurationHelper<J> extends AbstractBasicConfiguratio
      *                                {@code boolean}
      */
     @Override
-    public boolean getBoolean(String jsonPath)
+    public Boolean getBoolean(String jsonPath)
     {
-        return getValue(jsonPath, boolean.class, nullValueProvider::getBooleanValue);
+        return getValue(jsonPath, Boolean.class, false);
     }
 
     /**
@@ -106,9 +105,9 @@ public class GenericJsonConfigurationHelper<J> extends AbstractBasicConfiguratio
      * @since 0.4.0
      */
     @Override
-    public boolean getMandatoryBoolean(String jsonPath)
+    public Boolean getMandatoryBoolean(String jsonPath)
     {
-        return getValue(jsonPath, boolean.class);
+        return getValue(jsonPath, Boolean.class);
     }
 
     /**
@@ -126,9 +125,9 @@ public class GenericJsonConfigurationHelper<J> extends AbstractBasicConfiguratio
      *                                {@code int}
      */
     @Override
-    public int getInt(String jsonPath)
+    public Integer getInteger(String jsonPath)
     {
-        return getValue(jsonPath, int.class, nullValueProvider::getIntValue);
+        return getValue(jsonPath, Integer.class, false);
     }
 
     /**
@@ -147,9 +146,9 @@ public class GenericJsonConfigurationHelper<J> extends AbstractBasicConfiguratio
      * @since 0.4.0
      */
     @Override
-    public int getMandatoryInt(String jsonPath)
+    public Integer getMandatoryInteger(String jsonPath)
     {
-        return getValue(jsonPath, int.class);
+        return getValue(jsonPath, Integer.class);
     }
 
     /**
@@ -167,9 +166,9 @@ public class GenericJsonConfigurationHelper<J> extends AbstractBasicConfiguratio
      *                                {@code long}
      */
     @Override
-    public long getLong(String jsonPath)
+    public Long getLong(String jsonPath)
     {
-        return getValue(jsonPath, long.class, nullValueProvider::getLongValue);
+        return getValue(jsonPath, Long.class, false);
     }
 
     /**
@@ -188,9 +187,9 @@ public class GenericJsonConfigurationHelper<J> extends AbstractBasicConfiguratio
      * @since 0.4.0
      */
     @Override
-    public long getMandatoryLong(String jsonPath)
+    public Long getMandatoryLong(String jsonPath)
     {
-        return getValue(jsonPath, long.class);
+        return getValue(jsonPath, Long.class);
     }
 
     /**
@@ -208,9 +207,9 @@ public class GenericJsonConfigurationHelper<J> extends AbstractBasicConfiguratio
      *                                {@code double}
      */
     @Override
-    public double getDouble(String jsonPath)
+    public Double getDouble(String jsonPath)
     {
-        return getValue(jsonPath, double.class, nullValueProvider::getDoubleValue);
+        return getValue(jsonPath, Double.class, false);
     }
 
     /**
@@ -229,9 +228,9 @@ public class GenericJsonConfigurationHelper<J> extends AbstractBasicConfiguratio
      * @since 0.4.0
      */
     @Override
-    public double getMandatoryDouble(String jsonPath)
+    public Double getMandatoryDouble(String jsonPath)
     {
-        return getValue(jsonPath, double.class);
+        return getValue(jsonPath, Double.class);
     }
 
     /**
@@ -248,7 +247,7 @@ public class GenericJsonConfigurationHelper<J> extends AbstractBasicConfiguratio
     @Override
     public String getString(String jsonPath)
     {
-        return getValue(jsonPath, String.class, nullValueProvider::getStringValue);
+        return getValue(jsonPath, String.class, false);
     }
 
     /**
@@ -288,7 +287,7 @@ public class GenericJsonConfigurationHelper<J> extends AbstractBasicConfiguratio
      */
     protected <T> T getValue(String jsonPath, Class<T> targetType)
     {
-        return getValue(jsonPath, targetType, null);
+        return getValue(jsonPath, targetType, true);
     }
 
     /**
@@ -298,7 +297,6 @@ public class GenericJsonConfigurationHelper<J> extends AbstractBasicConfiguratio
      *
      * @param jsonPath        the path to read
      * @param targetType      the type the expression result should be mapped to
-     * @param defaultSupplier the supplier to be used if JSONPath not found
      *
      * @return the mapped value associated with the specified {@code jsonPath}
      *
@@ -308,28 +306,23 @@ public class GenericJsonConfigurationHelper<J> extends AbstractBasicConfiguratio
      * @throws ClassCastException     if the {@code jsonPath} result cannot be assigned to
      *                                {@code double}
      */
-    protected <T> T getValue(String jsonPath, Class<T> targetType, Supplier<T> defaultSupplier)
+    protected <T> T getValue(String jsonPath, Class<T> targetType, boolean mandatory)
     {
         Object result = documentContext.read(jsonPath);
         switch (jsonProvider.length(result))
         {
         case 0:
-            return applyDefault(defaultSupplier, jsonPath);
+            if (mandatory)
+            {
+                throw new ConfigurationException("No value found for path: %s", jsonPath);
+            }
+            return null;
         case 1:
             Object element = jsonProvider.getArrayIndex(result, 0);
             return mappingProvider.map(element, targetType, jsonPathConfiguration);
         default:
             throw new ConfigurationException("Multiple values found for path: %s", jsonPath);
         }
-    }
-
-    private <T> T applyDefault(Supplier<T> defaultSupplier, String jsonPath)
-    {
-        if (defaultSupplier != null)
-        {
-            return defaultSupplier.get();
-        }
-        throw new ConfigurationException("No value found for path: %s", jsonPath);
     }
 
 }

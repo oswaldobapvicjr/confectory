@@ -71,21 +71,21 @@ class JacksonJsonNodeHelperTest
     }
 
     @Test
-    void getBoolean_unknownKey_false()
+    void getBoolean_unknownKey_null()
     {
-        assertThat(HELPER.getBoolean("$.unknown"), equalTo(false));
+        assertThat(HELPER.getBoolean("$.unknown"), equalTo(null));
     }
 
     @Test
-    void getInt_existingKey_success()
+    void getInteger_existingKey_success()
     {
-        assertThat(HELPER.getInt("$.intValue"), equalTo(9));
+        assertThat(HELPER.getInteger("$.intValue"), equalTo(9));
     }
 
     @Test
-    void getInt_unknownKey_zero()
+    void getInteger_unknownKey_null()
     {
-        assertThat(HELPER.getInt("$.unknown"), equalTo(0));
+        assertThat(HELPER.getInteger("$.unknown"), equalTo(null));
     }
 
     @Test
@@ -95,9 +95,9 @@ class JacksonJsonNodeHelperTest
     }
 
     @Test
-    void getLong_unknownKey_zero()
+    void getLong_unknownKey_null()
     {
-        assertThat(HELPER.getLong("$.unknown"), equalTo(0L));
+        assertThat(HELPER.getLong("$.unknown"), equalTo(null));
     }
 
     @Test
@@ -114,21 +114,21 @@ class JacksonJsonNodeHelperTest
     }
 
     @Test
-    void getDouble_unknownKey_zero()
+    void getDouble_unknownKey_null()
     {
-        assertThat(HELPER.getDouble("$.unknown"), equalTo(0.0));
+        assertThat(HELPER.getDouble("$.unknown"), equalTo(null));
     }
 
     @Test
-    void getSring_existingKey_success()
+    void getString_existingKey_success()
     {
         assertThat(HELPER.getString("$.store.attributes.color"), equalTo("yellow"));
     }
 
     @Test
-    void getSring_unknownKey_empty()
+    void getString_unknownKey_null()
     {
-        assertThat(HELPER.getString("$.unknown"), equalTo(""));
+        assertThat(HELPER.getString("$.unknown"), equalTo(null));
     }
 
 }

@@ -1,6 +1,6 @@
 package net.obvj.confectory.settings;
 
-import static net.obvj.confectory.settings.ConfectorySettings.*;
+import static net.obvj.confectory.settings.ConfectorySettings.INITIAL_DATA_FETCH_STRATEGY;
 import static net.obvj.junit.utils.matchers.AdvancedMatchers.throwsException;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -12,7 +12,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import net.obvj.confectory.DataFetchStrategy;
-import net.obvj.confectory.helper.nullvalue.NullValueProvider;
 
 /**
  * Unit tests for the {@link ConfectorySettings}.
@@ -24,8 +23,6 @@ import net.obvj.confectory.helper.nullvalue.NullValueProvider;
 class ConfectorySettingsTest
 {
     @Mock
-    private NullValueProvider nullValueProvider;
-    @Mock
     private DataFetchStrategy dataFetchStrategy;
 
     private ConfectorySettings settings = ConfectorySettings.getInstance();
@@ -34,23 +31,6 @@ class ConfectorySettingsTest
     void reset()
     {
         settings.reset();
-    }
-
-    @Test
-    void setDefaultNullValueProvider_null_exceptionAndNoChangePerformed()
-    {
-        assertThat(settings.getDefaultNullValueProvider(), is(INITIAL_NULL_VALUE_PROVIDER));
-        assertThat(() -> settings.setDefaultNullValueProvider(null),
-                throwsException(NullPointerException.class).withMessage("null is not allowed"));
-        assertThat(settings.getDefaultNullValueProvider(), is(INITIAL_NULL_VALUE_PROVIDER));
-    }
-
-    @Test
-    void setDefaultNullValueProvider_valid_success()
-    {
-        assertThat(settings.getDefaultNullValueProvider(), is(INITIAL_NULL_VALUE_PROVIDER));
-        settings.setDefaultNullValueProvider(nullValueProvider);
-        assertThat(settings.getDefaultNullValueProvider(), is(nullValueProvider));
     }
 
     @Test

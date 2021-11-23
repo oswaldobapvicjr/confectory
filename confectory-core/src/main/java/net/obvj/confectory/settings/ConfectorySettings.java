@@ -19,8 +19,6 @@ package net.obvj.confectory.settings;
 import java.util.Objects;
 
 import net.obvj.confectory.DataFetchStrategy;
-import net.obvj.confectory.helper.nullvalue.NullValueProvider;
-import net.obvj.confectory.helper.nullvalue.StandardNullValueProvider;
 
 /**
  * An object that defines the global settings for the {@code Confectory} project.
@@ -30,10 +28,6 @@ import net.obvj.confectory.helper.nullvalue.StandardNullValueProvider;
  */
 public class ConfectorySettings
 {
-    /**
-     * The initial {@link NullValueProvider} to be applied by default
-     */
-    protected static final NullValueProvider INITIAL_NULL_VALUE_PROVIDER = StandardNullValueProvider.instance();
 
     /**
      * The initial {@link DataFetchStrategy} to be applied by default
@@ -44,7 +38,6 @@ public class ConfectorySettings
 
     // Settings - start
 
-    private NullValueProvider defaultNullValueProvider;
     private DataFetchStrategy defaultDataFetchStrategy;
 
     /*
@@ -60,7 +53,6 @@ public class ConfectorySettings
      */
     public void reset()
     {
-        defaultNullValueProvider = INITIAL_NULL_VALUE_PROVIDER;
         defaultDataFetchStrategy = INITIAL_DATA_FETCH_STRATEGY;
     }
 
@@ -70,29 +62,6 @@ public class ConfectorySettings
     public static ConfectorySettings getInstance()
     {
         return INSTANCE;
-    }
-
-    /**
-     * Returns the {@link NullValueProvider} to be applied by default when no such provider
-     * specified at {@code Configuration} level.
-     *
-     * @return the default {@code NullValueProvider}
-     */
-    public NullValueProvider getDefaultNullValueProvider()
-    {
-        return defaultNullValueProvider;
-    }
-
-    /**
-     * Defines the {@link NullValueProvider} to be applied by default when no such provider
-     * specified at {@code Configuration} level.
-     *
-     * @param provider the default {@code NullValueProvider} to set; not null
-     * @throws NullPointerException if the specified provider is null
-     */
-    public void setDefaultNullValueProvider(NullValueProvider provider)
-    {
-        defaultNullValueProvider = Objects.requireNonNull(provider, "null is not allowed");
     }
 
     /**

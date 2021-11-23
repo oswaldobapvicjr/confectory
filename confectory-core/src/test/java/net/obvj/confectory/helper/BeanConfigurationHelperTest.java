@@ -40,7 +40,7 @@ class BeanConfigurationHelperTest
     @Test
     void getInt_existingKey_zero()
     {
-        assertThat(() -> HELPER.getInt(KEY), CONFIGURATION_EXCEPTION_TYPE_NOT_SUPPORTED);
+        assertThat(() -> HELPER.getInteger(KEY), CONFIGURATION_EXCEPTION_TYPE_NOT_SUPPORTED);
     }
 
     @Test

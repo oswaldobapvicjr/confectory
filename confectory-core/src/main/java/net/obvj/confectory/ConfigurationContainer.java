@@ -23,7 +23,6 @@ import java.util.stream.Stream;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import net.obvj.confectory.helper.nullvalue.NullValueProvider;
 import net.obvj.confectory.settings.ConfectorySettings;
 
 /**
@@ -50,10 +49,10 @@ import net.obvj.confectory.settings.ConfectorySettings;
  * from all {@code Configuration} objects if the selected data-fetch strategy is
  * {@code LENIENT}.
  * <p>
- * Each container may have a custom {@link DataFetchStrategy} and
- * {@link NullValueProvider}. Both objects may be specified at container construction time
- * and modified using the setter methods at anytime. If not specified, the container uses
- * the default objects configured via {@link ConfectorySettings}.
+ * Each container may have a custom {@link DataFetchStrategy} which may be specified at
+ * container construction time and modified using the setter method anytime. If not
+ * specified, the container uses the default choice configured via
+ * {@link ConfectorySettings}.
  * <p>
  * <strong>IMPORTANT:</strong> This class works only with map-based {@code Configuration}
  * objects (e.g.: {@code Properties}, {@code JSONObject}, {@code JsonNode}, etc.). In
@@ -73,7 +72,6 @@ public class ConfigurationContainer
 
     private Map<String, Set<Configuration<?>>> configMap = new HashMap<>();
     private DataFetchStrategy dataFetchStrategy;
-    private NullValueProvider nullValueProvider;
 
     /**
      * Builds a new {@code ConfigurationContainer} with an arbitrary number of preset
@@ -84,7 +82,7 @@ public class ConfigurationContainer
      */
     public ConfigurationContainer(Configuration<?>... configs)
     {
-        this(null, null, configs);
+        this(null, configs);
     }
 
     /**
@@ -99,45 +97,8 @@ public class ConfigurationContainer
      */
     public ConfigurationContainer(DataFetchStrategy dataFetchStrategy, Configuration<?>... configs)
     {
-        this(dataFetchStrategy, null, configs);
-    }
-
-    /**
-     * Builds a new {@code ConfigurationContainer} with a custom {@link NullValueProvider} and
-     * an arbitrary number of preset {@code Configuration} objects.
-     *
-     * @param nullValueProvider an optional {@link NullValueProvider} to be used when keys are
-     *                          not found; {@code null} is allowed and means the default
-     *                          provider will be applied
-     * @param configs           an arbitrary number of {@code Configuration} objects (zero or
-     *                          more) to be registered at constructor time
-     */
-
-    public ConfigurationContainer(NullValueProvider nullValueProvider, Configuration<?>... configs)
-    {
-        this(null, nullValueProvider, configs);
-    }
-
-    /**
-     * Builds a new {@code ConfigurationContainer} with custom {@link DataFetchStrategy} and
-     * {@link NullValueProvider} and an arbitrary number of preset {@code Configuration}
-     * objects.
-     *
-     * @param dataFetchStrategy an optional {@link DataFetchStrategy} to be applied by this
-     *                          container; {@code null} is allowed and means the default
-     *                          strategy will be applied
-     * @param nullValueProvider an optional {@link NullValueProvider} to be used when keys are
-     *                          not found; {@code null} is allowed and means the default
-     *                          provider will be applied
-     * @param configs           an arbitrary number of {@code Configuration} objects (zero or
-     *                          more) to be registered at constructor time
-     */
-    public ConfigurationContainer(DataFetchStrategy dataFetchStrategy, NullValueProvider nullValueProvider,
-            Configuration<?>... configs)
-    {
         ConfectorySettings settings = Confectory.settings();
         setDataFetchStrategy(ObjectUtils.defaultIfNull(dataFetchStrategy, settings.getDefaultDataFetchStrategy()));
-        setNullValueProvider(ObjectUtils.defaultIfNull(nullValueProvider, settings.getDefaultNullValueProvider()));
 
         Arrays.stream(configs).forEach(this::add);
     }
@@ -161,27 +122,6 @@ public class ConfigurationContainer
     public void setDataFetchStrategy(DataFetchStrategy strategy)
     {
         dataFetchStrategy = Objects.requireNonNull(strategy, "the DataFetchStrategy must not be null");
-    }
-
-    /**
-     * Returns the {@code NullValueProvider} associated with this container.
-     *
-     * @return a {@link NullValueProvider} instance
-     */
-    public NullValueProvider getNullValueProvider()
-    {
-        return nullValueProvider;
-    }
-
-    /**
-     * Defines a custom {@code NullValueProvider} for this container.
-     *
-     * @param provider the {@link NullValueProvider} to set; not null
-     * @throws NullPointerException if the specified {@code provider} is null
-     */
-    public void setNullValueProvider(NullValueProvider provider)
-    {
-        nullValueProvider = Objects.requireNonNull(provider, "null is not allowed");
     }
 
     /**
@@ -229,7 +169,7 @@ public class ConfigurationContainer
      *
      * @see DataFetchStrategy
      */
-    public boolean getBoolean(String key)
+    public Boolean getBoolean(String key)
     {
         return getBoolean(DEFAULT_NAMESPACE, key);
     }
@@ -242,9 +182,9 @@ public class ConfigurationContainer
      * @param key       the property key
      * @return the {@code boolean} value associated with the specified {@code key}
      */
-    public boolean getBoolean(String namespace, String key)
+    public Boolean getBoolean(String namespace, String key)
     {
-        return getProperty(namespace, config -> config.getBoolean(key), NullValueProvider::getBooleanValue);
+        return getProperty(namespace, config -> config.getBoolean(key));
     }
 
     /**
@@ -256,9 +196,9 @@ public class ConfigurationContainer
      *
      * @see DataFetchStrategy
      */
-    public int getInt(String key)
+    public Integer getInteger(String key)
     {
-        return getInt(DEFAULT_NAMESPACE, key);
+        return getInteger(DEFAULT_NAMESPACE, key);
     }
 
     /**
@@ -269,9 +209,9 @@ public class ConfigurationContainer
      * @param key       the property key
      * @return the {@code int} value associated with the specified {@code key}
      */
-    public int getInt(String namespace, String key)
+    public Integer getInteger(String namespace, String key)
     {
-        return getProperty(namespace, config -> config.getInt(key), NullValueProvider::getIntValue);
+        return getProperty(namespace, config -> config.getInteger(key));
     }
 
     /**
@@ -283,7 +223,7 @@ public class ConfigurationContainer
      *
      * @see DataFetchStrategy
      */
-    public long getLong(String key)
+    public Long getLong(String key)
     {
         return getLong(DEFAULT_NAMESPACE, key);
     }
@@ -296,9 +236,9 @@ public class ConfigurationContainer
      * @param key       the property key
      * @return the {@code long} value associated with the specified {@code key}
      */
-    public long getLong(String namespace, String key)
+    public Long getLong(String namespace, String key)
     {
-        return getProperty(namespace, config -> config.getLong(key), NullValueProvider::getLongValue);
+        return getProperty(namespace, config -> config.getLong(key));
     }
 
     /**
@@ -311,7 +251,7 @@ public class ConfigurationContainer
      *
      * @see DataFetchStrategy
      */
-    public double getDouble(String key)
+    public Double getDouble(String key)
     {
         return getDouble(DEFAULT_NAMESPACE, key);
     }
@@ -324,9 +264,9 @@ public class ConfigurationContainer
      * @param key       the property key
      * @return the {@code double} value associated with the specified {@code key}
      */
-    public double getDouble(String namespace, String key)
+    public Double getDouble(String namespace, String key)
     {
-        return getProperty(namespace, config -> config.getDouble(key), NullValueProvider::getDoubleValue);
+        return getProperty(namespace, config -> config.getDouble(key));
     }
 
     /**
@@ -354,24 +294,21 @@ public class ConfigurationContainer
      */
     public String getString(String namespace, String key)
     {
-        return getProperty(namespace, config -> config.getString(key), NullValueProvider::getStringValue);
+        return getProperty(namespace, config -> config.getString(key));
     }
 
     /**
      * Template method for retrieving properties from the {@code configMap}.
      *
-     * @param <T>               the property return type
-     * @param namespace         the namespace which property is to be fetched
-     * @param mainFunction      the main data fetch function; applies a particular method to
-     *                          the {@code Configuration} objects in process
-     * @param nullValueSupplier a null-value supplying function
+     * @param <T>          the property return type
+     * @param namespace    the namespace which property is to be fetched
+     * @param mainFunction the main data fetch function; applies a particular method to the
+     *                     {@code Configuration} objects in process
      *
-     * @return the value of the property evaluated by the {@code mainFunction}, or the one
-     *         specified by the {@code nullValueFunction} (on top of the instance-level
-     *         {@code nullValueProvider})
+     * @return the value of the property evaluated by the {@code mainFunction}, or
+     *         {@code null} if not found
      */
-    private <T> T getProperty(String namespace, Function<Configuration<?>, T> mainFunction,
-            Function<NullValueProvider, T> nullValueSupplier)
+    private <T> T getProperty(String namespace, Function<Configuration<?>, T> mainFunction)
     {
         Iterator<Configuration<?>> iterator = getConfigurationStream(namespace).iterator();
         while (iterator.hasNext())
@@ -379,15 +316,12 @@ public class ConfigurationContainer
             Configuration<?> config = iterator.next();
             T value = mainFunction.apply(config);
 
-            // We use the provider defined at Configuration level to test the value
-            T nullValue = nullValueSupplier.apply(config.getNullValueProvider());
-            if (!nullValue.equals(value))
+            if (value != null)
             {
                 return value;
             }
         }
-        // We use the provider defined at container level to return a default value
-        return nullValueSupplier.apply(nullValueProvider);
+        return null;
     }
 
     /**

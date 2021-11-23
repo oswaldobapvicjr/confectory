@@ -45,7 +45,7 @@ public interface ConfigurationDataRetriever<T>
      *
      * @return the {@code boolean} value associated with the specified {@code key}
      */
-    boolean getBoolean(String key);
+    Boolean getBoolean(String key);
 
     /**
      * Returns the {@code int} value associated with the specified {@code key}.
@@ -56,7 +56,7 @@ public interface ConfigurationDataRetriever<T>
      * @return the {@code int} value associated with the specified {@code key}
      * @throws NumberFormatException if the value is not a parsable {@code int}.
      */
-    int getInt(String key);
+    Integer getInteger(String key);
 
     /**
      * Returns the {@code long} value associated with the specified {@code key}.
@@ -67,7 +67,7 @@ public interface ConfigurationDataRetriever<T>
      * @return the {@code long} value associated with the specified {@code key}
      * @throws NumberFormatException if the value is not a parsable {@code long}.
      */
-    long getLong(String key);
+    Long getLong(String key);
 
     /**
      * Returns the {@code double} value associated with the specified {@code key}.
@@ -78,7 +78,7 @@ public interface ConfigurationDataRetriever<T>
      * @return the {@code double} value associated with the specified {@code key}
      * @throws NumberFormatException if the value is not a parsable {@code double}.
      */
-    double getDouble(String key);
+    Double getDouble(String key);
 
     /**
      * Returns the {@code String} value associated with the specified {@code key}.
@@ -102,7 +102,7 @@ public interface ConfigurationDataRetriever<T>
      *
      * @since 0.4.0
      */
-    boolean getMandatoryBoolean(String key);
+    Boolean getMandatoryBoolean(String key);
 
     /**
      * Returns the {@code int} value associated with the specified {@code key}.
@@ -117,7 +117,7 @@ public interface ConfigurationDataRetriever<T>
      *
      * @since 0.4.0
      */
-    int getMandatoryInt(String key);
+    Integer getMandatoryInteger(String key);
 
     /**
      * Returns the {@code long} value associated with the specified {@code key}.
@@ -132,7 +132,7 @@ public interface ConfigurationDataRetriever<T>
      *
      * @since 0.4.0
      */
-    long getMandatoryLong(String key);
+    Long getMandatoryLong(String key);
 
     /**
      * Returns the {@code double} value associated with the specified {@code key}.
@@ -147,7 +147,7 @@ public interface ConfigurationDataRetriever<T>
      *
      * @since 0.4.0
      */
-    double getMandatoryDouble(String key);
+    Double getMandatoryDouble(String key);
 
     /**
      * Returns the {@code String} value associated with the specified {@code key}.

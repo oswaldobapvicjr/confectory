@@ -17,7 +17,6 @@
 package net.obvj.confectory.helper;
 
 import net.obvj.confectory.ConfigurationDataRetriever;
-import net.obvj.confectory.helper.nullvalue.NullValueProvider;
 
 /**
  * A base interface for Configuration Helper objects providing methods for retrieving
@@ -30,18 +29,5 @@ import net.obvj.confectory.helper.nullvalue.NullValueProvider;
  */
 public interface ConfigurationHelper<T> extends ConfigurationDataRetriever<T>
 {
-    /**
-     * Defines a {@link NullValueProvider} for invalid keys.
-     *
-     * @param provider the {@link NullValueProvider} to set; not null
-     *
-     * @throws NullPointerException if the specified provider is null
-     */
-    void setNullValueProvider(NullValueProvider provider);
-
-    /**
-     * @return the {@link NullValueProvider} associated with this helper.
-     */
-    NullValueProvider getNullValueProvider();
-
+    // TODO remove
 }

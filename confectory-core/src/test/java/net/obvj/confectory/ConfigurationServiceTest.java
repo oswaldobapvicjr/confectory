@@ -2,7 +2,6 @@ package net.obvj.confectory;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
@@ -14,7 +13,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import net.obvj.confectory.helper.ConfigurationHelper;
 import net.obvj.confectory.helper.NullConfigurationHelper;
-import net.obvj.confectory.helper.nullvalue.NullValueProvider;
 import net.obvj.confectory.mapper.Mapper;
 import net.obvj.confectory.source.Source;
 
@@ -33,27 +31,22 @@ class ConfigurationServiceTest
     @Mock
     private Mapper<String> mapper;
     @Mock
-    private NullValueProvider nullValueProvider;
-    @Mock
     private ConfigurationHelper<String> helper;
 
     private Optional<String> bean = Optional.of("test");
 
     @Test
-    void prepareConfigurationHelper_success_validObjectWithNullValueProvider()
+    void getConfigurationHelper_success_validObjectWithNullValueProvider()
     {
         when(mapper.configurationHelper(bean.get())).thenReturn(helper);
-        ConfigurationHelper<String> result = ConfigurationService.prepareConfigurationHelper(bean, mapper,
-                nullValueProvider);
+        ConfigurationHelper<String> result = ConfigurationService.getConfigurationHelper(bean, mapper);
         assertThat(result, equalTo(helper));
-        verify(helper).setNullValueProvider(nullValueProvider);
     }
 
     @Test
-    void prepareConfigurationHelper_empty_nullConfigurationHelper()
+    void getConfigurationHelper_empty_nullConfigurationHelper()
     {
-        ConfigurationHelper<String> result = ConfigurationService.prepareConfigurationHelper(Optional.empty(), mapper,
-                nullValueProvider);
+        ConfigurationHelper<String> result = ConfigurationService.getConfigurationHelper(Optional.empty(), mapper);
         assertThat(result.getClass(), equalTo(NullConfigurationHelper.class));
     }
 
