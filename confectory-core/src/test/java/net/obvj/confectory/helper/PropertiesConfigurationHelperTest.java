@@ -3,6 +3,7 @@ package net.obvj.confectory.helper;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.Properties;
 
@@ -10,9 +11,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import net.obvj.confectory.helper.nullvalue.AbstractNullValueProvider;
-import net.obvj.confectory.helper.nullvalue.NullValueProvider;
 
 /**
  * Unit tests for the {@link PropertiesConfigurationHelper}.
@@ -29,39 +27,6 @@ class PropertiesConfigurationHelperTest
 
     private static final PropertiesConfigurationHelper HELPER = new PropertiesConfigurationHelper(PROPERTIES);
 
-    private static final NullValueProvider CUSTOM_NULL_VALUE_PROVIDER = new AbstractNullValueProvider()
-    {
-        @Override
-        public String getStringValue()
-        {
-            return "<<null>>";
-        }
-
-        @Override
-        public long getLongValue()
-        {
-            return -1L;
-        }
-
-        @Override
-        public int getIntValue()
-        {
-            return -1;
-        }
-
-        @Override
-        public double getDoubleValue()
-        {
-            return -1.0;
-        }
-
-        @Override
-        public boolean getBooleanValue()
-        {
-            return false;
-        }
-    };
-
     @BeforeAll
     static void setupProperties()
     {
@@ -70,8 +35,6 @@ class PropertiesConfigurationHelperTest
         PROPERTIES.put("prop.long", "9876543210");
         PROPERTIES.put("prop.double", "3.333");
         PROPERTIES.put("prop.string", "stringValue");
-
-        HELPER.setNullValueProvider(CUSTOM_NULL_VALUE_PROVIDER);
     }
 
     @Test
@@ -81,69 +44,63 @@ class PropertiesConfigurationHelperTest
     }
 
     @Test
-    void getBooleanProperty_existingKey_true()
+    void getBoolean_existingKey_valid()
     {
         assertThat(HELPER.getBoolean("prop.boolean"), is(true));
     }
 
     @Test
-    void getBooleanProperty_unknownKey_false()
+    void getBoolean_unknownKey_null()
     {
-        assertThat(HELPER.getBoolean(PROP_UNKNOWN), is(false));
+        assertNull(HELPER.getBoolean(PROP_UNKNOWN));
     }
 
     @Test
-    void getIntProperty_existingKey_zero()
+    void getInteger_existingKey_valid()
     {
-        assertThat(HELPER.getInt("prop.int"), is(2015));
+        assertThat(HELPER.getInteger("prop.int"), is(2015));
     }
 
     @Test
-    void getIntProperty_unknownKey_zero()
+    void getInteger_unknownKey_null()
     {
-        assertThat(HELPER.getInt(PROP_UNKNOWN), is(CUSTOM_NULL_VALUE_PROVIDER.getIntValue()));
+        assertNull(HELPER.getInteger(PROP_UNKNOWN));
     }
 
     @Test
-    void getLongProperty_existingKey_zero()
+    void getLong_existingKey_valid()
     {
         assertThat(HELPER.getLong("prop.long"), is(9876543210L));
     }
 
     @Test
-    void getLongProperty_unknownKey_zero()
+    void getLong_unknownKey_null()
     {
-        assertThat(HELPER.getLong(PROP_UNKNOWN), is(CUSTOM_NULL_VALUE_PROVIDER.getLongValue()));
+        assertNull(HELPER.getLong(PROP_UNKNOWN));
     }
 
     @Test
-    void getDoubleProperty_existingKey_zero()
+    void getDouble_existingKey_valid()
     {
         assertThat(HELPER.getDouble("prop.double"), is(3.333));
     }
 
     @Test
-    void getDoubleProperty_unknownKey_zero()
+    void getDouble_unknownKey_null()
     {
-        assertThat(HELPER.getDouble(PROP_UNKNOWN), is(CUSTOM_NULL_VALUE_PROVIDER.getDoubleValue()));
+        assertNull(HELPER.getDouble(PROP_UNKNOWN));
     }
 
     @Test
-    void getSringProperty_existingKey_empty()
+    void getString_existingKey_valid()
     {
         assertThat(HELPER.getString("prop.string"), is("stringValue"));
     }
 
     @Test
-    void getSringProperty_unknownKey_empty()
+    void getString_unknownKey_null()
     {
-        assertThat(HELPER.getString(PROP_UNKNOWN), is(CUSTOM_NULL_VALUE_PROVIDER.getStringValue()));
-    }
-
-    @Test
-    void getNullValueProvider_custom()
-    {
-        assertThat(HELPER.getNullValueProvider(), is(CUSTOM_NULL_VALUE_PROVIDER));
+        assertNull(HELPER.getString(PROP_UNKNOWN));
     }
 
 }

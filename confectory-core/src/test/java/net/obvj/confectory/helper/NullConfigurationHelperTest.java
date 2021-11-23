@@ -1,11 +1,16 @@
 package net.obvj.confectory.helper;
 
-import static org.hamcrest.CoreMatchers.is;
+import static net.obvj.junit.utils.matchers.AdvancedMatchers.throwsException;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.Optional;
 
+import org.hamcrest.Matcher;
 import org.junit.jupiter.api.Test;
+
+import net.obvj.confectory.ConfigurationException;
 
 /**
  * Unit tests for the {@link NullConfigurationHelper}.
@@ -17,72 +22,75 @@ class NullConfigurationHelperTest
 {
     private static final String KEY1 = "key1";
 
+    private static final Matcher<Runnable> EXCEPTION_NOT_FOUND = throwsException(ConfigurationException.class)
+            .withMessageContaining("Not found");
+
     private NullConfigurationHelper<Object> helper = new NullConfigurationHelper<>();
 
     @Test
     void getBean_empty()
     {
-        assertThat(helper.getBean(), is(Optional.empty()));
+        assertEquals(Optional.empty(), helper.getBean());
     }
 
     @Test
-    void getBoolean_anyKey_false()
+    void getBoolean_anyKey_null()
     {
-        assertThat(helper.getBoolean(KEY1), is(false));
+        assertNull(helper.getBoolean(KEY1));
     }
 
     @Test
-    void getInt_anyKey_zero()
+    void getInteger_anyKey_null()
     {
-        assertThat(helper.getInt(KEY1), is(0));
+        assertNull(helper.getInteger(KEY1));
     }
 
     @Test
-    void getLong_anyKey_zero()
+    void getLong_anyKey_null()
     {
-        assertThat(helper.getLong(KEY1), is(0L));
+        assertNull(helper.getLong(KEY1));
     }
 
     @Test
-    void getDouble_anyKey_zero()
+    void getDouble_anyKey_null()
     {
-        assertThat(helper.getDouble(KEY1), is(0.0));
+        assertNull(helper.getDouble(KEY1));
     }
 
     @Test
-    void getSring_anyKey_empty()
+    void getString_anyKey_null()
     {
-        assertThat(helper.getString(KEY1), is(""));
+        assertNull(helper.getString(KEY1));
     }
 
     @Test
-    void getMandatoryBoolean_anyKey_false()
+    void getMandatoryBoolean_anyKey_exception()
     {
-        assertThat(helper.getMandatoryBoolean(KEY1), is(false));
+        assertThat(() -> helper.getMandatoryBoolean(KEY1), EXCEPTION_NOT_FOUND);
     }
 
     @Test
-    void getMandatoryInt_anyKey_zero()
+    void getMandatoryInteger_anyKey_exception()
     {
-        assertThat(helper.getMandatoryInt(KEY1), is(0));
+        assertThat(() -> helper.getMandatoryInteger(KEY1), EXCEPTION_NOT_FOUND);
     }
 
     @Test
-    void getMandatoryLong_anyKey_zero()
+    void getMandatoryLong_anyKey_exception()
     {
-        assertThat(helper.getMandatoryLong(KEY1), is(0L));
+        assertThat(() -> helper.getMandatoryLong(KEY1), EXCEPTION_NOT_FOUND);
     }
 
     @Test
-    void getMandatoryDouble_anyKey_zero()
+    void getMandatoryDouble_anyKey_exception()
     {
-        assertThat(helper.getMandatoryDouble(KEY1), is(0.0));
+        assertThat(() -> helper.getMandatoryDouble(KEY1), EXCEPTION_NOT_FOUND);
     }
 
     @Test
-    void getMandatorySring_anyKey_empty()
+    void getMandatoryString_anyKey_exception()
     {
-        assertThat(helper.getMandatoryString(KEY1), is(""));
+        assertThat(() -> helper.getMandatoryString(KEY1), EXCEPTION_NOT_FOUND);
     }
 
 }

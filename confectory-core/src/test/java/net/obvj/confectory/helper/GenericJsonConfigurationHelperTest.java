@@ -64,9 +64,9 @@ class GenericJsonConfigurationHelperTest
     }
 
     @Test
-    void getBoolean_unknownKey_false()
+    void getBoolean_unknownKey_null()
     {
-        assertThat(HELPER.getBoolean(PATH_UNKNOWN), equalTo(false));
+        assertThat(HELPER.getBoolean(PATH_UNKNOWN), equalTo(null));
     }
 
     @Test
@@ -76,33 +76,33 @@ class GenericJsonConfigurationHelperTest
     }
 
     @Test
-    void getMandatoryBoolean_unknownKey_false()
+    void getMandatoryBoolean_unknownKey_exception()
     {
         assertThat(() -> HELPER.getMandatoryBoolean(PATH_UNKNOWN), EXCEPTION_NO_VALUE_FOUND_PATH_UNKNOWN);
     }
 
     @Test
-    void getInt_existingKey_success()
+    void getInteger_existingKey_success()
     {
-        assertThat(HELPER.getInt("$.intValue"), equalTo(9));
+        assertThat(HELPER.getInteger("$.intValue"), equalTo(9));
     }
 
     @Test
-    void getInt_unknownKey_zero()
+    void getInteger_unknownKey_null()
     {
-        assertThat(HELPER.getInt(PATH_UNKNOWN), equalTo(0));
+        assertThat(HELPER.getInteger(PATH_UNKNOWN), equalTo(null));
     }
 
     @Test
-    void getMandatoryInt_existingKey_success()
+    void getMandatoryInteger_existingKey_success()
     {
-        assertThat(HELPER.getMandatoryInt("$.intValue"), equalTo(9));
+        assertThat(HELPER.getMandatoryInteger("$.intValue"), equalTo(9));
     }
 
     @Test
-    void getMandatoryInt_unknownKey_zero()
+    void getMandatoryInteger_unknownKey_exception()
     {
-        assertThat(() -> HELPER.getMandatoryInt(PATH_UNKNOWN), EXCEPTION_NO_VALUE_FOUND_PATH_UNKNOWN);
+        assertThat(() -> HELPER.getMandatoryInteger(PATH_UNKNOWN), EXCEPTION_NO_VALUE_FOUND_PATH_UNKNOWN);
     }
 
     @Test
@@ -112,9 +112,9 @@ class GenericJsonConfigurationHelperTest
     }
 
     @Test
-    void getLong_unknownKey_zero()
+    void getLong_unknownKey_null()
     {
-        assertThat(HELPER.getLong(PATH_UNKNOWN), equalTo(0L));
+        assertThat(HELPER.getLong(PATH_UNKNOWN), equalTo(null));
     }
 
     @Test
@@ -124,7 +124,7 @@ class GenericJsonConfigurationHelperTest
     }
 
     @Test
-    void getMandatoryLong_unknownKey_zero()
+    void getMandatoryLong_unknownKey_exception()
     {
         assertThat(() -> HELPER.getMandatoryLong(PATH_UNKNOWN), EXCEPTION_NO_VALUE_FOUND_PATH_UNKNOWN);
     }
@@ -136,9 +136,9 @@ class GenericJsonConfigurationHelperTest
     }
 
     @Test
-    void getDouble_unknownKey_zero()
+    void getDouble_unknownKey_null()
     {
-        assertThat(HELPER.getDouble(PATH_UNKNOWN), equalTo(0.0));
+        assertThat(HELPER.getDouble(PATH_UNKNOWN), equalTo(null));
     }
 
     @Test
@@ -148,21 +148,21 @@ class GenericJsonConfigurationHelperTest
     }
 
     @Test
-    void getMandatoryDouble_unknownKey_zero()
+    void getMandatoryDouble_unknownKey_exception()
     {
         assertThat(() -> HELPER.getMandatoryDouble(PATH_UNKNOWN), EXCEPTION_NO_VALUE_FOUND_PATH_UNKNOWN);
     }
 
     @Test
-    void getSring_existingKey_success()
+    void getString_existingKey_success()
     {
         assertThat(HELPER.getString("$.stringValue"), equalTo("test"));
     }
 
     @Test
-    void getSring_unknownKey_empty()
+    void getSring_unknownKey_null()
     {
-        assertThat(HELPER.getString(PATH_UNKNOWN), equalTo(""));
+        assertThat(HELPER.getString(PATH_UNKNOWN), equalTo(null));
     }
 
     @Test
@@ -179,15 +179,15 @@ class GenericJsonConfigurationHelperTest
     }
 
     @Test
-    void getMandatorySring_existingKey_success()
+    void getMandatoryString_existingKey_success()
     {
         assertThat(HELPER.getMandatoryString("$.stringValue"), equalTo("test"));
     }
 
     @Test
-    void getMandatorySring_unknownKey_empty()
+    void getMandatoryString_unknownKey_exception()
     {
-        assertThat(() -> HELPER.getMandatoryDouble(PATH_UNKNOWN), EXCEPTION_NO_VALUE_FOUND_PATH_UNKNOWN);
+        assertThat(() -> HELPER.getMandatoryString(PATH_UNKNOWN), EXCEPTION_NO_VALUE_FOUND_PATH_UNKNOWN);
     }
 
 }

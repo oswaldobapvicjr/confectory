@@ -19,9 +19,9 @@ public class ConfectoryTestDriveClasspathProperties
         System.out.println(config.getBean());
         System.out.println(config.getBoolean("web.enable"));
         System.out.println(config.getString("web.host"));
-        System.out.println(config.getInt("web.port"));
+        System.out.println(config.getInteger("web.port"));
         System.out.println(config.getDouble("web.price"));
-        System.out.println(config.getInt("web.test"));
+        System.out.println(config.getInteger("web.test"));
 
     }
 }

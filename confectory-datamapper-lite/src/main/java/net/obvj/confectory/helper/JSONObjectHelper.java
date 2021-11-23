@@ -44,12 +44,23 @@ public class JSONObjectHelper extends GenericJsonConfigurationHelper<JSONObject>
     }
 
     @Override
-    public double getDouble(String jsonPath)
+    public Double getDouble(String jsonPath)
+    {
+        BigDecimal bigDecimal = getBigDecimal(jsonPath, false);
+        return bigDecimal == null ? null : bigDecimal.doubleValue();
+    }
+
+    @Override
+    public Double getMandatoryDouble(String jsonPath)
+    {
+        BigDecimal bigDecimal = getBigDecimal(jsonPath, true);
+        return bigDecimal.doubleValue();
+    }
+
+    private BigDecimal getBigDecimal(String jsonPath, boolean optional)
     {
         // JSON-Java parses double values as BigDecimals by default
-        BigDecimal bigDecimal = getValue(jsonPath, BigDecimal.class,
-                () -> BigDecimal.valueOf(super.nullValueProvider.getDoubleValue()));
-        return bigDecimal.doubleValue();
+        return getValue(jsonPath, BigDecimal.class, optional);
     }
 
 }

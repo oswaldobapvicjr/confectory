@@ -27,7 +27,7 @@ import java.util.Optional;
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 0.1.0
  */
-public abstract class BasicConfigurationHelper<T> extends AbstractBasicConfigurationHelper<T>
+public abstract class BasicConfigurationHelper<T> implements ConfigurationHelper<T>
 {
     protected final T bean;
 
@@ -43,59 +43,59 @@ public abstract class BasicConfigurationHelper<T> extends AbstractBasicConfigura
     }
 
     @Override
-    public boolean getBoolean(String key)
+    public Boolean getBoolean(String key)
     {
         String value = getString(key);
-        return nullValueProvider.isNull(value) ? nullValueProvider.getBooleanValue() : Boolean.parseBoolean(value);
+        return value == null ? null : Boolean.valueOf(value);
     }
 
     @Override
-    public boolean getMandatoryBoolean(String key)
+    public Boolean getMandatoryBoolean(String key)
     {
         String string = getMandatoryString(key);
-        return Boolean.parseBoolean(string);
+        return Boolean.valueOf(string);
     }
 
     @Override
-    public int getInt(String key)
+    public Integer getInteger(String key)
     {
         String value = getString(key);
-        return nullValueProvider.isNull(value) ? nullValueProvider.getIntValue() : Integer.parseInt(value);
+        return value == null ? null : Integer.valueOf(value);
     }
 
     @Override
-    public int getMandatoryInt(String key)
+    public Integer getMandatoryInteger(String key)
     {
         String string = getMandatoryString(key);
-        return Integer.parseInt(string);
+        return Integer.valueOf(string);
     }
 
     @Override
-    public long getLong(String key)
+    public Long getLong(String key)
     {
         String value = getString(key);
-        return nullValueProvider.isNull(value) ? nullValueProvider.getLongValue() : Long.parseLong(value);
+        return value == null ? null : Long.valueOf(value);
     }
 
     @Override
-    public long getMandatoryLong(String key)
+    public Long getMandatoryLong(String key)
     {
         String string = getMandatoryString(key);
-        return Long.parseLong(string);
+        return Long.valueOf(string);
     }
 
     @Override
-    public double getDouble(String key)
+    public Double getDouble(String key)
     {
         String value = getString(key);
-        return nullValueProvider.isNull(value) ? nullValueProvider.getDoubleValue() : Double.parseDouble(value);
+        return value == null ? null : Double.valueOf(value);
     }
 
     @Override
-    public double getMandatoryDouble(String key)
+    public Double getMandatoryDouble(String key)
     {
         String string = getMandatoryString(key);
-        return Double.parseDouble(string);
+        return Double.valueOf(string);
     }
 
 }

@@ -15,8 +15,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import net.obvj.confectory.helper.ConfigurationHelper;
-import net.obvj.confectory.helper.nullvalue.NullValueProvider;
-import net.obvj.confectory.helper.nullvalue.StandardNullValueProvider;
 import net.obvj.confectory.mapper.Mapper;
 import net.obvj.confectory.source.AbstractSource;
 import net.obvj.confectory.source.DynamicSource;
@@ -42,12 +40,9 @@ class ConfigurationBuilderTest
     private Mapper<Object> mapper;
     @Mock
     private ConfigurationHelper<Object> helper;
-    @Mock
-    private NullValueProvider nullValueProvider;
 
     private void assertConfigurationMetadata(ConfigurationMetadataRetriever<Object> configuration, Source<?> source,
-            Mapper<?> mapper, String namespace, int precedence, boolean optional, boolean lazy,
-            NullValueProvider nullValueProvider)
+            Mapper<?> mapper, String namespace, int precedence, boolean optional, boolean lazy)
     {
         assertThat(configuration.getSource(), equalTo(source));
         assertThat(configuration.getMapper(), equalTo(mapper));
@@ -55,21 +50,20 @@ class ConfigurationBuilderTest
         assertThat(configuration.getPrecedence(), equalTo(precedence));
         assertThat(configuration.isOptional(), equalTo(optional));
         assertThat(configuration.isLazy(), equalTo(lazy));
-        assertThat(configuration.getNullValueProvider(), equalTo(nullValueProvider));
     }
 
     @Test
     void constructor_noArgument_emptyBuilder()
     {
         ConfigurationBuilder<Object> builder = new ConfigurationBuilder<>();
-        assertConfigurationMetadata(builder, null, null, null, 0, false, false, null);
+        assertConfigurationMetadata(builder, null, null, null, 0, false, false);
     }
 
     @Test
     void constructor_null_emptyBuilder()
     {
         ConfigurationBuilder<Object> builder = new ConfigurationBuilder<>(null);
-        assertConfigurationMetadata(builder, null, null, null, 0, false, false, null);
+        assertConfigurationMetadata(builder, null, null, null, 0, false, false);
     }
 
     @Test
@@ -81,10 +75,9 @@ class ConfigurationBuilderTest
         when(configuration.getPrecedence()).thenReturn(999);
         when(configuration.isOptional()).thenReturn(true);
         when(configuration.isLazy()).thenReturn(true);
-        when(configuration.getNullValueProvider()).thenReturn(nullValueProvider);
 
         ConfigurationBuilder<Object> builder = new ConfigurationBuilder<>(configuration);
-        assertConfigurationMetadata(builder, source, mapper, NAMESPACE1, 999, true, true, nullValueProvider);
+        assertConfigurationMetadata(builder, source, mapper, NAMESPACE1, 999, true, true);
     }
 
     @Test
@@ -116,8 +109,7 @@ class ConfigurationBuilderTest
 
         Configuration<Object> newConfiguration = builder.build();
 
-        assertConfigurationMetadata(newConfiguration, source, mapper, "", 0, false, false,
-                StandardNullValueProvider.instance());
+        assertConfigurationMetadata(newConfiguration, source, mapper, "", 0, false, false);
         assertThat(newConfiguration.getBean().get(), equalTo(OBJECT1));
     }
 
@@ -133,12 +125,11 @@ class ConfigurationBuilderTest
                 .namespace(NAMESPACE1)
                 .precedence(777)
                 .optional()
-                .lazy()
-                .nullValueProvider(nullValueProvider);
+                .lazy();
 
         Configuration<Object> newConfiguration = builder.build();
 
-        assertConfigurationMetadata(newConfiguration, source, mapper, NAMESPACE1, 777, true, true, nullValueProvider);
+        assertConfigurationMetadata(newConfiguration, source, mapper, NAMESPACE1, 777, true, true);
         assertThat(newConfiguration.getBean().get(), equalTo(OBJECT1));
     }
 

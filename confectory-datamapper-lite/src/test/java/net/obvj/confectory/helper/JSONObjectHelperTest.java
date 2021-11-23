@@ -64,21 +64,21 @@ class JSONObjectHelperTest
     }
 
     @Test
-    void getBoolean_unknownKey_false()
+    void getBoolean_unknownKey_null()
     {
-        assertThat(HELPER.getBoolean(PATH_UNKNOWN), equalTo(false));
+        assertThat(HELPER.getBoolean(PATH_UNKNOWN), equalTo(null));
     }
 
     @Test
-    void getInt_existingKey_success()
+    void getInteger_existingKey_success()
     {
-        assertThat(HELPER.getInt("$.intValue"), equalTo(9));
+        assertThat(HELPER.getInteger("$.intValue"), equalTo(9));
     }
 
     @Test
-    void getInt_unknownKey_zero()
+    void getInteger_unknownKey_null()
     {
-        assertThat(HELPER.getInt(PATH_UNKNOWN), equalTo(0));
+        assertThat(HELPER.getInteger(PATH_UNKNOWN), equalTo(null));
     }
 
     @Test
@@ -88,9 +88,9 @@ class JSONObjectHelperTest
     }
 
     @Test
-    void getLong_unknownKey_zero()
+    void getLong_unknownKey_null()
     {
-        assertThat(HELPER.getLong(PATH_UNKNOWN), equalTo(0L));
+        assertThat(HELPER.getLong(PATH_UNKNOWN), equalTo(null));
     }
 
     @Test
@@ -107,21 +107,42 @@ class JSONObjectHelperTest
     }
 
     @Test
-    void getDouble_unknownKey_zero()
+    void getDouble_unknownKey_null()
     {
-        assertThat(HELPER.getDouble(PATH_UNKNOWN), equalTo(0.0));
+        assertThat(HELPER.getDouble(PATH_UNKNOWN), equalTo(null));
     }
 
     @Test
-    void getSring_existingKey_success()
+    void getMandatoryDouble_existingKeyAndSingleton_success()
+    {
+        assertThat(HELPER.getMandatoryDouble("$.store.books[?(@.title=='The Gruffalo')].price"), equalTo(8.99));
+    }
+
+    @Test
+    void getMandatoryDouble_existingKeyAndMultipleElements_configurationException()
+    {
+        assertThat(() -> HELPER.getMandatoryDouble("$.store.books[?(@.price>5)].price"),
+                throwsException(ConfigurationException.class).withMessageContaining("Multiple values found for path"));
+    }
+
+    @Test
+    void getMandatoryDouble_unknownKey_configurationException()
+    {
+        assertThat(() -> HELPER.getMandatoryDouble(PATH_UNKNOWN),
+                throwsException(ConfigurationException.class).withMessageContaining("No value found", PATH_UNKNOWN));
+
+    }
+
+    @Test
+    void getString_existingKey_success()
     {
         assertThat(HELPER.getString("$.store.attributes.color"), equalTo("yellow"));
     }
 
     @Test
-    void getSring_unknownKey_empty()
+    void getString_unknownKey_null()
     {
-        assertThat(HELPER.getString(PATH_UNKNOWN), equalTo(""));
+        assertThat(HELPER.getString(PATH_UNKNOWN), equalTo(null));
     }
 
 }

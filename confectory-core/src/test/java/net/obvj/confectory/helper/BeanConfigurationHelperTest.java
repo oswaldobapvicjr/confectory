@@ -38,9 +38,9 @@ class BeanConfigurationHelperTest
     }
 
     @Test
-    void getInt_existingKey_zero()
+    void getInteger_existingKey_zero()
     {
-        assertThat(() -> HELPER.getInt(KEY), CONFIGURATION_EXCEPTION_TYPE_NOT_SUPPORTED);
+        assertThat(() -> HELPER.getInteger(KEY), CONFIGURATION_EXCEPTION_TYPE_NOT_SUPPORTED);
     }
 
     @Test
@@ -56,13 +56,13 @@ class BeanConfigurationHelperTest
     }
 
     @Test
-    void getSring_existingKey_empty()
+    void getString_existingKey_empty()
     {
         assertThat(() -> HELPER.getString(KEY), CONFIGURATION_EXCEPTION_TYPE_NOT_SUPPORTED);
     }
 
     @Test
-    void getMandatorySring_existingKey_empty()
+    void getMandatoryString_existingKey_empty()
     {
         assertThat(() -> HELPER.getMandatoryString(KEY), CONFIGURATION_EXCEPTION_TYPE_NOT_SUPPORTED);
     }

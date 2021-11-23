@@ -16,7 +16,6 @@
 
 package net.obvj.confectory;
 
-import net.obvj.confectory.helper.nullvalue.NullValueProvider;
 import net.obvj.confectory.mapper.Mapper;
 import net.obvj.confectory.source.Source;
 
@@ -85,10 +84,4 @@ public interface ConfigurationMetadataRetriever<T>
      */
     boolean isLazy();
 
-    /**
-     * Returns the {@code NullValueProvider} associated with this {@code Configuration}.
-     *
-     * @return a {@link NullValueProvider} instance
-     */
-    NullValueProvider getNullValueProvider();
 }

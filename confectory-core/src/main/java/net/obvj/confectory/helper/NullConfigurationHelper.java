@@ -18,6 +18,8 @@ package net.obvj.confectory.helper;
 
 import java.util.Optional;
 
+import net.obvj.confectory.ConfigurationException;
+
 /**
  * A "no-op" Configuration Helper object for situations where an optional
  * {@code Configuration} object is not available.
@@ -27,7 +29,7 @@ import java.util.Optional;
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 0.1.0
  */
-public class NullConfigurationHelper<T> extends AbstractBasicConfigurationHelper<T>
+public class NullConfigurationHelper<T> implements ConfigurationHelper<T>
 {
 
     /**
@@ -40,78 +42,98 @@ public class NullConfigurationHelper<T> extends AbstractBasicConfigurationHelper
     }
 
     /**
-     * @return the smart-null value for {@code boolean}, always
+     * @return {@code null}, always <b>(not to be interpreted as {@code false})</b>
      */
     @Override
-    public boolean getBoolean(String key)
+    public Boolean getBoolean(String key)
     {
-        return nullValueProvider.getBooleanValue();
+        return null;
     }
 
     /**
-     * @return the smart-null value for {@code int}, always
+     * @return {@code null}, always
      */
     @Override
-    public int getInt(String key)
+    public Integer getInteger(String key)
     {
-        return nullValueProvider.getIntValue();
+        return null;
     }
 
     /**
-     * @return the smart-null value for {@code long}, always
+     * @return {@code null}, always
      */
     @Override
-    public long getLong(String key)
+    public Long getLong(String key)
     {
-        return nullValueProvider.getLongValue();
+        return null;
     }
 
     /**
-     * @return the smart-null value for {@code double}, always
+     * @return {@code null}, always
      */
     @Override
-    public double getDouble(String key)
+    public Double getDouble(String key)
     {
-        return nullValueProvider.getDoubleValue();
+        return null;
     }
 
     /**
-     * @return the smart-null value for {@code String}, always
+     * @return {@code null}, always
      */
     @Override
     public String getString(String key)
     {
-        return nullValueProvider.getStringValue();
+        return null;
     }
 
+    /**
+     * @throws ConfigurationException always
+     */
     @Override
-    public boolean getMandatoryBoolean(String key)
+    public Boolean getMandatoryBoolean(String key)
     {
-        return getBoolean(key);
+        throw newConfigurationException();
     }
 
+    /**
+     * @throws ConfigurationException always
+     */
     @Override
-    public int getMandatoryInt(String key)
+    public Integer getMandatoryInteger(String key)
     {
-        return getInt(key);
+        throw newConfigurationException();
     }
 
+    /**
+     * @throws ConfigurationException always
+     */
     @Override
-    public long getMandatoryLong(String key)
+    public Long getMandatoryLong(String key)
     {
-        return getLong(key);
+        throw newConfigurationException();
     }
 
+    /**
+     * @throws ConfigurationException always
+     */
     @Override
-    public double getMandatoryDouble(String key)
+    public Double getMandatoryDouble(String key)
     {
-        return getDouble(key);
+        throw newConfigurationException();
     }
 
+    /**
+     * @throws ConfigurationException always
+     */
     @Override
     public String getMandatoryString(String key)
     {
-        return getString(key);
+        throw newConfigurationException();
+    }
+
+    private ConfigurationException newConfigurationException()
+    {
+        return new ConfigurationException("Not found");
     }
 
 }

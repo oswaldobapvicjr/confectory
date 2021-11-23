@@ -17,7 +17,6 @@
 package net.obvj.confectory.helper;
 
 import java.util.Optional;
-import java.util.function.*;
 
 import com.jayway.jsonpath.*;
 import com.jayway.jsonpath.internal.filter.ValueNodes.JsonNode;
@@ -33,7 +32,7 @@ import net.obvj.confectory.ConfigurationException;
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 0.3.0
  */
-public class GenericJsonConfigurationHelper<J> extends AbstractBasicConfigurationHelper<J>
+public class GenericJsonConfigurationHelper<J> implements ConfigurationHelper<J>
 {
     protected final J json;
     protected final JsonProvider jsonProvider;
@@ -71,12 +70,13 @@ public class GenericJsonConfigurationHelper<J> extends AbstractBasicConfiguratio
     }
 
     /**
-     * Returns the {@code boolean} value associated with the specified {@code jsonPath} in the
-     * {@code JsonNode} in context, provided that the expression returns a single element that
-     * can be mapped to {@code boolean}.
+     * Returns the {@code Boolean} object associated with the specified {@code jsonPath} in
+     * the {@code JsonNode} in context, provided that the expression returns a single element
+     * that can be mapped to {@code boolean}.
      *
      * @param jsonPath the path to read
-     * @return the {@code boolean} value associated with the specified {@code jsonPath}
+     * @return the {@code Boolean} object associated with the specified {@code jsonPath};
+     *         {@code null} if not found
      *
      * @throws InvalidPathException   if the {@code jsonPath} expression is not valid
      * @throws ConfigurationException if the {@code jsonPath} expression returns more than a
@@ -85,18 +85,19 @@ public class GenericJsonConfigurationHelper<J> extends AbstractBasicConfiguratio
      *                                {@code boolean}
      */
     @Override
-    public boolean getBoolean(String jsonPath)
+    public Boolean getBoolean(String jsonPath)
     {
-        return getValue(jsonPath, boolean.class, nullValueProvider::getBooleanValue);
+        return getValue(jsonPath, Boolean.class, false);
     }
 
     /**
-     * Returns the {@code boolean} value associated with the specified {@code jsonPath} in the
-     * {@code JsonNode} in context, provided that the expression returns a single element that
-     * can be mapped to {@code boolean}.
+     * Returns the {@code Boolean} object associated with the specified {@code jsonPath} in
+     * the {@code JsonNode} in context, provided that the expression returns a single element
+     * that can be mapped to {@code boolean}.
      *
      * @param jsonPath the path to read
-     * @return the {@code boolean} value associated with the specified {@code jsonPath}
+     * @return the {@code Boolean} object associated with the specified {@code jsonPath};
+     *         never {@code null}
      *
      * @throws InvalidPathException   if the {@code jsonPath} expression is not valid
      * @throws ConfigurationException if not value found or the {@code jsonPath} expression
@@ -106,18 +107,19 @@ public class GenericJsonConfigurationHelper<J> extends AbstractBasicConfiguratio
      * @since 0.4.0
      */
     @Override
-    public boolean getMandatoryBoolean(String jsonPath)
+    public Boolean getMandatoryBoolean(String jsonPath)
     {
-        return getValue(jsonPath, boolean.class);
+        return getValue(jsonPath, Boolean.class);
     }
 
     /**
-     * Returns the {@code int} value associated with the specified {@code jsonPath} in the
-     * {@code JsonNode} in context, provided that the expression returns a single element that
-     * can be mapped to {@code int}.
+     * Returns the {@code Integer} object associated with the specified {@code jsonPath} in
+     * the {@code JsonNode} in context, provided that the expression returns a single element
+     * that can be mapped to {@code int}.
      *
      * @param jsonPath the path to read
-     * @return the {@code int} value associated with the specified {@code jsonPath}
+     * @return the {@code Integer} object associated with the specified {@code jsonPath};
+     *         {@code null} if not found
      *
      * @throws InvalidPathException   if the {@code jsonPath} expression is not valid
      * @throws ConfigurationException if the {@code jsonPath} expression returns more than a
@@ -126,18 +128,19 @@ public class GenericJsonConfigurationHelper<J> extends AbstractBasicConfiguratio
      *                                {@code int}
      */
     @Override
-    public int getInt(String jsonPath)
+    public Integer getInteger(String jsonPath)
     {
-        return getValue(jsonPath, int.class, nullValueProvider::getIntValue);
+        return getValue(jsonPath, Integer.class, false);
     }
 
     /**
-     * Returns the {@code int} value associated with the specified {@code jsonPath} in the
-     * {@code JsonNode} in context, provided that the expression returns a single element that
-     * can be mapped to {@code int}.
+     * Returns the {@code Integer} object associated with the specified {@code jsonPath} in
+     * the {@code JsonNode} in context, provided that the expression returns a single element
+     * that can be mapped to {@code int}.
      *
      * @param jsonPath the path to read
-     * @return the {@code int} value associated with the specified {@code jsonPath}
+     * @return the {@code Integer} object associated with the specified {@code jsonPath};
+     *         never {@code null}
      *
      * @throws InvalidPathException   if the {@code jsonPath} expression is not valid
      * @throws ConfigurationException if not value found or the {@code jsonPath} expression
@@ -147,18 +150,19 @@ public class GenericJsonConfigurationHelper<J> extends AbstractBasicConfiguratio
      * @since 0.4.0
      */
     @Override
-    public int getMandatoryInt(String jsonPath)
+    public Integer getMandatoryInteger(String jsonPath)
     {
-        return getValue(jsonPath, int.class);
+        return getValue(jsonPath, Integer.class);
     }
 
     /**
-     * Returns the {@code long} value associated with the specified {@code jsonPath} in the
+     * Returns the {@code Long} object associated with the specified {@code jsonPath} in the
      * {@code JsonNode} in context, provided that the expression returns a single element that
      * can be mapped to {@code long}.
      *
      * @param jsonPath the path to read
-     * @return the {@code long} value associated with the specified {@code jsonPath}
+     * @return the {@code Long} object associated with the specified {@code jsonPath};
+     *         {@code null} if not found
      *
      * @throws InvalidPathException   if the {@code jsonPath} expression is not valid
      * @throws ConfigurationException if the {@code jsonPath} expression returns more than a
@@ -167,18 +171,19 @@ public class GenericJsonConfigurationHelper<J> extends AbstractBasicConfiguratio
      *                                {@code long}
      */
     @Override
-    public long getLong(String jsonPath)
+    public Long getLong(String jsonPath)
     {
-        return getValue(jsonPath, long.class, nullValueProvider::getLongValue);
+        return getValue(jsonPath, Long.class, false);
     }
 
     /**
-     * Returns the {@code long} value associated with the specified {@code jsonPath} in the
+     * Returns the {@code Long} object associated with the specified {@code jsonPath} in the
      * {@code JsonNode} in context, provided that the expression returns a single element that
      * can be mapped to {@code long}.
      *
      * @param jsonPath the path to read
-     * @return the {@code long} value associated with the specified {@code jsonPath}
+     * @return the {@code Long} object associated with the specified {@code jsonPath}; never
+     *         {@code null}
      *
      * @throws InvalidPathException   if the {@code jsonPath} expression is not valid
      * @throws ConfigurationException if not value found or the {@code jsonPath} expression
@@ -188,18 +193,19 @@ public class GenericJsonConfigurationHelper<J> extends AbstractBasicConfiguratio
      * @since 0.4.0
      */
     @Override
-    public long getMandatoryLong(String jsonPath)
+    public Long getMandatoryLong(String jsonPath)
     {
-        return getValue(jsonPath, long.class);
+        return getValue(jsonPath, Long.class);
     }
 
     /**
-     * Returns the {@code double} value associated with the specified {@code jsonPath} in the
+     * Returns the {@code Double} object associated with the specified {@code jsonPath} in the
      * {@code JsonNode} in context, provided that the expression returns a single element that
      * can be mapped to {@code double}.
      *
      * @param jsonPath the path to read
-     * @return the {@code double} value associated with the specified {@code jsonPath}
+     * @return the {@code Double} object associated with the specified {@code jsonPath};
+     *         {@code null} if not found
      *
      * @throws InvalidPathException   if the {@code jsonPath} expression is not valid
      * @throws ConfigurationException if the {@code jsonPath} expression returns more than a
@@ -208,18 +214,19 @@ public class GenericJsonConfigurationHelper<J> extends AbstractBasicConfiguratio
      *                                {@code double}
      */
     @Override
-    public double getDouble(String jsonPath)
+    public Double getDouble(String jsonPath)
     {
-        return getValue(jsonPath, double.class, nullValueProvider::getDoubleValue);
+        return getValue(jsonPath, Double.class, false);
     }
 
     /**
-     * Returns the {@code double} value associated with the specified {@code jsonPath} in the
+     * Returns the {@code Double} object associated with the specified {@code jsonPath} in the
      * {@code JsonNode} in context, provided that the expression returns a single element that
      * can be mapped to {@code double}.
      *
      * @param jsonPath the path to read
-     * @return the {@code double} value associated with the specified {@code jsonPath}
+     * @return the {@code Double} object associated with the specified {@code jsonPath}; never
+     *         {@code null}
      *
      * @throws InvalidPathException   if the {@code jsonPath} expression is not valid
      * @throws ConfigurationException if not value found or the {@code jsonPath} expression
@@ -229,17 +236,18 @@ public class GenericJsonConfigurationHelper<J> extends AbstractBasicConfiguratio
      * @since 0.4.0
      */
     @Override
-    public double getMandatoryDouble(String jsonPath)
+    public Double getMandatoryDouble(String jsonPath)
     {
-        return getValue(jsonPath, double.class);
+        return getValue(jsonPath, Double.class);
     }
 
     /**
-     * Returns the {@code String} value associated with the specified {@code jsonPath} in the
+     * Returns the {@code String} object associated with the specified {@code jsonPath} in the
      * {@code JsonNode} in context, provided that the expression returns a single element.
      *
      * @param jsonPath the path to read
-     * @return the {@code String} value associated with the specified {@code jsonPath}
+     * @return the {@code String} object associated with the specified {@code jsonPath};
+     *         {@code null} if not found
      *
      * @throws InvalidPathException   if the {@code jsonPath} expression is not valid
      * @throws ConfigurationException if the {@code jsonPath} expression returns more than a
@@ -248,15 +256,15 @@ public class GenericJsonConfigurationHelper<J> extends AbstractBasicConfiguratio
     @Override
     public String getString(String jsonPath)
     {
-        return getValue(jsonPath, String.class, nullValueProvider::getStringValue);
+        return getValue(jsonPath, String.class, false);
     }
 
     /**
-     * Returns the {@code String} value associated with the specified {@code jsonPath} in the
+     * Returns the {@code String} object associated with the specified {@code jsonPath} in the
      * {@code JsonNode} in context, provided that the expression returns a single element.
      *
      * @param jsonPath the path to read
-     * @return the {@code String} value associated with the specified {@code jsonPath}
+     * @return the {@code String} value associated with the specified {@code jsonPath}; never {@code null}
      *
      * @throws InvalidPathException   if the {@code jsonPath} expression is not valid
      * @throws ConfigurationException if not value found or the {@code jsonPath} expression
@@ -282,13 +290,13 @@ public class GenericJsonConfigurationHelper<J> extends AbstractBasicConfiguratio
      * @throws InvalidPathException   if the {@code jsonPath} expression is not valid
      * @throws ConfigurationException if not value found or the {@code jsonPath} expression
      *                                returns more than a single element
-     * @throws ClassCastException     if the {@code jsonPath} result cannot be assigned to
-     *                                {@code double}
+     * @throws ClassCastException     if the {@code jsonPath} result cannot be assigned to the
+     *                                specified {@code targetType}
      * @since 0.4.0
      */
     protected <T> T getValue(String jsonPath, Class<T> targetType)
     {
-        return getValue(jsonPath, targetType, null);
+        return getValue(jsonPath, targetType, true);
     }
 
     /**
@@ -296,40 +304,34 @@ public class GenericJsonConfigurationHelper<J> extends AbstractBasicConfiguratio
      * in context, provided that the expression returns a single element that can be mapped to
      * the specified class type.
      *
-     * @param jsonPath        the path to read
-     * @param targetType      the type the expression result should be mapped to
-     * @param defaultSupplier the supplier to be used if JSONPath not found
+     * @param jsonPath   the path to read
+     * @param targetType the type the expression result should be mapped to
      *
      * @return the mapped value associated with the specified {@code jsonPath}
      *
      * @throws InvalidPathException   if the {@code jsonPath} expression is not valid
      * @throws ConfigurationException if the {@code jsonPath} expression returns more than a
      *                                single element
-     * @throws ClassCastException     if the {@code jsonPath} result cannot be assigned to
-     *                                {@code double}
+     * @throws ClassCastException     if the {@code jsonPath} result cannot be assigned to the
+     *                                specified {@code targetType}
      */
-    protected <T> T getValue(String jsonPath, Class<T> targetType, Supplier<T> defaultSupplier)
+    protected <T> T getValue(String jsonPath, Class<T> targetType, boolean mandatory)
     {
         Object result = documentContext.read(jsonPath);
         switch (jsonProvider.length(result))
         {
         case 0:
-            return applyDefault(defaultSupplier, jsonPath);
+            if (mandatory)
+            {
+                throw new ConfigurationException("No value found for path: %s", jsonPath);
+            }
+            return null;
         case 1:
             Object element = jsonProvider.getArrayIndex(result, 0);
             return mappingProvider.map(element, targetType, jsonPathConfiguration);
         default:
             throw new ConfigurationException("Multiple values found for path: %s", jsonPath);
         }
-    }
-
-    private <T> T applyDefault(Supplier<T> defaultSupplier, String jsonPath)
-    {
-        if (defaultSupplier != null)
-        {
-            return defaultSupplier.get();
-        }
-        throw new ConfigurationException("No value found for path: %s", jsonPath);
     }
 
 }

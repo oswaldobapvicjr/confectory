@@ -18,10 +18,8 @@ package net.obvj.confectory;
 
 import java.util.Objects;
 
-import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import net.obvj.confectory.helper.nullvalue.NullValueProvider;
 import net.obvj.confectory.mapper.Mapper;
 import net.obvj.confectory.source.DynamicSource;
 import net.obvj.confectory.source.Source;
@@ -61,7 +59,6 @@ public class ConfigurationBuilder<T> implements ConfigurationMetadataRetriever<T
     private Mapper<T> mapper;
     private boolean optional;
     private boolean lazy;
-    private NullValueProvider nullValueProvider;
 
     /**
      * Creates a new, empty {@code ConfigurationBuilder}.
@@ -88,7 +85,6 @@ public class ConfigurationBuilder<T> implements ConfigurationMetadataRetriever<T
             mapper = sourceConfiguration.getMapper();
             optional = sourceConfiguration.isOptional();
             lazy = sourceConfiguration.isLazy();
-            nullValueProvider = sourceConfiguration.getNullValueProvider();
         }
     }
 
@@ -224,22 +220,6 @@ public class ConfigurationBuilder<T> implements ConfigurationMetadataRetriever<T
     }
 
     /**
-     * Defines an optional {@link NullValueProvider} to be used when keys are not found.
-     * <p>
-     * <strong>Note:</strong> This setting is <strong>optional</strong> and a default object
-     * will be applied if no custom provider is specified.
-     *
-     *
-     * @param provider the provider to set; {@code null} is allowed
-     * @return a reference to this same {@code ConfigurationBuilder} for chained calls
-     */
-    public ConfigurationBuilder<T> nullValueProvider(NullValueProvider provider)
-    {
-        this.nullValueProvider = provider;
-        return this;
-    }
-
-    /**
      * Builds the target {@code Configuration}.
      *
      * @return a new {@link Configuration} object
@@ -254,9 +234,6 @@ public class ConfigurationBuilder<T> implements ConfigurationMetadataRetriever<T
         Objects.requireNonNull(mapper, "The configuration mapper must not be null");
 
         namespace = StringUtils.defaultString(namespace);
-
-        nullValueProvider = ObjectUtils.defaultIfNull(nullValueProvider,
-                Confectory.settings().getDefaultNullValueProvider());
 
         return new Configuration<>(this);
     }
@@ -295,12 +272,6 @@ public class ConfigurationBuilder<T> implements ConfigurationMetadataRetriever<T
     public boolean isLazy()
     {
         return lazy;
-    }
-
-    @Override
-    public NullValueProvider getNullValueProvider()
-    {
-        return nullValueProvider;
     }
 
 }

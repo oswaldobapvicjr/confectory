@@ -43,8 +43,7 @@ public class PropertiesConfigurationHelper extends BasicConfigurationHelper<Prop
     @Override
     public String getString(String key)
     {
-        String value = getValue(key);
-        return value == null ? nullValueProvider.getStringValue() : value;
+        return getValue(key);
     }
 
     @Override

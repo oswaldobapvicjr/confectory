@@ -38,124 +38,142 @@ public interface ConfigurationDataRetriever<T>
     Optional<T> getBean();
 
     /**
-     * Returns the {@code boolean} value associated with the specified {@code key}.
+     * Returns the {@code Boolean} object associated with the specified {@code key}.
      *
-     * @param key the property key (some implementations may also accept a path expression,
-     *            e.g: {@code JSONPath})
+     * @param key the object key (some implementations may also accept a path expression, e.g:
+     *            {@code JSONPath})
      *
-     * @return the {@code boolean} value associated with the specified {@code key}
+     * @return the {@code Boolean} object associated with the specified {@code key};
+     *         {@code null} if not found
      */
-    boolean getBoolean(String key);
+    Boolean getBoolean(String key);
 
     /**
-     * Returns the {@code int} value associated with the specified {@code key}.
+     * Returns the {@code Integer} object associated with the specified {@code key}.
      *
-     * @param key the property key (some implementations may also accept a path expression,
-     *            e.g: {@code JSONPath}
+     * @param key the object key (some implementations may also accept a path expression, e.g:
+     *            {@code JSONPath}
      *
-     * @return the {@code int} value associated with the specified {@code key}
+     * @return the {@code Integer} object associated with the specified {@code key};
+     *         {@code null} if not found
+     *
      * @throws NumberFormatException if the value is not a parsable {@code int}.
      */
-    int getInt(String key);
+    Integer getInteger(String key);
 
     /**
-     * Returns the {@code long} value associated with the specified {@code key}.
+     * Returns the {@code Long} object associated with the specified {@code key}.
      *
-     * @param key the property key (some implementations may also accept a path expression,
-     *            e.g: {@code JSONPath}
+     * @param key the object key (some implementations may also accept a path expression, e.g:
+     *            {@code JSONPath}
      *
-     * @return the {@code long} value associated with the specified {@code key}
+     * @return the {@code Long} object associated with the specified {@code key}; {@code null}
+     *         if not found
+     *
      * @throws NumberFormatException if the value is not a parsable {@code long}.
      */
-    long getLong(String key);
+    Long getLong(String key);
 
     /**
-     * Returns the {@code double} value associated with the specified {@code key}.
+     * Returns the {@code Double} object associated with the specified {@code key}.
      *
-     * @param key the property key (some implementations may also accept a path expression,
-     *            e.g: {@code JSONPath}
+     * @param key the object key (some implementations may also accept a path expression, e.g:
+     *            {@code JSONPath}
      *
-     * @return the {@code double} value associated with the specified {@code key}
+     * @return the {@code Double} object associated with the specified {@code key};
+     *         {@code null} if not found
+     *
      * @throws NumberFormatException if the value is not a parsable {@code double}.
      */
-    double getDouble(String key);
+    Double getDouble(String key);
 
     /**
-     * Returns the {@code String} value associated with the specified {@code key}.
+     * Returns the {@code String} object associated with the specified {@code key}.
      *
-     * @param key the property key (some implementations may also accept a path expression,
-     *            e.g: {@code JSONPath})
+     * @param key the object key (some implementations may also accept a path expression, e.g:
+     *            {@code JSONPath})
      *
-     * @return the {@code String} value associated with the specified {@code key}
+     * @return the {@code String} object associated with the specified {@code key};
+     *         {@code null} if not found
      */
     String getString(String key);
 
     /**
-     * Returns the {@code boolean} value associated with the specified {@code key}.
+     * Returns the {@code Boolean} object associated with the specified {@code key}, throwing
+     * an exception if not found.
      *
-     * @param key the property key (some implementations may also accept a path expression,
-     *            e.g: {@code JSONPath})
+     * @param key the object key (some implementations may also accept a path expression, e.g:
+     *            {@code JSONPath})
      *
-     * @return the {@code boolean} value associated with the specified {@code key}
+     * @return the {@code Boolean} value associated with the specified {@code key}; never
+     *         {@code null}
      *
      * @throws ConfigurationException if the specified key (or path) is not found.
      *
      * @since 0.4.0
      */
-    boolean getMandatoryBoolean(String key);
+    Boolean getMandatoryBoolean(String key);
 
     /**
-     * Returns the {@code int} value associated with the specified {@code key}.
+     * Returns the {@code Integer} object associated with the specified {@code key}, throwing
+     * an exception if not found.
      *
-     * @param key the property key (some implementations may also accept a path expression,
-     *            e.g: {@code JSONPath})
+     * @param key the object key (some implementations may also accept a path expression, e.g:
+     *            {@code JSONPath})
      *
-     * @return the {@code int} value associated with the specified {@code key}
+     * @return the {@code Integer} object associated with the specified {@code key}; never
+     *         {@code null}
      *
      * @throws ConfigurationException if the specified key (or path) is not found.
      * @throws NumberFormatException  if the value is not a parsable {@code int}.
      *
      * @since 0.4.0
      */
-    int getMandatoryInt(String key);
+    Integer getMandatoryInteger(String key);
 
     /**
-     * Returns the {@code long} value associated with the specified {@code key}.
+     * Returns the {@code Long} object associated with the specified {@code key}, throwing an
+     * exception if not found.
      *
-     * @param key the property key (some implementations may also accept a path expression,
-     *            e.g: {@code JSONPath})
+     * @param key the object key (some implementations may also accept a path expression, e.g:
+     *            {@code JSONPath})
      *
-     * @return the {@code long} value associated with the specified {@code key}
+     * @return the {@code Long} object associated with the specified {@code key}; never
+     *         {@code null}
      *
      * @throws ConfigurationException if the specified key (or path) is not found.
      * @throws NumberFormatException  if the value is not a parsable {@code long}.
      *
      * @since 0.4.0
      */
-    long getMandatoryLong(String key);
+    Long getMandatoryLong(String key);
 
     /**
-     * Returns the {@code double} value associated with the specified {@code key}.
+     * Returns the {@code Double} object associated with the specified {@code key}, throwing
+     * an exception if not found.
      *
-     * @param key the property key (some implementations may also accept a path expression,
-     *            e.g: {@code JSONPath})
+     * @param key the object key (some implementations may also accept a path expression, e.g:
+     *            {@code JSONPath})
      *
-     * @return the {@code double} value associated with the specified {@code key}
+     * @return the {@code Double} object associated with the specified {@code key}; never
+     *         {@code null}
      *
      * @throws ConfigurationException if the specified key (or path) is not found.
      * @throws NumberFormatException  if the value is not a parsable {@code double}.
      *
      * @since 0.4.0
      */
-    double getMandatoryDouble(String key);
+    Double getMandatoryDouble(String key);
 
     /**
-     * Returns the {@code String} value associated with the specified {@code key}.
+     * Returns the {@code String} object associated with the specified {@code key}, throwing
+     * an exception if not found.
      *
-     * @param key the property key (some implementations may also accept a path expression,
-     *            e.g: {@code JSONPath})
+     * @param key the object key (some implementations may also accept a path expression, e.g:
+     *            {@code JSONPath})
      *
-     * @return the {@code String} value associated with the specified {@code key}
+     * @return the {@code String} object associated with the specified {@code key}; never
+     *         {@code null}
      *
      * @throws ConfigurationException if the specified key (or path) is not found.
      *

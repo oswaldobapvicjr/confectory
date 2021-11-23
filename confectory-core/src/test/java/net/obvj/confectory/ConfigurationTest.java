@@ -109,9 +109,9 @@ class ConfigurationTest
     }
 
     @Test
-    void getString_invalidKey_defaultValue()
+    void getString_invalidKey_null()
     {
-        assertThat(CONFIG_PROPERTIES_1.getString(UNKNOWN), equalTo(""));
+        assertThat(CONFIG_PROPERTIES_1.getString(UNKNOWN), equalTo(null));
     }
 
     @Test
@@ -133,9 +133,9 @@ class ConfigurationTest
     }
 
     @Test
-    void getBoolean_invalidKey_defaultValue()
+    void getBoolean_invalidKey_null()
     {
-        assertThat(CONFIG_PROPERTIES_1.getBoolean(UNKNOWN), equalTo(false));
+        assertThat(CONFIG_PROPERTIES_1.getBoolean(UNKNOWN), equalTo(null));
     }
 
     @Test
@@ -151,27 +151,27 @@ class ConfigurationTest
     }
 
     @Test
-    void getInt_validKey_value()
+    void getInteger_validKey_value()
     {
-        assertThat(CONFIG_PROPERTIES_1.getInt("myInt"), equalTo(9));
+        assertThat(CONFIG_PROPERTIES_1.getInteger("myInt"), equalTo(9));
     }
 
     @Test
-    void getInt_invalidKey_defaultValue()
+    void getInteger_invalidKey_null()
     {
-        assertThat(CONFIG_PROPERTIES_1.getInt(UNKNOWN), equalTo(0));
+        assertThat(CONFIG_PROPERTIES_1.getInteger(UNKNOWN), equalTo(null));
     }
 
     @Test
-    void getMandatoryInt_validKey_value()
+    void getMandatoryInteger_validKey_value()
     {
-        assertThat(CONFIG_PROPERTIES_1.getMandatoryInt("myInt"), equalTo(9));
+        assertThat(CONFIG_PROPERTIES_1.getMandatoryInteger("myInt"), equalTo(9));
     }
 
     @Test
-    void getMandatoryInt_invalidKey_configurationException()
+    void getMandatoryInteger_invalidKey_configurationException()
     {
-        assertThat(() -> CONFIG_PROPERTIES_1.getMandatoryInt(UNKNOWN), CONFIGURATION_EXCEPTION_NO_VALUE_FOUND);
+        assertThat(() -> CONFIG_PROPERTIES_1.getMandatoryInteger(UNKNOWN), CONFIGURATION_EXCEPTION_NO_VALUE_FOUND);
     }
 
     @Test
@@ -181,9 +181,9 @@ class ConfigurationTest
     }
 
     @Test
-    void getLong_invalidKey_defaultValue()
+    void getLong_invalidKey_null()
     {
-        assertThat(CONFIG_PROPERTIES_1.getLong(UNKNOWN), equalTo(0L));
+        assertThat(CONFIG_PROPERTIES_1.getLong(UNKNOWN), equalTo(null));
     }
 
     @Test
@@ -205,9 +205,9 @@ class ConfigurationTest
     }
 
     @Test
-    void getDouble_invalidKey_defaultValue()
+    void getDouble_invalidKey_null()
     {
-        assertThat(CONFIG_PROPERTIES_1.getDouble(UNKNOWN), equalTo(0.0));
+        assertThat(CONFIG_PROPERTIES_1.getDouble(UNKNOWN), equalTo(null));
     }
 
     @Test
