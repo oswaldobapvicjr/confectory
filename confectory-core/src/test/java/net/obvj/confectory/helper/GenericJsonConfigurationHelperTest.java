@@ -179,13 +179,13 @@ class GenericJsonConfigurationHelperTest
     }
 
     @Test
-    void getMandatorySring_existingKey_success()
+    void getMandatoryString_existingKey_success()
     {
         assertThat(HELPER.getMandatoryString("$.stringValue"), equalTo("test"));
     }
 
     @Test
-    void getMandatorySring_unknownKey_exception()
+    void getMandatoryString_unknownKey_exception()
     {
         assertThat(() -> HELPER.getMandatoryString(PATH_UNKNOWN), EXCEPTION_NO_VALUE_FOUND_PATH_UNKNOWN);
     }

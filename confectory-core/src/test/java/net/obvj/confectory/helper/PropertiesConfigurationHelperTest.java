@@ -44,7 +44,7 @@ class PropertiesConfigurationHelperTest
     }
 
     @Test
-    void getBoolean_existingKey_valie()
+    void getBoolean_existingKey_valid()
     {
         assertThat(HELPER.getBoolean("prop.boolean"), is(true));
     }
@@ -92,13 +92,13 @@ class PropertiesConfigurationHelperTest
     }
 
     @Test
-    void getSring_existingKey_valid()
+    void getString_existingKey_valid()
     {
         assertThat(HELPER.getString("prop.string"), is("stringValue"));
     }
 
     @Test
-    void getSring_unknownKey_null()
+    void getString_unknownKey_null()
     {
         assertNull(HELPER.getString(PROP_UNKNOWN));
     }

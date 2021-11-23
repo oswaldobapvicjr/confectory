@@ -160,12 +160,13 @@ public class ConfigurationContainer
     }
 
     /**
-     * Returns the {@code boolean} value associated with the specified {@code key} in the
+     * Returns the {@code Boolean} object associated with the specified {@code key} in the
      * default namespace (or in all namespaces depending on the {@link DataFetchStrategy} in
      * scope).
      *
-     * @param key the property key
-     * @return the {@code boolean} value associated with the specified {@code key}
+     * @param key the object key (or path)
+     * @return the {@code Boolean} object associated with the specified {@code key};
+     *         {@code null} if not found
      *
      * @see DataFetchStrategy
      */
@@ -175,24 +176,27 @@ public class ConfigurationContainer
     }
 
     /**
-     * Returns the {@code boolean} value associated with the specified {@code key} in the
+     * Returns the {@code Boolean} object associated with the specified {@code key} in the
      * specified {@code namespace}.
      *
      * @param namespace the namespace to be used
-     * @param key       the property key
-     * @return the {@code boolean} value associated with the specified {@code key}
+     * @param key       the object key (or path)
+     * @return the {@code Boolean} object associated with the specified {@code key};
+     *         {@code null} if not found
      */
     public Boolean getBoolean(String namespace, String key)
     {
-        return getProperty(namespace, config -> config.getBoolean(key));
+        return getValue(namespace, config -> config.getBoolean(key));
     }
 
     /**
-     * Returns the {@code int} value associated with the specified {@code key} in the default
-     * namespace (or in all namespaces depending on the {@link DataFetchStrategy} in scope).
+     * Returns the {@code Integer} object associated with the specified {@code key} in the
+     * default namespace (or in all namespaces depending on the {@link DataFetchStrategy} in
+     * scope).
      *
-     * @param key the property key
-     * @return the {@code int} value associated with the specified {@code key}
+     * @param key the object key (or path)
+     * @return the {@code Integer} object associated with the specified {@code key};
+     *         {@code null} if not found
      *
      * @see DataFetchStrategy
      */
@@ -202,24 +206,27 @@ public class ConfigurationContainer
     }
 
     /**
-     * Returns the {@code int} value associated with the specified {@code key} in the
+     * Returns the {@code Integer} object associated with the specified {@code key} in the
      * specified {@code namespace}.
      *
      * @param namespace the namespace to be used
-     * @param key       the property key
-     * @return the {@code int} value associated with the specified {@code key}
+     * @param key       the object key (or path)
+     * @return the {@code Integer} object associated with the specified {@code key};
+     *         {@code null} if not found
      */
     public Integer getInteger(String namespace, String key)
     {
-        return getProperty(namespace, config -> config.getInteger(key));
+        return getValue(namespace, config -> config.getInteger(key));
     }
 
     /**
-     * Returns the {@code long} value associated with the specified {@code key} in the default
-     * namespace (or in all namespaces depending on the {@link DataFetchStrategy} in scope).
+     * Returns the {@code Long} object associated with the specified {@code key} in the
+     * default namespace (or in all namespaces depending on the {@link DataFetchStrategy} in
+     * scope).
      *
-     * @param key the property key
-     * @return the {@code long} value associated with the specified {@code key}
+     * @param key the object key (or path)
+     * @return the {@code Long} object associated with the specified {@code key}; {@code null}
+     *         if not found
      *
      * @see DataFetchStrategy
      */
@@ -229,25 +236,27 @@ public class ConfigurationContainer
     }
 
     /**
-     * Returns the {@code long} value associated with the specified {@code key} in the
+     * Returns the {@code Long} object associated with the specified {@code key} in the
      * specified {@code namespace}.
      *
      * @param namespace the namespace to be used
-     * @param key       the property key
-     * @return the {@code long} value associated with the specified {@code key}
+     * @param key       the object key (or path)
+     * @return the {@code Long} object associated with the specified {@code key}; {@code null}
+     *         if not found
      */
     public Long getLong(String namespace, String key)
     {
-        return getProperty(namespace, config -> config.getLong(key));
+        return getValue(namespace, config -> config.getLong(key));
     }
 
     /**
-     * Returns the {@code double} value associated with the specified {@code key} in the
+     * Returns the {@code Double} object associated with the specified {@code key} in the
      * default namespace (or in all namespaces depending on the {@link DataFetchStrategy} in
      * scope).
      *
-     * @param key the property key
-     * @return the {@code double} value associated with the specified {@code key}
+     * @param key the object key (or path)
+     * @return the {@code Double} value associated with the specified {@code key};
+     *         {@code null} if not found
      *
      * @see DataFetchStrategy
      */
@@ -257,25 +266,27 @@ public class ConfigurationContainer
     }
 
     /**
-     * Returns the {@code double} value associated with the specified {@code key} in the
+     * Returns the {@code Double} object associated with the specified {@code key} in the
      * specified {@code namespace}.
      *
      * @param namespace the namespace to be used
-     * @param key       the property key
-     * @return the {@code double} value associated with the specified {@code key}
+     * @param key       the object key (or path)
+     * @return the {@code Double} object associated with the specified {@code key};
+     *         {@code null} if not found
      */
     public Double getDouble(String namespace, String key)
     {
-        return getProperty(namespace, config -> config.getDouble(key));
+        return getValue(namespace, config -> config.getDouble(key));
     }
 
     /**
-     * Returns the {@code String} value associated with the specified {@code key} in the
+     * Returns the {@code String} object associated with the specified {@code key} in the
      * default namespace (or in all namespaces depending on the {@link DataFetchStrategy} in
      * scope).
      *
-     * @param key the property key
-     * @return the {@code String} value associated with the specified {@code key}
+     * @param key the object key (or path)
+     * @return the {@code String} object associated with the specified {@code key};
+     *         {@code null} if not found
      *
      * @see DataFetchStrategy
      */
@@ -285,30 +296,30 @@ public class ConfigurationContainer
     }
 
     /**
-     * Returns the {@code String} value associated with the specified {@code key} in the
+     * Returns the {@code String} object associated with the specified {@code key} in the
      * specified {@code namespace}.
      *
      * @param namespace the namespace to be used
-     * @param key       the property key
-     * @return the {@code String} value associated with the specified {@code key}
+     * @param key       the object key (or path)
+     * @return the {@code String} object associated with the specified {@code key};
+     *         {@code null} if not found
      */
     public String getString(String namespace, String key)
     {
-        return getProperty(namespace, config -> config.getString(key));
+        return getValue(namespace, config -> config.getString(key));
     }
 
     /**
      * Template method for retrieving properties from the {@code configMap}.
      *
-     * @param <T>          the property return type
+     * @param <T>          the value return type
      * @param namespace    the namespace which property is to be fetched
      * @param mainFunction the main data fetch function; applies a particular method to the
      *                     {@code Configuration} objects in process
      *
-     * @return the value of the property evaluated by the {@code mainFunction}, or
-     *         {@code null} if not found
+     * @return the value evaluated by the {@code mainFunction}, or {@code null} if not found
      */
-    private <T> T getProperty(String namespace, Function<Configuration<?>, T> mainFunction)
+    private <T> T getValue(String namespace, Function<Configuration<?>, T> mainFunction)
     {
         Iterator<Configuration<?>> iterator = getConfigurationStream(namespace).iterator();
         while (iterator.hasNext())

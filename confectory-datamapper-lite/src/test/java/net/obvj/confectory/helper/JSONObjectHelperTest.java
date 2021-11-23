@@ -140,7 +140,7 @@ class JSONObjectHelperTest
     }
 
     @Test
-    void getSring_unknownKey_null()
+    void getString_unknownKey_null()
     {
         assertThat(HELPER.getString(PATH_UNKNOWN), equalTo(null));
     }

@@ -40,7 +40,7 @@ class NullConfigurationHelperTest
     }
 
     @Test
-    void getInt_anyKey_null()
+    void getInteger_anyKey_null()
     {
         assertNull(helper.getInteger(KEY1));
     }
@@ -58,37 +58,37 @@ class NullConfigurationHelperTest
     }
 
     @Test
-    void getSring_anyKey_null()
+    void getString_anyKey_null()
     {
         assertNull(helper.getString(KEY1));
     }
 
     @Test
-    void getMandatoryBoolean_anyKey_null()
+    void getMandatoryBoolean_anyKey_exception()
     {
         assertThat(() -> helper.getMandatoryBoolean(KEY1), EXCEPTION_NOT_FOUND);
     }
 
     @Test
-    void getMandatoryInteger_anyKey_null()
+    void getMandatoryInteger_anyKey_exception()
     {
         assertThat(() -> helper.getMandatoryInteger(KEY1), EXCEPTION_NOT_FOUND);
     }
 
     @Test
-    void getMandatoryLong_anyKey_null()
+    void getMandatoryLong_anyKey_exception()
     {
         assertThat(() -> helper.getMandatoryLong(KEY1), EXCEPTION_NOT_FOUND);
     }
 
     @Test
-    void getMandatoryDouble_anyKey_null()
+    void getMandatoryDouble_anyKey_exception()
     {
         assertThat(() -> helper.getMandatoryDouble(KEY1), EXCEPTION_NOT_FOUND);
     }
 
     @Test
-    void getMandatorySring_anyKey_null()
+    void getMandatoryString_anyKey_exception()
     {
         assertThat(() -> helper.getMandatoryString(KEY1), EXCEPTION_NOT_FOUND);
     }
