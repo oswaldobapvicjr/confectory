@@ -16,11 +16,12 @@
 
 package net.obvj.confectory.helper;
 
+import net.obvj.confectory.Configuration;
 import net.obvj.confectory.ConfigurationDataRetriever;
 
 /**
- * A base interface for Configuration Helper objects providing methods for retrieving
- * configuration data from different source types.
+ * A marker interface that works as an abstraction for objects that retrieve data form
+ * previously loaded {@link Configuration} objects.
  *
  * @param <T> the source type which configuration data is to be retrieved
  *
@@ -29,5 +30,5 @@ import net.obvj.confectory.ConfigurationDataRetriever;
  */
 public interface ConfigurationHelper<T> extends ConfigurationDataRetriever<T>
 {
-    // TODO remove
+    // Currently just marker interface
 }

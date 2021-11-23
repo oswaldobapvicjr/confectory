@@ -70,12 +70,13 @@ public class GenericJsonConfigurationHelper<J> implements ConfigurationHelper<J>
     }
 
     /**
-     * Returns the {@code boolean} value associated with the specified {@code jsonPath} in the
-     * {@code JsonNode} in context, provided that the expression returns a single element that
-     * can be mapped to {@code boolean}.
+     * Returns the {@code Boolean} object associated with the specified {@code jsonPath} in
+     * the {@code JsonNode} in context, provided that the expression returns a single element
+     * that can be mapped to {@code boolean}.
      *
      * @param jsonPath the path to read
-     * @return the {@code boolean} value associated with the specified {@code jsonPath}
+     * @return the {@code Boolean} object associated with the specified {@code jsonPath};
+     *         {@code null} if not found
      *
      * @throws InvalidPathException   if the {@code jsonPath} expression is not valid
      * @throws ConfigurationException if the {@code jsonPath} expression returns more than a
@@ -90,12 +91,13 @@ public class GenericJsonConfigurationHelper<J> implements ConfigurationHelper<J>
     }
 
     /**
-     * Returns the {@code boolean} value associated with the specified {@code jsonPath} in the
-     * {@code JsonNode} in context, provided that the expression returns a single element that
-     * can be mapped to {@code boolean}.
+     * Returns the {@code Boolean} object associated with the specified {@code jsonPath} in
+     * the {@code JsonNode} in context, provided that the expression returns a single element
+     * that can be mapped to {@code boolean}.
      *
      * @param jsonPath the path to read
-     * @return the {@code boolean} value associated with the specified {@code jsonPath}
+     * @return the {@code Boolean} object associated with the specified {@code jsonPath};
+     *         never {@code null}
      *
      * @throws InvalidPathException   if the {@code jsonPath} expression is not valid
      * @throws ConfigurationException if not value found or the {@code jsonPath} expression
@@ -111,12 +113,13 @@ public class GenericJsonConfigurationHelper<J> implements ConfigurationHelper<J>
     }
 
     /**
-     * Returns the {@code int} value associated with the specified {@code jsonPath} in the
-     * {@code JsonNode} in context, provided that the expression returns a single element that
-     * can be mapped to {@code int}.
+     * Returns the {@code Integer} object associated with the specified {@code jsonPath} in
+     * the {@code JsonNode} in context, provided that the expression returns a single element
+     * that can be mapped to {@code int}.
      *
      * @param jsonPath the path to read
-     * @return the {@code int} value associated with the specified {@code jsonPath}
+     * @return the {@code Integer} object associated with the specified {@code jsonPath};
+     *         {@code null} if not found
      *
      * @throws InvalidPathException   if the {@code jsonPath} expression is not valid
      * @throws ConfigurationException if the {@code jsonPath} expression returns more than a
@@ -131,12 +134,13 @@ public class GenericJsonConfigurationHelper<J> implements ConfigurationHelper<J>
     }
 
     /**
-     * Returns the {@code int} value associated with the specified {@code jsonPath} in the
-     * {@code JsonNode} in context, provided that the expression returns a single element that
-     * can be mapped to {@code int}.
+     * Returns the {@code Integer} object associated with the specified {@code jsonPath} in
+     * the {@code JsonNode} in context, provided that the expression returns a single element
+     * that can be mapped to {@code int}.
      *
      * @param jsonPath the path to read
-     * @return the {@code int} value associated with the specified {@code jsonPath}
+     * @return the {@code Integer} object associated with the specified {@code jsonPath};
+     *         never {@code null}
      *
      * @throws InvalidPathException   if the {@code jsonPath} expression is not valid
      * @throws ConfigurationException if not value found or the {@code jsonPath} expression
@@ -152,12 +156,13 @@ public class GenericJsonConfigurationHelper<J> implements ConfigurationHelper<J>
     }
 
     /**
-     * Returns the {@code long} value associated with the specified {@code jsonPath} in the
+     * Returns the {@code Long} object associated with the specified {@code jsonPath} in the
      * {@code JsonNode} in context, provided that the expression returns a single element that
      * can be mapped to {@code long}.
      *
      * @param jsonPath the path to read
-     * @return the {@code long} value associated with the specified {@code jsonPath}
+     * @return the {@code Long} object associated with the specified {@code jsonPath};
+     *         {@code null} if not found
      *
      * @throws InvalidPathException   if the {@code jsonPath} expression is not valid
      * @throws ConfigurationException if the {@code jsonPath} expression returns more than a
@@ -172,12 +177,13 @@ public class GenericJsonConfigurationHelper<J> implements ConfigurationHelper<J>
     }
 
     /**
-     * Returns the {@code long} value associated with the specified {@code jsonPath} in the
+     * Returns the {@code Long} object associated with the specified {@code jsonPath} in the
      * {@code JsonNode} in context, provided that the expression returns a single element that
      * can be mapped to {@code long}.
      *
      * @param jsonPath the path to read
-     * @return the {@code long} value associated with the specified {@code jsonPath}
+     * @return the {@code Long} object associated with the specified {@code jsonPath}; never
+     *         {@code null}
      *
      * @throws InvalidPathException   if the {@code jsonPath} expression is not valid
      * @throws ConfigurationException if not value found or the {@code jsonPath} expression
@@ -193,12 +199,13 @@ public class GenericJsonConfigurationHelper<J> implements ConfigurationHelper<J>
     }
 
     /**
-     * Returns the {@code double} value associated with the specified {@code jsonPath} in the
+     * Returns the {@code Double} object associated with the specified {@code jsonPath} in the
      * {@code JsonNode} in context, provided that the expression returns a single element that
      * can be mapped to {@code double}.
      *
      * @param jsonPath the path to read
-     * @return the {@code double} value associated with the specified {@code jsonPath}
+     * @return the {@code Double} object associated with the specified {@code jsonPath};
+     *         {@code null} if not found
      *
      * @throws InvalidPathException   if the {@code jsonPath} expression is not valid
      * @throws ConfigurationException if the {@code jsonPath} expression returns more than a
@@ -213,12 +220,13 @@ public class GenericJsonConfigurationHelper<J> implements ConfigurationHelper<J>
     }
 
     /**
-     * Returns the {@code double} value associated with the specified {@code jsonPath} in the
+     * Returns the {@code Double} object associated with the specified {@code jsonPath} in the
      * {@code JsonNode} in context, provided that the expression returns a single element that
      * can be mapped to {@code double}.
      *
      * @param jsonPath the path to read
-     * @return the {@code double} value associated with the specified {@code jsonPath}
+     * @return the {@code Double} object associated with the specified {@code jsonPath}; never
+     *         {@code null}
      *
      * @throws InvalidPathException   if the {@code jsonPath} expression is not valid
      * @throws ConfigurationException if not value found or the {@code jsonPath} expression
@@ -234,11 +242,12 @@ public class GenericJsonConfigurationHelper<J> implements ConfigurationHelper<J>
     }
 
     /**
-     * Returns the {@code String} value associated with the specified {@code jsonPath} in the
+     * Returns the {@code String} object associated with the specified {@code jsonPath} in the
      * {@code JsonNode} in context, provided that the expression returns a single element.
      *
      * @param jsonPath the path to read
-     * @return the {@code String} value associated with the specified {@code jsonPath}
+     * @return the {@code String} object associated with the specified {@code jsonPath};
+     *         {@code null} if not found
      *
      * @throws InvalidPathException   if the {@code jsonPath} expression is not valid
      * @throws ConfigurationException if the {@code jsonPath} expression returns more than a
@@ -251,11 +260,11 @@ public class GenericJsonConfigurationHelper<J> implements ConfigurationHelper<J>
     }
 
     /**
-     * Returns the {@code String} value associated with the specified {@code jsonPath} in the
+     * Returns the {@code String} object associated with the specified {@code jsonPath} in the
      * {@code JsonNode} in context, provided that the expression returns a single element.
      *
      * @param jsonPath the path to read
-     * @return the {@code String} value associated with the specified {@code jsonPath}
+     * @return the {@code String} value associated with the specified {@code jsonPath}; never {@code null}
      *
      * @throws InvalidPathException   if the {@code jsonPath} expression is not valid
      * @throws ConfigurationException if not value found or the {@code jsonPath} expression
@@ -281,8 +290,8 @@ public class GenericJsonConfigurationHelper<J> implements ConfigurationHelper<J>
      * @throws InvalidPathException   if the {@code jsonPath} expression is not valid
      * @throws ConfigurationException if not value found or the {@code jsonPath} expression
      *                                returns more than a single element
-     * @throws ClassCastException     if the {@code jsonPath} result cannot be assigned to
-     *                                {@code double}
+     * @throws ClassCastException     if the {@code jsonPath} result cannot be assigned to the
+     *                                specified {@code targetType}
      * @since 0.4.0
      */
     protected <T> T getValue(String jsonPath, Class<T> targetType)
@@ -295,16 +304,16 @@ public class GenericJsonConfigurationHelper<J> implements ConfigurationHelper<J>
      * in context, provided that the expression returns a single element that can be mapped to
      * the specified class type.
      *
-     * @param jsonPath        the path to read
-     * @param targetType      the type the expression result should be mapped to
+     * @param jsonPath   the path to read
+     * @param targetType the type the expression result should be mapped to
      *
      * @return the mapped value associated with the specified {@code jsonPath}
      *
      * @throws InvalidPathException   if the {@code jsonPath} expression is not valid
      * @throws ConfigurationException if the {@code jsonPath} expression returns more than a
      *                                single element
-     * @throws ClassCastException     if the {@code jsonPath} result cannot be assigned to
-     *                                {@code double}
+     * @throws ClassCastException     if the {@code jsonPath} result cannot be assigned to the
+     *                                specified {@code targetType}
      */
     protected <T> T getValue(String jsonPath, Class<T> targetType, boolean mandatory)
     {

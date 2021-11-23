@@ -36,7 +36,7 @@ class ConfigurationServiceTest
     private Optional<String> bean = Optional.of("test");
 
     @Test
-    void getConfigurationHelper_success_validObjectWithNullValueProvider()
+    void getConfigurationHelper_success_validConfigurationHelper()
     {
         when(mapper.configurationHelper(bean.get())).thenReturn(helper);
         ConfigurationHelper<String> result = ConfigurationService.getConfigurationHelper(bean, mapper);

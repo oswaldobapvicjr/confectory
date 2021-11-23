@@ -42,7 +42,7 @@ public class NullConfigurationHelper<T> implements ConfigurationHelper<T>
     }
 
     /**
-     * @return the smart-null value for {@code boolean}, always
+     * @return {@code null}, always <b>(not to be interpreted as {@code false})</b>
      */
     @Override
     public Boolean getBoolean(String key)
@@ -51,7 +51,7 @@ public class NullConfigurationHelper<T> implements ConfigurationHelper<T>
     }
 
     /**
-     * @return the smart-null value for {@code int}, always
+     * @return {@code null}, always
      */
     @Override
     public Integer getInteger(String key)
@@ -60,7 +60,7 @@ public class NullConfigurationHelper<T> implements ConfigurationHelper<T>
     }
 
     /**
-     * @return the smart-null value for {@code long}, always
+     * @return {@code null}, always
      */
     @Override
     public Long getLong(String key)
@@ -69,7 +69,7 @@ public class NullConfigurationHelper<T> implements ConfigurationHelper<T>
     }
 
     /**
-     * @return the smart-null value for {@code double}, always
+     * @return {@code null}, always
      */
     @Override
     public Double getDouble(String key)
@@ -78,7 +78,7 @@ public class NullConfigurationHelper<T> implements ConfigurationHelper<T>
     }
 
     /**
-     * @return the smart-null value for {@code String}, always
+     * @return {@code null}, always
      */
     @Override
     public String getString(String key)
@@ -86,30 +86,45 @@ public class NullConfigurationHelper<T> implements ConfigurationHelper<T>
         return null;
     }
 
+    /**
+     * @throws ConfigurationException always
+     */
     @Override
     public Boolean getMandatoryBoolean(String key)
     {
         throw newConfigurationException();
     }
 
+    /**
+     * @throws ConfigurationException always
+     */
     @Override
     public Integer getMandatoryInteger(String key)
     {
         throw newConfigurationException();
     }
 
+    /**
+     * @throws ConfigurationException always
+     */
     @Override
     public Long getMandatoryLong(String key)
     {
         throw newConfigurationException();
     }
 
+    /**
+     * @throws ConfigurationException always
+     */
     @Override
     public Double getMandatoryDouble(String key)
     {
         throw newConfigurationException();
     }
 
+    /**
+     * @throws ConfigurationException always
+     */
     @Override
     public String getMandatoryString(String key)
     {

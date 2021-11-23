@@ -154,7 +154,7 @@ class GenericJsonConfigurationHelperTest
     }
 
     @Test
-    void getSring_existingKey_success()
+    void getString_existingKey_success()
     {
         assertThat(HELPER.getString("$.stringValue"), equalTo("test"));
     }
