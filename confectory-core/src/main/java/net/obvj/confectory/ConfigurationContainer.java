@@ -361,6 +361,17 @@ public class ConfigurationContainer
     }
 
     /**
+     * Returns the number of {@code Configuration} objects in this container.
+     *
+     * @return the number of {@code Configuration} objects in this container
+     * @since 1.0.0
+     */
+    public long size()
+    {
+        return configMap.values().stream().mapToInt(Set::size).sum();
+    }
+
+    /**
      * Returns the number of {@code Configuration} objects associated with the specified
      * {@code namespace} in this container.
      *
@@ -370,7 +381,18 @@ public class ConfigurationContainer
      */
     public long size(String namespace)
     {
-        return getConfigurationStream(namespace).count();
+        return configMap.getOrDefault(parseNamespace(namespace), Collections.emptySet()).size();
+    }
+
+    /**
+     * Returns {@code true} if this container contains no {@code Configuration} objects.
+     *
+     * @return {@code true} if this container contains no {@code Configuration} objects
+     * @since 1.0.0
+     */
+    public boolean isEmpty()
+    {
+        return configMap.isEmpty();
     }
 
     /**

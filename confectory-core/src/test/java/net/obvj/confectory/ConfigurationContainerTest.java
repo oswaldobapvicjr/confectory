@@ -308,4 +308,48 @@ class ConfigurationContainerTest
         assertThat(container.size(NAMESPACE2), equalTo(1L)); // No change expected
     }
 
+    @Test
+    void size_severalScenarios_validValues()
+    {
+        ConfigurationContainer container = new ConfigurationContainer();
+        assertThat(container.size(),           equalTo(0L));
+        assertThat(container.size(null), equalTo(0L)); // null maps to the default namespace
+        assertThat(container.size(NAMESPACE1), equalTo(0L));
+        assertThat(container.size(NAMESPACE2), equalTo(0L));
+
+        container.add(CONF_NS1_PROPERTIES_1);
+        assertThat(container.size(),           equalTo(1L));
+        assertThat(container.size(null),       equalTo(0L));
+        assertThat(container.size(NAMESPACE1), equalTo(1L));
+        assertThat(container.size(NAMESPACE2), equalTo(0L));
+
+        container.add(CONF_NS1_PROPERTIES_2);
+        assertThat(container.size(),           equalTo(2L));
+        assertThat(container.size(null),       equalTo(0L));
+        assertThat(container.size(NAMESPACE1), equalTo(2L));
+        assertThat(container.size(NAMESPACE2), equalTo(0L));
+
+        container.add(CONF_NS2_PROPERTIES_1);
+        assertThat(container.size(),           equalTo(3L));
+        assertThat(container.size(null),       equalTo(0L));
+        assertThat(container.size(NAMESPACE1), equalTo(2L));
+        assertThat(container.size(NAMESPACE2), equalTo(1L));
+
+        container.add(CONF_PROPERTIES_1); // no namespace defined
+        assertThat(container.size(),           equalTo(4L));
+        assertThat(container.size(null),       equalTo(1L));
+        assertThat(container.size(NAMESPACE1), equalTo(2L));
+        assertThat(container.size(NAMESPACE2), equalTo(1L));
+    }
+
+    @Test
+    void isEmpty_severalScenarios_validValues()
+    {
+        ConfigurationContainer container = new ConfigurationContainer();
+        assertThat(container.isEmpty(), equalTo(true));
+
+        container.add(CONF_PROPERTIES_1);
+        assertThat(container.isEmpty(), equalTo(false));
+    }
+
 }
