@@ -25,7 +25,7 @@ class NullConfigurationHelperTest
     private NullConfigurationHelper<Object> helper = new NullConfigurationHelper<>();
 
     @Test
-    void getBean_empty()
+    void getBean_null()
     {
         assertNull(helper.getBean());
     }
