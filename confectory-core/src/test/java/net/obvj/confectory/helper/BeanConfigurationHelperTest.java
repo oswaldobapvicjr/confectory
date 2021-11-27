@@ -28,7 +28,7 @@ class BeanConfigurationHelperTest
     @Test
     void getBean_notEmpty()
     {
-        assertThat(HELPER.getBean().get(), is(sameInstance(OBJECT)));
+        assertThat(HELPER.getBean(), is(sameInstance(OBJECT)));
     }
 
     @Test

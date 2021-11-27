@@ -2,14 +2,13 @@ package net.obvj.confectory.source;
 
 import static net.obvj.junit.utils.matchers.AdvancedMatchers.containsAll;
 import static net.obvj.junit.utils.matchers.AdvancedMatchers.throwsException;
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -55,9 +54,9 @@ class URLSourceTest
     }
 
     @Test
-    void load_malformedURLAndOptionalTrue_empty()
+    void load_malformedURLAndOptionalTrue_null()
     {
-        assertThat(SOURCE_MALFORMED_URL.load(MAPPER, true), is(Optional.empty()));
+        assertThat(SOURCE_MALFORMED_URL.load(MAPPER, true), equalTo(null));
     }
 
     @Test
@@ -66,7 +65,7 @@ class URLSourceTest
         when(url.openStream()).thenReturn(inputStream);
         when(mapper.apply(inputStream)).thenReturn(URL1_CONTENT);
 
-        assertThat(urlSource.load(url, mapper), is(URL1_CONTENT));
+        assertThat(urlSource.load(url, mapper), equalTo(URL1_CONTENT));
     }
 
     @Test
@@ -81,7 +80,7 @@ class URLSourceTest
     @Test
     void parseURL_validURL_success()
     {
-        assertThat(URLSource.parseURL(VALID_URL).toString(), is(VALID_URL));
+        assertThat(URLSource.parseURL(VALID_URL).toString(), equalTo(VALID_URL));
     }
 
 }

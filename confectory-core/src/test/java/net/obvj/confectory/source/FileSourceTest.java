@@ -2,14 +2,13 @@ package net.obvj.confectory.source;
 
 import static net.obvj.junit.utils.matchers.AdvancedMatchers.containsAll;
 import static net.obvj.junit.utils.matchers.AdvancedMatchers.throwsException;
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.BDDMockito.then;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -44,25 +43,25 @@ class FileSourceTest
     @InjectMocks
     private FileSource<String> fileSource = new FileSource<>("");
 
-
     @Test
     void load_fileNotFoundAndOptionalFalse_configurationSourceException()
     {
         assertThat(() -> TEST_SOURCE_FILE_NOT_FOUND.load(STRING_MAPPER, false),
                 throwsException(ConfigurationSourceException.class)
-                .withMessage(containsAll(FILE_NOT_FOUND_PATH).ignoreCase()).withCause(FileNotFoundException.class));
+                        .withMessage(containsAll(FILE_NOT_FOUND_PATH).ignoreCase())
+                        .withCause(FileNotFoundException.class));
     }
 
     @Test
-    void load_fileNotFoundAndOptionalTrue_empty()
+    void load_fileNotFoundAndOptionalTrue_null()
     {
-        assertThat(TEST_SOURCE_FILE_NOT_FOUND.load(STRING_MAPPER, true), is(Optional.empty()));
+        assertThat(TEST_SOURCE_FILE_NOT_FOUND.load(STRING_MAPPER, true), equalTo(null));
     }
 
     @Test
     void load_file1_success()
     {
-        assertThat(TEST_SOURCE_FILE_FILE1_TXT.load(STRING_MAPPER, true).get(), containsAll("line1"));
+        assertThat(TEST_SOURCE_FILE_FILE1_TXT.load(STRING_MAPPER, true), containsAll("line1"));
     }
 
     @Test

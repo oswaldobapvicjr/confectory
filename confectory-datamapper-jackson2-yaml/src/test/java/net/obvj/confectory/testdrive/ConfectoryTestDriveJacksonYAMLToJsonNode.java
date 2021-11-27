@@ -19,7 +19,7 @@ public class ConfectoryTestDriveJacksonYAMLToJsonNode
                 .mapper(new JacksonYAMLToJsonNodeMapper())
                 .build();
 
-        System.out.println(config.getBean().get().toPrettyString());
+        System.out.println(config.getBean().toPrettyString());
         System.out.println(config.getString("$.root.foo"));
     }
 }

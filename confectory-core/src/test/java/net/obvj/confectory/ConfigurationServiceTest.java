@@ -4,8 +4,6 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.when;
 
-import java.util.Optional;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -33,20 +31,20 @@ class ConfigurationServiceTest
     @Mock
     private ConfigurationHelper<String> helper;
 
-    private Optional<String> bean = Optional.of("test");
+    private String bean = "test";
 
     @Test
     void getConfigurationHelper_success_validConfigurationHelper()
     {
-        when(mapper.configurationHelper(bean.get())).thenReturn(helper);
+        when(mapper.configurationHelper(bean)).thenReturn(helper);
         ConfigurationHelper<String> result = ConfigurationService.getConfigurationHelper(bean, mapper);
         assertThat(result, equalTo(helper));
     }
 
     @Test
-    void getConfigurationHelper_empty_nullConfigurationHelper()
+    void getConfigurationHelper_null_nullConfigurationHelper()
     {
-        ConfigurationHelper<String> result = ConfigurationService.getConfigurationHelper(Optional.empty(), mapper);
+        ConfigurationHelper<String> result = ConfigurationService.getConfigurationHelper(null, mapper);
         assertThat(result.getClass(), equalTo(NullConfigurationHelper.class));
     }
 

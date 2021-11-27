@@ -40,7 +40,7 @@ class PropertiesConfigurationHelperTest
     @Test
     void getBean_empty()
     {
-        assertThat(HELPER.getBean().get(), is(sameInstance(PROPERTIES)));
+        assertThat(HELPER.getBean(), is(sameInstance(PROPERTIES)));
     }
 
     @Test

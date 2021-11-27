@@ -16,8 +16,6 @@
 
 package net.obvj.confectory.helper;
 
-import java.util.Optional;
-
 import com.jayway.jsonpath.*;
 import com.jayway.jsonpath.internal.filter.ValueNodes.JsonNode;
 import com.jayway.jsonpath.spi.json.JsonProvider;
@@ -64,9 +62,9 @@ public class GenericJsonConfigurationHelper<J> implements ConfigurationHelper<J>
      * @return the JSON document in context
      */
     @Override
-    public Optional<J> getBean()
+    public J getBean()
     {
-        return Optional.ofNullable(json);
+        return json;
     }
 
     /**
@@ -264,7 +262,8 @@ public class GenericJsonConfigurationHelper<J> implements ConfigurationHelper<J>
      * {@code JsonNode} in context, provided that the expression returns a single element.
      *
      * @param jsonPath the path to read
-     * @return the {@code String} value associated with the specified {@code jsonPath}; never {@code null}
+     * @return the {@code String} value associated with the specified {@code jsonPath}; never
+     *         {@code null}
      *
      * @throws InvalidPathException   if the {@code jsonPath} expression is not valid
      * @throws ConfigurationException if not value found or the {@code jsonPath} expression

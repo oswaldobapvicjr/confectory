@@ -16,8 +16,6 @@
 
 package net.obvj.confectory.source;
 
-import java.util.Optional;
-
 import net.obvj.confectory.ConfigurationSourceException;
 import net.obvj.confectory.mapper.Mapper;
 
@@ -33,8 +31,8 @@ public interface Source<T>
 {
 
     /**
-     * Applies a specific configuration loading strategy and returns the retrieved data,
-     * throwing an exception if the operation fails.
+     * Applies a specific configuration loading strategy and returns a mapped bean containing
+     * the retrieved data, throwing an exception if the operation fails.
      *
      * @param mapper the {@link Mapper} to be applied on the source input stream
      * @return the loaded configuration data
@@ -44,20 +42,20 @@ public interface Source<T>
     T load(Mapper<T> mapper);
 
     /**
-     * Applies a specific configuration loading strategy and returns an {@link Optional},
-     * possibly containing the retrieved data. If the {@code optional} parameter is
-     * {@code true} and the operation fails, then {@link Optional#empty()} is returned.
+     * Applies a specific configuration loading strategy and returns a mapped bean containing
+     * the retrieved data. If the {@code optional} parameter is {@code true} and the operation
+     * fails, this method returns {@code null}.
      *
      * @param mapper   the {@link Mapper} to be applied on the source input stream
      * @param optional a flag indicating whether or not an exception should be thrown in an
      *                 event of failure to load the configuration source
-     * @return the loaded configuration data, or an empty object in an event of failure with
-     *         the {@code optional} flag set as {@code true}
+     * @return the loaded configuration data, or {@code null} in an event of failure if the
+     *         {@code optional} flag set as {@code true}
      *
      * @throws ConfigurationSourceException in an event of failure to load the configuration
-     *                                      source, with the {@code optional} flag set as
-     *                                      {@code false}
+     *                                      source (only if the {@code optional} flag set as
+     *                                      {@code false})
      */
-    Optional<T> load(Mapper<T> mapper, boolean optional);
+    T load(Mapper<T> mapper, boolean optional);
 
 }

@@ -14,7 +14,7 @@ public class ConfectoryTestDriveJacksonJsonToObject
                 .mapper(new JacksonJsonToObjectMapper<>(MyBean.class))
                 .build();
 
-        MyBean myBean = config.getBean().get();
+        MyBean myBean = config.getBean();
         System.out.println(myBean);
         System.out.println(myBean.isEnabled());
         System.out.println(myBean.getAgents().get(0).getInterval());

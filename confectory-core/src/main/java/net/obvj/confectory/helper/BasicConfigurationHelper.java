@@ -16,8 +16,6 @@
 
 package net.obvj.confectory.helper;
 
-import java.util.Optional;
-
 /**
  * A basic, abstract Configuration Helper object providing common infrastructure for
  * concrete implementations.
@@ -37,9 +35,9 @@ public abstract class BasicConfigurationHelper<T> implements ConfigurationHelper
     }
 
     @Override
-    public Optional<T> getBean()
+    public T getBean()
     {
-        return Optional.ofNullable(bean);
+        return bean;
     }
 
     @Override

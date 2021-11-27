@@ -15,6 +15,6 @@ public class ConfectoryTestDriveURLToString
                 .mapper(new StringMapper())
                 .build();
 
-        System.out.println(config.getBean().get());
+        System.out.println(config.getBean());
     }
 }

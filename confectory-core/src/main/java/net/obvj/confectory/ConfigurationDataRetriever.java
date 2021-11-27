@@ -16,8 +16,6 @@
 
 package net.obvj.confectory;
 
-import java.util.Optional;
-
 /**
  * A base interface for objects that retrieve configuration data.
  *
@@ -30,12 +28,13 @@ public interface ConfigurationDataRetriever<T>
 {
 
     /**
-     * Returns the target configuration object used by this data retriever, typically for
-     * manual handling and/or troubleshooting purposes.
+     * Returns the configuration bean used by this data retriever, typically for manual
+     * handling and/or troubleshooting purposes.
      *
-     * @return an {@link Optional}, possibly containing the target configuration object
+     * @return the configuration bean (<b>Note: </b> it can be {@code null} if the
+     *         {@code Configuration} is marked as optional)
      */
-    Optional<T> getBean();
+    T getBean();
 
     /**
      * Returns the {@code Boolean} object associated with the specified {@code key}.

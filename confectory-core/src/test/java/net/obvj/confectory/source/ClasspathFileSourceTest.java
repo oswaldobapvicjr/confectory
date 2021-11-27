@@ -2,15 +2,13 @@ package net.obvj.confectory.source;
 
 import static net.obvj.junit.utils.matchers.AdvancedMatchers.containsAll;
 import static net.obvj.junit.utils.matchers.AdvancedMatchers.throwsException;
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -52,7 +50,7 @@ class ClasspathFileSourceTest
     @Test
     void load_fileInClassPathAndOptionalFalse_fileContent()
     {
-        assertThat(TEST_SOURCE_FILE1.load(MAPPER, false).get(), containsAll(FILE1_CONTENT));
+        assertThat(TEST_SOURCE_FILE1.load(MAPPER, false), containsAll(FILE1_CONTENT));
     }
 
     @Test
@@ -66,15 +64,13 @@ class ClasspathFileSourceTest
     @Test
     void load_fileInClassPathAndOptionalTrue_fileContent()
     {
-        Optional<String> content = TEST_SOURCE_FILE1.load(MAPPER, true);
-        assertTrue(content.isPresent());
-        assertThat(content.get(), containsAll(FILE1_CONTENT));
+        assertThat(TEST_SOURCE_FILE1.load(MAPPER, true), containsAll(FILE1_CONTENT));
     }
 
     @Test
-    void load_fileNotFoundAndOptionalTrue_empty()
+    void load_fileNotFoundAndOptionalTrue_null()
     {
-        assertThat(TEST_SOURCE_FILE_NOT_FOUND.load(MAPPER, true), is(Optional.empty()));
+        assertThat(TEST_SOURCE_FILE_NOT_FOUND.load(MAPPER, true), equalTo(null));
     }
 
     @Test

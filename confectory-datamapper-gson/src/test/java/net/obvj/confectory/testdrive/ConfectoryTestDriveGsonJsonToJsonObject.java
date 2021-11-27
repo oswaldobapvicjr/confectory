@@ -16,7 +16,7 @@ public class ConfectoryTestDriveGsonJsonToJsonObject
                 .mapper(new GsonJsonObjectMapper())
                 .build();
 
-        System.out.println(new GsonBuilder().setPrettyPrinting().create().toJson(config.getBean().get()));
+        System.out.println(new GsonBuilder().setPrettyPrinting().create().toJson(config.getBean()));
         System.out.println(config.getBoolean("enabled"));
         System.out.println(config.getString("$.agents[0].class"));
         System.out.println(config.getString("$.agents[0].interval"));

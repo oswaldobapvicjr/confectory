@@ -319,7 +319,7 @@ public class ConfigurationContainer
      *
      * @return the value evaluated by the {@code mainFunction}, or {@code null} if not found
      */
-    private <T> T getValue(String namespace, Function<Configuration<?>, T> mainFunction)
+    protected <T> T getValue(String namespace, Function<Configuration<?>, T> mainFunction)
     {
         Iterator<Configuration<?>> iterator = getConfigurationStream(namespace).iterator();
         while (iterator.hasNext())

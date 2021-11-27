@@ -18,7 +18,7 @@ public class ConfectoryTestDriveXMLToJSONObject2
                 .mapper(new XMLToJSONObjectMapper())
                 .build();
 
-        System.out.println(config.getBean().get().toString(2));
+        System.out.println(config.getBean().toString(2));
         System.out.println(config.getString("$.root.foo"));
     }
 }

@@ -46,13 +46,13 @@ class StringSourceTest
     @Test
     void load_validStringAndOptionalFalse_loadedSuccessfully()
     {
-        assertThat(STRING_SOURCE1.load(STRING_MAPPER, false).get(), equalTo(STRING1));
+        assertThat(STRING_SOURCE1.load(STRING_MAPPER, false), equalTo(STRING1));
     }
 
     @Test
     void load_validStringAndOptionalTrue_loadedSuccessfully()
     {
-        assertThat(STRING_SOURCE1.load(STRING_MAPPER, true).get(), equalTo(STRING1));
+        assertThat(STRING_SOURCE1.load(STRING_MAPPER, true), equalTo(STRING1));
     }
 
     @Test
