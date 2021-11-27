@@ -48,6 +48,34 @@ class TypeSafeConfigurationContainerTest
     }
 
     @Test
+    void getBean_noArgumentAndOnlyConfigsWithNamespace_null()
+    {
+        container = new TypeSafeConfigurationContainer<>(CONF_NS1_BEAN_1, CONF_NS2_BEAN_1);
+        assertThat(container.getBean(), equalTo(null));
+    }
+
+    @Test
+    void getBean_noArgument_configWithoutNamespace()
+    {
+        container = new TypeSafeConfigurationContainer<>(CONF_NS1_BEAN_1, CONF_NS2_BEAN_1, CONF_BEAN_3);
+        assertThat(container.getBean(), equalTo(BEAN_3));
+    }
+
+    @Test
+    void getBean_invalidNamespace_null()
+    {
+        container = new TypeSafeConfigurationContainer<>(CONF_NS1_BEAN_1, CONF_NS2_BEAN_1, CONF_BEAN_3);
+        assertThat(container.getBean("invalid"), equalTo(null));
+    }
+
+    @Test
+    void getBean_validNamespace_highestPrecedenceBeanInNamespace()
+    {
+        container = new TypeSafeConfigurationContainer<>(CONF_NS1_BEAN_1, CONF_NS1_BEAN_2, CONF_NS2_BEAN_1);
+        assertThat(container.getBean(NAMESPACE1), equalTo(BEAN_1_2));
+    }
+
+    @Test
     void clear_presetConfigurations_empty()
     {
         container = new TypeSafeConfigurationContainer<>(CONF_NS1_BEAN_1, CONF_NS2_BEAN_1);
@@ -93,7 +121,7 @@ class TypeSafeConfigurationContainerTest
     @Test
     void isEmpty_severalScenarios_validValues()
     {
-        ConfigurationContainer container = new ConfigurationContainer();
+        container = new TypeSafeConfigurationContainer<String>();
         assertThat(container.isEmpty(), equalTo(true));
 
         container.add(CONF_BEAN_3);
