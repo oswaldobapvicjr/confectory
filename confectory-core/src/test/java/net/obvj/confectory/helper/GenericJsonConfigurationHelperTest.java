@@ -54,7 +54,7 @@ class GenericJsonConfigurationHelperTest
     @Test
     void getBean_notEmpty()
     {
-        assertThat(HELPER.getBean().get(), is(sameInstance(TEST_JSON_SAMPLE1)));
+        assertThat(HELPER.getBean(), is(sameInstance(TEST_JSON_SAMPLE1)));
     }
 
     @Test

@@ -110,7 +110,7 @@ class ConfigurationBuilderTest
         Configuration<Object> newConfiguration = builder.build();
 
         assertConfigurationMetadata(newConfiguration, source, mapper, "", 0, false, false);
-        assertThat(newConfiguration.getBean().get(), equalTo(OBJECT1));
+        assertThat(newConfiguration.getBean(), equalTo(OBJECT1));
     }
 
     @Test
@@ -130,7 +130,7 @@ class ConfigurationBuilderTest
         Configuration<Object> newConfiguration = builder.build();
 
         assertConfigurationMetadata(newConfiguration, source, mapper, NAMESPACE1, 777, true, true);
-        assertThat(newConfiguration.getBean().get(), equalTo(OBJECT1));
+        assertThat(newConfiguration.getBean(), equalTo(OBJECT1));
     }
 
     @Test

@@ -16,8 +16,6 @@
 
 package net.obvj.confectory.helper;
 
-import java.util.Optional;
-
 import net.obvj.confectory.ConfigurationException;
 
 /**
@@ -33,12 +31,12 @@ public class NullConfigurationHelper<T> implements ConfigurationHelper<T>
 {
 
     /**
-     * @return {@link Optional#empty()}, always
+     * @return {@code null}, always
      */
     @Override
-    public Optional<T> getBean()
+    public T getBean()
     {
-        return Optional.empty();
+        return null;
     }
 
     /**

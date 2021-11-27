@@ -53,15 +53,15 @@ class JacksonJsonNodeHelperTest
     private static final JsonNode TEST_JSON_SAMPLE1 = new ConfigurationBuilder<JsonNode>()
             .source(new StringSource<JsonNode>(STR_TEST_JSON_SAMPLE1))
             .mapper(new JacksonJsonNodeMapper())
-            .build().getBean().get();
+            .build().getBean();
 
     private static final JacksonJsonNodeHelper HELPER = new JacksonJsonNodeHelper(TEST_JSON_SAMPLE1);
 
 
     @Test
-    void getBean_notEmpty()
+    void getBean_validInstance()
     {
-        assertThat(HELPER.getBean().get(), is(sameInstance(TEST_JSON_SAMPLE1)));
+        assertThat(HELPER.getBean(), is(sameInstance(TEST_JSON_SAMPLE1)));
     }
 
     @Test

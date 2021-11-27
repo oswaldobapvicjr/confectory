@@ -38,9 +38,9 @@ class PropertiesConfigurationHelperTest
     }
 
     @Test
-    void getBean_empty()
+    void getBean_null()
     {
-        assertThat(HELPER.getBean().get(), is(sameInstance(PROPERTIES)));
+        assertThat(HELPER.getBean(), is(sameInstance(PROPERTIES)));
     }
 
     @Test

@@ -53,15 +53,15 @@ class GsonJsonObjectHelperTest
     private static final JsonObject TEST_JSON_SAMPLE1 = new ConfigurationBuilder<JsonObject>()
             .source(new StringSource<JsonObject>(STR_TEST_JSON_SAMPLE1))
             .mapper(new GsonJsonObjectMapper())
-            .build().getBean().get();
+            .build().getBean();
 
     private static final GsonJsonObjectHelper HELPER = new GsonJsonObjectHelper(TEST_JSON_SAMPLE1);
 
 
     @Test
-    void getBean_notEmpty()
+    void getBean_sameInstance()
     {
-        assertThat(HELPER.getBean().get(), is(sameInstance(TEST_JSON_SAMPLE1)));
+        assertThat(HELPER.getBean(), is(sameInstance(TEST_JSON_SAMPLE1)));
     }
 
     @Test

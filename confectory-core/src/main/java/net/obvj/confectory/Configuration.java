@@ -17,7 +17,6 @@
 package net.obvj.confectory;
 
 import java.util.Objects;
-import java.util.Optional;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -154,7 +153,7 @@ public final class Configuration<T> implements ConfigurationDataRetriever<T>, Co
     }
 
     @Override
-    public Optional<T> getBean()
+    public T getBean()
     {
         return getService().getBean();
     }
@@ -288,7 +287,7 @@ public final class Configuration<T> implements ConfigurationDataRetriever<T>, Co
  */
 final class ConfigurationService<T> implements ConfigurationDataRetriever<T>
 {
-    private final Optional<T> bean;
+    private final T bean;
     private final ConfigurationHelper<T> helper;
 
     ConfigurationService(Source<T> source, Mapper<T> mapper, boolean optional)
@@ -297,13 +296,13 @@ final class ConfigurationService<T> implements ConfigurationDataRetriever<T>
         this.helper = getConfigurationHelper(bean, mapper);
     }
 
-    static <T> ConfigurationHelper<T> getConfigurationHelper(Optional<T> bean, Mapper<T> mapper)
+    static <T> ConfigurationHelper<T> getConfigurationHelper(T bean, Mapper<T> mapper)
     {
-        return bean.isPresent() ? mapper.configurationHelper(bean.get()) : new NullConfigurationHelper<>();
+        return bean != null ? mapper.configurationHelper(bean) : new NullConfigurationHelper<>();
     }
 
     @Override
-    public Optional<T> getBean()
+    public T getBean()
     {
         return bean;
     }

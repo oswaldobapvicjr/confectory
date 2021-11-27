@@ -15,7 +15,7 @@ public class ConfectoryTestDriveJacksonJsonToJsonNode
                 .mapper(new JacksonJsonNodeMapper())
                 .build();
 
-        System.out.println(config.getBean().get().toPrettyString());
+        System.out.println(config.getBean().toPrettyString());
         System.out.println(config.getBoolean("enabled"));
         System.out.println(config.getString("$.agents[0].interval"));
         System.out.println(config.getString("$.agents[?(@.class=='Agent2')].interval"));

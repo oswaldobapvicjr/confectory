@@ -16,7 +16,7 @@ public class ConfectoryTestDriveURLToGsonJsonObject
                 .mapper(new GsonJsonObjectMapper())
                 .build();
 
-        System.out.println(new GsonBuilder().setPrettyPrinting().create().toJson(config.getBean().get()));
+        System.out.println(new GsonBuilder().setPrettyPrinting().create().toJson(config.getBean()));
         System.out.println(config.getString("$.date"));
         System.out.println(config.getLong("$.milliseconds_since_epoch"));
         System.out.println(config.getString("$.time"));

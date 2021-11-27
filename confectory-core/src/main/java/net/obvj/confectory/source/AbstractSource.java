@@ -19,7 +19,6 @@ package net.obvj.confectory.source;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
-import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,12 +64,11 @@ public abstract class AbstractSource<T> implements Source<T>
     }
 
     @Override
-    public Optional<T> load(Mapper<T> mapper, boolean optional)
+    public T load(Mapper<T> mapper, boolean optional)
     {
         try
         {
-            T content = load(mapper);
-            return Optional.ofNullable(content);
+            return load(mapper);
         }
         catch (Exception exception)
         {
@@ -78,7 +76,7 @@ public abstract class AbstractSource<T> implements Source<T>
             {
                 LOGGER.warn("Unable to load optional source: {}", this);
                 LOGGER.debug("Exception details:", exception);
-                return Optional.empty();
+                return null;
             }
             throw exception;
         }
@@ -123,7 +121,8 @@ public abstract class AbstractSource<T> implements Source<T>
     @Override
     public String toString()
     {
-        return new StringBuilder().append(getClass().getSimpleName()).append("(").append(parameter).append(")").toString();
+        return new StringBuilder().append(getClass().getSimpleName()).append("(").append(parameter).append(")")
+                .toString();
     }
 
 }

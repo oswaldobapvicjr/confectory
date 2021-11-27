@@ -2,10 +2,7 @@ package net.obvj.confectory.helper;
 
 import static net.obvj.junit.utils.matchers.AdvancedMatchers.throwsException;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-
-import java.util.Optional;
 
 import org.hamcrest.Matcher;
 import org.junit.jupiter.api.Test;
@@ -28,9 +25,9 @@ class NullConfigurationHelperTest
     private NullConfigurationHelper<Object> helper = new NullConfigurationHelper<>();
 
     @Test
-    void getBean_empty()
+    void getBean_null()
     {
-        assertEquals(Optional.empty(), helper.getBean());
+        assertNull(helper.getBean());
     }
 
     @Test
