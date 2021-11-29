@@ -74,8 +74,8 @@ public abstract class AbstractSource<T> implements Source<T>
         {
             if (optional)
             {
-                LOGGER.trace("Unable to load optional source: {}", this);
-                LOGGER.trace("Suppressed exception:", exception);
+                LOGGER.info("Unable to load optional resource: {}", this);
+                LOGGER.debug("Suppressed exception:", exception);
                 return null;
             }
             throw exception;
