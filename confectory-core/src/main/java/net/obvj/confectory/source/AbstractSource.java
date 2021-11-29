@@ -20,9 +20,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import net.obvj.confectory.ConfigurationSourceException;
 import net.obvj.confectory.mapper.Mapper;
 
 /**
@@ -70,11 +72,12 @@ public abstract class AbstractSource<T> implements Source<T>
         {
             return load(mapper);
         }
-        catch (Exception exception)
+        catch (ConfigurationSourceException exception)
         {
             if (optional)
             {
-                LOGGER.info("Unable to load optional resource: {}", this);
+                String rootCauseMessage = ExceptionUtils.getRootCauseMessage(exception);
+                LOGGER.warn("Unable to load optional resource: {} ({})", this, rootCauseMessage);
                 LOGGER.debug("Suppressed exception:", exception);
                 return null;
             }
