@@ -56,54 +56,78 @@ Configuration<JSONObject> config = Configuration.<JSONObject>builder()
 - Easy configuration setup
 - Seamless data query using **JSONPath** or user-defined beans
 - Support for the **best providers** available in the community (e.g.: Jackson, GSON)
-- Accept **multiple configuration choices** (e.g.: XML, JSON, or YAML) and define **precedence levels** for each one
+- Accept **multiple configuration formats** (e.g.: XML, JSON, or YAML) and define **precedence levels** for each one
 
----
 
-## Planned releases
+## How to include it
+
+Confectory was designed to work with the lowest-possible number of transitive dependencies. So, we offer separate modules that can be selected according to the client needs, optimizing your application:
 
 <table>
-  <tr>
-    <th>Version</th>
-    <th>Release</th>
-    <th>Key features</th>
-  </tr>
-  <tr>
-    <td><b>0.1.0 :heavy_check_mark:</b></td>
-    <td>2021-08</td>
-    <td>
-      <li>Configuration Builder</li>
-      <li>Local file sources</li>
-      <li><b>Properties</b> format parsing</li>
-    </td>
-  </tr>
-  <tr>
-    <td><b>0.2.0 :heavy_check_mark:</b></td>
-    <td>2021-09</td>
-    <td>
-      <li><b>XML and JSON</b> files parsing</li>
-      <li>Data fetch using JSONPath</li>
-    </td>
-  </tr>
-  <tr>
-    <td><b>0.3.0 :heavy_check_mark:</b></td>
-    <td>2021-10</td>
-    <td>
-      <li><b>XML, JSON and YAML</b> files parsing</li>
-      <li>Bean mapping using Jackson 2</li>
-    </td>
-  </tr>
-  <tr>
-    <td><b>0.4.0 :heavy_check_mark:</b></td>
-    <td>2021-11</td>
-    <td>
-      <li>JSON files parsing using GSON</li>
-      <li><b>URL</b> file source</li>
-      <li>Lazy loading</li>
-    </td>
-  </tr>
-</table>
 
+<tr>
+<th>Module</th>
+<th>Provider(s)</th>
+<th>Properties</th>
+<th>XML</th>
+<th>JSON</th>
+<th>YAML</th>
+</tr>
+
+<tr>
+<td><b>confectory-core</b></td>
+<td>Java only (JDK8+)</td>
+<td>:heavy_check_mark:</td>
+<td>--</td>
+<td>--</td>
+<td>--</td>
+</tr>
+
+<tr>
+<td><b>confectory-datamapper-lite</b></td>
+<td>json.org</td>
+<td>:heavy_check_mark:</td>
+<td>:heavy_check_mark:</td>
+<td>:heavy_check_mark:</td>
+<td>--</td>
+</tr>
+
+<tr>
+<td><b>confectory-datamapper-jackson2-json</b></td>
+<td>Jackson 2</td>
+<td>--</td>
+<td>--</td>
+<td>:heavy_check_mark:</td>
+<td>--</td>
+</tr>
+<tr>
+<td><b>confectory-datamapper-jackson2-xml</b></td>
+<td>Jackson + XML Mapper</td>
+<td>--</td>
+<td>:heavy_check_mark:</td>
+<td>:heavy_check_mark:</td>
+<td>--</td>
+</tr>
+
+<tr>
+<td><b>confectory-datamapper-jackson2-yaml</b></td>
+<td>Jackson + YAML Mapper</td>
+<td>--</td>
+<td>--</td>
+<td>:heavy_check_mark:</td>
+<td>:heavy_check_mark:</td>
+</tr>
+
+<tr>
+<td><b>confectory-datamapper-gson</b></td>
+<td>GSON</td>
+<td>--</td>
+<td>--</td>
+<td>:heavy_check_mark:</td>
+<td>--</td>
+</tr>
+
+</table>
 
 ## Contributing
 
