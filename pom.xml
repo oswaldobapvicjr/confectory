@@ -32,9 +32,9 @@
     </developers>
 
     <scm>
-        <url>https://obvj.net/confectory-base</url>
-        <connection>scm:git:git://github.com/oswaldobapvicjr/confectory-base.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com/oswaldobapvicjr/confectory-base.git</developerConnection>
+        <url>https://obvj.net/confectory</url>
+        <connection>scm:git:git://github.com/oswaldobapvicjr/confectory.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/oswaldobapvicjr/confectory.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
 
