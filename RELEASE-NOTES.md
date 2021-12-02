@@ -2,7 +2,7 @@
 
 # Release Notes
 
-## 1.0.0 <sup>(2021-12)</sup>
+## 1.0.0 <sup>(2021-12)</sup> [![Maven Central](https://img.shields.io/maven-central/v/net.obvj/confectory?color=blue&versionPrefix=1.0.0)](https://search.maven.org/search?q=g:net.obvj%20AND%20a:confectory*%20AND%20v:1.0.0)
 
 #### New features/enhancements
 
