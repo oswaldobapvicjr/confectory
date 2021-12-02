@@ -46,7 +46,7 @@ Configuration<JSONObject> config = Configuration.<JSONObject>builder()
 
 ````java
 Configuration<JSONObject> config = Configuration.<JSONObject>builder()
-        .source(SourceFactory.httpSource("http://myserver:8080/config"))
+        .source("http://myserver:8080/config")
         .mapper(new XmlToJSONObjectMapper())
         .build();
 ````
@@ -63,71 +63,15 @@ Configuration<JSONObject> config = Configuration.<JSONObject>builder()
 
 Confectory was designed to work with the lowest-possible number of transitive dependencies. So, we offer separate modules that can be selected according to the client needs, optimizing your application:
 
-<table>
+| Module                                                                                                                                   | Providers             | Properties | XML     | JSON    | YAML    |
+|------------------------------------------------------------------------------------------------------------------------------------------|-----------------------|:----------:|:-------:|:-------:|:-------:|
+| [**confectory-core**](https://maven-badges.herokuapp.com/maven-central/net.obvj/confectory-core)                                         | Java only (JDK8+)     | &#9745;    | --      | --      | --      |
+| [**confectory-datamapper-lite**](https://maven-badges.herokuapp.com/maven-central/net.obvj/confectory-datamapper-lite)                   | json.org + JSONPath   | &#9745;    | &#9745; | &#9745; | --      |
+| [**confectory-datamapper-jackson2-json**](https://maven-badges.herokuapp.com/maven-central/net.obvj/confectory-datamapper-jackson2-json) | Jackson 2             | --         | --      | &#9745; | --      |
+| [**confectory-datamapper-jackson2-xml**](https://maven-badges.herokuapp.com/maven-central/net.obvj/confectory-datamapper-jackson2-xml)   | Jackson + XML Mapper  | --         | &#9745; | &#9745; | --      |
+| [**confectory-datamapper-jackson2-yaml**](https://maven-badges.herokuapp.com/maven-central/net.obvj/confectory-datamapper-jackson2-yaml) | Jackson + YAML Mapper | --         | --      | &#9745; | &#9745; |
+| [**confectory-datamapper-gson**](https://maven-badges.herokuapp.com/maven-central/net.obvj/confectory-datamapper-gson)                   | Gson                  | --         | --      | &#9745; | --      |
 
-<tr>
-<th>Module</th>
-<th>Provider(s)</th>
-<th>Properties</th>
-<th>XML</th>
-<th>JSON</th>
-<th>YAML</th>
-</tr>
-
-<tr>
-<td><b>confectory-core</b></td>
-<td>Java only (JDK8+)</td>
-<td>:heavy_check_mark:</td>
-<td>--</td>
-<td>--</td>
-<td>--</td>
-</tr>
-
-<tr>
-<td><b>confectory-datamapper-lite</b></td>
-<td>json.org</td>
-<td>:heavy_check_mark:</td>
-<td>:heavy_check_mark:</td>
-<td>:heavy_check_mark:</td>
-<td>--</td>
-</tr>
-
-<tr>
-<td><b>confectory-datamapper-jackson2-json</b></td>
-<td>Jackson 2</td>
-<td>--</td>
-<td>--</td>
-<td>:heavy_check_mark:</td>
-<td>--</td>
-</tr>
-<tr>
-<td><b>confectory-datamapper-jackson2-xml</b></td>
-<td>Jackson + XML Mapper</td>
-<td>--</td>
-<td>:heavy_check_mark:</td>
-<td>:heavy_check_mark:</td>
-<td>--</td>
-</tr>
-
-<tr>
-<td><b>confectory-datamapper-jackson2-yaml</b></td>
-<td>Jackson + YAML Mapper</td>
-<td>--</td>
-<td>--</td>
-<td>:heavy_check_mark:</td>
-<td>:heavy_check_mark:</td>
-</tr>
-
-<tr>
-<td><b>confectory-datamapper-gson</b></td>
-<td>GSON</td>
-<td>--</td>
-<td>--</td>
-<td>:heavy_check_mark:</td>
-<td>--</td>
-</tr>
-
-</table>
 
 ## Contributing
 
