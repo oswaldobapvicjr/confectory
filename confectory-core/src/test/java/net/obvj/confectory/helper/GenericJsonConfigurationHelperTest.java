@@ -11,9 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.jayway.jsonpath.spi.json.JsonSmartJsonProvider;
-import com.jayway.jsonpath.spi.mapper.JsonSmartMappingProvider;
-
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import net.obvj.confectory.ConfigurationException;
@@ -43,9 +40,8 @@ class GenericJsonConfigurationHelperTest
         TEST_JSON_SAMPLE1.put("array", array);
     }
 
-    // Simple concrete helper for testing purposes
-    private static final GenericJsonConfigurationHelper<JSONObject> HELPER = new GenericJsonConfigurationHelper<JSONObject>(
-            TEST_JSON_SAMPLE1, new JsonSmartJsonProvider(), new JsonSmartMappingProvider());
+    private static final GenericJsonConfigurationHelper<JSONObject> HELPER = new SmartJsonConfigurationHelper(
+            TEST_JSON_SAMPLE1);
 
     private static final String PATH_UNKNOWN = "$.unknown";
     private static final Matcher<Runnable> EXCEPTION_NO_VALUE_FOUND_PATH_UNKNOWN = throwsException(

@@ -23,7 +23,7 @@ import net.obvj.confectory.helper.GsonJsonObjectHelper;
  * @since 0.4.0
  */
 @ExtendWith(MockitoExtension.class)
-class JacksonJsonNodeMapperTest
+class GsonJsonObjectMapperTest
 {
     private static final String TEST_JSON_SAMPLE1 = "{"
                                                   + "  \"intValue\": 9,"
