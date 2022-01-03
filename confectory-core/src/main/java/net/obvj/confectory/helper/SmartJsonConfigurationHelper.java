@@ -26,7 +26,7 @@ import net.minidev.json.JSONObject;
  * (Smart) {@link JSONObject}, with JSONPath capabilities.
  *
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
- * @since 1.1.0
+ * @since 1.0.1
  */
 public class SmartJsonConfigurationHelper extends GenericJsonConfigurationHelper<JSONObject>
 {
