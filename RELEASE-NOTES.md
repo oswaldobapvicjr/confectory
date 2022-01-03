@@ -2,6 +2,13 @@
 
 # Release Notes
 
+## 1.0.1 <sup>(2022-01)</sup> [![Maven Central](https://img.shields.io/maven-central/v/net.obvj/confectory?color=blue&versionPrefix=1.0.1)](https://search.maven.org/search?q=g:net.obvj%20AND%20a:confectory*%20AND%20v:1.0.1)
+
+#### Bug fix
+
+- `[#59]` Upgrade to Jackson 2.13.1 to fix a DoS vulnerability issue
+
+
 ## 1.0.0 <sup>(2021-12)</sup> [![Maven Central](https://img.shields.io/maven-central/v/net.obvj/confectory?color=blue&versionPrefix=1.0.0)](https://search.maven.org/search?q=g:net.obvj%20AND%20a:confectory*%20AND%20v:1.0.0)
 
 #### New features/enhancements
