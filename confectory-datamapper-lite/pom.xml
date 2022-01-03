@@ -14,7 +14,7 @@
     </description>
 
     <properties>
-        <json-org.version>20210307</json-org.version>
+        <json-org.version>20211205</json-org.version>
     </properties>
 
     <dependencies>
