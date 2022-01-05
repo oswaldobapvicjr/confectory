@@ -30,6 +30,9 @@ import net.obvj.confectory.helper.SmartJsonConfigurationHelper;
 public class YAMLToJSONObjectMapper extends YAMLToObjectMapper<JSONObject> implements Mapper<JSONObject>
 {
 
+    /**
+     * Builds a new YAML mapper
+     */
     public YAMLToJSONObjectMapper()
     {
         super(JSONObject.class);

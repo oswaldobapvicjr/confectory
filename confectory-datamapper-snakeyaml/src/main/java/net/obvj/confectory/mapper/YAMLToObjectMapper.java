@@ -35,7 +35,7 @@ import net.obvj.confectory.helper.ConfigurationHelper;
  */
 public class YAMLToObjectMapper<T> implements Mapper<T>
 {
-    private Class<T> targetType;
+    private final Class<T> targetType;
 
     /**
      * Builds a new YAML mapper with the specified target type.
