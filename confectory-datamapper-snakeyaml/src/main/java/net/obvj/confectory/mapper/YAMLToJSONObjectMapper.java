@@ -18,7 +18,7 @@ package net.obvj.confectory.mapper;
 
 import net.minidev.json.JSONObject;
 import net.obvj.confectory.helper.ConfigurationHelper;
-import net.obvj.confectory.helper.SmartJsonConfigurationHelper;
+import net.obvj.confectory.helper.JsonSmartConfigurationHelper;
 
 /**
  * A specialized {@code Mapper} that loads the contents of a valid YAML {@code Source}
@@ -41,7 +41,7 @@ public class YAMLToJSONObjectMapper extends YAMLToObjectMapper<JSONObject> imple
     @Override
     public ConfigurationHelper<JSONObject> configurationHelper(JSONObject jsonObject)
     {
-        return new SmartJsonConfigurationHelper(jsonObject);
+        return new JsonSmartConfigurationHelper(jsonObject);
     }
 
 }

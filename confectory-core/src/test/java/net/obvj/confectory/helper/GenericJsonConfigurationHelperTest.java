@@ -40,7 +40,7 @@ class GenericJsonConfigurationHelperTest
         TEST_JSON_SAMPLE1.put("array", array);
     }
 
-    private static final GenericJsonConfigurationHelper<JSONObject> HELPER = new SmartJsonConfigurationHelper(
+    private static final GenericJsonConfigurationHelper<JSONObject> HELPER = new JsonSmartConfigurationHelper(
             TEST_JSON_SAMPLE1);
 
     private static final String PATH_UNKNOWN = "$.unknown";

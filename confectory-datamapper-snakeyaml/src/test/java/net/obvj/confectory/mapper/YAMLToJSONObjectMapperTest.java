@@ -12,7 +12,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import net.minidev.json.JSONObject;
-import net.obvj.confectory.helper.SmartJsonConfigurationHelper;
+import net.obvj.confectory.helper.JsonSmartConfigurationHelper;
 
 /**
  * Unit tests for the {@link YAMLToJSONObjectMapper} class.
@@ -50,7 +50,7 @@ class YAMLToJSONObjectMapperTest
     @Test
     void configurationHelper_jsonObjectConfigurationHelper()
     {
-        assertThat(mapper.configurationHelper(jsonNode).getClass(), equalTo(SmartJsonConfigurationHelper.class));
+        assertThat(mapper.configurationHelper(jsonNode).getClass(), equalTo(JsonSmartConfigurationHelper.class));
     }
 
 }

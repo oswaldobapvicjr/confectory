@@ -65,12 +65,13 @@ Confectory was designed to work with the lowest-possible number of transitive de
 
 | Module                                                                                                                                   | Providers             | Properties | XML     | JSON    | YAML    |
 |------------------------------------------------------------------------------------------------------------------------------------------|-----------------------|:----------:|:-------:|:-------:|:-------:|
-| [**confectory-core**](https://maven-badges.herokuapp.com/maven-central/net.obvj/confectory-core)                                         | Java only (JDK8+)     | &#9745;    | --      | --      | --      |
-| [**confectory-datamapper-lite**](https://maven-badges.herokuapp.com/maven-central/net.obvj/confectory-datamapper-lite)                   | json.org + JSONPath   | &#9745;    | &#9745; | &#9745; | --      |
+| [**confectory-core**](https://maven-badges.herokuapp.com/maven-central/net.obvj/confectory-core)                                         | Java + json-smart     | &#9745;    | --      | --      | --      |
+| [**confectory-datamapper-lite**](https://maven-badges.herokuapp.com/maven-central/net.obvj/confectory-datamapper-lite)                   | json.org              | &#9745;    | &#9745; | &#9745; | --      |
+| [**confectory-datamapper-gson**](https://maven-badges.herokuapp.com/maven-central/net.obvj/confectory-datamapper-gson)                   | Google Gson           | --         | --      | &#9745; | --      |
 | [**confectory-datamapper-jackson2-json**](https://maven-badges.herokuapp.com/maven-central/net.obvj/confectory-datamapper-jackson2-json) | Jackson 2             | --         | --      | &#9745; | --      |
 | [**confectory-datamapper-jackson2-xml**](https://maven-badges.herokuapp.com/maven-central/net.obvj/confectory-datamapper-jackson2-xml)   | Jackson + XML Mapper  | --         | &#9745; | &#9745; | --      |
 | [**confectory-datamapper-jackson2-yaml**](https://maven-badges.herokuapp.com/maven-central/net.obvj/confectory-datamapper-jackson2-yaml) | Jackson + YAML Mapper | --         | --      | &#9745; | &#9745; |
-| [**confectory-datamapper-gson**](https://maven-badges.herokuapp.com/maven-central/net.obvj/confectory-datamapper-gson)                   | Gson                  | --         | --      | &#9745; | --      |
+| [**confectory-datamapper-snakeyaml**](https://obvj.net/confectory)                                                                       | SnakeYAML             | --         | --      | &#9745; | &#9745; |
 
 
 ## Contributing

@@ -23,12 +23,12 @@ import net.minidev.json.JSONObject;
 
 /**
  * A specialized Configuration Helper that retrieves data from {@code net.minidev}'s
- * (Smart) {@link JSONObject}, with JSONPath capabilities.
+ * (json-smart) {@link JSONObject}, with JSONPath capabilities.
  *
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 1.0.1
  */
-public class SmartJsonConfigurationHelper extends GenericJsonConfigurationHelper<JSONObject>
+public class JsonSmartConfigurationHelper extends GenericJsonConfigurationHelper<JSONObject>
 {
 
     /**
@@ -36,7 +36,7 @@ public class SmartJsonConfigurationHelper extends GenericJsonConfigurationHelper
      *
      * @param jsonObject the JSON document to be set
      */
-    public SmartJsonConfigurationHelper(JSONObject jsonObject)
+    public JsonSmartConfigurationHelper(JSONObject jsonObject)
     {
         super(jsonObject, new JsonSmartJsonProvider(), new JsonSmartMappingProvider());
     }
