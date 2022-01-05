@@ -1,0 +1,32 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>net.obvj</groupId>
+        <artifactId>confectory</artifactId>
+        <version>1.0.2-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>confectory-datamapper-jackson2-toml</artifactId>
+    <name>Confectory Data Mapper - Jackson 2 (TOML)</name>
+    <description>
+        Confectory module that adds support to TOML deserialization using Jackson 2 as provider
+    </description>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>net.obvj</groupId>
+            <artifactId>confectory-datamapper-jackson2-json</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-toml</artifactId>
+            <version>${jackson2.version}</version>
+        </dependency>
+
+    </dependencies>
+
+</project>
