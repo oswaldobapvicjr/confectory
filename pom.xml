@@ -68,6 +68,7 @@
         <module>confectory-datamapper-jackson2-json</module>
         <module>confectory-datamapper-jackson2-xml</module>
         <module>confectory-datamapper-jackson2-yaml</module>
+        <module>confectory-datamapper-jackson2-toml</module>
         <module>confectory-datamapper-gson</module>
         <module>confectory-datamapper-snakeyaml</module>
     </modules>
