@@ -4,7 +4,7 @@
 
     <groupId>net.obvj</groupId>
     <artifactId>confectory</artifactId>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>1.1.0</version>
     <packaging>pom</packaging>
 
     <name>Confectory</name>
@@ -35,7 +35,7 @@
         <url>https://obvj.net/confectory</url>
         <connection>scm:git:git://github.com/oswaldobapvicjr/confectory.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/oswaldobapvicjr/confectory.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>confectory-1.1.0</tag>
     </scm>
 
     <issueManagement>
