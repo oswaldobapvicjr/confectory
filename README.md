@@ -15,7 +15,7 @@ The modular, multi-format configuration framework for Java applications.
 
 ## Overview
 
-**Confectory** provides a comprehensive API for handling system configuration data. Use it to accept and combine configuration data from multiple **sources** and **formats**.
+Confectory is a modular framework, designed to hide the complexity of handling multiple configuration files for Java applications in general, providing a **reliable** and **fast** API for parsing data from different **Sources** (file or URL) in a variety of formats and querying data transparently, using a **unified data query language**: JSONPath.
 
 ## Examples
 
