@@ -9,8 +9,6 @@
 
 The modular, multi-format configuration framework for Java applications.
 
-![confectory-animation](resources/confectory-animation.gif)
-
 ---
 
 ## Overview
