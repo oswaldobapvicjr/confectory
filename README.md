@@ -49,6 +49,8 @@ Configuration<JSONObject> config = Configuration.<JSONObject>builder()
         .build();
 ````
 
+> ℹ️ [Find more examples in the wiki.](https://github.com/oswaldobapvicjr/confectory/wiki/Examples/)
+
 ## Features
 
 - Easy configuration setup
