@@ -17,7 +17,7 @@ Confectory is a modular framework, designed to hide the complexity of handling m
 
 ## Examples
 
-#### Loading configuration data from a local Properties file in the classpath:
+#### 1. Load data from a local Properties file in the classpath:
 
 ````java
 Configuration<Properties> config = Configuration.<Properties>builder()
@@ -26,27 +26,23 @@ Configuration<Properties> config = Configuration.<Properties>builder()
         .build();
 ````
 
-#### Loading configuration data from a JSON document in the file system:
+Then access document data using one of the *getter* methods, using keys:
+````java
+System.out.println(config.getBoolean("web.enable"));
+````
+
+#### 2. Load data from a JSON document in a Web server:
 
 ````java
 Configuration<JSONObject> config = Configuration.<JSONObject>builder()
-        .source(SourceFactory.fileSource("${HOME}/myapp/myconf.json"))
+        .source("http://time.jsontest.com")
         .mapper(new JSONObjectMapper())
         .build();
 ````
 
-> Then access document data using [JSONPath expressions](https://goessner.net/articles/JsonPath/index.html#e2):
-> ````java
-> String value = config.getString("$.store.name");
-> ````
-
-#### Loading XML document from an HTTP server as JSON:
-
+Then access document data using [JSONPath expressions](https://goessner.net/articles/JsonPath/index.html#e2):
 ````java
-Configuration<JSONObject> config = Configuration.<JSONObject>builder()
-        .source("http://myserver:8080/config")
-        .mapper(new XmlToJSONObjectMapper())
-        .build();
+System.out.println(config.getString("$.time"));
 ````
 
 > ℹ️ [Find more examples in the wiki.](https://github.com/oswaldobapvicjr/confectory/wiki/Examples/)
