@@ -18,10 +18,18 @@ package net.obvj.confectory.util;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 
 import org.apache.commons.lang3.ClassUtils;
 
+/**
+ * A class that contains built-in parsers from string into common object types, typically
+ * for Reflection purposes.
+ *
+ * @author oswaldo.bapvic.jr
+ * @since 1.2.0
+ */
 public class ParseFactory
 {
     private static final Map<Class<?>, Function<String, ?>> factory = new HashMap<>();
@@ -39,26 +47,44 @@ public class ParseFactory
         factory.put(String.class, Function.identity());
     }
 
+    /**
+     * Private constructor to hide the public, implicit one.
+     */
     private ParseFactory()
     {
         throw new UnsupportedOperationException("Instantiation not allowed");
     }
 
+    /**
+     * Parses the contents of a string into the specified type.
+     *
+     * @param <T>    the target type
+     * @param type   the target type
+     * @param string the string to be parsed
+     * @return an object containing the result of the parsing of the specified string into the
+     *         specified type
+     * @throws UnsupportedOperationException if the requested target type is not supported
+     */
     @SuppressWarnings("unchecked")
     public static <T> T parse(Class<T> type, String string)
     {
         Class<?> objectType = ClassUtils.primitiveToWrapper(type);
-        Object object = getFunction(objectType).apply(string);
+        Function<String, ?> function = getFunction(objectType)
+                .orElseThrow(() -> new UnsupportedOperationException("Unsupported type: " + type));
+        Object object = function.apply(string);
         return (T) object;
     }
 
-    private static Function<String, ?> getFunction(Class<?> type)
+    /**
+     * Returns an {@link Optional} possibly containing a {@link Function} to parse the
+     * specified target type.
+     *
+     * @param type the target type
+     * @return the {@link Function} to be applied for the specified type, or
+     *         {@link Optional#empty()} if the specified type is not supported
+     */
+    private static Optional<Function<String, ?>> getFunction(Class<?> type)
     {
-        Function<String, ?> function = factory.get(type);
-        if (function == null)
-        {
-            throw new UnsupportedOperationException("Unsupported type: " + type);
-        }
-        return function;
+        return Optional.ofNullable(factory.get(type));
     }
 }
