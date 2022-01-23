@@ -118,7 +118,7 @@ public class PropertiesToObjectMapper<T> implements Mapper<T>
      * @throws IllegalAccessException if the field is not made accessible
      * @throws NullPointerException   if any of the parameters is null
      */
-    protected void writeField(T targetObject, Field field, Properties properties) throws IllegalAccessException
+    private void writeField(T targetObject, Field field, Properties properties) throws IllegalAccessException
     {
         if (isTransient(field))
         {

@@ -31,39 +31,37 @@ class PropertiesToObjectMapperTest
 
     static class MyBeanNoExplicitMapping
     {
-        Boolean booleanValue;
-        String stringValue;
-        Integer intValue;
+        Boolean booleanValue; // implicit mapping
+        String stringValue;   // implicit mapping
+        Integer intValue;     // implicit mapping
 
         public MyBeanNoExplicitMapping() {}
     }
 
     static class MyBeanExplicitMapping
     {
-        @Property("booleanValue") boolean b;
-        @Property("stringValue") String s;
-        @Property("intValue") int i;
+        @Property("booleanValue") boolean b; // explicit mapping
+        @Property("stringValue") String s;   // explicit mapping
+        @Property("intValue") int i;         // explicit mapping
 
         public MyBeanExplicitMapping() {}
     }
 
     static class MyBeanHybrid
     {
-        @Property("booleanValue")
-        boolean b;
-        @Property
-        String stringValue;
-        int intValue;
-        double unknownDouble;
+        @Property("booleanValue") boolean b; // explicit mapping
+        @Property String stringValue;        // implicit mapping
+        int intValue;                        // implicit mapping
+        double unknownDouble;                // invalid property
 
         public MyBeanHybrid() {}
     }
 
     static class MyBeanAllFieldsTransient
     {
-        transient boolean booleanValue;
-        transient String stringValue;
-        transient int intValue;
+        transient boolean booleanValue; // implicit, but transient
+        transient String stringValue;   // implicit, but transient
+        transient int intValue;         // implicit, but transient
 
         public MyBeanAllFieldsTransient() {}
     }
