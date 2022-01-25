@@ -22,5 +22,7 @@ public class ConfectoryTestDriveGsonJsonToJsonObject
         System.out.println(config.getString("$.agents[0].interval"));
         System.out.println(config.getString("$.agents[1:].class"));
         System.out.println(config.getString("$.agents[?(@.class=='Agent2')].interval"));
+        System.out.println(config.get("$.agents.*.class"));
+        System.out.println(config.get("$.agents[0]"));
     }
 }

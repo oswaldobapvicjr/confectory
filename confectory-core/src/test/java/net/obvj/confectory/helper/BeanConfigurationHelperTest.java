@@ -32,37 +32,43 @@ class BeanConfigurationHelperTest
     }
 
     @Test
-    void getBoolean_existingKey_true()
+    void get_existingKey_exception()
+    {
+        assertThat(() -> HELPER.get(KEY), CONFIGURATION_EXCEPTION_TYPE_NOT_SUPPORTED);
+    }
+
+    @Test
+    void getBoolean_existingKey_exception()
     {
         assertThat(() -> HELPER.getBoolean(KEY), CONFIGURATION_EXCEPTION_TYPE_NOT_SUPPORTED);
     }
 
     @Test
-    void getInteger_existingKey_zero()
+    void getInteger_existingKey_exception()
     {
         assertThat(() -> HELPER.getInteger(KEY), CONFIGURATION_EXCEPTION_TYPE_NOT_SUPPORTED);
     }
 
     @Test
-    void getLong_existingKey_zero()
+    void getLong_existingKey_exception()
     {
         assertThat(() -> HELPER.getLong(KEY), CONFIGURATION_EXCEPTION_TYPE_NOT_SUPPORTED);
     }
 
     @Test
-    void getDouble_existingKey_zero()
+    void getDouble_existingKey_exception()
     {
         assertThat(() -> HELPER.getDouble(KEY), CONFIGURATION_EXCEPTION_TYPE_NOT_SUPPORTED);
     }
 
     @Test
-    void getString_existingKey_empty()
+    void getString_existingKey_exception()
     {
         assertThat(() -> HELPER.getString(KEY), CONFIGURATION_EXCEPTION_TYPE_NOT_SUPPORTED);
     }
 
     @Test
-    void getMandatoryString_existingKey_empty()
+    void getMandatoryString_existingKey_exception()
     {
         assertThat(() -> HELPER.getMandatoryString(KEY), CONFIGURATION_EXCEPTION_TYPE_NOT_SUPPORTED);
     }

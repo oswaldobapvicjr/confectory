@@ -24,20 +24,20 @@ import net.obvj.confectory.ConfigurationException;
 @ExtendWith(MockitoExtension.class)
 class GenericJsonConfigurationHelperTest
 {
+    private static final JSONArray TEST_JSON_ARRAY1 = new JSONArray();
     private static final JSONObject TEST_JSON_SAMPLE1 = new JSONObject();
 
     static
     {
+        TEST_JSON_ARRAY1.add("element1");
+        TEST_JSON_ARRAY1.add("element2");
+
         TEST_JSON_SAMPLE1.put("intValue", 9);
         TEST_JSON_SAMPLE1.put("longValue", 9876543210L);
         TEST_JSON_SAMPLE1.put("booleanValue", true);
         TEST_JSON_SAMPLE1.put("stringValue", "test");
         TEST_JSON_SAMPLE1.put("doubleValue", 7.89);
-
-        JSONArray array = new JSONArray();
-        array.add("element1");
-        array.add("element2");
-        TEST_JSON_SAMPLE1.put("array", array);
+        TEST_JSON_SAMPLE1.put("array", TEST_JSON_ARRAY1);
     }
 
     private static final GenericJsonConfigurationHelper<JSONObject> HELPER = new JsonSmartConfigurationHelper(
@@ -51,6 +51,18 @@ class GenericJsonConfigurationHelperTest
     void getBean_notEmpty()
     {
         assertThat(HELPER.getBean(), is(sameInstance(TEST_JSON_SAMPLE1)));
+    }
+
+    @Test
+    void get_existingKey_success()
+    {
+        assertThat(HELPER.get("$.array[*]"), equalTo(TEST_JSON_ARRAY1));
+    }
+
+    @Test
+    void get_unknownKey_emptyArrays()
+    {
+        assertThat(HELPER.get(PATH_UNKNOWN), equalTo(new JSONArray()));
     }
 
     @Test

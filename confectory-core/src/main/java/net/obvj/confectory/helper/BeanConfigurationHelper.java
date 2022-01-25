@@ -41,7 +41,18 @@ public class BeanConfigurationHelper<T> extends BasicConfigurationHelper<T>
     /**
      * @param key not used since this method implementation is a "no-op"
      * @throws ConfigurationException always, since the data for this type of helper should be
-     *                                handled by the user-defined bean
+     *                                retrieved by the user-defined bean
+     */
+    @Override
+    public Object get(String key)
+    {
+        throw newConfigurationException();
+    }
+
+    /**
+     * @param key not used since this method implementation is a "no-op"
+     * @throws ConfigurationException always, since the data for this type of helper should be
+     *                                retrieved by the user-defined bean
      */
     @Override
     public String getString(String key)
@@ -52,7 +63,7 @@ public class BeanConfigurationHelper<T> extends BasicConfigurationHelper<T>
     /**
      * @param key not used since this method implementation is a "no-op"
      * @throws ConfigurationException always, since the data for this type of helper should be
-     *                                handled by the user-defined bean
+     *                                retrieved by the user-defined bean
      */
     @Override
     public String getMandatoryString(String key)

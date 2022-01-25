@@ -41,6 +41,13 @@ public class PropertiesConfigurationHelper extends BasicConfigurationHelper<Prop
     }
 
     @Override
+    public Object get(String key)
+    {
+        validateKey(key);
+        return super.bean.get(key);
+    }
+
+    @Override
     public String getString(String key)
     {
         return getValue(key);
@@ -59,8 +66,12 @@ public class PropertiesConfigurationHelper extends BasicConfigurationHelper<Prop
 
     protected String getValue(String key)
     {
-        Objects.requireNonNull(key, "The key must not be null");
+        validateKey(key);
         return super.bean.getProperty(key);
     }
 
+    private void validateKey(String key)
+    {
+        Objects.requireNonNull(key, "The key must not be null");
+    }
 }

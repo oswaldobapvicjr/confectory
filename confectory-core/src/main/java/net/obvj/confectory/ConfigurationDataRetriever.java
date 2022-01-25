@@ -37,6 +37,22 @@ public interface ConfigurationDataRetriever<T>
     T getBean();
 
     /**
+     * Returns the object associated with the specified {@code key}.
+     * <p>
+     * <b>Note:</b> The actual return type may vary depending on the underlying
+     * implementation.
+     *
+     * @param key the object key (some implementations may also accept a path expression, e.g:
+     *            {@code JSONPath})
+     *
+     * @return the object object associated with the specified {@code key}; {@code null} if
+     *         not found
+     *
+     * @since 1.2.0
+     */
+    Object get(String key);
+
+    /**
      * Returns the {@code Boolean} object associated with the specified {@code key}.
      *
      * @param key the object key (some implementations may also accept a path expression, e.g:
