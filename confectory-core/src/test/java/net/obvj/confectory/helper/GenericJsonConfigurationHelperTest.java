@@ -60,7 +60,7 @@ class GenericJsonConfigurationHelperTest
     }
 
     @Test
-    void get_unknownKey_emptyArrays()
+    void get_unknownKey_emptyArray()
     {
         assertThat(HELPER.get(PATH_UNKNOWN), equalTo(new JSONArray()));
     }

@@ -39,14 +39,18 @@ public interface ConfigurationDataRetriever<T>
     /**
      * Returns the object associated with the specified {@code key}.
      * <p>
-     * <b>Note:</b> The actual return type may vary depending on the underlying
-     * implementation.
+     * <b>Notes:</b>
+     * <ul>
+     * <li>The actual return type may vary depending on the underlying implementation</li>
+     * <li>On a JSON implementation, the return will usually be an array</li>
+     * </ul>
      *
      * @param key the object key (some implementations may also accept a path expression, e.g:
      *            {@code JSONPath})
      *
-     * @return the object object associated with the specified {@code key}; {@code null} if
-     *         not found
+     * @return the object object associated with the specified {@code key}. Depending on the
+     *         actual implementation, the result may be either {@code null} or an empty array
+     *         if the specified key is not found
      *
      * @since 1.2.0
      */
