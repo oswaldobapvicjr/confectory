@@ -253,7 +253,7 @@ public class GenericJsonConfigurationHelper<J> implements ConfigurationHelper<J>
      *
      * @param jsonPath the path to read
      * @return the {@code String} object associated with the specified {@code jsonPath};
-     *         {@code null} if the path is found
+     *         {@code null} if the path is not found
      *
      * @throws IllegalArgumentException if {@code jsonPath} is null or empty
      * @throws InvalidPathException     if the {@code jsonPath} expression is not valid
