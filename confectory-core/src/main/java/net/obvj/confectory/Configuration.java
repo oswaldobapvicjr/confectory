@@ -159,6 +159,12 @@ public final class Configuration<T> implements ConfigurationDataRetriever<T>, Co
     }
 
     @Override
+    public Object get(String key)
+    {
+        return getService().get(key);
+    }
+
+    @Override
     public Boolean getBoolean(String key)
     {
         return getService().getBoolean(key);
@@ -305,6 +311,12 @@ final class ConfigurationService<T> implements ConfigurationDataRetriever<T>
     public T getBean()
     {
         return bean;
+    }
+
+    @Override
+    public Object get(String key)
+    {
+        return helper.get(key);
     }
 
     @Override

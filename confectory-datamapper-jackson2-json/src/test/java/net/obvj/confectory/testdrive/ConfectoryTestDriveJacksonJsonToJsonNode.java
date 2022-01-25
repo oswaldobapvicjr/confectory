@@ -19,5 +19,7 @@ public class ConfectoryTestDriveJacksonJsonToJsonNode
         System.out.println(config.getBoolean("enabled"));
         System.out.println(config.getString("$.agents[0].interval"));
         System.out.println(config.getString("$.agents[?(@.class=='Agent2')].interval"));
+        System.out.println(config.get("$.agents[*].class"));
+        System.out.println(config.get("$.agents[0]"));
     }
 }

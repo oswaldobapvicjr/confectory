@@ -18,5 +18,7 @@ public class ConfectoryTestDriveXMLToJSONObject
         System.out.println(config.getBoolean("conf.enabled"));
         System.out.println(config.getString("**.agent[0].interval"));
         System.out.println(config.getString("$.conf.agents.agent[?(@.class=='Agent2')].interval"));
+        System.out.println(config.get("$.conf.agents"));
+        System.out.println(config.get("$.conf.agents.**.class"));
     }
 }

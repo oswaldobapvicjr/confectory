@@ -21,6 +21,8 @@ public class ConfectoryTestDriveYAMLToJSONObject
         System.out.println(config.getString("$.contactDetails[?(@.type=='landline')].number"));
         System.out.println(config.getString("$.homeAddress.line"));
         System.out.println(config.getString("$.homeAddress.city"));
+        System.out.println(config.get("$.contactDetails[*].type"));
+        System.out.println(config.get("$.contactDetails[?(@.type=='landline')]"));
 
     }
 }

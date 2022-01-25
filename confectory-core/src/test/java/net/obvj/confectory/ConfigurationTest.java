@@ -103,6 +103,19 @@ class ConfigurationTest
     }
 
     @Test
+    void get_validKey_value()
+    {
+        // java.util.Properties doesn't convert strings
+        assertThat(CONFIG_PROPERTIES_1.get("myBool"), equalTo("true"));
+    }
+
+    @Test
+    void get_invalidKey_null()
+    {
+        assertThat(CONFIG_PROPERTIES_1.get(UNKNOWN), equalTo(null));
+    }
+
+    @Test
     void getString_validKey_value()
     {
         assertThat(CONFIG_PROPERTIES_1.getString("myKey"), equalTo("myValue"));

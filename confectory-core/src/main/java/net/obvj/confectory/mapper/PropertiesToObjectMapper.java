@@ -54,7 +54,6 @@ import net.obvj.confectory.util.Property;
  * assume a default value, i.e.: {@code null} for object types, zero for numeric types,
  * and {@code false} for booleans.</li>
  * </ul>
- * <p>
  *
  * @param <T> the target type to be produced by this {@code Mapper}
  *

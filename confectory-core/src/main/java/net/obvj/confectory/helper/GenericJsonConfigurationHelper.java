@@ -74,13 +74,14 @@ public class GenericJsonConfigurationHelper<J> implements ConfigurationHelper<J>
      *
      * @param jsonPath the path to read
      * @return the {@code Boolean} object associated with the specified {@code jsonPath};
-     *         {@code null} if not found
+     *         {@code null} if the path is not found
      *
-     * @throws InvalidPathException   if the {@code jsonPath} expression is not valid
-     * @throws ConfigurationException if the {@code jsonPath} expression returns more than a
-     *                                single element
-     * @throws ClassCastException     if the {@code jsonPath} result cannot be assigned to
-     *                                {@code boolean}
+     * @throws IllegalArgumentException if {@code jsonPath} is null or empty
+     * @throws InvalidPathException     if the {@code jsonPath} expression is not valid
+     * @throws ConfigurationException   if the {@code jsonPath} expression returns more than a
+     *                                  single element
+     * @throws ClassCastException       if the {@code jsonPath} result cannot be assigned to
+     *                                  {@code boolean}
      */
     @Override
     public Boolean getBoolean(String jsonPath)
@@ -97,11 +98,12 @@ public class GenericJsonConfigurationHelper<J> implements ConfigurationHelper<J>
      * @return the {@code Boolean} object associated with the specified {@code jsonPath};
      *         never {@code null}
      *
-     * @throws InvalidPathException   if the {@code jsonPath} expression is not valid
-     * @throws ConfigurationException if not value found or the {@code jsonPath} expression
-     *                                returns more than a single element
-     * @throws ClassCastException     if the {@code jsonPath} result cannot be assigned to
-     *                                {@code boolean}
+     * @throws IllegalArgumentException if {@code jsonPath} is null or empty
+     * @throws InvalidPathException     if the {@code jsonPath} expression is not valid
+     * @throws ConfigurationException   if not value found or the {@code jsonPath} expression
+     *                                  returns more than a single element
+     * @throws ClassCastException       if the {@code jsonPath} result cannot be assigned to
+     *                                  {@code boolean}
      * @since 0.4.0
      */
     @Override
@@ -117,13 +119,14 @@ public class GenericJsonConfigurationHelper<J> implements ConfigurationHelper<J>
      *
      * @param jsonPath the path to read
      * @return the {@code Integer} object associated with the specified {@code jsonPath};
-     *         {@code null} if not found
+     *         {@code null} if the path is not found
      *
-     * @throws InvalidPathException   if the {@code jsonPath} expression is not valid
-     * @throws ConfigurationException if the {@code jsonPath} expression returns more than a
-     *                                single element
-     * @throws ClassCastException     if the {@code jsonPath} result cannot be assigned to
-     *                                {@code int}
+     * @throws IllegalArgumentException if {@code jsonPath} is null or empty
+     * @throws InvalidPathException     if the {@code jsonPath} expression is not valid
+     * @throws ConfigurationException   if the {@code jsonPath} expression returns more than a
+     *                                  single element
+     * @throws ClassCastException       if the {@code jsonPath} result cannot be assigned to
+     *                                  {@code int}
      */
     @Override
     public Integer getInteger(String jsonPath)
@@ -140,11 +143,12 @@ public class GenericJsonConfigurationHelper<J> implements ConfigurationHelper<J>
      * @return the {@code Integer} object associated with the specified {@code jsonPath};
      *         never {@code null}
      *
-     * @throws InvalidPathException   if the {@code jsonPath} expression is not valid
-     * @throws ConfigurationException if not value found or the {@code jsonPath} expression
-     *                                returns more than a single element
-     * @throws ClassCastException     if the {@code jsonPath} result cannot be assigned to
-     *                                {@code int}
+     * @throws IllegalArgumentException if {@code jsonPath} is null or empty
+     * @throws InvalidPathException     if the {@code jsonPath} expression is not valid
+     * @throws ConfigurationException   if not value found or the {@code jsonPath} expression
+     *                                  returns more than a single element
+     * @throws ClassCastException       if the {@code jsonPath} result cannot be assigned to
+     *                                  {@code int}
      * @since 0.4.0
      */
     @Override
@@ -160,13 +164,14 @@ public class GenericJsonConfigurationHelper<J> implements ConfigurationHelper<J>
      *
      * @param jsonPath the path to read
      * @return the {@code Long} object associated with the specified {@code jsonPath};
-     *         {@code null} if not found
+     *         {@code null} if the path is not found
      *
-     * @throws InvalidPathException   if the {@code jsonPath} expression is not valid
-     * @throws ConfigurationException if the {@code jsonPath} expression returns more than a
-     *                                single element
-     * @throws ClassCastException     if the {@code jsonPath} result cannot be assigned to
-     *                                {@code long}
+     * @throws IllegalArgumentException if {@code jsonPath} is null or empty
+     * @throws InvalidPathException     if the {@code jsonPath} expression is not valid
+     * @throws ConfigurationException   if the {@code jsonPath} expression returns more than a
+     *                                  single element
+     * @throws ClassCastException       if the {@code jsonPath} result cannot be assigned to
+     *                                  {@code long}
      */
     @Override
     public Long getLong(String jsonPath)
@@ -183,11 +188,12 @@ public class GenericJsonConfigurationHelper<J> implements ConfigurationHelper<J>
      * @return the {@code Long} object associated with the specified {@code jsonPath}; never
      *         {@code null}
      *
-     * @throws InvalidPathException   if the {@code jsonPath} expression is not valid
-     * @throws ConfigurationException if not value found or the {@code jsonPath} expression
-     *                                returns more than a single element
-     * @throws ClassCastException     if the {@code jsonPath} result cannot be assigned to
-     *                                {@code long}
+     * @throws IllegalArgumentException if {@code jsonPath} is null or empty
+     * @throws InvalidPathException     if the {@code jsonPath} expression is not valid
+     * @throws ConfigurationException   if not value found or the {@code jsonPath} expression
+     *                                  returns more than a single element
+     * @throws ClassCastException       if the {@code jsonPath} result cannot be assigned to
+     *                                  {@code long}
      * @since 0.4.0
      */
     @Override
@@ -203,13 +209,14 @@ public class GenericJsonConfigurationHelper<J> implements ConfigurationHelper<J>
      *
      * @param jsonPath the path to read
      * @return the {@code Double} object associated with the specified {@code jsonPath};
-     *         {@code null} if not found
+     *         {@code null} if the path is not found
      *
-     * @throws InvalidPathException   if the {@code jsonPath} expression is not valid
-     * @throws ConfigurationException if the {@code jsonPath} expression returns more than a
-     *                                single element
-     * @throws ClassCastException     if the {@code jsonPath} result cannot be assigned to
-     *                                {@code double}
+     * @throws IllegalArgumentException if {@code jsonPath} is null or empty
+     * @throws InvalidPathException     if the {@code jsonPath} expression is not valid
+     * @throws ConfigurationException   if the {@code jsonPath} expression returns more than a
+     *                                  single element
+     * @throws ClassCastException       if the {@code jsonPath} result cannot be assigned to
+     *                                  {@code double}
      */
     @Override
     public Double getDouble(String jsonPath)
@@ -226,11 +233,12 @@ public class GenericJsonConfigurationHelper<J> implements ConfigurationHelper<J>
      * @return the {@code Double} object associated with the specified {@code jsonPath}; never
      *         {@code null}
      *
-     * @throws InvalidPathException   if the {@code jsonPath} expression is not valid
-     * @throws ConfigurationException if not value found or the {@code jsonPath} expression
-     *                                returns more than a single element
-     * @throws ClassCastException     if the {@code jsonPath} result cannot be assigned to
-     *                                {@code double}
+     * @throws IllegalArgumentException if {@code jsonPath} is null or empty
+     * @throws InvalidPathException     if the {@code jsonPath} expression is not valid
+     * @throws ConfigurationException   if not value found or the {@code jsonPath} expression
+     *                                  returns more than a single element
+     * @throws ClassCastException       if the {@code jsonPath} result cannot be assigned to
+     *                                  {@code double}
      * @since 0.4.0
      */
     @Override
@@ -245,11 +253,12 @@ public class GenericJsonConfigurationHelper<J> implements ConfigurationHelper<J>
      *
      * @param jsonPath the path to read
      * @return the {@code String} object associated with the specified {@code jsonPath};
-     *         {@code null} if not found
+     *         {@code null} if the path is not found
      *
-     * @throws InvalidPathException   if the {@code jsonPath} expression is not valid
-     * @throws ConfigurationException if the {@code jsonPath} expression returns more than a
-     *                                single element
+     * @throws IllegalArgumentException if {@code jsonPath} is null or empty
+     * @throws InvalidPathException     if the {@code jsonPath} expression is not valid
+     * @throws ConfigurationException   if the {@code jsonPath} expression returns more than a
+     *                                  single element
      */
     @Override
     public String getString(String jsonPath)
@@ -265,9 +274,10 @@ public class GenericJsonConfigurationHelper<J> implements ConfigurationHelper<J>
      * @return the {@code String} value associated with the specified {@code jsonPath}; never
      *         {@code null}
      *
-     * @throws InvalidPathException   if the {@code jsonPath} expression is not valid
-     * @throws ConfigurationException if not value found or the {@code jsonPath} expression
-     *                                returns more than a single element
+     * @throws IllegalArgumentException if {@code jsonPath} is null or empty
+     * @throws InvalidPathException     if the {@code jsonPath} expression is not valid
+     * @throws ConfigurationException   if not value found or the {@code jsonPath} expression
+     *                                  returns more than a single element
      * @since 0.4.0
      */
     @Override
@@ -286,11 +296,12 @@ public class GenericJsonConfigurationHelper<J> implements ConfigurationHelper<J>
      *
      * @return the mapped value associated with the specified {@code jsonPath}
      *
-     * @throws InvalidPathException   if the {@code jsonPath} expression is not valid
-     * @throws ConfigurationException if not value found or the {@code jsonPath} expression
-     *                                returns more than a single element
-     * @throws ClassCastException     if the {@code jsonPath} result cannot be assigned to the
-     *                                specified {@code targetType}
+     * @throws IllegalArgumentException if {@code jsonPath} is null or empty
+     * @throws InvalidPathException     if the {@code jsonPath} expression is not valid
+     * @throws ConfigurationException   if not value found or the {@code jsonPath} expression
+     *                                  returns more than a single element
+     * @throws ClassCastException       if the {@code jsonPath} result cannot be assigned to
+     *                                  the specified {@code targetType}
      * @since 0.4.0
      */
     protected <T> T getValue(String jsonPath, Class<T> targetType)
@@ -308,15 +319,16 @@ public class GenericJsonConfigurationHelper<J> implements ConfigurationHelper<J>
      *
      * @return the mapped value associated with the specified {@code jsonPath}
      *
-     * @throws InvalidPathException   if the {@code jsonPath} expression is not valid
-     * @throws ConfigurationException if the {@code jsonPath} expression returns more than a
-     *                                single element
-     * @throws ClassCastException     if the {@code jsonPath} result cannot be assigned to the
-     *                                specified {@code targetType}
+     * @throws IllegalArgumentException if {@code jsonPath} is null or empty
+     * @throws InvalidPathException     if the {@code jsonPath} expression is not valid
+     * @throws ConfigurationException   if the {@code jsonPath} expression returns more than a
+     *                                  single element
+     * @throws ClassCastException       if the {@code jsonPath} result cannot be assigned to
+     *                                  the specified {@code targetType}
      */
     protected <T> T getValue(String jsonPath, Class<T> targetType, boolean mandatory)
     {
-        Object result = documentContext.read(jsonPath);
+        Object result = get(jsonPath);
         switch (jsonProvider.length(result))
         {
         case 0:
@@ -331,6 +343,29 @@ public class GenericJsonConfigurationHelper<J> implements ConfigurationHelper<J>
         default:
             throw new ConfigurationException("Multiple values found for path: %s", jsonPath);
         }
+    }
+
+    /**
+     * Returns the object associated with the specified @code jsonPath} in the JSON document
+     * in context.
+     * <p>
+     * <b>Note:</b> The actual return type may vary depending on the JSON implementation, but
+     * usually it should be an array.
+     *
+     * @param jsonPath the path to read
+     *
+     * @return the object associated with the specified {@code key}; or an empty array if the
+     *         path is not found
+     *
+     * @throws IllegalArgumentException if {@code jsonPath} is null or empty
+     * @throws InvalidPathException     if the {@code jsonPath} expression is not valid
+     *
+     * @since 1.2.0
+     */
+    @Override
+    public Object get(String jsonPath)
+    {
+        return documentContext.read(jsonPath);
     }
 
 }
