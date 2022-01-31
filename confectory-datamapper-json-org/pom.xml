@@ -8,7 +8,7 @@
     </parent>
 
     <artifactId>confectory-datamapper-json-org</artifactId>
-    <name>Confectory Data Mapper - json.org</name>
+    <name>Confectory Data Mapper - Json.org</name>
     <description>
         Confectory module that adds support to JSON and XML using json.org's reference implementation as provider
     </description>
