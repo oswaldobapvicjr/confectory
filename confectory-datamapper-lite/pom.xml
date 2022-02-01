@@ -12,25 +12,12 @@
     <description>
         Confectory module that adds support to JSON and XML using JSON-Java and JsonPath
     </description>
+    <packaging>pom</packaging>
 
-    <properties>
-        <json-org.version>20211205</json-org.version>
-    </properties>
-
-    <dependencies>
-
-        <dependency>
-            <groupId>net.obvj</groupId>
-            <artifactId>confectory-core</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>${json-org.version}</version>
-        </dependency>
-
-    </dependencies>
+    <distributionManagement>
+        <relocation>
+            <artifactId>confectory-datamapper-json-org</artifactId>
+        </relocation>
+    </distributionManagement>
 
 </project>

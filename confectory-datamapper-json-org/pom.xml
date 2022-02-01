@@ -1,0 +1,36 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>net.obvj</groupId>
+        <artifactId>confectory</artifactId>
+        <version>1.1.1-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>confectory-datamapper-json-org</artifactId>
+    <name>Confectory Data Mapper - Json.org</name>
+    <description>
+        Confectory module that adds support to JSON and XML using json.org's reference implementation as provider
+    </description>
+
+    <properties>
+        <json-org.version>20211205</json-org.version>
+    </properties>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>net.obvj</groupId>
+            <artifactId>confectory-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>${json-org.version}</version>
+        </dependency>
+
+    </dependencies>
+
+</project>
