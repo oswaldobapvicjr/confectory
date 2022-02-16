@@ -11,8 +11,10 @@ import java.io.IOException;
 
 import org.junit.jupiter.api.Test;
 
+import net.obvj.confectory.ConfigurationException;
 import net.obvj.confectory.ConfigurationSourceException;
 import net.obvj.confectory.helper.BeanConfigurationHelper;
+import net.obvj.confectory.mapper.PropertiesToObjectMapperTest.MyBeanPrivateConstructor;
 import net.obvj.confectory.mapper.model.MyIni;
 
 /**
@@ -49,7 +51,7 @@ class INIToObjectMapperTest
 
     private static final String INVALID_INI_4 = "invalid line\n";
 
-    private static final String INVALID_INI_5 = ";Comment\n"
+    private static final String VALID_INI_2   = ";Comment\n"
                                               + "rootProperty = myRootValue\n"
                                               + "\n"
                                               + "[section3]\n" // Unmapped, the children properties shall be skipped
@@ -62,7 +64,11 @@ class INIToObjectMapperTest
                                               + "section_string = mySection2Value\n"
                                               + "section_number = 2\n"
                                               + "section_bool = true\n";
-;
+
+    static class MyBeanPrivateConstructor
+    {
+        private MyBeanPrivateConstructor() {}
+    }
 
     private Mapper<MyIni> mapper = new INIToObjectMapper<>(MyIni.class);
 
@@ -128,12 +134,29 @@ class INIToObjectMapperTest
     @Test
     void apply_sectionNotMapped_sectionSkipped() throws IOException
     {
-        MyIni result = testWithString(INVALID_INI_5);
+        MyIni result = testWithString(VALID_INI_2);
         assertThat(result.getRootProperty(), is(equalTo("myRootValue")));
         assertThat(result.getSection1(), is(equalTo(null)));
         assertThat(result.getSection2().getSectionString(), is(equalTo("mySection2Value")));
         assertThat(result.getSection2().getSectionNumber(), is(equalTo(2)));
         assertThat(result.getSection2().isSectionBoolean(), is(equalTo(true)));
+    }
+
+    @Test
+    void apply_beanWithPrivateConstructor_configurationException()
+    {
+        assertThat(() ->
+        {
+            try
+            {
+                new INIToObjectMapper<>(MyBeanPrivateConstructor.class).apply(toInputStream(VALID_INI_1));
+            }
+            catch (IOException e)
+            {
+                throw new AssertionError("IOException happened, but ConfigurationException was expected", e);
+            }
+        }, throwsException(ConfigurationException.class).withCause(ReflectiveOperationException.class));
+
     }
 
     @Test
