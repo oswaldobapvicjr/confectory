@@ -104,7 +104,7 @@ public class INIToObjectMapper<T> extends AbstractINIMapper<T> implements Mapper
     /**
      * @return the current type being processed by the template, which can be either the final
      *         {@code targetType}, or the current section type; or {@code null} if the current
-     *         section does not have a corresponing field in the final {@code targetType}
+     *         section does not have a corresponding field in the final {@code targetType}
      */
     private Class<?> getCurrentType()
     {
@@ -157,8 +157,8 @@ public class INIToObjectMapper<T> extends AbstractINIMapper<T> implements Mapper
      * Returns {@code true} if the field is annotated with a Property annotation which value
      * matches the specified name.
      *
-     * @param field the field to be checked
-     * @param name  the name to be tested
+     * @param field the field to be checked; not null
+     * @param name  the name to be tested; not null
      * @return {@code true} if the field is annotated with a Property annotation which value
      *         matches the specified name
      */
