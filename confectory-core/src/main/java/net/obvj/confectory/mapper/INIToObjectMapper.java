@@ -43,6 +43,7 @@ import net.obvj.confectory.util.ReflectionUtils;
 public class INIToObjectMapper<T> extends AbstractINIMapper<T> implements Mapper<T>
 {
     private static final String MSG_UNABLE_TO_BUILD_OBJECT = "Unable to build object of type: %s";
+    private static final String MSG_UNPARSABLE_PROPERTY_VALUE = "The property %s does not contain a parsable %s";
 
     private final Class<T> targetType;
 
@@ -81,7 +82,15 @@ public class INIToObjectMapper<T> extends AbstractINIMapper<T> implements Mapper
     Object doParseValue(String value)
     {
         Field field = findField(getCurrentType(), currentKey);
-        return field != null ? ParseFactory.parse(field.getType(), value) : null;
+        try
+        {
+            return field != null ? ParseFactory.parse(field.getType(), value) : null;
+        }
+        catch (NumberFormatException exception)
+        {
+            throw new ConfigurationException(exception, MSG_UNPARSABLE_PROPERTY_VALUE,
+                    currentFieldIdentifierToString(), field.getType());
+        }
     }
 
     @Override
@@ -120,9 +129,9 @@ public class INIToObjectMapper<T> extends AbstractINIMapper<T> implements Mapper
      * Find a field matching any of the following criteria in the specified type, or
      * {@code null} if no match found:
      * <ul>
-     * <li>the field name is equal to the specified {@code name} parameter; or</li>
      * <li>the field is marked with the {@code @}{@link Property} annotation, and the
-     * annotation defines a custom name equal to the one specified in the parameter</li>
+     * annotation defines a custom name equal to the one specified in the parameter; or</li>
+     * <li>the field name is equal to the specified {@code name} parameter</li>
      * </ul>
      *
      * @param type the class to reflect; not null
@@ -131,8 +140,7 @@ public class INIToObjectMapper<T> extends AbstractINIMapper<T> implements Mapper
      */
     private static Field findField(Class<?> type, String name)
     {
-        return Optional.ofNullable(FieldUtils.getField(type, name, true))
-                .orElseGet(() -> findFieldByAnnotation(type, name).orElse(null));
+        return findFieldByAnnotation(type, name).orElseGet(() -> FieldUtils.getField(type, name, true));
     }
 
     /**
@@ -166,6 +174,20 @@ public class INIToObjectMapper<T> extends AbstractINIMapper<T> implements Mapper
     {
         Property property = field.getDeclaredAnnotation(Property.class);
         return property != null && name.equals(property.value());
+    }
+
+    /**
+     * @return a string representing the current field for exception/troubleshooting purposes
+     */
+    private String currentFieldIdentifierToString()
+    {
+        StringBuilder builder = new StringBuilder();
+        if (currentSectionName != null)
+        {
+            builder.append("['").append(currentSectionName).append("']");
+        }
+        builder.append("['").append(currentKey).append("']");
+        return builder.toString();
     }
 
     @Override

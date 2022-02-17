@@ -7,6 +7,7 @@ public class MyIni
     private String rootProperty;
     private Section section1;
     private Section section2;
+    private double number;
 
     /**
      * @return the rootProperty
@@ -32,6 +33,14 @@ public class MyIni
         return section2;
     }
 
+    /**
+     * @return the number
+     */
+    public double getNumber()
+    {
+        return number;
+    }
+
     public static class Section
     {
         @Property("section_string")
@@ -40,6 +49,8 @@ public class MyIni
         private int sectionNumber;
         @Property("section_bool")
         private boolean sectionBoolean;
+
+        private transient String transientField;
 
         /**
          * @return the sectionString
@@ -64,6 +75,15 @@ public class MyIni
         {
             return sectionBoolean;
         }
+
+        /**
+         * @return the transientField
+         */
+        public String getTransientField()
+        {
+            return transientField;
+        }
+
     }
 
 }

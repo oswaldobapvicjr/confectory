@@ -14,11 +14,10 @@ import org.junit.jupiter.api.Test;
 import net.obvj.confectory.ConfigurationException;
 import net.obvj.confectory.ConfigurationSourceException;
 import net.obvj.confectory.helper.BeanConfigurationHelper;
-import net.obvj.confectory.mapper.PropertiesToObjectMapperTest.MyBeanPrivateConstructor;
 import net.obvj.confectory.mapper.model.MyIni;
 
 /**
- * Unit tests for the {@link INIToJObjectMapper} class.
+ * Unit tests for the {@link INIToObjectMapper} class.
  *
  * @author oswaldo.bapvic.jr
  * @since 1.3.0
@@ -27,12 +26,14 @@ class INIToObjectMapperTest
 {
     private static final String VALID_INI_1    = ";Comment\n"
                                                + "rootProperty = myRootValue\n"
+                                               + "unMappedProperty = no action\n"
                                                + "\n"
                                                + "[section1]\n"
                                                + "# Alternative comment\n"
                                                + "section_string = mySection1Value\n"
                                                + "section_number = 1\n"
                                                + "section_bool = false\n"
+                                               + "transientField = should be null\n"
                                                + "\n"
                                                + "[section2]\n"
                                                + "section_string = mySection2Value\n"
@@ -51,6 +52,13 @@ class INIToObjectMapperTest
 
     private static final String INVALID_INI_4 = "invalid line\n";
 
+    private static final String INVALID_INI_5  = ";Test with invalid type\n"
+                                               + "number = abc\n"; // exception
+
+    private static final String INVALID_INI_6  = ";Test with invalid type inside section\n"
+                                               + "[section1]\n"
+                                               + "section_number = abc\n"; // exception
+
     private static final String VALID_INI_2   = ";Comment\n"
                                               + "rootProperty = myRootValue\n"
                                               + "\n"
@@ -68,6 +76,16 @@ class INIToObjectMapperTest
     static class MyBeanPrivateConstructor
     {
         private MyBeanPrivateConstructor() {}
+    }
+
+    static class MyBeanPrivateSection
+    {
+        Section section1;
+
+        static class Section
+        {
+            private Section() {} // unsupported
+        }
     }
 
     private Mapper<MyIni> mapper = new INIToObjectMapper<>(MyIni.class);
@@ -95,12 +113,16 @@ class INIToObjectMapperTest
     {
         MyIni result = testWithString(VALID_INI_1);
         assertThat(result.getRootProperty(), is(equalTo("myRootValue")));
+
         assertThat(result.getSection1().getSectionString(), is(equalTo("mySection1Value")));
         assertThat(result.getSection1().getSectionNumber(), is(equalTo(1)));
         assertThat(result.getSection1().isSectionBoolean(), is(equalTo(false)));
+        assertThat(result.getSection1().getTransientField(), is(equalTo(null)));
+
         assertThat(result.getSection2().getSectionString(), is(equalTo("mySection2Value")));
         assertThat(result.getSection2().getSectionNumber(), is(equalTo(2)));
         assertThat(result.getSection2().isSectionBoolean(), is(equalTo(true)));
+        assertThat(result.getSection2().getTransientField(), is(equalTo(null)));
     }
 
     @Test
@@ -132,6 +154,24 @@ class INIToObjectMapperTest
     }
 
     @Test
+    void apply_invalidType_exception() throws IOException
+    {
+        assertThat(() -> testWithString(INVALID_INI_5),
+                throwsException(ConfigurationException.class).withMessage(equalTo(
+                        "The property ['number'] does not contain a parsable double"))
+                        .withCause(NumberFormatException.class));
+    }
+
+    @Test
+    void apply_invalidTypeInsideSection_exception() throws IOException
+    {
+        assertThat(() -> testWithString(INVALID_INI_6),
+                throwsException(ConfigurationException.class).withMessage(equalTo(
+                        "The property ['section1']['section_number'] does not contain a parsable int"))
+                        .withCause(NumberFormatException.class));
+    }
+
+    @Test
     void apply_sectionNotMapped_sectionSkipped() throws IOException
     {
         MyIni result = testWithString(VALID_INI_2);
@@ -156,7 +196,22 @@ class INIToObjectMapperTest
                 throw new AssertionError("IOException happened, but ConfigurationException was expected", e);
             }
         }, throwsException(ConfigurationException.class).withCause(ReflectiveOperationException.class));
+    }
 
+    @Test
+    void apply_beanWithPrivateConstructorInSection_configurationException()
+    {
+        assertThat(() ->
+        {
+            try
+            {
+                new INIToObjectMapper<>(MyBeanPrivateSection.class).apply(toInputStream(VALID_INI_1));
+            }
+            catch (IOException e)
+            {
+                throw new AssertionError("IOException happened, but ConfigurationException was expected", e);
+            }
+        }, throwsException(ConfigurationException.class).withCause(ReflectiveOperationException.class));
     }
 
     @Test
