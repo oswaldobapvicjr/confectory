@@ -43,7 +43,7 @@ import net.obvj.confectory.util.ReflectionUtils;
 public class INIToObjectMapper<T> extends AbstractINIMapper<T> implements Mapper<T>
 {
     private static final String MSG_UNABLE_TO_BUILD_OBJECT = "Unable to build object of type: %s";
-    private static final String MSG_UNPARSABLE_PROPERTY_VALUE = "The property %s does not contain a parsable %s";
+    private static final String MSG_UNPARSABLE_PROPERTY_VALUE = "The value defined for property %s cannot be parsed as '%s'";
 
     private final Class<T> targetType;
 
@@ -68,9 +68,21 @@ public class INIToObjectMapper<T> extends AbstractINIMapper<T> implements Mapper
     Object newObject()
     {
         Class<?> type = getCurrentType();
+        return type != null ? newObject(type) : null;
+    }
+
+    /**
+     * Returns a new instance of the specified class by invoking the default constructor.
+     *
+     * @param type the type to be instantiated
+     * @return a new instance
+     * @throws ConfigurationException in the occurrence of any reflective-operation exception
+     */
+    private Object newObject(Class<?> type)
+    {
         try
         {
-            return type != null ? ConstructorUtils.invokeConstructor(type) : null;
+            return ConstructorUtils.invokeConstructor(type);
         }
         catch (ReflectiveOperationException exception)
         {

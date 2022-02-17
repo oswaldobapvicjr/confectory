@@ -158,7 +158,7 @@ class INIToObjectMapperTest
     {
         assertThat(() -> testWithString(INVALID_INI_5),
                 throwsException(ConfigurationException.class).withMessage(equalTo(
-                        "The property ['number'] does not contain a parsable double"))
+                        "The value defined for property ['number'] cannot be parsed as 'double'"))
                         .withCause(NumberFormatException.class));
     }
 
@@ -167,7 +167,7 @@ class INIToObjectMapperTest
     {
         assertThat(() -> testWithString(INVALID_INI_6),
                 throwsException(ConfigurationException.class).withMessage(equalTo(
-                        "The property ['section1']['section_number'] does not contain a parsable int"))
+                        "The value defined for property ['section1']['section_number'] cannot be parsed as 'int'"))
                         .withCause(NumberFormatException.class));
     }
 
