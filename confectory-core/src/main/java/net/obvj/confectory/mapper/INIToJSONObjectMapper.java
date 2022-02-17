@@ -28,7 +28,7 @@ import net.obvj.confectory.helper.JsonSmartConfigurationHelper;
  * A specialized {@code Mapper} that loads the contents of a valid INI {@code Source}
  * (e.g.: file, URL) as a {@link JSONObject}.
  * <p>
- * <strong>Note:</strong> This mapper is <b>NOT</b> thread-safe.
+ * <strong>Important:</strong> This mapper is <b>NOT</b> thread-safe.
  *
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 1.3.0

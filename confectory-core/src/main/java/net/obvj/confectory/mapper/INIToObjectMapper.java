@@ -35,7 +35,29 @@ import net.obvj.confectory.util.ReflectionUtils;
  * A specialized {@code Mapper} that loads the contents of a valid INI {@code Source}
  * (e.g.: file, URL) into a POJO (Plain-Old Java Object).
  * <p>
- * <strong>Note:</strong> This mapper is <b>NOT</b> thread-safe.
+ * Every property and section will be assigned to a field in the target object in either
+ * of the following cases:
+ * <ul>
+ * <li>the field is marked with the {@code @}{@link Property} annotation, defining a
+ * custom key to be mapped; or</li>
+ * <li>the field name is equal to the property key (with no need to use an annotation in
+ * these cases)</li>
+ * </ul>
+ * <p>
+ * <strong>Notes:</strong>
+ * <ul>
+ * <li>The fields in the target object can be {@code private} (recommended)</li>
+ * <li>Fields marked {@code transient} are ignored</li>
+ * <li>If the associated property is missing in the source, the corresponding field will
+ * assume a default value, i.e.: {@code null} for object types, zero for numeric types,
+ * and {@code false} for booleans.</li>
+ * <li>If the a section is not mapped to dedicated object in the target class, the whole
+ * section will be skipped</li>
+ * </ul>
+ * <p>
+ * <strong>Important:</strong> This mapper is <b>NOT</b> thread-safe.
+ *
+ * @param <T> the target type to be produced by this {@code Mapper}
  *
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 1.3.0
