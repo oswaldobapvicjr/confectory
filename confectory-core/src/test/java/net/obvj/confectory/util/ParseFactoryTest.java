@@ -56,9 +56,15 @@ class ParseFactoryTest
     }
 
     @Test
-    void parse_string_success()
+    void parse_string_sameInstance()
     {
         assertThat(ParseFactory.parse(String.class, STR_123), sameInstance(STR_123));
+    }
+
+    @Test
+    void parse_characterEmptyString_zero()
+    {
+        assertThat(ParseFactory.parse(Character.class, ""), equalTo('\0'));
     }
 
 }

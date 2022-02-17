@@ -19,7 +19,6 @@ package net.obvj.confectory.mapper;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.Properties;
 
 import org.apache.commons.lang3.StringUtils;
@@ -31,6 +30,7 @@ import net.obvj.confectory.helper.BeanConfigurationHelper;
 import net.obvj.confectory.helper.ConfigurationHelper;
 import net.obvj.confectory.util.ParseFactory;
 import net.obvj.confectory.util.Property;
+import net.obvj.confectory.util.ReflectionUtils;
 
 /**
  * A specialized {@code Mapper} that loads the contents of a {@code Source} (e.g.: file,
@@ -119,7 +119,7 @@ public class PropertiesToObjectMapper<T> implements Mapper<T>
      */
     private void writeField(T targetObject, Field field, Properties properties) throws IllegalAccessException
     {
-        if (isTransient(field))
+        if (ReflectionUtils.isTransient(field))
         {
             return; // Ignore transient fields
         }
@@ -132,19 +132,6 @@ public class PropertiesToObjectMapper<T> implements Mapper<T>
             FieldUtils.writeDeclaredField(targetObject, field.getName(), parsedValue, true);
         }
         // Do nothing if the property is not found
-    }
-
-    /**
-     * Evaluates if the specified field is marked {@code transient}.
-     *
-     * @param field the {@link Field} to be evaluated
-     * @return {@code true} if the field contains the {@code transient} modifier;
-     *         {@code false}, otherwise
-     * @throws NullPointerException if the field is null
-     */
-    private static boolean isTransient(Field field)
-    {
-        return Modifier.isTransient(field.getModifiers());
     }
 
     /**

@@ -43,7 +43,7 @@ public class ParseFactory
         factory.put(Long.class, Long::valueOf);
         factory.put(Float.class, Float::valueOf);
         factory.put(Double.class, Double::valueOf);
-        factory.put(Character.class, string -> Character.valueOf(string.charAt(0)));
+        factory.put(Character.class, string -> string.isEmpty() ? 0 : Character.valueOf(string.charAt(0)));
         factory.put(String.class, Function.identity());
     }
 
