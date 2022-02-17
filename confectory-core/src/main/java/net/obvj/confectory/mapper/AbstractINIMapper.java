@@ -59,7 +59,7 @@ public abstract class AbstractINIMapper<T> implements Mapper<T>
      * @throws IOException if a low-level I/O problem (such and unexpected end-of-input, or
      *                     network error) occurs while reading from the {@code InputStream}
      */
-    protected Object doApply(InputStream inputStream) throws IOException
+    protected final Object doApply(InputStream inputStream) throws IOException
     {
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         currentLine = reader.readLine();
@@ -116,7 +116,7 @@ public abstract class AbstractINIMapper<T> implements Mapper<T>
     /**
      * @return {@code true} if the current line starts with one of the comment tokens
      */
-    private boolean isCommentLine()
+    private final boolean isCommentLine()
     {
         char firstCharacter = currentLine.charAt(0);
         return firstCharacter == TOKEN_COMMENT_START || firstCharacter == TOKEN_COMMENT_START_ALT;
@@ -125,7 +125,7 @@ public abstract class AbstractINIMapper<T> implements Mapper<T>
     /**
      * @return {@code true} if the current line starts with {@link #TOKEN_SECTION_NAME_START}
      */
-    private boolean isSectionLine()
+    private final boolean isSectionLine()
     {
         return currentLine.charAt(0) == TOKEN_SECTION_NAME_START;
     }
@@ -137,7 +137,7 @@ public abstract class AbstractINIMapper<T> implements Mapper<T>
      * @param currentLineNumber the line number for due exception reporting
      * @return the section name
      */
-    private String parseSectionName()
+    private final String parseSectionName()
     {
         int sectionNameDelimiterIndex = currentLine.indexOf(TOKEN_SECTION_NAME_END);
         if (sectionNameDelimiterIndex < 0)
@@ -155,7 +155,7 @@ public abstract class AbstractINIMapper<T> implements Mapper<T>
     /**
      * @return true if the current line contains the {@link #TOKEN_KEY_VALUE_DELIMITER}
      */
-    private boolean isPropertyLine()
+    private final boolean isPropertyLine()
     {
         return currentLine.contains(TOKEN_KEY_VALUE_DELIMITER);
     }
@@ -163,7 +163,7 @@ public abstract class AbstractINIMapper<T> implements Mapper<T>
     /**
      * @return the key part of the current line, provided that it's a property line
      */
-    private String parseKey()
+    private final String parseKey()
     {
         String key = currentLine.substring(0, currentLine.indexOf(TOKEN_KEY_VALUE_DELIMITER)).trim();
         if (key.isEmpty())
@@ -176,10 +176,10 @@ public abstract class AbstractINIMapper<T> implements Mapper<T>
     /**
      * @return the value part of the current line, provided that it's a propertly line
      */
-    private Object parseValue()
+    private final Object parseValue()
     {
         String value = currentLine.substring(currentLine.indexOf(TOKEN_KEY_VALUE_DELIMITER) + 1).trim();
-        return doParseValue(value);
+        return parseValue(value);
     }
 
     /**
@@ -189,7 +189,7 @@ public abstract class AbstractINIMapper<T> implements Mapper<T>
      * @param expected a description of what was expected
      * @return a new {@link ConfigurationSourceException} with a formatted message
      */
-    private ConfigurationSourceException malformedIniException(String expected)
+    private final ConfigurationSourceException malformedIniException(String expected)
     {
         return new ConfigurationSourceException(MSG_MALFORMED_INI, expected, currentLineNumber, currentLine);
     }
@@ -207,7 +207,7 @@ public abstract class AbstractINIMapper<T> implements Mapper<T>
      * @param value the value to be parsed
      * @return the parsed Java Object
      */
-    abstract Object doParseValue(String value);
+    abstract Object parseValue(String value);
 
     /**
      * Associates the specified value with the specified name in the specified target object.

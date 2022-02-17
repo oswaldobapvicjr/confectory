@@ -90,21 +90,9 @@ public class INIToObjectMapper<T> extends AbstractINIMapper<T> implements Mapper
     Object newObject()
     {
         Class<?> type = getCurrentType();
-        return type != null ? newObject(type) : null;
-    }
-
-    /**
-     * Returns a new instance of the specified class by invoking the default constructor.
-     *
-     * @param type the type to be instantiated
-     * @return a new instance
-     * @throws ConfigurationException in the occurrence of any reflective-operation exception
-     */
-    private Object newObject(Class<?> type)
-    {
         try
         {
-            return ConstructorUtils.invokeConstructor(type);
+            return type != null ? ConstructorUtils.invokeConstructor(type) : null;
         }
         catch (ReflectiveOperationException exception)
         {
@@ -113,7 +101,7 @@ public class INIToObjectMapper<T> extends AbstractINIMapper<T> implements Mapper
     }
 
     @Override
-    Object doParseValue(String value)
+    Object parseValue(String value)
     {
         Field field = findField(getCurrentType(), currentKey);
         try

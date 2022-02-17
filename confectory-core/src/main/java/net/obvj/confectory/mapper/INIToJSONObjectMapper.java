@@ -48,7 +48,7 @@ public class INIToJSONObjectMapper extends AbstractINIMapper<JSONObject> impleme
     }
 
     @Override
-    Object doParseValue(String value)
+    Object parseValue(String value)
     {
         return JSONValue.parse(value); // return either null, number, boolean, or string
     }
