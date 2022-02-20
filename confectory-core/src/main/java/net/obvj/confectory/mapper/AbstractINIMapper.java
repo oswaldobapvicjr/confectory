@@ -33,6 +33,18 @@ import net.obvj.confectory.ConfigurationSourceException;
  */
 public abstract class AbstractINIMapper<T> implements Mapper<T>
 {
+    /**
+     * An object that holds context variables for each mapping operation, with the purpose to
+     * secure thread-safety for this mapper.
+     */
+    static class Context
+    {
+        String currentLine;
+        String currentSectionName;
+        String currentKey;
+        int currentLineNumber;
+    }
+
     private static final char TOKEN_COMMENT_START = ';';
     private static final char TOKEN_COMMENT_START_ALT = '#';
     private static final char TOKEN_SECTION_NAME_START = '[';
@@ -44,12 +56,6 @@ public abstract class AbstractINIMapper<T> implements Mapper<T>
     private static final String ARG_PROPERTY = "property";
     private static final String ARG_TOKEN = "token '%s'";
 
-    protected String currentLine;
-    protected String currentSectionName;
-    protected Object currentSection;
-    protected String currentKey;
-    protected int currentLineNumber = 0;
-
     /**
      * A template method that defines the skeleton of the INI source parsing operation and
      * delegates the final output mapping behavior to its concrete implementations.
@@ -59,56 +65,58 @@ public abstract class AbstractINIMapper<T> implements Mapper<T>
      * @throws IOException if a low-level I/O problem (such and unexpected end-of-input, or
      *                     network error) occurs while reading from the {@code InputStream}
      */
-    protected final Object doApply(InputStream inputStream) throws IOException
+    final Object doApply(InputStream inputStream) throws IOException
     {
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-        currentLine = reader.readLine();
-        currentLineNumber = 1;
-        currentSectionName = null;
 
-        Object out = newObject();
-        currentSection = out; // Let the final out be the initial section
+        Context context = new Context();
+        context.currentLine = reader.readLine();
+        context.currentLineNumber = 1;
+        context.currentSectionName = null;
+
+        Object out = newObject(context);
+        Object currentSection = out; // Let the final out be the initial section
         boolean skipSection = false;
 
-        while (currentLine != null)
+        while (context.currentLine != null)
         {
-            currentLine = currentLine.trim();
+            context.currentLine = context.currentLine.trim();
 
-            if (currentLine.isEmpty() || isCommentLine())
+            if (context.currentLine.isEmpty() || isCommentLine(context.currentLine))
             {
                 // Ignore empty and comment lines
             }
-            else if (isSectionLine())
+            else if (isSectionLine(context.currentLine))
             {
                 skipSection = false;
-                currentSectionName = parseSectionName();
-                currentSection = newObject(); // the current session, from now on
+                context.currentSectionName = parseSectionName(context);
+                currentSection = newObject(context); // the current session, from now on
                 if (currentSection == null)
                 {
                     skipSection = true; // flag to skip next properties until the next section declaration
                 }
                 else
                 {
-                    put(out, currentSectionName, currentSection);
+                    put(out, context.currentSectionName, currentSection);
                 }
             }
-            else if (isPropertyLine())
+            else if (isPropertyLine(context.currentLine))
             {
                 if (!skipSection)
                 {
-                    currentKey = parseKey();
-                    Object value = parseValue();
-                    put(currentSection, currentKey, value);
+                    context.currentKey = parseKey(context);
+                    Object value = parseValue(context);
+                    put(currentSection, context.currentKey, value);
                 }
                 // Do not process any property until the next section declaration
             }
             else
             {
-                throw malformedIniException(ARG_PROPERTY);
+                throw malformedIniException(context, ARG_PROPERTY);
             }
 
-            currentLine = reader.readLine();
-            currentLineNumber++;
+            context.currentLine = reader.readLine();
+            context.currentLineNumber++;
         }
         return out;
     }
@@ -116,38 +124,39 @@ public abstract class AbstractINIMapper<T> implements Mapper<T>
     /**
      * @return {@code true} if the current line starts with one of the comment tokens
      */
-    private final boolean isCommentLine()
+    private static final boolean isCommentLine(String line)
     {
-        char firstCharacter = currentLine.charAt(0);
+        char firstCharacter = line.charAt(0);
         return firstCharacter == TOKEN_COMMENT_START || firstCharacter == TOKEN_COMMENT_START_ALT;
     }
 
     /**
      * @return {@code true} if the current line starts with {@link #TOKEN_SECTION_NAME_START}
      */
-    private final boolean isSectionLine()
+    private static final boolean isSectionLine(String line)
     {
-        return currentLine.charAt(0) == TOKEN_SECTION_NAME_START;
+        return line.charAt(0) == TOKEN_SECTION_NAME_START;
     }
 
     /**
      * Parses the section name.
      *
-     * @param line   the line to be parsed (cannot be null)
+     * @param context           the {@link Context}
+     * @param line              the line to be parsed (cannot be null)
      * @param currentLineNumber the line number for due exception reporting
      * @return the section name
      */
-    private final String parseSectionName()
+    private static final String parseSectionName(Context context)
     {
-        int sectionNameDelimiterIndex = currentLine.indexOf(TOKEN_SECTION_NAME_END);
+        int sectionNameDelimiterIndex = context.currentLine.indexOf(TOKEN_SECTION_NAME_END);
         if (sectionNameDelimiterIndex < 0)
         {
-            throw malformedIniException(String.format(ARG_TOKEN, TOKEN_SECTION_NAME_END));
+            throw malformedIniException(context, String.format(ARG_TOKEN, TOKEN_SECTION_NAME_END));
         }
-        String name = currentLine.substring(1, sectionNameDelimiterIndex);
+        String name = context.currentLine.substring(1, sectionNameDelimiterIndex);
         if (name.isEmpty())
         {
-            throw malformedIniException(ARG_SECTION_NAME);
+            throw malformedIniException(context, ARG_SECTION_NAME);
         }
         return name;
     }
@@ -155,59 +164,67 @@ public abstract class AbstractINIMapper<T> implements Mapper<T>
     /**
      * @return true if the current line contains the {@link #TOKEN_KEY_VALUE_DELIMITER}
      */
-    private final boolean isPropertyLine()
+    private static final boolean isPropertyLine(String line)
     {
-        return currentLine.contains(TOKEN_KEY_VALUE_DELIMITER);
+        return line.contains(TOKEN_KEY_VALUE_DELIMITER);
     }
 
     /**
+     * @param context the {@link Context}
      * @return the key part of the current line, provided that it's a property line
      */
-    private final String parseKey()
+    private static final String parseKey(Context context)
     {
-        String key = currentLine.substring(0, currentLine.indexOf(TOKEN_KEY_VALUE_DELIMITER)).trim();
+        int endIndex = context.currentLine.indexOf(TOKEN_KEY_VALUE_DELIMITER);
+        String key = context.currentLine.substring(0, endIndex).trim();
         if (key.isEmpty())
         {
-            throw malformedIniException(ARG_PROPERTY_KEY);
+            throw malformedIniException(context, ARG_PROPERTY_KEY);
         }
         return key;
     }
 
     /**
+     * @param context the {@link Context}
      * @return the value part of the current line, provided that it's a propertly line
      */
-    private final Object parseValue()
+    private final Object parseValue(Context context)
     {
-        String value = currentLine.substring(currentLine.indexOf(TOKEN_KEY_VALUE_DELIMITER) + 1).trim();
-        return parseValue(value);
+        int beginIndex = context.currentLine.indexOf(TOKEN_KEY_VALUE_DELIMITER) + 1;
+        String value = context.currentLine.substring(beginIndex).trim();
+        return parseValue(context, value);
     }
 
     /**
      * Create a new {@link ConfigurationSourceException} with a formatted message, containing
      * also the current line text and number.
      *
+     * @param context  the {@link Context}
      * @param expected a description of what was expected
      * @return a new {@link ConfigurationSourceException} with a formatted message
      */
-    private final ConfigurationSourceException malformedIniException(String expected)
+    private static final ConfigurationSourceException malformedIniException(Context context, String expected)
     {
-        return new ConfigurationSourceException(MSG_MALFORMED_INI, expected, currentLineNumber, currentLine);
+        return new ConfigurationSourceException(MSG_MALFORMED_INI, expected, context.currentLineNumber,
+                context.currentLine);
     }
 
     /**
      * Creates a new container object that can accept names and values parsed from the source.
      *
+     * @param context the {@link Context}
      * @return an object that can represent either the final document or a specific section
      */
-    abstract Object newObject();
+    abstract Object newObject(Context context);
 
     /**
      * Parse the specified text value into Java Object.
      *
-     * @param value the value to be parsed
+     * @param context the {@link Context}
+     * @param value   the value to be parsed
      * @return the parsed Java Object
      */
-    abstract Object parseValue(String value);
+    abstract Object parseValue(Context context, String value);
 
     /**
      * Associates the specified value with the specified name in the specified target object.
