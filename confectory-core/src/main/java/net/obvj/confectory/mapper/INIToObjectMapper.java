@@ -54,8 +54,6 @@ import net.obvj.confectory.util.ReflectionUtils;
  * <li>If the a section is not mapped to dedicated object in the target class, the whole
  * section will be skipped</li>
  * </ul>
- * <p>
- * <strong>Important:</strong> This mapper is <b>NOT</b> thread-safe.
  *
  * @param <T> the target type to be produced by this {@code Mapper}
  *
@@ -87,9 +85,9 @@ public class INIToObjectMapper<T> extends AbstractINIMapper<T> implements Mapper
     }
 
     @Override
-    Object newObject()
+    Object newObject(Context context)
     {
-        Class<?> type = getCurrentType();
+        Class<?> type = getCurrentType(context);
         try
         {
             return type != null ? ConstructorUtils.invokeConstructor(type) : null;
@@ -101,9 +99,9 @@ public class INIToObjectMapper<T> extends AbstractINIMapper<T> implements Mapper
     }
 
     @Override
-    Object parseValue(String value)
+    Object parseValue(Context context, String value)
     {
-        Field field = findField(getCurrentType(), currentKey);
+        Field field = findField(getCurrentType(context), context.currentKey);
         try
         {
             return field != null ? ParseFactory.parse(field.getType(), value) : null;
@@ -111,7 +109,7 @@ public class INIToObjectMapper<T> extends AbstractINIMapper<T> implements Mapper
         catch (NumberFormatException exception)
         {
             throw new ConfigurationException(exception, MSG_UNPARSABLE_PROPERTY_VALUE,
-                    currentFieldIdentifierToString(), field.getType());
+                    currentFieldIdentifierToString(context), field.getType());
         }
     }
 
@@ -137,13 +135,13 @@ public class INIToObjectMapper<T> extends AbstractINIMapper<T> implements Mapper
      *         {@code targetType}, or the current section type; or {@code null} if the current
      *         section does not have a corresponding field in the final {@code targetType}
      */
-    private Class<?> getCurrentType()
+    private Class<?> getCurrentType(Context context)
     {
-        if (currentSectionName == null)
+        if (context.currentSectionName == null)
         {
             return targetType;
         }
-        Field field = findField(targetType, currentSectionName);
+        Field field = findField(targetType, context.currentSectionName);
         return field != null ? field.getType() : null;
     }
 
@@ -201,14 +199,14 @@ public class INIToObjectMapper<T> extends AbstractINIMapper<T> implements Mapper
     /**
      * @return a string representing the current field for exception/troubleshooting purposes
      */
-    private String currentFieldIdentifierToString()
+    private String currentFieldIdentifierToString(Context context)
     {
         StringBuilder builder = new StringBuilder();
-        if (currentSectionName != null)
+        if (context.currentSectionName != null)
         {
-            builder.append("['").append(currentSectionName).append("']");
+            builder.append("['").append(context.currentSectionName).append("']");
         }
-        builder.append("['").append(currentKey).append("']");
+        builder.append("['").append(context.currentKey).append("']");
         return builder.toString();
     }
 

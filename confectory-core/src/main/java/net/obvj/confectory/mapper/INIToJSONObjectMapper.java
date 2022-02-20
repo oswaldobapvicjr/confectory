@@ -27,8 +27,6 @@ import net.obvj.confectory.helper.JsonSmartConfigurationHelper;
 /**
  * A specialized {@code Mapper} that loads the contents of a valid INI {@code Source}
  * (e.g.: file, URL) as a {@link JSONObject}.
- * <p>
- * <strong>Important:</strong> This mapper is <b>NOT</b> thread-safe.
  *
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 1.3.0
@@ -42,13 +40,13 @@ public class INIToJSONObjectMapper extends AbstractINIMapper<JSONObject> impleme
     }
 
     @Override
-    Object newObject()
+    Object newObject(Context context)
     {
         return new JSONObject();
     }
 
     @Override
-    Object parseValue(String value)
+    Object parseValue(Context context, String value)
     {
         return JSONValue.parse(value); // return either null, number, boolean, or string
     }
