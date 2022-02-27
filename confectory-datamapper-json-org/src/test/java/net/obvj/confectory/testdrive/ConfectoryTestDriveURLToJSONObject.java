@@ -4,7 +4,7 @@ package net.obvj.confectory.testdrive;
 import org.json.JSONObject;
 
 import net.obvj.confectory.Configuration;
-import net.obvj.confectory.mapper.JSONObjectMapper;
+import net.obvj.confectory.mapper.JsonOrgJSONObjectMapper;
 
 public class ConfectoryTestDriveURLToJSONObject
 {
@@ -13,7 +13,7 @@ public class ConfectoryTestDriveURLToJSONObject
         Configuration<JSONObject> config = Configuration.<JSONObject>builder()
                 .namespace("test")
                 .source("http://ip.jsontest.com")
-                .mapper(new JSONObjectMapper())
+                .mapper(new JsonOrgJSONObjectMapper())
                 .build();
 
         System.out.println(config.getBean().toString(2));

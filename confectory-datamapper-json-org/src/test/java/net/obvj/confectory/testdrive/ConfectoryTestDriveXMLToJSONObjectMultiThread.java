@@ -10,7 +10,7 @@ import org.apache.commons.io.FileUtils;
 import org.json.JSONObject;
 
 import net.obvj.confectory.Configuration;
-import net.obvj.confectory.mapper.XMLToJSONObjectMapper;
+import net.obvj.confectory.mapper.JsonOrgXMLToJSONObjectMapper;
 
 public class ConfectoryTestDriveXMLToJSONObjectMultiThread
 {
@@ -25,7 +25,7 @@ public class ConfectoryTestDriveXMLToJSONObjectMultiThread
 
         Configuration<JSONObject> config = Configuration.<JSONObject>builder()
                 .source("testfiles/agents.xml")
-                .mapper(new XMLToJSONObjectMapper()).build();
+                .mapper(new JsonOrgXMLToJSONObjectMapper()).build();
 
         Runnable runnable = () ->
         {

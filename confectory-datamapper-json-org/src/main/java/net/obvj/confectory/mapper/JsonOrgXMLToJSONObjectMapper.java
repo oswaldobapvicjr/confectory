@@ -46,7 +46,7 @@ import org.json.XML;
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 0.2.0
  */
-public class XMLToJSONObjectMapper extends JSONObjectMapper implements Mapper<JSONObject>
+public class JsonOrgXMLToJSONObjectMapper extends JsonOrgJSONObjectMapper implements Mapper<JSONObject>
 {
 
     @Override

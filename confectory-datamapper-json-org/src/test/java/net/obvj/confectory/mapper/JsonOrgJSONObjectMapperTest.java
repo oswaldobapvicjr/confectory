@@ -10,15 +10,15 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
-import net.obvj.confectory.helper.JSONObjectHelper;
+import net.obvj.confectory.helper.JsonOrgJSONObjectHelper;
 
 /**
- * Unit tests for the {@link JSONObjectMapper} class.
+ * Unit tests for the {@link JsonOrgJSONObjectMapper} class.
  *
  * @author oswaldo.bapvic.jr
  * @since 0.2.0
  */
-class JSONObjectMapperTest
+class JsonOrgJSONObjectMapperTest
 {
     private static final String TEST_JSON_SAMPLE1 = "{"
                                                   + "  \"intValue\": 9,"
@@ -29,7 +29,7 @@ class JSONObjectMapperTest
                                                   + "  ]"
                                                   + "}";
 
-    private JSONObjectMapper mapper = new JSONObjectMapper();
+    private JsonOrgJSONObjectMapper mapper = new JsonOrgJSONObjectMapper();
 
     private ByteArrayInputStream toInputStream(String content)
     {
@@ -53,7 +53,7 @@ class JSONObjectMapperTest
     @Test
     void configurationHelper_jsonObjectConfigurationHelper()
     {
-        assertThat(mapper.configurationHelper(new JSONObject()).getClass(), equalTo(JSONObjectHelper.class));
+        assertThat(mapper.configurationHelper(new JSONObject()).getClass(), equalTo(JsonOrgJSONObjectHelper.class));
     }
 
 }

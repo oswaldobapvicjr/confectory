@@ -30,7 +30,7 @@ import com.jayway.jsonpath.spi.mapper.JsonOrgMappingProvider;
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 0.2.0
  */
-public class JSONObjectHelper extends GenericJsonConfigurationHelper<JSONObject>
+public class JsonOrgJSONObjectHelper extends GenericJsonConfigurationHelper<JSONObject>
 {
 
     /**
@@ -38,7 +38,7 @@ public class JSONObjectHelper extends GenericJsonConfigurationHelper<JSONObject>
      *
      * @param jsonObject the JSON object to be set
      */
-    public JSONObjectHelper(JSONObject jsonObject)
+    public JsonOrgJSONObjectHelper(JSONObject jsonObject)
     {
         super(jsonObject, new JsonOrgJsonProvider(), new JsonOrgMappingProvider());
     }
