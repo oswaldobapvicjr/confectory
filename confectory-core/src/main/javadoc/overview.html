@@ -8,10 +8,13 @@
        This is the API specification for the core part of the <strong>Confectory</strong> project.
     </p>
     <p>
-       <strong>Confectory</strong> is a modular, multi-format configuration framework for Java applications.
+       <strong>Confectory</strong> is a modular framework, designed to hide the complexity of handling
+       configuration files for Java applications in general, providing a reliable and fast API for parsing
+       data from different <b>sources</b> (e.g.: file or URL) in a variety of formats and querying data
+       transparently, using a <b>unified data query language</b>: JSONPath.
     </p>
     <p>
-       The core part of the project defines the base API and provides basic functionality, including:
+       The core part of the project defines the base API and provides basic standard functionality, including:
     </p>
     <ul>
        <li style="margin-bottom:6px">
@@ -25,7 +28,9 @@
           Built-in <code>Source</code> implementations for loading local resources from file system and classpath 
        </li>
        <li style="margin-bottom:6px">
-          Built-in <code>Mapper</code> for contents in <code>java.util.Properties</code> format
+          Built-in <code>Mapper</code> implementations for delivering contents as <code>String</code>,
+          <code>Properties</code>, <code>JSONObject</code> (using <code>smart-json</code> as default provider)
+          or POJO (user-defined beans)
        </li>
     </ul>
     <p>
