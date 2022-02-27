@@ -9,7 +9,7 @@ import java.util.Properties;
 
 import org.junit.jupiter.api.Test;
 
-import net.obvj.confectory.helper.PropertiesConfigurationHelper;
+import net.obvj.confectory.internal.helper.PropertiesConfigurationHelper;
 
 /**
  * Unit tests for the {@link PropertiesMapper} class.

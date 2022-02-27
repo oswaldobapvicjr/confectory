@@ -21,8 +21,8 @@ import java.util.Objects;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import net.obvj.confectory.helper.ConfigurationHelper;
-import net.obvj.confectory.helper.NullConfigurationHelper;
+import net.obvj.confectory.internal.helper.ConfigurationHelper;
+import net.obvj.confectory.internal.helper.NullConfigurationHelper;
 import net.obvj.confectory.mapper.Mapper;
 import net.obvj.confectory.source.Source;
 

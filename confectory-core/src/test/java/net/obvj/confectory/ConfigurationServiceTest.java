@@ -9,8 +9,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import net.obvj.confectory.helper.ConfigurationHelper;
-import net.obvj.confectory.helper.NullConfigurationHelper;
+import net.obvj.confectory.internal.helper.ConfigurationHelper;
+import net.obvj.confectory.internal.helper.NullConfigurationHelper;
 import net.obvj.confectory.mapper.Mapper;
 import net.obvj.confectory.source.Source;
 

@@ -21,8 +21,8 @@ import java.io.InputStream;
 
 import org.yaml.snakeyaml.Yaml;
 
-import net.obvj.confectory.helper.BeanConfigurationHelper;
-import net.obvj.confectory.helper.ConfigurationHelper;
+import net.obvj.confectory.internal.helper.BeanConfigurationHelper;
+import net.obvj.confectory.internal.helper.ConfigurationHelper;
 
 /**
  * A specialized {@code Mapper} that loads the contents of a valid YAML {@code Source}

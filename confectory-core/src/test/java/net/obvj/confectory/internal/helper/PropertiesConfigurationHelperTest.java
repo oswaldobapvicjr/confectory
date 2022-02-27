@@ -1,4 +1,4 @@
-package net.obvj.confectory.helper;
+package net.obvj.confectory.internal.helper;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.sameInstance;

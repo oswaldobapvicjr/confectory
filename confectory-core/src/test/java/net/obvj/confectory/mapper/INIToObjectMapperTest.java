@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 
 import net.obvj.confectory.ConfigurationException;
 import net.obvj.confectory.ConfigurationSourceException;
-import net.obvj.confectory.helper.BeanConfigurationHelper;
+import net.obvj.confectory.internal.helper.BeanConfigurationHelper;
 import net.obvj.confectory.mapper.model.MyIni;
 
 /**

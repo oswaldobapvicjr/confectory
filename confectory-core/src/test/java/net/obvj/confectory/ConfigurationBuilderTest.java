@@ -14,7 +14,7 @@ import org.mockito.Answers;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import net.obvj.confectory.helper.ConfigurationHelper;
+import net.obvj.confectory.internal.helper.ConfigurationHelper;
 import net.obvj.confectory.mapper.Mapper;
 import net.obvj.confectory.source.AbstractSource;
 import net.obvj.confectory.source.DynamicSource;

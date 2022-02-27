@@ -21,8 +21,8 @@ import java.io.InputStream;
 
 import net.minidev.json.JSONObject;
 import net.minidev.json.JSONValue;
-import net.obvj.confectory.helper.ConfigurationHelper;
-import net.obvj.confectory.helper.JsonSmartConfigurationHelper;
+import net.obvj.confectory.internal.helper.ConfigurationHelper;
+import net.obvj.confectory.internal.helper.JsonSmartConfigurationHelper;
 
 /**
  * A specialized {@code Mapper} that loads the contents of a valid INI {@code Source}

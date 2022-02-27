@@ -19,7 +19,7 @@ package net.obvj.confectory.mapper;
 import java.io.IOException;
 import java.io.InputStream;
 
-import net.obvj.confectory.helper.ConfigurationHelper;
+import net.obvj.confectory.internal.helper.ConfigurationHelper;
 
 /**
  * The base interface for a configuration mapper.

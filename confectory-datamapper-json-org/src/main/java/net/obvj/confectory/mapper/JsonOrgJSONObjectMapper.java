@@ -22,8 +22,8 @@ import java.io.InputStream;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import net.obvj.confectory.helper.ConfigurationHelper;
-import net.obvj.confectory.helper.JsonOrgJSONObjectHelper;
+import net.obvj.confectory.internal.helper.ConfigurationHelper;
+import net.obvj.confectory.internal.helper.JsonOrgJSONObjectHelper;
 
 /**
  * A specialized {@code Mapper} that loads the contents of a valid JSON {@code Source}

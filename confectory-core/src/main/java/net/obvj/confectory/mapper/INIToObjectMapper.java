@@ -25,8 +25,8 @@ import org.apache.commons.lang3.reflect.ConstructorUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
 import net.obvj.confectory.ConfigurationException;
-import net.obvj.confectory.helper.BeanConfigurationHelper;
-import net.obvj.confectory.helper.ConfigurationHelper;
+import net.obvj.confectory.internal.helper.BeanConfigurationHelper;
+import net.obvj.confectory.internal.helper.ConfigurationHelper;
 import net.obvj.confectory.util.ParseFactory;
 import net.obvj.confectory.util.Property;
 import net.obvj.confectory.util.ReflectionUtils;

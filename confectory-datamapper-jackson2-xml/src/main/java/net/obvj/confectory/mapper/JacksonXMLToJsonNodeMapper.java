@@ -19,8 +19,8 @@ package net.obvj.confectory.mapper;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 
-import net.obvj.confectory.helper.ConfigurationHelper;
-import net.obvj.confectory.helper.JacksonJsonNodeHelper;
+import net.obvj.confectory.internal.helper.ConfigurationHelper;
+import net.obvj.confectory.internal.helper.JacksonJsonNodeHelper;
 
 /**
  * A specialized {@code Mapper} that loads the contents of a valid XML {@code Source}

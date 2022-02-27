@@ -13,7 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-import net.obvj.confectory.helper.JacksonJsonNodeHelper;
+import net.obvj.confectory.internal.helper.JacksonJsonNodeHelper;
 
 /**
  * Unit tests for the {@link JacksonXMLToJsonNodeMapper} class.

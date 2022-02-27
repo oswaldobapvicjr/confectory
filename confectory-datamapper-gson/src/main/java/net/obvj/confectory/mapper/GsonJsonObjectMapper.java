@@ -19,8 +19,8 @@ package net.obvj.confectory.mapper;
 import com.google.gson.JsonObject;
 import com.jayway.jsonpath.internal.filter.ValueNodes.JsonNode;
 
-import net.obvj.confectory.helper.ConfigurationHelper;
-import net.obvj.confectory.helper.GsonJsonObjectHelper;
+import net.obvj.confectory.internal.helper.ConfigurationHelper;
+import net.obvj.confectory.internal.helper.GsonJsonObjectHelper;
 
 /**
  * A specialized {@code Mapper} that loads the contents of a valid JSON {@code Source}

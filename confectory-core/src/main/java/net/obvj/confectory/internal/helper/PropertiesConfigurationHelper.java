@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package net.obvj.confectory.helper;
+package net.obvj.confectory.internal.helper;
 
 import java.util.Objects;
 import java.util.Properties;

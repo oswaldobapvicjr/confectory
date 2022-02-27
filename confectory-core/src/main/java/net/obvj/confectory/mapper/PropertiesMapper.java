@@ -20,8 +20,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import net.obvj.confectory.helper.ConfigurationHelper;
-import net.obvj.confectory.helper.PropertiesConfigurationHelper;
+import net.obvj.confectory.internal.helper.ConfigurationHelper;
+import net.obvj.confectory.internal.helper.PropertiesConfigurationHelper;
 
 /**
  * A specialized {@code Mapper} that loads the contents of a {@code Source} (e.g.: file,

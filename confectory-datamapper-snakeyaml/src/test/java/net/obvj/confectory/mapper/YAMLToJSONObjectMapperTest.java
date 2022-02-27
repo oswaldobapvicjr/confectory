@@ -12,7 +12,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import net.minidev.json.JSONObject;
-import net.obvj.confectory.helper.JsonSmartConfigurationHelper;
+import net.obvj.confectory.internal.helper.JsonSmartConfigurationHelper;
 
 /**
  * Unit tests for the {@link YAMLToJSONObjectMapper} class.

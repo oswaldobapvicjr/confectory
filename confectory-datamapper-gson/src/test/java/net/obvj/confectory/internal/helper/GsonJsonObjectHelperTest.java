@@ -1,4 +1,4 @@
-package net.obvj.confectory.helper;
+package net.obvj.confectory.internal.helper;
 
 import static net.obvj.junit.utils.matchers.AdvancedMatchers.throwsException;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -10,21 +10,21 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import com.google.gson.JsonObject;
 
 import net.obvj.confectory.ConfigurationBuilder;
 import net.obvj.confectory.ConfigurationException;
-import net.obvj.confectory.mapper.JacksonJsonNodeMapper;
+import net.obvj.confectory.mapper.GsonJsonObjectMapper;
 import net.obvj.confectory.source.StringSource;
 
 /**
- * Unit tests for the {@link JacksonJsonNodeHelper}.
+ * Unit tests for the {@link GsonJsonObjectHelper}.
  *
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
- * @since 0.3.0
+ * @since 0.4.0
  */
 @ExtendWith(MockitoExtension.class)
-class JacksonJsonNodeHelperTest
+class GsonJsonObjectHelperTest
 {
     private static final String STR_TEST_JSON_SAMPLE1 = "{\r\n"
             + "  \"intValue\": 9,\r\n"
@@ -50,16 +50,16 @@ class JacksonJsonNodeHelperTest
             + "  }\r\n"
             + "}";
 
-    private static final JsonNode TEST_JSON_SAMPLE1 = new ConfigurationBuilder<JsonNode>()
-            .source(new StringSource<JsonNode>(STR_TEST_JSON_SAMPLE1))
-            .mapper(new JacksonJsonNodeMapper())
+    private static final JsonObject TEST_JSON_SAMPLE1 = new ConfigurationBuilder<JsonObject>()
+            .source(new StringSource<JsonObject>(STR_TEST_JSON_SAMPLE1))
+            .mapper(new GsonJsonObjectMapper())
             .build().getBean();
 
-    private static final JacksonJsonNodeHelper HELPER = new JacksonJsonNodeHelper(TEST_JSON_SAMPLE1);
+    private static final GsonJsonObjectHelper HELPER = new GsonJsonObjectHelper(TEST_JSON_SAMPLE1);
 
 
     @Test
-    void getBean_validInstance()
+    void getBean_sameInstance()
     {
         assertThat(HELPER.getBean(), is(sameInstance(TEST_JSON_SAMPLE1)));
     }
@@ -110,7 +110,7 @@ class JacksonJsonNodeHelperTest
     void getDouble_existingKeyAndMultipleElements_configurationException()
     {
         assertThat(() -> HELPER.getDouble("$.store.books[?(@.price>5)].price"),
-                throwsException(ConfigurationException.class).withMessageContaining("Multiple values found for path"));
+                throwsException(ConfigurationException.class).withMessageContaining("Multiple values found"));
     }
 
     @Test

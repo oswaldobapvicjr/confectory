@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package net.obvj.confectory.helper;
+package net.obvj.confectory.internal.helper;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.jayway.jsonpath.spi.json.JacksonJsonNodeJsonProvider;

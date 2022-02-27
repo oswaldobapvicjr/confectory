@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package net.obvj.confectory.helper;
+package net.obvj.confectory.internal.helper;
 
 /**
  * A basic, abstract Configuration Helper object providing common infrastructure for

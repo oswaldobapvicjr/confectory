@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package net.obvj.confectory.helper;
+package net.obvj.confectory.internal.helper;
 
 import com.jayway.jsonpath.*;
 import com.jayway.jsonpath.internal.filter.ValueNodes.JsonNode;

@@ -22,8 +22,8 @@ import java.io.InputStream;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 
-import net.obvj.confectory.helper.BeanConfigurationHelper;
-import net.obvj.confectory.helper.ConfigurationHelper;
+import net.obvj.confectory.internal.helper.BeanConfigurationHelper;
+import net.obvj.confectory.internal.helper.ConfigurationHelper;
 
 /**
  * A specialized {@code Mapper} that loads the contents of a valid JSON {@code Source}

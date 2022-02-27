@@ -14,12 +14,21 @@
  * limitations under the License.
  */
 
+package net.obvj.confectory.internal.helper;
+
+import net.obvj.confectory.Configuration;
+import net.obvj.confectory.ConfigurationDataRetriever;
+
 /**
- * <p>
- * This package contains classes that support data retrieval for supported
- * {@code Configuration} formats.
- * </p>
+ * A marker interface that works as an abstraction for objects that retrieve data form
+ * previously loaded {@link Configuration} objects.
  *
+ * @param <T> the source type which configuration data is to be retrieved
+ *
+ * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 0.1.0
  */
-package net.obvj.confectory.helper;
+public interface ConfigurationHelper<T> extends ConfigurationDataRetriever<T>
+{
+    // Currently just marker interface
+}

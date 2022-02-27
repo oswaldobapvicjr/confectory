@@ -18,8 +18,8 @@ package net.obvj.confectory.mapper;
 
 import java.io.InputStream;
 
-import net.obvj.confectory.helper.ConfigurationHelper;
-import net.obvj.confectory.helper.BeanConfigurationHelper;
+import net.obvj.confectory.internal.helper.BeanConfigurationHelper;
+import net.obvj.confectory.internal.helper.ConfigurationHelper;
 
 /**
  * An abstract {@code Mapper} for implementations intended to load the contents of an

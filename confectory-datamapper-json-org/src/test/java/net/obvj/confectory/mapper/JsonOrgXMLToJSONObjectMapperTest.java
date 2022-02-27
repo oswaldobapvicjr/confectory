@@ -10,7 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
-import net.obvj.confectory.helper.JsonOrgJSONObjectHelper;
+import net.obvj.confectory.internal.helper.JsonOrgJSONObjectHelper;
 
 /**
  * Unit tests for the {@link JsonOrgXMLToJSONObjectMapper} class.

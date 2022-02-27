@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package net.obvj.confectory.helper;
+package net.obvj.confectory.internal.helper;
 
 import com.google.gson.JsonObject;
 import com.jayway.jsonpath.spi.json.GsonJsonProvider;

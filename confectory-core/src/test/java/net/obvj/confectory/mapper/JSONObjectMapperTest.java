@@ -14,7 +14,7 @@ import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import net.minidev.json.parser.ParseException;
 import net.obvj.confectory.ConfigurationException;
-import net.obvj.confectory.helper.JsonSmartConfigurationHelper;
+import net.obvj.confectory.internal.helper.JsonSmartConfigurationHelper;
 
 /**
  * Unit tests for the {@link JSONObjectMapper} class.

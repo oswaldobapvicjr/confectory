@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import net.minidev.json.JSONObject;
 import net.obvj.confectory.ConfigurationSourceException;
-import net.obvj.confectory.helper.JsonSmartConfigurationHelper;
+import net.obvj.confectory.internal.helper.JsonSmartConfigurationHelper;
 
 /**
  * Unit tests for the {@link INIToJSONObjectMapper} class.

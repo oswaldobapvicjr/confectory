@@ -24,8 +24,8 @@ import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
 import net.obvj.confectory.ConfigurationException;
-import net.obvj.confectory.helper.ConfigurationHelper;
-import net.obvj.confectory.helper.JsonSmartConfigurationHelper;
+import net.obvj.confectory.internal.helper.ConfigurationHelper;
+import net.obvj.confectory.internal.helper.JsonSmartConfigurationHelper;
 
 /**
  * A specialized {@code Mapper} that loads the contents of a valid JSON {@code Source}

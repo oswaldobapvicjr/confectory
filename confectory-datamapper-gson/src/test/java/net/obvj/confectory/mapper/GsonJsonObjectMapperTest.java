@@ -14,7 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-import net.obvj.confectory.helper.GsonJsonObjectHelper;
+import net.obvj.confectory.internal.helper.GsonJsonObjectHelper;
 
 /**
  * Unit tests for the {@link GsonJsonObjectMapper} class.

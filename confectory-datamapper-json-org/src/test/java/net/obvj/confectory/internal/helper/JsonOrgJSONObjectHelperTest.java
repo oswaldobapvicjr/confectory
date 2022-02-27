@@ -1,6 +1,6 @@
-package net.obvj.confectory.helper;
+package net.obvj.confectory.internal.helper;
 
-import static net.obvj.junit.utils.matchers.AdvancedMatchers.*;
+import static net.obvj.junit.utils.matchers.AdvancedMatchers.throwsException;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.sameInstance;
