@@ -28,9 +28,9 @@ import com.jayway.jsonpath.spi.mapper.JsonOrgMappingProvider;
  * {@link JSONObject}, with JSONPath capabilities.
  *
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
- * @since 0.2.0
+ * @since 2.0.0 (<b>note:</b> since 0.2.0 as {@code JSONObjectConfigurationHelperMapper})
  */
-public class JSONObjectHelper extends GenericJsonConfigurationHelper<JSONObject>
+public class JsonOrgJSONObjectHelper extends GenericJsonConfigurationHelper<JSONObject>
 {
 
     /**
@@ -38,7 +38,7 @@ public class JSONObjectHelper extends GenericJsonConfigurationHelper<JSONObject>
      *
      * @param jsonObject the JSON object to be set
      */
-    public JSONObjectHelper(JSONObject jsonObject)
+    public JsonOrgJSONObjectHelper(JSONObject jsonObject)
     {
         super(jsonObject, new JsonOrgJsonProvider(), new JsonOrgMappingProvider());
     }

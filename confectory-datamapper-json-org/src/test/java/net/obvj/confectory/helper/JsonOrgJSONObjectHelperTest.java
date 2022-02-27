@@ -14,13 +14,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import net.obvj.confectory.ConfigurationException;
 
 /**
- * Unit tests for the {@link JSONObjectHelper}.
+ * Unit tests for the {@link JsonOrgJSONObjectHelper}.
  *
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 0.2.0
  */
 @ExtendWith(MockitoExtension.class)
-class JSONObjectHelperTest
+class JsonOrgJSONObjectHelperTest
 {
     private static final String PATH_UNKNOWN = "$.unknown";
 
@@ -48,7 +48,8 @@ class JSONObjectHelperTest
             + "  }\r\n"
             + "}");
 
-    private static final JSONObjectHelper HELPER = new JSONObjectHelper(TEST_JSON_SAMPLE1);
+    private static final ConfigurationHelper<JSONObject> HELPER = new JsonOrgJSONObjectHelper(
+            TEST_JSON_SAMPLE1);
 
 
     @Test

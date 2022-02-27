@@ -3,7 +3,7 @@ package net.obvj.confectory.testdrive;
 import org.json.JSONObject;
 
 import net.obvj.confectory.Configuration;
-import net.obvj.confectory.mapper.XMLToJSONObjectMapper;
+import net.obvj.confectory.mapper.JsonOrgXMLToJSONObjectMapper;
 import net.obvj.confectory.source.SourceFactory;
 
 public class ConfectoryTestDriveXMLToJSONObject2
@@ -15,7 +15,7 @@ public class ConfectoryTestDriveXMLToJSONObject2
         Configuration<JSONObject> config = Configuration.<JSONObject>builder()
                 .namespace("test")
                 .source(SourceFactory.stringSource(xml))
-                .mapper(new XMLToJSONObjectMapper())
+                .mapper(new JsonOrgXMLToJSONObjectMapper())
                 .build();
 
         System.out.println(config.getBean().toString(2));

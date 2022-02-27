@@ -20,7 +20,7 @@ class StringMapperTest
 {
     private static final String TEST_CONTENT = "content";
 
-    private StringMapper mapper = new StringMapper();
+    private Mapper<String> mapper = new StringMapper();
 
     @Test
     void apply_validInputStream_loadedSuccessfully() throws IOException

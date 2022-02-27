@@ -3,7 +3,7 @@ package net.obvj.confectory.testdrive;
 import org.json.JSONObject;
 
 import net.obvj.confectory.Configuration;
-import net.obvj.confectory.mapper.XMLToJSONObjectMapper;
+import net.obvj.confectory.mapper.JsonOrgXMLToJSONObjectMapper;
 
 public class ConfectoryTestDriveXMLToJSONObject
 {
@@ -12,7 +12,7 @@ public class ConfectoryTestDriveXMLToJSONObject
         Configuration<JSONObject> config = Configuration.<JSONObject>builder()
                 .namespace("test")
                 .source("testfiles/agents.xml")
-                .mapper(new XMLToJSONObjectMapper()).build();
+                .mapper(new JsonOrgXMLToJSONObjectMapper()).build();
 
         System.out.println(config.getBean().toString(2));
         System.out.println(config.getBoolean("conf.enabled"));

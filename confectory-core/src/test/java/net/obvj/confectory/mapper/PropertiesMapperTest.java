@@ -21,7 +21,7 @@ class PropertiesMapperTest
 {
     private static final String TEST_PROPERTIES_CONTENT = "web.host=localhost\nweb.port=1910";
 
-    private PropertiesMapper mapper = new PropertiesMapper();
+    private Mapper<Properties> mapper = new PropertiesMapper();
 
     @Test
     void apply_validInputStream_loadedSuccessfully() throws IOException
