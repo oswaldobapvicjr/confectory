@@ -29,7 +29,7 @@ class JsonOrgJSONObjectMapperTest
                                                   + "  ]"
                                                   + "}";
 
-    private JsonOrgJSONObjectMapper mapper = new JsonOrgJSONObjectMapper();
+    private Mapper<JSONObject> mapper = new JsonOrgJSONObjectMapper();
 
     private ByteArrayInputStream toInputStream(String content)
     {

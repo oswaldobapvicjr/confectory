@@ -48,7 +48,8 @@ class JsonOrgJSONObjectHelperTest
             + "  }\r\n"
             + "}");
 
-    private static final JsonOrgJSONObjectHelper HELPER = new JsonOrgJSONObjectHelper(TEST_JSON_SAMPLE1);
+    private static final ConfigurationHelper<JSONObject> HELPER = new JsonOrgJSONObjectHelper(
+            TEST_JSON_SAMPLE1);
 
 
     @Test

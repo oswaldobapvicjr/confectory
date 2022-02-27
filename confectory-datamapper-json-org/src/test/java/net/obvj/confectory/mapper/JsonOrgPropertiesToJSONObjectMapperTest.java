@@ -25,7 +25,7 @@ class JsonOrgPropertiesToJSONObjectMapperTest
             + "stringValue=string1\n";
 
 
-    private JsonOrgPropertiesToJSONObjectMapper mapper = new JsonOrgPropertiesToJSONObjectMapper();
+    private Mapper<JSONObject> mapper = new JsonOrgPropertiesToJSONObjectMapper();
 
     private ByteArrayInputStream toInputStream(String content)
     {

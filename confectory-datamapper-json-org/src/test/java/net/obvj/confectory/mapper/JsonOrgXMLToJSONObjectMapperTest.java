@@ -31,7 +31,7 @@ class JsonOrgXMLToJSONObjectMapperTest
             + "</root>\n";
 
 
-    private JsonOrgXMLToJSONObjectMapper mapper = new JsonOrgXMLToJSONObjectMapper();
+    private Mapper<JSONObject> mapper = new JsonOrgXMLToJSONObjectMapper();
 
     private ByteArrayInputStream toInputStream(String content)
     {
