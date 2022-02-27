@@ -58,7 +58,7 @@ import net.obvj.confectory.util.ReflectionUtils;
  * @param <T> the target type to be produced by this {@code Mapper}
  *
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
- * @since 1.3.0
+ * @since 2.0.0
  */
 public class INIToObjectMapper<T> extends AbstractINIMapper<T> implements Mapper<T>
 {

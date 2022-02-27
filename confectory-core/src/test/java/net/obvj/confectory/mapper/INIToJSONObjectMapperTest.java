@@ -18,7 +18,7 @@ import net.obvj.confectory.helper.JsonSmartConfigurationHelper;
  * Unit tests for the {@link INIToJSONObjectMapper} class.
  *
  * @author oswaldo.bapvic.jr
- * @since 1.3.0
+ * @since 2.0.0
  */
 class INIToJSONObjectMapperTest
 {

@@ -29,7 +29,7 @@ import net.obvj.confectory.ConfigurationSourceException;
  * population to a concrete implementation.
  *
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
- * @since 1.3.0
+ * @since 2.0.0
  */
 public abstract class AbstractINIMapper<T> implements Mapper<T>
 {

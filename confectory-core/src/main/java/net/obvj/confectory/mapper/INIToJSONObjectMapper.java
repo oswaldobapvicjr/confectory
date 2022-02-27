@@ -29,7 +29,7 @@ import net.obvj.confectory.helper.JsonSmartConfigurationHelper;
  * (e.g.: file, URL) as a {@link JSONObject}.
  *
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
- * @since 1.3.0
+ * @since 2.0.0
  */
 public class INIToJSONObjectMapper extends AbstractINIMapper<JSONObject> implements Mapper<JSONObject>
 {
