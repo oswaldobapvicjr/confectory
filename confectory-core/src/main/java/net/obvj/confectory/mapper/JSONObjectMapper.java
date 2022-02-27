@@ -32,7 +32,7 @@ import net.obvj.confectory.helper.JsonSmartConfigurationHelper;
  * (e.g.: file, URL) as a {@link JSONObject} ({@code json-smart} JSON implementation).
  *
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
- * @since 1.3.0
+ * @since 2.0.0
  */
 public class JSONObjectMapper implements Mapper<JSONObject>
 {
@@ -40,15 +40,15 @@ public class JSONObjectMapper implements Mapper<JSONObject>
     @Override
     public JSONObject apply(InputStream inputStream) throws IOException
     {
-    	JSONParser parser = new JSONParser(JSONParser.DEFAULT_PERMISSIVE_MODE);
-		try
-		{
-			return parser.parse(inputStream, JSONObject.class);
-		}
-		catch (UnsupportedEncodingException | ParseException exception)
-		{
-			throw new ConfigurationException(exception);
-		}
+        JSONParser parser = new JSONParser(JSONParser.DEFAULT_PERMISSIVE_MODE);
+        try
+        {
+            return parser.parse(inputStream, JSONObject.class);
+        }
+        catch (UnsupportedEncodingException | ParseException exception)
+        {
+            throw new ConfigurationException(exception);
+        }
     }
 
     @Override

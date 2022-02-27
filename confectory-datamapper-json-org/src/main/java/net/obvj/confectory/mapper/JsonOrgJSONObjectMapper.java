@@ -30,7 +30,7 @@ import net.obvj.confectory.helper.JsonOrgJSONObjectHelper;
  * (e.g.: file, URL) as a {@link JSONObject} ({@code json.org} reference implementation).
  *
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
- * @since 0.2.0
+ * @since 2.0.0 (<b>note:</b> since 0.2.0 as {@code JSONObjectMapper})
  */
 public class JsonOrgJSONObjectMapper implements Mapper<JSONObject>
 {

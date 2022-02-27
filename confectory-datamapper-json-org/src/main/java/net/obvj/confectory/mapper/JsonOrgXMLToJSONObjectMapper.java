@@ -44,7 +44,7 @@ import org.json.XML;
  * {@link Mapper} implementation.
  *
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
- * @since 0.2.0
+ * @since 2.0.0 (<b>note:</b> since 0.2.0 as {@code XMLTOJSONObjectMapper})
  */
 public class JsonOrgXMLToJSONObjectMapper extends JsonOrgJSONObjectMapper implements Mapper<JSONObject>
 {
