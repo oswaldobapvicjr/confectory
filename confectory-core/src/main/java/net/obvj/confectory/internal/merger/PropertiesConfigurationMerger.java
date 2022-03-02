@@ -34,31 +34,39 @@ public class PropertiesConfigurationMerger extends AbstractConfigurationMerger<P
     @Override
     Properties doMerge(Configuration<Properties> config1, Configuration<Properties> config2)
     {
-        Properties config1Map = config1.getBean();
-        Properties config2Map = config2.getBean();
+        Properties properties1 = getPropertiesSafely(config1);
+        Properties properties2 = getPropertiesSafely(config2);
 
-        if (isEmpty(config1Map)) return config2Map;
-        if (isEmpty(config2Map)) return config1Map;
+        if (properties1.isEmpty()) return properties2;
+        if (properties2.isEmpty()) return properties1;
 
         Properties result = new Properties();
 
         // First iterate through the first map
-        config1Map.forEach((key, value) ->
+        properties1.forEach((key, value) ->
         {
             // The actual value must be the one from the highest-precedence map
-            Object actualValue = config2Map.containsKey(key)
-                    && config2.getPrecedence() > config1.getPrecedence() ? config2Map.get(key) : value;
+            Object actualValue = properties2.containsKey(key)
+                    && config2.getPrecedence() > config1.getPrecedence() ? properties2.get(key) : value;
             result.put(key, actualValue);
         });
 
         // Then iterate through the second map to find additional keys
-        config2Map.forEach(result::putIfAbsent);
+        properties2.forEach(result::putIfAbsent);
         return result;
     }
 
-    private boolean isEmpty(Properties properties)
+    /**
+     * Returns the {@link Properties} object associated with the specified
+     * {@link Configuration}, or an empty {@link Properties} if the bean is null.
+     *
+     * @param config the {@link Configuration} which {@link Properties} are to be retrieved
+     * @return a {@link Properties} object, not null
+     */
+    private Properties getPropertiesSafely(Configuration<Properties> config)
     {
-        return properties == null || properties.isEmpty();
+        Properties bean = config.getBean();
+        return bean == null ? new Properties() : bean;
     }
 
 }

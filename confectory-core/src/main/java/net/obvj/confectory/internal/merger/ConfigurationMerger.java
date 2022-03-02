@@ -41,8 +41,8 @@ public interface ConfigurationMerger<T>
      * precedence) will be applied to the new {@code Configuration}</li>
      * </ul>
      *
-     * @param config1 the first {@code Configuration}
-     * @param config2 the second {@code Configuration}
+     * @param config1 the first {@code Configuration}; not null
+     * @param config2 the second {@code Configuration}; not null
      *
      * @return a new {@code Configuration} resulting from the combination of {@code config1}
      *         and {@code config2}

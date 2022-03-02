@@ -34,6 +34,7 @@ public class DummySource<T> extends AbstractSource<T> implements Source<T>
      */
     public DummySource()
     {
+        // This secures the uniqueness of the final Configuration
         super(UUID.randomUUID().toString());
     }
 

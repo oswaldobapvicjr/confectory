@@ -35,9 +35,26 @@ public abstract class AbstractConfigurationMerger<T> implements ConfigurationMer
     @Override
     public final Configuration<T> merge(Configuration<T> config1, Configuration<T> config2)
     {
+        checkParameters(config1, config2);
         T mergedObject = doMerge(config1, config2);
         Configuration<T> higherPrecedenceConfig = getHighestPrecedenceConfig(config1, config2);
         return newConfiguration(mergedObject, higherPrecedenceConfig);
+    }
+
+    /**
+     * Checks the parameters against nullity.
+     *
+     * @param config1 the first configuration to check
+     * @param config2 the second configuration to check
+     *
+     * @throws NullPointerException if any configuration is null
+     */
+    private void checkParameters(Configuration<T> config1, Configuration<T> config2)
+    {
+        if (config1 == null || config2 == null)
+        {
+            throw new NullPointerException("The configuration to merge must not be null");
+        }
     }
 
     /**
