@@ -59,6 +59,7 @@ public class ConfigurationBuilder<T> implements ConfigurationMetadataRetriever<T
     private Mapper<T> mapper;
     private boolean optional;
     private boolean lazy;
+    private T bean;
 
     /**
      * Creates a new, empty {@code ConfigurationBuilder}.
@@ -220,6 +221,19 @@ public class ConfigurationBuilder<T> implements ConfigurationMetadataRetriever<T
     }
 
     /**
+     * <strong>[Optional]</strong> Defines a preset bean for the new {@code Configuration}.
+     *
+     * @param bean the preset bean to be set
+     * @return a reference to this same {@code ConfigurationBuilder} for chained calls
+     * @since 2.1.0
+     */
+    public ConfigurationBuilder<T> bean(T bean)
+    {
+        this.bean = bean;
+        return this;
+    }
+
+    /**
      * Builds the target {@code Configuration}.
      *
      * @return a new {@link Configuration} object
@@ -272,6 +286,11 @@ public class ConfigurationBuilder<T> implements ConfigurationMetadataRetriever<T
     public boolean isLazy()
     {
         return lazy;
+    }
+
+    public T getBean()
+    {
+        return bean;
     }
 
 }

@@ -92,14 +92,19 @@ public final class Configuration<T> implements ConfigurationDataRetriever<T>, Co
      */
     protected Configuration(ConfigurationBuilder<T> builder)
     {
-        this.namespace = builder.getNamespace();
-        this.precedence = builder.getPrecedence();
-        this.source = builder.getSource();
-        this.mapper = builder.getMapper();
-        this.optional = builder.isOptional();
-        this.lazy = builder.isLazy();
+        namespace = builder.getNamespace();
+        precedence = builder.getPrecedence();
+        source = builder.getSource();
+        mapper = builder.getMapper();
+        optional = builder.isOptional();
+        lazy = builder.isLazy();
 
-        if (!lazy)
+        T bean = builder.getBean();
+        if (bean != null)
+        {
+            service = new ConfigurationService<>(bean, mapper);
+        }
+        else if (!lazy)
         {
             getService();
         }
@@ -296,9 +301,29 @@ final class ConfigurationService<T> implements ConfigurationDataRetriever<T>
     private final T bean;
     private final ConfigurationHelper<T> helper;
 
+    /**
+     * Creates a {@code ConfigurationService} from a {@link Source} and {@link Mapper}.
+     *
+     * @param source   the {@link Source} to be loaded
+     * @param mapper   the {@link Mapper} to be applied
+     * @param optional a flag indicating whether or not an exception should be thrown in an
+     *                 event of failure to load the configuration source
+     */
     ConfigurationService(Source<T> source, Mapper<T> mapper, boolean optional)
     {
-        this.bean = source.load(mapper, optional);
+        this(source.load(mapper, optional), mapper);
+    }
+
+    /**
+     * Creates a {@code ConfigurationService} with a preset bean.
+     *
+     * @param bean   the bean to set
+     * @param mapper the {@link Mapper} which {@link ConfigurationHelper} is to be retrieved
+     * @since 2.1.0
+     */
+    ConfigurationService(T bean, Mapper<T> mapper)
+    {
+        this.bean = bean;
         this.helper = getConfigurationHelper(bean, mapper);
     }
 
