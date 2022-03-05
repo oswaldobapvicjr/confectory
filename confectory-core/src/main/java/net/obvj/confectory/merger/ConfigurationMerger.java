@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package net.obvj.confectory.internal.merger;
+package net.obvj.confectory.merger;
 
 import net.obvj.confectory.Configuration;
 

@@ -1,4 +1,4 @@
-package net.obvj.confectory.internal.merger;
+package net.obvj.confectory.merger;
 
 import static net.obvj.junit.utils.matchers.AdvancedMatchers.throwsException;
 import static org.hamcrest.CoreMatchers.equalTo;
