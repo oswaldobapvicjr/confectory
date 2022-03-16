@@ -62,8 +62,7 @@ public class JsonPathExpression
      * Produces a new {@code JsonPathExpression} with the concatenation result of this
      * {@code JsonPathExpression} and the given key.
      *
-     * @param expression a {@code String} representing the key to be appended to the end of
-     *                   this {@code JsonPathExpression}
+     * @param key the key to be appended to the end of this {@code JsonPathExpression}
      * @return a new, compiled {@link JsonPathExpression}
      *
      * @throws InvalidPathException if the resulting JsonPath expression is invalid
