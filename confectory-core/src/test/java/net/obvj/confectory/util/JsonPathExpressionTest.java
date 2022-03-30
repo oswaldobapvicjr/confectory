@@ -2,9 +2,15 @@ package net.obvj.confectory.util;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.junit.jupiter.api.Test;
 
 import com.jayway.jsonpath.InvalidPathException;
+import com.jayway.jsonpath.JsonPathException;
 
 /**
  * Unit tests for the {@link JsonPathExpression} class.
@@ -81,6 +87,44 @@ class JsonPathExpressionTest
     {
         JsonPathExpression expression1 = new JsonPathExpression("$.agent.class");
         assertSame(expression1, expression1.append(""));
+    }
+
+    @Test
+    void equals_similarObjects_true()
+    {
+        assertEquals(new JsonPathExpression("$['attr']"), new JsonPathExpression("$.attr"));
+    }
+
+    @Test
+    void equals_sameObject_true()
+    {
+        JsonPathExpression expression = new JsonPathExpression("$['attr']");
+        assertEquals(expression, expression);
+    }
+
+    @Test
+    void equals_null_false()
+    {
+        assertFalse(new JsonPathExpression("$['attr']").equals(null));
+    }
+
+    @Test
+    void equals_differentObjects_false()
+    {
+        JsonPathExpression expression = new JsonPathExpression("$['attr']");
+        assertFalse(expression.equals(new Object()));
+        assertFalse(expression.equals(new JsonPathExpression("$")));
+    }
+
+    @Test
+    void equals_similarObjectsInAHashSet_noRepeatedElements()
+    {
+        List<JsonPathExpression> list = Arrays.asList(new JsonPathExpression("$.key"),
+                new JsonPathExpression("$['key']"));
+        Set<JsonPathExpression> set = new HashSet<>(list);
+
+        assertEquals(1, set.size());
+        assertTrue(set.containsAll(list));
     }
 
 }
