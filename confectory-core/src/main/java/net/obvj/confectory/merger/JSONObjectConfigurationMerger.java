@@ -16,9 +16,15 @@
 
 package net.obvj.confectory.merger;
 
-import java.util.*;
+import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toMap;
+import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +34,6 @@ import com.jayway.jsonpath.InvalidPathException;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import net.obvj.confectory.Configuration;
-import net.obvj.confectory.ConfigurationException;
 import net.obvj.confectory.mapper.JSONObjectMapper;
 import net.obvj.confectory.util.ConfigurationComparator;
 import net.obvj.confectory.util.JsonPathExpression;
@@ -45,14 +50,14 @@ public class JSONObjectConfigurationMerger extends AbstractConfigurationMerger<J
 {
     private static final Logger LOGGER = LoggerFactory.getLogger(JSONObjectConfigurationMerger.class);
 
-    private Map<JsonPathExpression, String> distinctKeysByJsonPath;
+    private final Map<JsonPathExpression, String> distinctKeysByJsonPath;
 
     /**
      * Creates a standard {@link JSONObjectConfigurationMerger}.
      */
     public JSONObjectConfigurationMerger()
     {
-        this(new HashMap<>());
+        this(Collections.emptyMap());
     }
 
     /**
@@ -61,17 +66,17 @@ public class JSONObjectConfigurationMerger extends AbstractConfigurationMerger<J
      *
      * @param distinctKeysByJsonPath a map that associates JsonPath expressions inside the
      *                               {@code JSONObject} and distinct keys for object
-     *                               identification during the merge of an array
+     *                               identification during the merge of an array; {@code null}
+     *                               is allowed
      *
      * @throws IllegalArgumentException if the specified expression is null or empty
      * @throws InvalidPathException     if the specified JsonPath expression is invalid
      */
     public JSONObjectConfigurationMerger(Map<String, String> distinctKeysByJsonPath)
     {
-        Objects.requireNonNull(distinctKeysByJsonPath);
-        // Compiling the JsonPath expressions for validation and further comparing
-        this.distinctKeysByJsonPath = distinctKeysByJsonPath.entrySet().stream().collect(
-                Collectors.toMap(entry -> new JsonPathExpression(entry.getKey()), Map.Entry::getValue));
+        this.distinctKeysByJsonPath = defaultIfNull(distinctKeysByJsonPath,
+                Collections.<String, String>emptyMap()).entrySet().stream()
+                        .collect(toMap(entry -> new JsonPathExpression(entry.getKey()), Map.Entry::getValue));
     }
 
     @Override
@@ -133,13 +138,13 @@ public class JSONObjectConfigurationMerger extends AbstractConfigurationMerger<J
 
                 if (value1 instanceof JSONObject)
                 {
-                    JSONObjectMerger merger = new JSONObjectMerger(absolutePath.appendKey(key),
+                    JSONObjectMerger merger = new JSONObjectMerger(absolutePath.appendChild(key),
                             distinctKeysByJsonPath);
                     result.put(key, merger.merge((JSONObject) value1, value2));
                 }
                 else if (value1 instanceof JSONArray)
                 {
-                    JSONObjectMerger merger = new JSONObjectMerger(absolutePath.appendKey(key),
+                    JSONObjectMerger merger = new JSONObjectMerger(absolutePath.appendChild(key),
                             distinctKeysByJsonPath);
                     result.put(key, merger.merge((JSONArray) value1, value2));
                 }
@@ -164,15 +169,14 @@ public class JSONObjectConfigurationMerger extends AbstractConfigurationMerger<J
          */
         private JSONObject merge(JSONObject json, Object object)
         {
-            if (object == null)
-            {
-                return new JSONObject(json);
-            }
             if (object instanceof JSONObject)
             {
                 return merge(json, (JSONObject) object);
             }
-            throw new ConfigurationException("Can not merge JSONObject with " + object.getClass());
+            // The second object is either null or has an incompatible type,
+            // so simply assume object with the highest precedence.
+            // Create a copy of it for safety.
+            return new JSONObject(json);
         }
 
         /**
@@ -186,15 +190,14 @@ public class JSONObjectConfigurationMerger extends AbstractConfigurationMerger<J
         private JSONArray merge(JSONArray array, Object object)
         {
             LOGGER.debug("Merging array on path: {}", absolutePath);
-            if (object == null)
-            {
-                return newJsonArray(array);
-            }
             if (object instanceof JSONArray)
             {
                 return merge(array, (JSONArray) object);
             }
-            throw new ConfigurationException("Can not merge JSONArray with " + object.getClass());
+            // The second object is either null or has an incompatible type,
+            // so simply assume the array from the highest-precedence object.
+            // Create a copy of it for safety.
+            return newJsonArray(array);
         }
 
         /**
@@ -279,7 +282,7 @@ public class JSONObjectConfigurationMerger extends AbstractConfigurationMerger<J
     private JSONObject[] getSortedJSONObjects(Configuration<JSONObject> config1,
             Configuration<JSONObject> config2)
     {
-        return Arrays.asList(config1, config2).stream().sorted(new ConfigurationComparator())
+        return asList(config1, config2).stream().sorted(new ConfigurationComparator())
                 .map(this::getJSONObjectSafely).toArray(JSONObject[]::new);
     }
 

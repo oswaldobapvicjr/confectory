@@ -24,7 +24,7 @@ import com.jayway.jsonpath.InvalidPathException;
 import com.jayway.jsonpath.JsonPath;
 
 /**
- * An immutable that represents a compiled JsonPath expression.
+ * An immutable object that represents a compiled {@code JsonPath} expression.
  *
  * @author oswaldo.bapvic.jr
  * @since 2.1.0
@@ -38,7 +38,7 @@ public class JsonPathExpression
      */
     public static final JsonPathExpression ROOT = new JsonPathExpression("$");
 
-    private static final String KEY_TO_EXPRESSION_PATTERN = "['%s']";
+    private static final String CHILD_TO_EXPRESSION_PATTERN = "['%s']";
 
     private final JsonPath jsonPath;
 
@@ -60,20 +60,20 @@ public class JsonPathExpression
 
     /**
      * Produces a new {@code JsonPathExpression} with the concatenation result of this
-     * {@code JsonPathExpression} and the given key.
+     * {@code JsonPathExpression} and the given child element name.
      *
-     * @param key the key to be appended to the end of this {@code JsonPathExpression}
+     * @param name the child name to be appended to the end of this {@code JsonPathExpression}
      * @return a new, compiled {@link JsonPathExpression}
      *
      * @throws InvalidPathException if the resulting JsonPath expression is invalid
      */
-    public JsonPathExpression appendKey(String key)
+    public JsonPathExpression appendChild(String name)
     {
-        if (StringUtils.isEmpty(key))
+        if (StringUtils.isEmpty(name))
         {
             return this;
         }
-        String expression = String.format(KEY_TO_EXPRESSION_PATTERN, key);
+        String expression = String.format(CHILD_TO_EXPRESSION_PATTERN, name);
         return append(expression);
     }
 

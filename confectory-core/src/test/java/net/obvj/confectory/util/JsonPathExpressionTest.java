@@ -54,7 +54,7 @@ class JsonPathExpressionTest
     @Test
     void appendKey_additionalFieldOnRoot_success()
     {
-        assertEquals("$['agents']", new JsonPathExpression("$").appendKey("agents").toString());
+        assertEquals("$['agents']", new JsonPathExpression("$").appendChild("agents").toString());
     }
 
     @Test
@@ -79,7 +79,7 @@ class JsonPathExpressionTest
     void appendKey_emptyValue_sameExpression()
     {
         JsonPathExpression expression1 = new JsonPathExpression("$.agent.class");
-        assertSame(expression1, expression1.appendKey(""));
+        assertSame(expression1, expression1.appendChild(""));
     }
 
     @Test
