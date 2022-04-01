@@ -223,13 +223,18 @@ public class JSONObjectConfigurationMerger extends AbstractConfigurationMerger<J
             {
                 array2.forEach(object ->
                 {
-                    if (!result.contains(object))
-                    {
-                        result.add(object);
-                    }
+                    addDistinctObject(result, object);
                 });
             }
             return result;
+        }
+
+        private void addDistinctObject(JSONArray result, Object object)
+        {
+            if (!result.contains(object))
+            {
+                result.add(object);
+            }
         }
 
         /**
@@ -250,6 +255,10 @@ public class JSONObjectConfigurationMerger extends AbstractConfigurationMerger<J
                 {
                     array.add(object);
                 }
+            }
+            else
+            {
+                addDistinctObject(array, object);
             }
         }
 

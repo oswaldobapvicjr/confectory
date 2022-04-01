@@ -115,6 +115,30 @@ class JSONObjectConfigurationMergerTest
             + "  \"address\": \"123 Street\"\r\n"
             + "}";
 
+    private static final String JSON_8
+            = "{\r\n"
+            + "  \"array\": [\r\n"
+            + "    {\r\n"
+            + "      \"name\": \"name1\",\r\n"
+            + "      \"value\": \"Json8Value1\"\r\n"
+            + "    },\r\n"
+            + "    \"element1\""
+            + "  ]\r\n"
+            + "}";
+
+    private static final String JSON_9
+            = "{\r\n"
+            + "  \"array\": [\r\n"
+            + "    {\r\n"
+            + "      \"name\": \"name1\",\r\n"
+            + "      \"value\": \"Json9Value1\"\r\n"
+            + "    },\r\n"
+            + "    \"element1\","
+            + "    \"element2\""
+            + "  ]\r\n"
+            + "}";
+
+
     private final ConfigurationMerger<JSONObject> merger = new JSONObjectConfigurationMerger();
 
     private static Configuration<JSONObject> newConfiguration(String json, int precedence)
@@ -125,8 +149,16 @@ class JSONObjectConfigurationMergerTest
 
     private static void assertArray(List<?> expected, Configuration<JSONObject> result, String jsonPath)
     {
+        assertArray(expected, result, jsonPath, true);
+    }
+
+    private static void assertArray(List<?> expected, Configuration<JSONObject> result, String jsonPath, boolean exactSize)
+    {
         JSONArray array = (JSONArray) result.get(jsonPath);
-        assertEquals(expected.size(), array.size());
+        if (exactSize)
+        {
+            assertEquals(expected.size(), array.size());
+        }
         assertTrue(array.containsAll(expected));
     }
 
@@ -242,4 +274,25 @@ class JSONObjectConfigurationMergerTest
                 .getString("$.address"));
     }
 
+    @Test
+    void merge_json8HighWithJson9LowAndDistinctKey_success()
+    {
+        Configuration<JSONObject> result = new JSONObjectConfigurationMerger(
+                Collections.singletonMap("$.array", "name")).merge(newConfiguration(JSON_8, 9),
+                        newConfiguration(JSON_9, 1));
+
+        assertEquals("Json8Value1", result.getString("$.array[?(@.name=='name1')].value"));
+        assertArray(Arrays.asList("element1", "element2"), result, "$.array[*]", false);
+    }
+
+    @Test
+    void merge_json8LowWithJson9HighAndDistinctKey_success()
+    {
+        Configuration<JSONObject> result = new JSONObjectConfigurationMerger(
+                Collections.singletonMap("$.array", "name")).merge(newConfiguration(JSON_8, 9),
+                        newConfiguration(JSON_9, 10));
+
+        assertEquals("Json9Value1", result.getString("$.array[?(@.name=='name1')].value"));
+        assertArray(Arrays.asList("element1", "element2"), result, "$.array[*]", false);
+    }
 }
