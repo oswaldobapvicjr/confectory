@@ -16,6 +16,8 @@
 
 package net.obvj.confectory.merger;
 
+import java.util.function.Supplier;
+
 import net.obvj.confectory.Configuration;
 import net.obvj.confectory.mapper.DummyMapper;
 import net.obvj.confectory.source.DummySource;
@@ -98,6 +100,20 @@ public abstract class AbstractConfigurationMerger<T> implements ConfigurationMer
                 .bean(bean)
                 .eager()
                 .build();
+    }
+
+    /**
+     * Returns the bean object associated with the specified {@link Configuration}, or a
+     * default object specified by a supplying function if the bean is null.
+     *
+     * @param config          the {@link Configuration} which bean is to be retrieved
+     * @param defaultSupplier a supplying function to be applied if the bean is null
+     * @return the actual bean', or the object returned by the specified supplier; not null
+     */
+    T getBeanSafely(Configuration<T> config, Supplier<T> defaultSupplier)
+    {
+        T bean = config.getBean();
+        return bean == null ? defaultSupplier.get() : bean;
     }
 
 }

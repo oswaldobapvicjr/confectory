@@ -288,8 +288,7 @@ public class JSONObjectConfigurationMerger extends AbstractConfigurationMerger<J
 
     private JSONObject getJSONObjectSafely(Configuration<JSONObject> config)
     {
-        JSONObject bean = config.getBean();
-        return bean == null ? new JSONObject() : bean;
+        return getBeanSafely(config, JSONObject::new);
     }
 
 }
