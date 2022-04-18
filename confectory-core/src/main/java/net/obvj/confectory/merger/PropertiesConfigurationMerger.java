@@ -65,8 +65,7 @@ public class PropertiesConfigurationMerger extends AbstractConfigurationMerger<P
      */
     private Properties getPropertiesSafely(Configuration<Properties> config)
     {
-        Properties bean = config.getBean();
-        return bean == null ? new Properties() : bean;
+        return getBeanSafely(config, Properties::new);
     }
 
 }
