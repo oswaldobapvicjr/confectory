@@ -41,6 +41,27 @@ import net.obvj.confectory.util.JsonPathExpression;
 /**
  * A specialized {@code ConfigurationMerger} that combines two {@link Configuration}
  * objects of type {@link JSONObject} (json-smart implementation) into a single one.
+ * <p>
+ * The resulting JSON document from the merge operation shall contain all exclusive
+ * objects from source documents and in case of In case of key collisions (i.e., the same
+ * key appears in both documents), the following rules will be applied:
+ * <ul>
+ * <li>for simple values, such as strings, numbers and boolean values, the value from the
+ * highest-precedence {@code Configuration} will be selected;</li>
+ * <li>if the value is a JSON object in <b>both</b> JSON sources, the two objects will be
+ * merged recursively; if the types are not compatible (e.g.: JSON object in one side and
+ * simple value or array in the other), then a copy of the object from the
+ * highest-precedence {@code Configuration} will be selected as fallback;</li>
+ * <li>if the value is a JSON array in <b>both</b> JSON sources, then all elements from
+ * both two arrays will be copied <b>distinctively</b> (i.e., repeated elements will not
+ * be copied to the resulting JSON document); if the types are not compatible (e.g.: JSON
+ * array in one side and simple value or complex object in the other), then a copy of the
+ * object from the highest-precedence {@code Configuration} will be selected as
+ * fallback</li>
+ * </ul>
+ * <p>
+ * A special solution for merging arrays of distinct objects with a specific key can be
+ * created using the optional constructor {@link #JSONObjectConfigurationMerger(Map)}.
  *
  * @see ConfigurationMerger
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
@@ -50,7 +71,7 @@ public class JSONObjectConfigurationMerger extends AbstractConfigurationMerger<J
 {
     private static final Logger LOGGER = LoggerFactory.getLogger(JSONObjectConfigurationMerger.class);
 
-    private final Map<JsonPathExpression, String> distinctKeysByJsonPath;
+    private final Map<JsonPathExpression, String> distinctObjectKeysInsideArrays;
 
     /**
      * Creates a standard {@link JSONObjectConfigurationMerger}.
@@ -63,18 +84,55 @@ public class JSONObjectConfigurationMerger extends AbstractConfigurationMerger<J
     /**
      * Creates a new {@link JSONObjectConfigurationMerger} with a map of distinct keys
      * associated with specific JsonPath expressions.
+     * <p>
+     * Use the {@code distinctObjectKeysInsideArrays} map to specify how to combine arrays of
+     * objects inside the JSON. For example, considering the following document:
+     * <p>
+     * <blockquote>
      *
-     * @param distinctKeysByJsonPath a map that associates JsonPath expressions inside the
-     *                               {@code JSONObject} and distinct keys for object
-     *                               identification during the merge of an array; {@code null}
-     *                               is allowed
+     * <pre>
+     * {
+     *   "params": [
+     *     {
+     *       "param": "name",
+     *       "value": "John Doe"
+     *     },
+     *     {
+     *       "param": "age",
+     *       "value": 33
+     *     }
+     *   ]
+     * }
+     * </pre>
+     *
+     * </blockquote>
+     *
+     * <p>
+     * A map containing an entry with the key {@code "$.params"} associated with the
+     * {@code "param"} value tells the algorithm to check for distinct objects identified by
+     * the value inside the {@code "param"} field during the merge of the {@code "$.params"}
+     * array.
+     * <p>
+     * In other words, if two JSON documents contain different objects identified by the same
+     * {@code "param"} attribute inside the array returned by the {@code JsonPath} expression
+     * {@code "$.params"}, then only the object from the {@link Configuration} with the
+     * highest precedence will be selected.
+     * <p>
+     * A {@code JsonPath} expression can be specified using either dot- or bracket-notation,
+     * but complex expressions containing filters, script, subscript, or union operations, are
+     * not supported.
+     *
+     * @param distinctObjectKeysInsideArrays a map that associates JsonPath expressions inside
+     *                                       the {@code JSONObject} and object keys for
+     *                                       distinction during the merge of an array;
+     *                                       {@code null} is allowed
      *
      * @throws IllegalArgumentException if the specified expression is null or empty
      * @throws InvalidPathException     if the specified JsonPath expression is invalid
      */
-    public JSONObjectConfigurationMerger(Map<String, String> distinctKeysByJsonPath)
+    public JSONObjectConfigurationMerger(Map<String, String> distinctObjectKeysInsideArrays)
     {
-        this.distinctKeysByJsonPath = defaultIfNull(distinctKeysByJsonPath,
+        this.distinctObjectKeysInsideArrays = defaultIfNull(distinctObjectKeysInsideArrays,
                 Collections.<String, String>emptyMap()).entrySet().stream()
                         .collect(toMap(entry -> new JsonPathExpression(entry.getKey()), Map.Entry::getValue));
     }
@@ -83,7 +141,8 @@ public class JSONObjectConfigurationMerger extends AbstractConfigurationMerger<J
     JSONObject doMerge(Configuration<JSONObject> config1, Configuration<JSONObject> config2)
     {
         JSONObject[] sortedJSONObjects = getSortedJSONObjects(config1, config2);
-        JSONObjectMerger merger = new JSONObjectMerger(JsonPathExpression.ROOT, distinctKeysByJsonPath);
+        JSONObjectMerger merger = new JSONObjectMerger(JsonPathExpression.ROOT,
+                distinctObjectKeysInsideArrays);
         return merger.merge(sortedJSONObjects[0], sortedJSONObjects[1]);
     }
 
@@ -93,22 +152,24 @@ public class JSONObjectConfigurationMerger extends AbstractConfigurationMerger<J
     static class JSONObjectMerger
     {
         private final JsonPathExpression absolutePath;
-        private final Map<JsonPathExpression, String> distinctKeysByJsonPath;
+        private final Map<JsonPathExpression, String> distinctObjectKeysByArrays;
 
         /**
          * Creates a new {@link JSONObjectMapper} for an absolute path.
          *
-         * @param absolutePath           the absolute path of the current {@link JSONObject} or
-         *                               {@link JSONArray} inside the root {@link JSONObject}
-         * @param distinctKeysByJsonPath a map that associates JsonPath expressions inside the
-         *                               {@code JSONObject} and distinct keys for object
-         *                               identification during the merge of an array
+         * @param absolutePath                   the absolute path of the current
+         *                                       {@link JSONObject} or {@link JSONArray} inside
+         *                                       the root {@link JSONObject}
+         * @param distinctObjectKeysInsideArrays a map that associates JsonPath expressions inside
+         *                                       the {@code JSONObject} and distinct keys for
+         *                                       object identification during the merge of an
+         *                                       array
          */
         public JSONObjectMerger(JsonPathExpression absolutePath,
-                Map<JsonPathExpression, String> distinctKeysByJsonPath)
+                Map<JsonPathExpression, String> distinctObjectKeysInsideArrays)
         {
             this.absolutePath = absolutePath;
-            this.distinctKeysByJsonPath = distinctKeysByJsonPath;
+            this.distinctObjectKeysByArrays = distinctObjectKeysInsideArrays;
         }
 
         /**
@@ -139,13 +200,13 @@ public class JSONObjectConfigurationMerger extends AbstractConfigurationMerger<J
                 if (value1 instanceof JSONObject)
                 {
                     JSONObjectMerger merger = new JSONObjectMerger(absolutePath.appendChild(key),
-                            distinctKeysByJsonPath);
+                            distinctObjectKeysByArrays);
                     result.put(key, merger.merge((JSONObject) value1, value2));
                 }
                 else if (value1 instanceof JSONArray)
                 {
                     JSONObjectMerger merger = new JSONObjectMerger(absolutePath.appendChild(key),
-                            distinctKeysByJsonPath);
+                            distinctObjectKeysByArrays);
                     result.put(key, merger.merge((JSONArray) value1, value2));
                 }
                 else
@@ -212,7 +273,7 @@ public class JSONObjectConfigurationMerger extends AbstractConfigurationMerger<J
             // The 1st array is always the highest-precedence one
             JSONArray result = newJsonArray(array1);
 
-            String distinctKey = distinctKeysByJsonPath.get(absolutePath);
+            String distinctKey = distinctObjectKeysByArrays.get(absolutePath);
             if (distinctKey != null)
             {
                 // Here we add objects from the 2nd array only if they are not present in the 1st one
