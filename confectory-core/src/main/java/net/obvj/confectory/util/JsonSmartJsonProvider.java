@@ -104,15 +104,15 @@ public class JsonSmartJsonProvider implements JsonProvider
     }
 
     @Override
-    public Object put(Object jsonObject, String key, Object value)
+    public void put(Object jsonObject, String key, Object value)
     {
-        return toJsonObject(jsonObject).put(key, value);
+        toJsonObject(jsonObject).put(key, value);
     }
 
     @Override
-    public boolean add(Object jsonArray, Object element)
+    public void add(Object jsonArray, Object element)
     {
-        return toJsonArray(jsonArray).add(element);
+        toJsonArray(jsonArray).add(element);
     }
 
     @Override
