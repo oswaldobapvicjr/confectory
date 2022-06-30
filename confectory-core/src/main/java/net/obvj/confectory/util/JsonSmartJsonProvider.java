@@ -28,7 +28,7 @@ import net.minidev.json.JSONObject;
 /**
  * A concrete {@link JsonProvider} implementation for the {@code json-smart} provider.
  *
- * @author oswaldo.bapvic.jr
+ * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 2.2.0
  *
  * @see JSONObject
@@ -110,6 +110,12 @@ public class JsonSmartJsonProvider implements JsonProvider
     }
 
     @Override
+    public void putIfAbsent(Object jsonObject, String key, Object value)
+    {
+        toJsonObject(jsonObject).putIfAbsent(key, value);
+    }
+
+    @Override
     public void add(Object jsonArray, Object element)
     {
         toJsonArray(jsonArray).add(element);
@@ -124,13 +130,7 @@ public class JsonSmartJsonProvider implements JsonProvider
     @Override
     public void forEachElementInArray(Object jsonArray, Consumer<? super Object> action)
     {
-        ((JSONArray) jsonArray).forEach(action);
-    }
-
-    @Override
-    public Object putIfAbsent(Object jsonObject, String key, Object value)
-    {
-        return toJsonObject(jsonObject).putIfAbsent(key, value);
+        toJsonArray(jsonArray).forEach(action);
     }
 
     @Override

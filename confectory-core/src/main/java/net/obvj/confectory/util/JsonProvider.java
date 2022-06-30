@@ -26,7 +26,7 @@ import java.util.stream.Stream;
  * An abstraction that represents a JSON provider (for example: Jackson, Gson, etc.)
  * defining common operations for all implementations.
  *
- * @author oswaldo.bapvic.jr
+ * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 2.2.0
  */
 public interface JsonProvider
@@ -130,6 +130,21 @@ public interface JsonProvider
     void put(Object jsonObject, String key, Object value);
 
     /**
+     * Associates the specified value with the specified key in the specified JSON object,
+     * provided that the specified key is not already associated with a value in the JSON.
+     *
+     * @param jsonObject the JSON object; not {@code null}
+     * @param key        the key with which the specified value is to be associated in the
+     *                   JSON; not {@code null}
+     * @param value      the value to be associated with the specified key in the JSON,
+     *                   provided that the specified key is absent in the document
+     *
+     * @throws ClassCastException if the specified {@code jsonObject} is not a valid JSON
+     *                            object for this provider
+     */
+    void putIfAbsent(Object jsonObject, String key, Object value);
+
+    /**
      * Appends the specified element to the end of the specified JSON array.
      *
      * @param jsonArray the JSON array; not {@code null}
@@ -140,13 +155,53 @@ public interface JsonProvider
      */
     void add(Object jsonArray, Object element);
 
+    /**
+     * Performs the given action for each entry in the specified JSON object until all entries
+     * have been processed.
+     *
+     * @param jsonObject the JSON object; not {@code null}
+     * @param action     the action to be performed for each entry; not {@code null}
+     *
+     * @throws ClassCastException   if the specified {@code jsonObject} is not a valid JSON
+     *                              object for this provider
+     * @throws NullPointerException if the specified action is {@code null}
+     */
     void forEachEntryInJsonObject(Object jsonObject, BiConsumer<? super String, ? super Object> action);
 
+    /**
+     * Performs the given action for each element of the specified JSON array until all
+     * entries have been processed.
+     *
+     * @param jsonObject the JSON array; not {@code null}
+     * @param action     the action to be performed for each element; not {@code null}
+     *
+     * @throws ClassCastException   if the specified {@code jsonArray} is not a valid JSON
+     *                              array for this provider
+     * @throws NullPointerException if the specified action is {@code null}
+     */
     void forEachElementInArray(Object jsonArray, Consumer<? super Object> action);
 
-    Object putIfAbsent(Object jsonObject, String key, Object value);
-
+    /**
+     * Checks if the specified JSON array contains the specified element.
+     *
+     * @param jsonArray the JSON array; not {@code null}
+     * @param element   the element to be searched
+     * @return {@code true} if the specified JSON array contains the specified element;
+     *         otherwise, {@code false}.
+     *
+     * @throws ClassCastException if the specified {@code jsonArray} is not a valid JSON array
+     *                            for this provider
+     */
     boolean arrayContains(Object jsonArray, Object element);
 
+    /**
+     * Returns a sequential {@code Stream} with the specified JSON array as its source.
+     *
+     * @param jsonArray the JSON array; not {@code null}
+     * @return a sequential {@code Stream} over the elements in this JSON array
+     *
+     * @throws ClassCastException if the specified {@code jsonArray} is not a valid JSON array
+     *                            for this provider
+     */
     Stream<Object> stream(Object jsonArray);
 }
