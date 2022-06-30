@@ -10,7 +10,6 @@ import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 import com.jayway.jsonpath.InvalidPathException;
-import com.jayway.jsonpath.JsonPathException;
 
 /**
  * Unit tests for the {@link JsonPathExpression} class.
