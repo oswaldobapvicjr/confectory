@@ -172,8 +172,8 @@ public interface JsonProvider
      * Performs the given action for each element of the specified JSON array until all
      * entries have been processed.
      *
-     * @param jsonObject the JSON array; not {@code null}
-     * @param action     the action to be performed for each element; not {@code null}
+     * @param jsonArray the JSON array; not {@code null}
+     * @param action    the action to be performed for each element; not {@code null}
      *
      * @throws ClassCastException   if the specified {@code jsonArray} is not a valid JSON
      *                              array for this provider
