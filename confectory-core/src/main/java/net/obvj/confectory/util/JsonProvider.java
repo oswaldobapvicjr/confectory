@@ -18,7 +18,6 @@ package net.obvj.confectory.util;
 
 import java.util.Map;
 import java.util.Set;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
@@ -48,7 +47,7 @@ public interface JsonProvider
      * @return {@code true} if the specified object is a provider-specific JSON array;
      *         otherwise, {@code false}.
      */
-    boolean isJsonArray(Object object);
+    boolean isJsonArray(final Object object);
 
     /**
      * Checks if the specified JSON object contains no data.
@@ -60,7 +59,7 @@ public interface JsonProvider
      * @throws ClassCastException if the specified parameter is not a valid JSON object for
      *                            this provider
      */
-    boolean isEmpty(Object jsonObject);
+    boolean isEmpty(final Object jsonObject);
 
     /**
      * Creates a provider-specific JSON object.
@@ -75,7 +74,7 @@ public interface JsonProvider
      * @param sourceJsonObject the JSON whose contents are to be copied; not {@code null}
      * @return a new JSON object with the contents of the source JSON object
      */
-    Object newJsonObject(Object sourceJsonObject);
+    Object newJsonObject(final Object sourceJsonObject);
 
     /**
      * Creates a provider-specific JSON array.
@@ -90,7 +89,7 @@ public interface JsonProvider
      * @param sourceJsonArray the JSON array whose contents are to be copied; not {@code null}
      * @return a new JSON array with the element of the source JSON array
      */
-    Object newJsonArray(Object sourceJsonArray);
+    Object newJsonArray(final Object sourceJsonArray);
 
     /**
      * Returns a {@link Set} view of the mappings contained in the specified JSON object.
@@ -101,7 +100,7 @@ public interface JsonProvider
      * @throws ClassCastException if the specified parameter is not a valid JSON object for
      *                            this provider
      */
-    Set<Map.Entry<String, Object>> entrySet(Object jsonObject);
+    Set<Map.Entry<String, Object>> entrySet(final Object jsonObject);
 
     /**
      * Returns the value to which the specified key is mapped in the specified JSON object; or
@@ -114,7 +113,7 @@ public interface JsonProvider
      * @throws ClassCastException if the specified {@code jsonObject} is not a valid JSON
      *                            object for this provider
      */
-    Object get(Object jsonObject, String key);
+    Object get(final Object jsonObject, final String key);
 
     /**
      * Associates the specified value with the specified key in the specified JSON object.
@@ -127,7 +126,7 @@ public interface JsonProvider
      * @throws ClassCastException if the specified {@code jsonObject} is not a valid JSON
      *                            object for this provider
      */
-    void put(Object jsonObject, String key, Object value);
+    void put(final Object jsonObject, final String key, final Object value);
 
     /**
      * Associates the specified value with the specified key in the specified JSON object,
@@ -142,7 +141,7 @@ public interface JsonProvider
      * @throws ClassCastException if the specified {@code jsonObject} is not a valid JSON
      *                            object for this provider
      */
-    void putIfAbsent(Object jsonObject, String key, Object value);
+    void putIfAbsent(final Object jsonObject, final String key, final Object value);
 
     /**
      * Appends the specified element to the end of the specified JSON array.
@@ -153,20 +152,7 @@ public interface JsonProvider
      * @throws ClassCastException if the specified {@code jsonArray} is not a valid JSON array
      *                            for this provider
      */
-    void add(Object jsonArray, Object element);
-
-    /**
-     * Performs the given action for each entry in the specified JSON object until all entries
-     * have been processed.
-     *
-     * @param jsonObject the JSON object; not {@code null}
-     * @param action     the action to be performed for each entry; not {@code null}
-     *
-     * @throws ClassCastException   if the specified {@code jsonObject} is not a valid JSON
-     *                              object for this provider
-     * @throws NullPointerException if the specified action is {@code null}
-     */
-    void forEachEntryInJsonObject(Object jsonObject, BiConsumer<? super String, ? super Object> action);
+    void add(final Object jsonArray, final Object element);
 
     /**
      * Performs the given action for each element of the specified JSON array until all
@@ -179,7 +165,7 @@ public interface JsonProvider
      *                              array for this provider
      * @throws NullPointerException if the specified action is {@code null}
      */
-    void forEachElementInArray(Object jsonArray, Consumer<? super Object> action);
+    void forEachElementInArray(final Object jsonArray, final Consumer<? super Object> action);
 
     /**
      * Checks if the specified JSON array contains the specified element.
@@ -192,7 +178,7 @@ public interface JsonProvider
      * @throws ClassCastException if the specified {@code jsonArray} is not a valid JSON array
      *                            for this provider
      */
-    boolean arrayContains(Object jsonArray, Object element);
+    boolean arrayContains(final Object jsonArray, final Object element);
 
     /**
      * Returns a sequential {@code Stream} with the specified JSON array as its source.
@@ -203,5 +189,6 @@ public interface JsonProvider
      * @throws ClassCastException if the specified {@code jsonArray} is not a valid JSON array
      *                            for this provider
      */
-    Stream<Object> stream(Object jsonArray);
+    Stream<Object> stream(final Object jsonArray);
+
 }

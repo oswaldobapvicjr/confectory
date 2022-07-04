@@ -37,8 +37,11 @@ import net.obvj.confectory.util.JsonPathExpression;
 import net.obvj.confectory.util.JsonProvider;
 
 /**
- * An abstract {@code ConfigurationMerger} that combines two {@link Configuration} objects
+ * A generic {@code ConfigurationMerger} that combines two {@link Configuration} objects
  * of type JSON.
+ * <p>
+ * The operation is provider-agnostic and depends on a specialized {@link JsonProvider}
+ * which must be specified via constructor.
  * <p>
  * The resulting JSON document from the merge operation shall contain all exclusive
  * objects from source documents and in case of In case of key collisions (i.e., the same
@@ -60,15 +63,17 @@ import net.obvj.confectory.util.JsonProvider;
  * <p>
  * A special solution for merging arrays of distinct objects with a specific key can be
  * created using the optional constructor
- * {@link #AbstractJSONConfigurationMerger(JsonProvider, Map)}.
+ * {@link #GenericJSONConfigurationMerger(JsonProvider, Map)}.
  *
+ * @see JsonProvider
  * @see ConfigurationMerger
+ *
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 2.1.0
  */
-public abstract class AbstractJSONConfigurationMerger<T> extends AbstractConfigurationMerger<T>
+public class GenericJSONConfigurationMerger<T> extends AbstractConfigurationMerger<T>
 {
-    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractJSONConfigurationMerger.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(GenericJSONConfigurationMerger.class);
 
     private final Map<JsonPathExpression, String> distinctObjectKeysInsideArrays;
 
@@ -82,7 +87,7 @@ public abstract class AbstractJSONConfigurationMerger<T> extends AbstractConfigu
      *
      * @throws NullPointerException if the specified JsonProvider is null
      */
-    public AbstractJSONConfigurationMerger(JsonProvider jsonProvider)
+    public GenericJSONConfigurationMerger(JsonProvider jsonProvider)
     {
         this(jsonProvider, Collections.emptyMap());
     }
@@ -136,7 +141,7 @@ public abstract class AbstractJSONConfigurationMerger<T> extends AbstractConfigu
      * @throws IllegalArgumentException if the map contains a null or empty expression
      * @throws InvalidPathException     if the specified JsonPath expression is invalid
      */
-    public AbstractJSONConfigurationMerger(JsonProvider jsonProvider,
+    public GenericJSONConfigurationMerger(JsonProvider jsonProvider,
             Map<String, String> distinctObjectKeysInsideArrays)
     {
         this.jsonProvider = requireNonNull(jsonProvider, "The JsonProvider cannot be null");
@@ -232,7 +237,10 @@ public abstract class AbstractJSONConfigurationMerger<T> extends AbstractConfigu
             }
 
             // Then iterate through the second json to find additional keys
-            jsonProvider.forEachEntryInJsonObject(json2, (key, value) -> jsonProvider.putIfAbsent(result, key, value));
+            for (Entry<String, Object> entry : jsonProvider.entrySet(json2))
+            {
+                jsonProvider.putIfAbsent(result, entry.getKey(), entry.getValue());
+            }
             return result;
         }
 
@@ -292,7 +300,7 @@ public abstract class AbstractJSONConfigurationMerger<T> extends AbstractConfigu
             String distinctKey = distinctObjectKeysByArrays.get(absolutePath);
             if (distinctKey != null)
             {
-                // Here we add objects from the 2nd array only if they are not present in the 1st one
+                // Here we add objects from the 2nd array only if they are not present in the 1st one.
                 // Because the user specified a distinct key, then use it to find the "equal" objects.
                 jsonProvider.forEachElementInArray(array2,
                         object -> addDistinctObject(object, distinctKey, result));
@@ -333,6 +341,8 @@ public abstract class AbstractJSONConfigurationMerger<T> extends AbstractConfigu
                 {
                     jsonProvider.add(array, object);
                 }
+                // Do nothing if the key is already present.
+                // It was populated from the highest-precedence json.
             }
             else
             {
