@@ -104,11 +104,11 @@ class JsonOrgJsonProviderTest
     @Test
     void arrayContains_nonExistingJSONObject_true()
     {
-        String expectedJson = "{\n"
-                            + "  \"key\": \"key1\",\n"
-                            + "  \"value\": \"value9999\"\n"
-                            + "}";
-        assertFalse(provider.arrayContains(JSON1.getJSONArray("objects"), new JSONObject(expectedJson)));
+        String unexpectedJson = "{\n"
+                              + "  \"key\": \"key1\",\n"
+                              + "  \"value\": \"value9999\"\n"
+                              + "}";
+        assertFalse(provider.arrayContains(JSON1.getJSONArray("objects"), new JSONObject(unexpectedJson)));
     }
 
 }
