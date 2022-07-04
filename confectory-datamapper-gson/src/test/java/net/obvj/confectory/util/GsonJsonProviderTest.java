@@ -43,7 +43,7 @@ class GsonJsonProviderTest
     }
 
     @Test
-    void putIfAbsent_existingKey_success()
+    void putIfAbsent_existingKey_noOverwriting()
     {
         JsonObject json = new JsonObject();
         provider.putIfAbsent(json, KEY1, VALUE1);

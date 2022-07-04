@@ -6,24 +6,23 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.StreamSupport;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-
 import net.obvj.confectory.Configuration;
-import net.obvj.confectory.mapper.GsonJsonObjectMapper;
+import net.obvj.confectory.mapper.JsonOrgJSONObjectMapper;
 import net.obvj.confectory.source.StringSource;
 
 /**
- * Unit tests for the {@link GsonJsonObjectConfigurationMerger}.
+ * Unit tests for the {@link JsonOrgJSONObjectConfigurationMerger}.
  *
  * @author oswaldo.bapvic.jr
  * @since 2.2.0
  */
-class GsonJsonObjectConfigurationMergerTest
+class JsonOrgJSONObjectConfigurationMergerTest
 {
 
     private static final String JSON_1
@@ -141,34 +140,40 @@ class GsonJsonObjectConfigurationMergerTest
             + "}";
 
 
-    private final ConfigurationMerger<JsonObject> merger = new GsonJsonObjectConfigurationMerger();
+    private final ConfigurationMerger<JSONObject> merger = new JsonOrgJSONObjectConfigurationMerger();
 
-    private static Configuration<JsonObject> newConfiguration(String json, int precedence)
+    private static Configuration<JSONObject> newConfiguration(String json, int precedence)
     {
-        return Configuration.<JsonObject>builder().precedence(precedence).source(new StringSource<>(json))
-                .mapper(new GsonJsonObjectMapper()).build();
+        return Configuration.<JSONObject>builder().precedence(precedence).source(new StringSource<>(json))
+                .mapper(new JsonOrgJSONObjectMapper()).build();
     }
 
-    private static void assertArray(List<?> expected, Configuration<JsonObject> result, String jsonPath)
+    private static void assertArray(List<?> expected, Configuration<JSONObject> result, String jsonPath)
     {
         assertArray(expected, result, jsonPath, true);
     }
 
-    private static void assertArray(List<?> expected, Configuration<JsonObject> result, String jsonPath,
+    private static void assertArray(List<?> expected, Configuration<JSONObject> result, String jsonPath,
             boolean exactSize)
     {
-        JsonArray array = (JsonArray) result.get(jsonPath);
+        JSONArray array = (JSONArray) result.get(jsonPath);
         if (exactSize)
         {
-            assertEquals(expected.size(), array.size());
+            assertEquals(expected.size(), array.length());
         }
-        expected.forEach(element -> assertTrue(array.contains(new Gson().toJsonTree(element))));
+        expected.forEach(expectedElement ->
+        {
+            assertTrue(
+                    StreamSupport.stream(array.spliterator(), false)
+                            .anyMatch(arrayElement -> arrayElement.equals(expectedElement)),
+                    () -> String.format("Expected element %s not found", expectedElement));
+        });
     }
 
     @Test
     void merge_json1HighWithJson2Low_success()
     {
-        Configuration<JsonObject> result = merger
+        Configuration<JSONObject> result = merger
                 .merge(newConfiguration(JSON_1, 9), newConfiguration(JSON_2, 1));
 
         assertEquals("value1", result.getString("string")); // from JSON_1
@@ -184,7 +189,7 @@ class GsonJsonObjectConfigurationMergerTest
     @Test
     void merge_json1LowWithJson2High_success()
     {
-        Configuration<JsonObject> result = merger
+        Configuration<JSONObject> result = merger
                 .merge(newConfiguration(JSON_1, 1), newConfiguration(JSON_2, 9));
 
         assertEquals("value2", result.getString("string")); // from JSON_2
@@ -200,7 +205,7 @@ class GsonJsonObjectConfigurationMergerTest
     @Test
     void merge_json3HighWithJson4Low_success()
     {
-        Configuration<JsonObject> result = merger
+        Configuration<JSONObject> result = merger
                 .merge(newConfiguration(JSON_3, 9), newConfiguration(JSON_4, 1));
 
         assertTrue(result.getBoolean("enabled")); // from JSON_4
@@ -210,7 +215,7 @@ class GsonJsonObjectConfigurationMergerTest
     @Test
     void merge_json3LowWithJson4High_success()
     {
-        Configuration<JsonObject> result = merger
+        Configuration<JSONObject> result = merger
                 .merge(newConfiguration(JSON_3, 5), newConfiguration(JSON_4, 6));
 
         assertTrue(result.getBoolean("enabled")); // from JSON_4
@@ -220,7 +225,7 @@ class GsonJsonObjectConfigurationMergerTest
     @Test
     void merge_json3HighWithJson4LowAndDistinctKey_success()
     {
-        Configuration<JsonObject> result = new GsonJsonObjectConfigurationMerger(
+        Configuration<JSONObject> result = new JsonOrgJSONObjectConfigurationMerger(
                 Collections.singletonMap("$.agents", "class")).merge(newConfiguration(JSON_3, 9),
                         newConfiguration(JSON_4, 1));
 
@@ -231,7 +236,7 @@ class GsonJsonObjectConfigurationMergerTest
     @Test
     void merge_json3LowWithJson4HighAndDistinctKey_success()
     {
-        Configuration<JsonObject> result = new GsonJsonObjectConfigurationMerger(
+        Configuration<JSONObject> result = new JsonOrgJSONObjectConfigurationMerger(
                 Collections.singletonMap("$.agents", "class")).merge(newConfiguration(JSON_3, 2),
                         newConfiguration(JSON_4, 3));
 
@@ -242,7 +247,7 @@ class GsonJsonObjectConfigurationMergerTest
     @Test
     void merge_json5HighWithJson6Low_success()
     {
-        Configuration<JsonObject> result = merger
+        Configuration<JSONObject> result = merger
                 .merge(newConfiguration(JSON_5, 9), newConfiguration(JSON_6, 8));
 
         assertEquals("0123-4567-8888", result.getString("$.phoneNumbers[?(@.type=='mobile')].number"));
@@ -254,7 +259,7 @@ class GsonJsonObjectConfigurationMergerTest
     @Test
     void merge_json5LowWithJson6High_success()
     {
-        Configuration<JsonObject> result = merger.merge(newConfiguration(JSON_5, 9),
+        Configuration<JSONObject> result = merger.merge(newConfiguration(JSON_5, 9),
                 newConfiguration(JSON_6, 10));
 
         assertEquals("0123-4567-8888", result.getString("$.phoneNumbers[?(@.type=='mobile')].number"));
@@ -280,7 +285,7 @@ class GsonJsonObjectConfigurationMergerTest
     @Test
     void merge_json8HighWithJson9LowAndDistinctKey_success()
     {
-        Configuration<JsonObject> result = new GsonJsonObjectConfigurationMerger(
+        Configuration<JSONObject> result = new JsonOrgJSONObjectConfigurationMerger(
                 Collections.singletonMap("$.array", "name")).merge(newConfiguration(JSON_8, 9),
                         newConfiguration(JSON_9, 1));
 
@@ -291,7 +296,7 @@ class GsonJsonObjectConfigurationMergerTest
     @Test
     void merge_json8LowWithJson9HighAndDistinctKey_success()
     {
-        Configuration<JsonObject> result = new GsonJsonObjectConfigurationMerger(
+        Configuration<JSONObject> result = new JsonOrgJSONObjectConfigurationMerger(
                 Collections.singletonMap("$.array", "name")).merge(newConfiguration(JSON_8, 9),
                         newConfiguration(JSON_9, 10));
 
