@@ -20,117 +20,119 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Spliterator;
 import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
- * A specialized {@link JsonProvider} implementation for {@code Gson}.
+ * A specialized {@link JsonProvider} implementation for {@code json.org}.
  *
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 2.2.0
  *
- * @see JsonObject
- * @see JsonArray
+ * @see JSONObject
+ * @see JSONArray
  */
-public class GsonJsonProvider implements JsonProvider
+public class JsonOrgJsonProvider implements JsonProvider
 {
-    private final Gson gson = new Gson();
 
-    private JsonObject toJsonObject(final Object jsonObject)
+    private JSONObject toJsonObject(final Object jsonObject)
     {
-        return (JsonObject) jsonObject;
+        return (JSONObject) jsonObject;
     }
 
-    private JsonArray toJsonArray(final Object jsonArray)
+    private JSONArray toJsonArray(final Object jsonArray)
     {
-        return (JsonArray) jsonArray;
-    }
-
-    protected JsonElement toJsonElement(final Object object)
-    {
-        return object instanceof JsonElement ? (JsonElement) object : gson.toJsonTree(object);
+        return (JSONArray) jsonArray;
     }
 
     @Override
     public boolean isJsonObject(final Object object)
     {
-        return object instanceof JsonObject;
+        return object instanceof JSONObject;
     }
 
     @Override
     public boolean isJsonArray(final Object object)
     {
-        return object instanceof JsonArray;
+        return object instanceof JSONArray;
     }
 
     @Override
     public boolean isEmpty(final Object jsonObject)
     {
-        return toJsonObject(jsonObject).size() == 0;
+        return toJsonObject(jsonObject).isEmpty();
     }
 
     @Override
     public Object newJsonObject()
     {
-        return new JsonObject();
+        return new JSONObject();
     }
 
     @Override
     public Object newJsonObject(final Object sourceJsonObject)
     {
-        return toJsonObject(sourceJsonObject).deepCopy();
+        JSONObject source = toJsonObject(sourceJsonObject);
+        JSONObject target = new JSONObject();
+        source.keySet().forEach((String key) ->
+        {
+            Object value = source.opt(key);
+            target.put(key, value);
+        });
+        return target;
     }
 
     @Override
     public Object newJsonArray()
     {
-        return new JsonArray();
+        return new JSONArray();
     }
 
     @Override
     public Object newJsonArray(final Object sourceJsonArray)
     {
-        return toJsonArray(sourceJsonArray).deepCopy();
+        return new JSONArray(toJsonArray(sourceJsonArray));
     }
 
     @Override
     public Set<Entry<String, Object>> entrySet(final Object jsonObject)
     {
-        return (Set) toJsonObject(jsonObject).entrySet();
+        JSONObject json = toJsonObject(jsonObject);
+        return json.keySet().stream().collect(Collectors.toMap(Function.identity(), json::opt)).entrySet();
     }
 
     @Override
     public Object get(final Object jsonObject, final String key)
     {
-        return toJsonObject(jsonObject).get(key);
+        return toJsonObject(jsonObject).opt(key);
     }
 
 
     @Override
     public void put(final Object jsonObject, final String key, final Object value)
     {
-        toJsonObject(jsonObject).add(key, toJsonElement(value));
+        toJsonObject(jsonObject).put(key, value);
     }
 
     @Override
     public void putIfAbsent(final Object jsonObject, final String key, final Object value)
     {
-        JsonObject json = toJsonObject(jsonObject);
-        if (json.get(key) == null)
+        JSONObject json = toJsonObject(jsonObject);
+        if (json.opt(key) == null)
         {
-            json.add(key, toJsonElement(value));
+            json.put(key, value);
         }
     }
 
     @Override
     public void add(final Object jsonArray, final Object element)
     {
-        toJsonArray(jsonArray).add(toJsonElement(element));
+        toJsonArray(jsonArray).put(element);
     }
 
     @Override
@@ -142,14 +144,21 @@ public class GsonJsonProvider implements JsonProvider
     @Override
     public boolean arrayContains(final Object jsonArray, final Object element)
     {
-        return toJsonArray(jsonArray).contains(toJsonElement(element));
+        return stream(jsonArray).anyMatch(arrayElement -> similarObjects(arrayElement, element));
+    }
+
+    private boolean similarObjects(Object first, Object second)
+    {
+        return first.equals(second)
+                || (first instanceof JSONObject && ((JSONObject) first).similar(second))
+                || (first instanceof JSONArray && ((JSONArray) first).similar(second));
     }
 
     @Override
     public Stream<Object> stream(final Object jsonArray)
     {
-        Spliterator<JsonElement> spliterator = toJsonArray(jsonArray).spliterator();
-        return (Stream) StreamSupport.stream(spliterator, false);
+        Spliterator<Object> spliterator = toJsonArray(jsonArray).spliterator();
+        return StreamSupport.stream(spliterator, false);
     }
 
 }

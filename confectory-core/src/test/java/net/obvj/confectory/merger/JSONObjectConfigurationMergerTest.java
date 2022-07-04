@@ -43,7 +43,7 @@ class JSONObjectConfigurationMergerTest
             + "    \"a\": \"Json2ObjectA\",\n"
             + "    \"c\": \"Json2ObjectC\"\n"
             + "  }\n,"
-            + "  \"number\": \"9876\""
+            + "  \"number\": 9876"
             + "}";
 
     private static final List<Integer> EXPECTED_JSON_1_JSON_2_ARRAY = Arrays.asList(1, 2, 3, 4, 5);
