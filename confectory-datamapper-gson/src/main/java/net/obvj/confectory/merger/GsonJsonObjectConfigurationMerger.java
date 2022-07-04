@@ -19,39 +19,38 @@ package net.obvj.confectory.merger;
 import java.util.Collections;
 import java.util.Map;
 
+import com.google.gson.JsonObject;
 import com.jayway.jsonpath.InvalidPathException;
 
-import net.minidev.json.JSONObject;
 import net.obvj.confectory.Configuration;
+import net.obvj.confectory.util.GsonJsonProvider;
 import net.obvj.confectory.util.JsonProvider;
-import net.obvj.confectory.util.JsonSmartJsonProvider;
 
 /**
  * A specialized {@code ConfigurationMerger} that combines two {@link Configuration}
- * objects of type {@link JSONObject} (using {@code json-smart} implementation) into a
- * single one.
+ * objects of type {@link JsonObject} ({@code Gson} implementation) into a single one.
  * <p>
  * For additional information, refer to the superclass
  * {@link GenericJSONConfigurationMerger}.
  *
  * @see GenericJSONConfigurationMerger
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
- * @since 2.1.0
+ * @since 2.2.0
  */
-public class JSONObjectConfigurationMerger extends GenericJSONConfigurationMerger<JSONObject>
+public class GsonJsonObjectConfigurationMerger extends GenericJSONConfigurationMerger<JsonObject>
 {
 
     /**
-     * Creates a new JSON Configuration Merger for {@link JSONObject} using {@code json-smart}
+     * Creates a new JSON Configuration Merger for {@link JsonObject} using the {@code Gson}
      * implementation.
      */
-    public JSONObjectConfigurationMerger()
+    public GsonJsonObjectConfigurationMerger()
     {
         this(Collections.emptyMap());
     }
 
     /**
-     * Creates a new JSON Configuration Merger for {@link JSONObject} using {@code json-smart}
+     * Creates a new JSON Configuration Merger for {@link JsonObject} using the {@code Gson}
      * implementation with a preset map of distinct keys.
      * <p>
      * For additional information, refer to
@@ -64,8 +63,8 @@ public class JSONObjectConfigurationMerger extends GenericJSONConfigurationMerge
      * @throws IllegalArgumentException if the map contains a null or empty expression
      * @throws InvalidPathException     if the specified JsonPath expression is invalid
      */
-    public JSONObjectConfigurationMerger(Map<String, String> distinctObjectKeysInsideArrays)
+    public GsonJsonObjectConfigurationMerger(Map<String, String> distinctObjectKeysInsideArrays)
     {
-        super(new JsonSmartJsonProvider(), distinctObjectKeysInsideArrays);
+        super(new GsonJsonProvider(), distinctObjectKeysInsideArrays);
     }
 }
