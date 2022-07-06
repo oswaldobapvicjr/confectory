@@ -108,7 +108,7 @@ class GsonJsonObjectConfigurationMergerTest
             + "    {\r\n"
             + "      \"type\": \"work\",\r\n"
             + "      \"number\": \"0123-4567-9999\"\r\n"
-            + "    },\r\n"
+            + "    }\r\n"
             + "  ]\r\n"
             + "}";
 
