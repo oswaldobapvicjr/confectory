@@ -41,7 +41,7 @@ public class JacksonJsonNodeConfigurationMerger extends GenericJSONConfiguration
 {
 
     /**
-     * Creates a new JSON Configuration Merger for {@link JsonNode} using the {@code Jackson}
+     * Creates a new JSON Configuration Merger for {@code Jackson}'s {@link JsonNode}
      * implementation.
      */
     public JacksonJsonNodeConfigurationMerger()
@@ -50,7 +50,7 @@ public class JacksonJsonNodeConfigurationMerger extends GenericJSONConfiguration
     }
 
     /**
-     * Creates a new JSON Configuration Merger for {@link JsonNode} using the {@code Jackson}
+     * Creates a new JSON Configuration Merger for {@code Jackson}'s {@link JsonNode}
      * implementation with a preset map of distinct keys.
      * <p>
      * For additional information, refer to
