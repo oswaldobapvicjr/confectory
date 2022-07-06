@@ -62,6 +62,7 @@ public class StringSource<T> extends AbstractSource<T> implements Source<T>
     @Override
     public String toString()
     {
-        return uuid;
+        return new StringBuilder().append(getClass().getSimpleName()).append("(").append(uuid).append(")")
+              .toString();
     }
 }
