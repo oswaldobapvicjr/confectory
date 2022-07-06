@@ -20,6 +20,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
+import java.util.UUID;
 
 import net.obvj.confectory.ConfigurationSourceException;
 import net.obvj.confectory.mapper.Mapper;
@@ -32,6 +33,7 @@ import net.obvj.confectory.mapper.Mapper;
  */
 public class StringSource<T> extends AbstractSource<T> implements Source<T>
 {
+    private String uuid;
     /**
      * Builds a new configuration source from the specified string.
      *
@@ -40,6 +42,7 @@ public class StringSource<T> extends AbstractSource<T> implements Source<T>
     public StringSource(String source)
     {
         super(Objects.requireNonNull(source, "The source string must not be null"));
+        uuid = UUID.randomUUID().toString();
     }
 
     @Override
@@ -56,4 +59,9 @@ public class StringSource<T> extends AbstractSource<T> implements Source<T>
         }
     }
 
+    @Override
+    public String toString()
+    {
+        return uuid;
+    }
 }
