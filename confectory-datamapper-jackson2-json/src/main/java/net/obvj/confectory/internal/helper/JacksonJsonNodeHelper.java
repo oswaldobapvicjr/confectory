@@ -20,6 +20,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.jayway.jsonpath.spi.json.JacksonJsonNodeJsonProvider;
 import com.jayway.jsonpath.spi.mapper.JacksonMappingProvider;
 
+import net.obvj.confectory.merger.ConfigurationMerger;
+import net.obvj.confectory.merger.JacksonJsonNodeConfigurationMerger;
+
 /**
  * A specialized Configuration Helper that retrieves data from Jackson's {@link JsonNode},
  * with JSONPath capabilities.
@@ -38,6 +41,12 @@ public class JacksonJsonNodeHelper extends GenericJsonConfigurationHelper<JsonNo
     public JacksonJsonNodeHelper(JsonNode jsonNode)
     {
         super(jsonNode, new JacksonJsonNodeJsonProvider(), new JacksonMappingProvider());
+    }
+
+    @Override
+    public ConfigurationMerger<JsonNode> configurationMerger()
+    {
+        return new JacksonJsonNodeConfigurationMerger();
     }
 
 }

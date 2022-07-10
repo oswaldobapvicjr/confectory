@@ -22,7 +22,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import net.obvj.confectory.internal.helper.ConfigurationHelper;
-import net.obvj.confectory.internal.helper.NullConfigurationHelper;
 import net.obvj.confectory.mapper.Mapper;
 import net.obvj.confectory.source.Source;
 
@@ -74,7 +73,8 @@ import net.obvj.confectory.source.Source;
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 0.1.0
  */
-public final class Configuration<T> implements ConfigurationDataRetriever<T>, ConfigurationMetadataRetriever<T>
+public final class Configuration<T>
+        implements ConfigurationDataRetriever<T>, ConfigurationMetadataRetriever<T>
 {
     private final String namespace;
     private final int precedence;
@@ -273,6 +273,11 @@ public final class Configuration<T> implements ConfigurationDataRetriever<T>, Co
         return getService().getMandatoryString(key);
     }
 
+    public Configuration<T> merge(Configuration<T> other)
+    {
+        return mapper.configurationHelper(getBean()).configurationMerger().merge(this, other);
+    }
+
     /**
      * @return the actual implementation (the Service part in the Proxy Design Pattern)
      * @since 0.4.0
@@ -324,12 +329,7 @@ final class ConfigurationService<T> implements ConfigurationDataRetriever<T>
     ConfigurationService(T bean, Mapper<T> mapper)
     {
         this.bean = bean;
-        this.helper = getConfigurationHelper(bean, mapper);
-    }
-
-    static <T> ConfigurationHelper<T> getConfigurationHelper(T bean, Mapper<T> mapper)
-    {
-        return bean != null ? mapper.configurationHelper(bean) : new NullConfigurationHelper<>();
+        this.helper = ConfigurationHelper.newInstance(bean, mapper);
     }
 
     @Override

@@ -16,12 +16,16 @@
 
 package net.obvj.confectory.internal.helper;
 
+import java.util.Objects;
+
 import net.obvj.confectory.Configuration;
 import net.obvj.confectory.ConfigurationDataRetriever;
+import net.obvj.confectory.mapper.Mapper;
+import net.obvj.confectory.merger.ConfigurationMerger;
 
 /**
- * A marker interface that works as an abstraction for objects that retrieve data form
- * previously loaded {@link Configuration} objects.
+ * An abstraction for objects that retrieve data from previously loaded
+ * {@link Configuration} objects.
  *
  * @param <T> the source type which configuration data is to be retrieved
  *
@@ -30,5 +34,35 @@ import net.obvj.confectory.ConfigurationDataRetriever;
  */
 public interface ConfigurationHelper<T> extends ConfigurationDataRetriever<T>
 {
-    // Currently just marker interface
+
+    /**
+     * Creates a new {@code ConfigurationHelper} for the given {@link Mapper}.
+     * <p>
+     * If the specified {@code bean} is {@code null}, a {@link NullConfigurationHelper} will
+     * be instantiated.
+     *
+     * @param bean   the bean to be evaluated; may be {@code null}
+     * @param mapper the {@link Mapper} whose helper should be instantiated; not {@code null}
+     *
+     * @return a new {@code ConfigurationHelper} instance for the specified {@link Mapper}
+     * @throws NullPointerException if the specified mapper is {@code null}
+     *
+     * @since 2.2.0
+     */
+    static <T> ConfigurationHelper<T> newInstance(T bean, Mapper<T> mapper)
+    {
+        Objects.requireNonNull(mapper, () -> "The mapper must not be null");
+        ConfigurationHelper<T> helper = mapper.configurationHelper(bean);
+        return bean != null ? helper : new NullConfigurationHelper<>(helper);
+    }
+
+    /**
+     * Creates the applicable {@link ConfigurationMerger} object for the type associated with
+     * this {@code ConfigurationHelper}.
+     *
+     * @return a new {@link ConfigurationMerger} instance
+     * @since 2.2.0
+     */
+    ConfigurationMerger<T> configurationMerger();
+
 }

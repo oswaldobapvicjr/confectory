@@ -20,6 +20,8 @@ import com.jayway.jsonpath.spi.json.JsonSmartJsonProvider;
 import com.jayway.jsonpath.spi.mapper.JsonSmartMappingProvider;
 
 import net.minidev.json.JSONObject;
+import net.obvj.confectory.merger.ConfigurationMerger;
+import net.obvj.confectory.merger.JSONObjectConfigurationMerger;
 
 /**
  * A specialized Configuration Helper that retrieves data from {@code net.minidev}'s
@@ -39,6 +41,12 @@ public class JsonSmartConfigurationHelper extends GenericJsonConfigurationHelper
     public JsonSmartConfigurationHelper(JSONObject jsonObject)
     {
         super(jsonObject, new JsonSmartJsonProvider(), new JsonSmartMappingProvider());
+    }
+
+    @Override
+    public ConfigurationMerger<JSONObject> configurationMerger()
+    {
+        return new JSONObjectConfigurationMerger();
     }
 
 }

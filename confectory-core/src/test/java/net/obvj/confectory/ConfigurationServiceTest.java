@@ -12,7 +12,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import net.obvj.confectory.internal.helper.ConfigurationHelper;
 import net.obvj.confectory.internal.helper.NullConfigurationHelper;
 import net.obvj.confectory.mapper.Mapper;
-import net.obvj.confectory.source.Source;
 
 /**
  * Unit tests for the {@link ConfigurationService} class.
@@ -20,12 +19,11 @@ import net.obvj.confectory.source.Source;
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 0.4.0
  */
+// TODO move to ConfigurationHelper
 @ExtendWith(MockitoExtension.class)
 class ConfigurationServiceTest
 {
 
-    @Mock
-    private Source<String> source;
     @Mock
     private Mapper<String> mapper;
     @Mock
@@ -37,14 +35,14 @@ class ConfigurationServiceTest
     void getConfigurationHelper_success_validConfigurationHelper()
     {
         when(mapper.configurationHelper(bean)).thenReturn(helper);
-        ConfigurationHelper<String> result = ConfigurationService.getConfigurationHelper(bean, mapper);
+        ConfigurationHelper<String> result = ConfigurationHelper.newInstance(bean, mapper);
         assertThat(result, equalTo(helper));
     }
 
     @Test
     void getConfigurationHelper_null_nullConfigurationHelper()
     {
-        ConfigurationHelper<String> result = ConfigurationService.getConfigurationHelper(null, mapper);
+        ConfigurationHelper<String> result = ConfigurationHelper.newInstance(null, mapper);
         assertThat(result.getClass(), equalTo(NullConfigurationHelper.class));
     }
 
