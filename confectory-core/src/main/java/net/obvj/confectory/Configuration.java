@@ -83,7 +83,7 @@ public final class Configuration<T>
     private final boolean optional;
     private final boolean lazy;
 
-    private ConfigurationDataRetriever<T> service;
+    private ConfigurationService<T> service;
 
     /**
      * Builds a new {@code Configuration} from the specified {@link ConfigurationBuilder}.
@@ -275,14 +275,14 @@ public final class Configuration<T>
 
     public Configuration<T> merge(Configuration<T> other)
     {
-        return mapper.configurationHelper(getBean()).configurationMerger().merge(this, other);
+        return getService().getHelper().configurationMerger().merge(this, other);
     }
 
     /**
-     * @return the actual implementation (the Service part in the Proxy Design Pattern)
+     * @return the actual configuration
      * @since 0.4.0
      */
-    private ConfigurationDataRetriever<T> getService()
+    private ConfigurationService<T> getService()
     {
         if (service == null)
         {
@@ -294,7 +294,8 @@ public final class Configuration<T>
 }
 
 /**
- * Actual implementation (the Service part in the Proxy Design Pattern).
+ * Actual implementation (the Service part in the Proxy Design Pattern), which allows the
+ * lazy loading of {@code Configuration} data.
  *
  * @param <T> the target configuration type
  *
@@ -330,6 +331,15 @@ final class ConfigurationService<T> implements ConfigurationDataRetriever<T>
     {
         this.bean = bean;
         this.helper = ConfigurationHelper.newInstance(bean, mapper);
+    }
+
+    /**
+     * @return the {@link ConfigurationHelper} assigned to this service
+     * @since 2.2.0
+     */
+    ConfigurationHelper<T> getHelper()
+    {
+        return helper;
     }
 
     @Override

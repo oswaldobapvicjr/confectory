@@ -38,8 +38,6 @@ public class NullConfigurationHelper<T> implements ConfigurationHelper<T>
     /**
      * Builds a {@code NullConfigurationHelper}.
      *
-     * @param originalHelper the initial {@code ConfigurationHelper} that should be applied if
-     *                      the actual bean was available
      * @since 2.2.0
      */
     public NullConfigurationHelper()
