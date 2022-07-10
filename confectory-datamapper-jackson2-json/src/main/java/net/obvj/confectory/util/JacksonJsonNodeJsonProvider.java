@@ -16,97 +16,104 @@
 
 package net.obvj.confectory.util;
 
+import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Spliterator;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
- * A specialized {@link JsonProvider} implementation for {@code Gson}.
+ * A specialized {@link JsonProvider} implementation for {@code Jackson}'s
+ * {@link JsonNode}.
  *
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 2.2.0
  *
- * @see JsonObject
- * @see JsonArray
+ * @see JsonNode
+ * @see ObjectNode
+ * @see ArrayNode
  */
-public class GsonJsonProvider implements JsonProvider
+public class JacksonJsonNodeJsonProvider implements JsonProvider
 {
-    private final Gson gson = new Gson();
-
-    private JsonObject toJsonObject(final Object jsonObject)
+    private ObjectNode toJsonObject(final Object jsonObject)
     {
-        return (JsonObject) jsonObject;
+        return (ObjectNode) jsonObject;
     }
 
-    private JsonArray toJsonArray(final Object jsonArray)
+    private ArrayNode toJsonArray(final Object jsonArray)
     {
-        return (JsonArray) jsonArray;
+        return (ArrayNode) jsonArray;
     }
 
-    protected JsonElement toJsonElement(final Object object)
+    /**
+     * Converts an object to a {@link JsonNode}.
+     *
+     * @param object the object to be converted
+     * @return a {@link JsonNode} from the specified object
+     */
+    public JsonNode toJsonNode(final Object object)
     {
-        return object instanceof JsonElement ? (JsonElement) object : gson.toJsonTree(object);
+        return object instanceof JsonNode ? (JsonNode) object
+                : new ObjectMapper().convertValue(object, JsonNode.class);
     }
 
     @Override
     public boolean isJsonObject(final Object object)
     {
-        return object instanceof JsonObject;
+        return object instanceof ObjectNode;
     }
 
     @Override
     public boolean isJsonArray(final Object object)
     {
-        return object instanceof JsonArray;
+        return object instanceof ArrayNode;
     }
 
     @Override
     public boolean isEmpty(final Object jsonObject)
     {
-        return toJsonObject(jsonObject).size() == 0;
+        return toJsonObject(jsonObject).isEmpty();
     }
 
     @Override
     public Object newJsonObject()
     {
-        return new JsonObject();
+        return JsonNodeFactory.instance.objectNode();
     }
 
     @Override
     public Object newJsonObject(final Object sourceJsonObject)
     {
-        JsonObject json = new JsonObject();
-        toJsonObject(sourceJsonObject).entrySet()
-                .forEach(entry -> json.add(entry.getKey(), entry.getValue()));
-        return json;
+        return JsonNodeFactory.instance.objectNode().setAll(toJsonObject(sourceJsonObject));
     }
 
     @Override
     public Object newJsonArray()
     {
-        return new JsonArray();
+        return JsonNodeFactory.instance.arrayNode();
     }
 
     @Override
     public Object newJsonArray(final Object sourceJsonArray)
     {
-        JsonArray array = new JsonArray();
-        array.addAll(toJsonArray(sourceJsonArray));
-        return array;
+        return JsonNodeFactory.instance.arrayNode().addAll(toJsonArray(sourceJsonArray));
     }
 
     @Override
     public Set<Entry<String, Object>> entrySet(final Object jsonObject)
     {
-        return (Set) toJsonObject(jsonObject).entrySet();
+        Iterator<Entry<String, JsonNode>> iterator = toJsonObject(jsonObject).fields();
+        Iterable<Entry<String, JsonNode>> iterable = () -> iterator;
+        return (Set) StreamSupport.stream(iterable.spliterator(), false).collect(Collectors.toSet());
     }
 
     @Override
@@ -119,23 +126,23 @@ public class GsonJsonProvider implements JsonProvider
     @Override
     public void put(final Object jsonObject, final String key, final Object value)
     {
-        toJsonObject(jsonObject).add(key, toJsonElement(value));
+        toJsonObject(jsonObject).set(key, toJsonNode(value));
     }
 
     @Override
     public void putIfAbsent(final Object jsonObject, final String key, final Object value)
     {
-        JsonObject json = toJsonObject(jsonObject);
+        ObjectNode json = toJsonObject(jsonObject);
         if (json.get(key) == null)
         {
-            json.add(key, toJsonElement(value));
+            json.set(key, toJsonNode(value));
         }
     }
 
     @Override
     public void add(final Object jsonArray, final Object element)
     {
-        toJsonArray(jsonArray).add(toJsonElement(element));
+        toJsonArray(jsonArray).add(toJsonNode(element));
     }
 
     @Override
@@ -147,13 +154,13 @@ public class GsonJsonProvider implements JsonProvider
     @Override
     public boolean arrayContains(final Object jsonArray, final Object element)
     {
-        return toJsonArray(jsonArray).contains(toJsonElement(element));
+        return stream(jsonArray).anyMatch(element::equals);
     }
 
     @Override
     public Stream<Object> stream(final Object jsonArray)
     {
-        Spliterator<JsonElement> spliterator = toJsonArray(jsonArray).spliterator();
+        Spliterator<JsonNode> spliterator = toJsonArray(jsonArray).spliterator();
         return (Stream) StreamSupport.stream(spliterator, false);
     }
 

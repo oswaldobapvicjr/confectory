@@ -70,6 +70,9 @@ public interface JsonProvider
 
     /**
      * Creates a new provider-specific JSON object with the contents of a preset JSON object.
+     * <p>
+     * <strong>Note:</strong> The resulting object is supposed to be <b>shallow copy</b> of
+     * the source JSON object.
      *
      * @param sourceJsonObject the JSON whose contents are to be copied; not {@code null}
      * @return a new JSON object with the contents of the source JSON object
@@ -85,6 +88,10 @@ public interface JsonProvider
 
     /**
      * Creates a new provider-specific JSON array with the elements of a preset JSON array.
+     * <p>
+     * <strong>Note:</strong> Although the actual implementation may vary depending on the
+     * concrete provider, the resulting object is supposed to be <b>shallow copy</b> of the
+     * source JSON array.
      *
      * @param sourceJsonArray the JSON array whose contents are to be copied; not {@code null}
      * @return a new JSON array with the element of the source JSON array
