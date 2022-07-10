@@ -5,6 +5,7 @@ import static net.obvj.junit.utils.matchers.AdvancedMatchers.throwsException;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import java.util.Arrays;
@@ -15,8 +16,10 @@ import java.util.Set;
 import org.hamcrest.Matcher;
 import org.junit.jupiter.api.Test;
 
+import net.obvj.confectory.internal.helper.NullConfigurationHelper;
 import net.obvj.confectory.mapper.PropertiesMapper;
 import net.obvj.confectory.mapper.StringMapper;
+import net.obvj.confectory.source.FileSource;
 import net.obvj.confectory.source.Source;
 import net.obvj.confectory.source.StringSource;
 
@@ -55,7 +58,15 @@ class ConfigurationTest
 
     private static final Configuration<Properties> CONFIG_PROPERTIES_1 = Configuration.<Properties>builder()
             .source(new StringSource<>("myKey=myValue\nmyBool=true\nmyInt=9\nmyLong=9876543210\nmyDouble=7.89"))
-            .mapper(new PropertiesMapper()).build();
+            .precedence(1).mapper(new PropertiesMapper()).build();
+
+    private static final Configuration<Properties> CONFIG_PROPERTIES_2 = Configuration.<Properties>builder()
+            .source(new StringSource<>("myKey=myValue2\nmyInt=10"))
+            .precedence(5).mapper(new PropertiesMapper()).build();
+
+    private static final Configuration<Properties> CONFIG_PROPERTIES_OPTIONAL = Configuration.<Properties>builder()
+            .source(new FileSource<>("unknown.properties")).optional()
+            .precedence(9).mapper(new PropertiesMapper()).build();
 
     @Test
     void equals_sameObjectAndSimilarObject_true()
@@ -233,6 +244,47 @@ class ConfigurationTest
     void getMandatoryDouble_invalidKey_configurationException()
     {
         assertThat(() -> CONFIG_PROPERTIES_1.getMandatoryDouble(UNKNOWN), CONFIGURATION_EXCEPTION_NO_VALUE_FOUND);
+    }
+
+    @Test
+    void merge_validConfig_newCombinedConfig()
+    {
+        Configuration<Properties> result = CONFIG_PROPERTIES_1.merge(CONFIG_PROPERTIES_2);
+        assertThat(result.getString("myKey"),    equalTo("myValue2"));  // CONFIG_PROPERTIES_2
+        assertThat(result.getInteger("myInt"),   equalTo(10));          // CONFIG_PROPERTIES_2
+        assertThat(result.getBoolean("myBool"),  equalTo(true));        // CONFIG_PROPERTIES_1
+        assertThat(result.getLong("myLong"),     equalTo(9876543210L)); // CONFIG_PROPERTIES_1
+        assertThat(result.getDouble("myDouble"), equalTo(7.89));        // CONFIG_PROPERTIES_1
+    }
+
+    /**
+     * This test is to verify the expected merger is selected even when the
+     * {@link NullConfigurationHelper} is in use.
+     */
+    @Test
+    void merge_nullWithValidConfig_newCombinedConfig()
+    {
+        Configuration<Properties> result = CONFIG_PROPERTIES_OPTIONAL.merge(CONFIG_PROPERTIES_1);
+        assertThat(result.getString("myKey"), equalTo("myValue")); // CONFIG_PROPERTIES_1
+        assertThat(result.getInteger("myInt"), equalTo(9)); // CONFIG_PROPERTIES_1
+        assertThat(result.getBoolean("myBool"), equalTo(true)); // CONFIG_PROPERTIES_1
+        assertThat(result.getLong("myLong"), equalTo(9876543210L)); // CONFIG_PROPERTIES_1
+        assertThat(result.getDouble("myDouble"), equalTo(7.89)); // CONFIG_PROPERTIES_1
+
+        assertNotSame(CONFIG_PROPERTIES_1, result);
+    }
+
+    @Test
+    void merge_validConfigWithNullConfig_newCombinedConfig()
+    {
+        Configuration<Properties> result = CONFIG_PROPERTIES_1.merge(CONFIG_PROPERTIES_OPTIONAL);
+        assertThat(result.getString("myKey"),    equalTo("myValue"));   // CONFIG_PROPERTIES_1
+        assertThat(result.getInteger("myInt"),   equalTo(9));           // CONFIG_PROPERTIES_1
+        assertThat(result.getBoolean("myBool"),  equalTo(true));        // CONFIG_PROPERTIES_1
+        assertThat(result.getLong("myLong"),     equalTo(9876543210L)); // CONFIG_PROPERTIES_1
+        assertThat(result.getDouble("myDouble"), equalTo(7.89));        // CONFIG_PROPERTIES_1
+
+        assertNotSame(CONFIG_PROPERTIES_1, result);
     }
 
 }

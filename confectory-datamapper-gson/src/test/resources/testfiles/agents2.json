@@ -1,0 +1,9 @@
+{
+  "enabled": false,
+  "agents": [
+    {
+      "class": "Agent3",
+      "interval": "30 minutes"
+    }
+  ]
+}
