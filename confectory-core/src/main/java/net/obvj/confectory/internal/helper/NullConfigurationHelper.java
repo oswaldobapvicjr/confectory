@@ -171,6 +171,10 @@ public class NullConfigurationHelper<T> implements ConfigurationHelper<T>
         return new ConfigurationException("Not found");
     }
 
+    /**
+     * @throws UnsupportedOperationException if no original helper is specified for this
+     *                                       {@code NullConfigurationHelper}.
+     */
     @Override
     public ConfigurationMerger<T> configurationMerger()
     {

@@ -1,13 +1,19 @@
 package net.obvj.confectory.internal.helper;
 
 import static net.obvj.junit.utils.matchers.AdvancedMatchers.throwsException;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNull;
+
+import java.util.Properties;
 
 import org.hamcrest.Matcher;
 import org.junit.jupiter.api.Test;
 
+import net.minidev.json.JSONObject;
 import net.obvj.confectory.ConfigurationException;
+import net.obvj.confectory.merger.JSONObjectConfigurationMerger;
+import net.obvj.confectory.merger.PropertiesConfigurationMerger;
 
 /**
  * Unit tests for the {@link NullConfigurationHelper}.
@@ -94,6 +100,29 @@ class NullConfigurationHelperTest
     void getMandatoryString_anyKey_exception()
     {
         assertThat(() -> helper.getMandatoryString(KEY1), EXCEPTION_NOT_FOUND);
+    }
+
+    @Test
+    void configurationMerger_originalHelperNotPresent_unsupportedOperation()
+    {
+        assertThat(() -> helper.configurationMerger().getClass(),
+                throwsException(UnsupportedOperationException.class));
+    }
+
+    @Test
+    void configurationMerger_originalPropertiesHelper_propertiesMerger()
+    {
+        ConfigurationHelper<Properties> helper = new PropertiesConfigurationHelper(new Properties());
+        assertThat(new NullConfigurationHelper<Properties>(helper).configurationMerger().getClass(),
+                equalTo(PropertiesConfigurationMerger.class));
+    }
+
+    @Test
+    void configurationMerger_originalJsonHelper_jsonMerger()
+    {
+        ConfigurationHelper<JSONObject> helper = new JsonSmartConfigurationHelper(new JSONObject());
+        assertThat(new NullConfigurationHelper<JSONObject>(helper).configurationMerger().getClass(),
+                equalTo(JSONObjectConfigurationMerger.class));
     }
 
 }

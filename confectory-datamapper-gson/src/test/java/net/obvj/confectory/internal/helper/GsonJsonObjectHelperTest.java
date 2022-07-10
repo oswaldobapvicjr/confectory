@@ -15,6 +15,7 @@ import com.google.gson.JsonObject;
 import net.obvj.confectory.ConfigurationBuilder;
 import net.obvj.confectory.ConfigurationException;
 import net.obvj.confectory.mapper.GsonJsonObjectMapper;
+import net.obvj.confectory.merger.GsonJsonObjectConfigurationMerger;
 import net.obvj.confectory.source.StringSource;
 
 /**
@@ -131,4 +132,9 @@ class GsonJsonObjectHelperTest
         assertThat(HELPER.getString("$.unknown"), equalTo(null));
     }
 
+    @Test
+    void configurationMerger_gsonConfigurationMerger()
+    {
+        assertThat(HELPER.configurationMerger().getClass(), equalTo(GsonJsonObjectConfigurationMerger.class));
+    }
 }

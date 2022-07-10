@@ -12,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import net.obvj.confectory.ConfigurationException;
+import net.obvj.confectory.merger.JsonOrgJSONObjectConfigurationMerger;
 
 /**
  * Unit tests for the {@link JsonOrgJSONObjectHelper}.
@@ -144,6 +145,13 @@ class JsonOrgJSONObjectHelperTest
     void getString_unknownKey_null()
     {
         assertThat(HELPER.getString(PATH_UNKNOWN), equalTo(null));
+    }
+
+    @Test
+    void configurationMerger_jsonOrgConfigurationMerger()
+    {
+        assertThat(HELPER.configurationMerger().getClass(),
+                equalTo(JsonOrgJSONObjectConfigurationMerger.class));
     }
 
 }

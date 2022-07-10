@@ -23,6 +23,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import net.obvj.confectory.internal.helper.ConfigurationHelper;
 import net.obvj.confectory.mapper.Mapper;
+import net.obvj.confectory.merger.ConfigurationMerger;
 import net.obvj.confectory.source.Source;
 
 /**
@@ -273,6 +274,30 @@ public final class Configuration<T>
         return getService().getMandatoryString(key);
     }
 
+    /**
+     * Combines this {@code Configuration} with another one, producing a new
+     * {@code Configuration}, with the following characteristics:
+     * <ul>
+     * <li>The resulting {@code Configuration} will receive all the elements from both
+     * {@code Configuration} objects</li>
+     * <li>In case of conflicting keys, the values at the highest-precedence
+     * {@code Configuration} will be selected</li>
+     * <li>The metadata of the highest-precedence {@code Configuration} (namespace and
+     * precedence) will be applied to the new {@code Configuration}</li>
+     * </ul>
+     * <p>
+     * <strong>Note: </strong> The other {@link Configuration} must be of the same type as the
+     * current one.
+     *
+     * @param other the {@code Configuration} to be merged with this one; not {@code null}
+     *
+     * @return a new {@code Configuration} resulting from the combination of this object and
+     *         the specified one
+     * @throws NullPointerException if the other {@code Configuration} is {@code null}
+     *
+     * @since 2.2.0
+     * @see ConfigurationMerger
+     */
     public Configuration<T> merge(Configuration<T> other)
     {
         return getService().getHelper().configurationMerger().merge(this, other);

@@ -14,15 +14,16 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import net.obvj.confectory.ConfigurationException;
+import net.obvj.confectory.merger.JSONObjectConfigurationMerger;
 
 /**
- * Unit tests for the {@link GenericJsonConfigurationHelper}.
+ * Unit tests for the {@link JsonSmartConfigurationHelper}.
  *
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 0.3.0
  */
 @ExtendWith(MockitoExtension.class)
-class GenericJsonConfigurationHelperTest
+class JsonSmartConfigurationHelperTest
 {
     private static final JSONArray TEST_JSON_ARRAY1 = new JSONArray();
     private static final JSONObject TEST_JSON_SAMPLE1 = new JSONObject();
@@ -198,4 +199,9 @@ class GenericJsonConfigurationHelperTest
         assertThat(() -> HELPER.getMandatoryString(PATH_UNKNOWN), EXCEPTION_NO_VALUE_FOUND_PATH_UNKNOWN);
     }
 
+    @Test
+    void configurationMerger_jsonSmartConfigurationMerger()
+    {
+        assertThat(HELPER.configurationMerger().getClass(), equalTo(JSONObjectConfigurationMerger.class));
+    }
 }

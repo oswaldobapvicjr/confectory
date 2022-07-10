@@ -73,4 +73,11 @@ class BeanConfigurationHelperTest
         assertThat(() -> HELPER.getMandatoryString(KEY), CONFIGURATION_EXCEPTION_TYPE_NOT_SUPPORTED);
     }
 
+    @Test
+    void configurationMerger_unsupportedOperation()
+    {
+        assertThat(() -> HELPER.configurationMerger(), throwsException(UnsupportedOperationException.class)
+                .withMessageContaining("not supported", "user-defined bean"));
+    }
+
 }

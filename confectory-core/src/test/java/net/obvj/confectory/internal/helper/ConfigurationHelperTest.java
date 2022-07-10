@@ -1,5 +1,6 @@
-package net.obvj.confectory;
+package net.obvj.confectory.internal.helper;
 
+import static net.obvj.junit.utils.matchers.AdvancedMatchers.throwsException;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.when;
@@ -9,19 +10,16 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import net.obvj.confectory.internal.helper.ConfigurationHelper;
-import net.obvj.confectory.internal.helper.NullConfigurationHelper;
 import net.obvj.confectory.mapper.Mapper;
 
 /**
- * Unit tests for the {@link ConfigurationService} class.
+ * Unit tests for the {@link ConfigurationHelper} class.
  *
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
- * @since 0.4.0
+ * @since 2.2.0
  */
-// TODO move to ConfigurationHelper
 @ExtendWith(MockitoExtension.class)
-class ConfigurationServiceTest
+class ConfigurationHelperTest
 {
 
     @Mock
@@ -29,10 +27,10 @@ class ConfigurationServiceTest
     @Mock
     private ConfigurationHelper<String> helper;
 
-    private String bean = "test";
+    private final String bean = "test";
 
     @Test
-    void getConfigurationHelper_success_validConfigurationHelper()
+    void newInstance_validBeanAndMapper_properConfigurationHelper()
     {
         when(mapper.configurationHelper(bean)).thenReturn(helper);
         ConfigurationHelper<String> result = ConfigurationHelper.newInstance(bean, mapper);
@@ -40,10 +38,18 @@ class ConfigurationServiceTest
     }
 
     @Test
-    void getConfigurationHelper_null_nullConfigurationHelper()
+    void newInstance_nullBeanAndValidMapper_nullConfigurationHelper()
     {
         ConfigurationHelper<String> result = ConfigurationHelper.newInstance(null, mapper);
         assertThat(result.getClass(), equalTo(NullConfigurationHelper.class));
     }
+
+    @Test
+    void newInstance_nullMapper_exception()
+    {
+        assertThat(() -> ConfigurationHelper.newInstance(bean, null),
+                throwsException(NullPointerException.class).withMessage("The mapper must not be null"));
+    }
+
 
 }
