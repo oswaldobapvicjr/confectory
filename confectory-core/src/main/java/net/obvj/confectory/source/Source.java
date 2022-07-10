@@ -21,6 +21,9 @@ import net.obvj.confectory.mapper.Mapper;
 
 /**
  * The base interface for a configuration source.
+ * <p>
+ * A {@code Source} is an object that basically defines the configuration input (e.g.:
+ * file, URL) and contains built-in logic for data access.
  *
  * @param <T> the configuration data type returned by this {@code Source}
  *

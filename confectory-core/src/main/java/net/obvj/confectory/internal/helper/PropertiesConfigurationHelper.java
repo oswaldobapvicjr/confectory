@@ -20,6 +20,8 @@ import java.util.Objects;
 import java.util.Properties;
 
 import net.obvj.confectory.ConfigurationException;
+import net.obvj.confectory.merger.ConfigurationMerger;
+import net.obvj.confectory.merger.PropertiesConfigurationMerger;
 
 /**
  * A specialized Configuration Helper that retrieves data from a {@link Properties}
@@ -73,5 +75,11 @@ public class PropertiesConfigurationHelper extends BasicConfigurationHelper<Prop
     private void validateKey(String key)
     {
         Objects.requireNonNull(key, "The key must not be null");
+    }
+
+    @Override
+    public ConfigurationMerger<Properties> configurationMerger()
+    {
+        return new PropertiesConfigurationMerger();
     }
 }

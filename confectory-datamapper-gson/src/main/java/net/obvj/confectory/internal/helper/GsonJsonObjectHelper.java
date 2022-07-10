@@ -20,6 +20,9 @@ import com.google.gson.JsonObject;
 import com.jayway.jsonpath.spi.json.GsonJsonProvider;
 import com.jayway.jsonpath.spi.mapper.GsonMappingProvider;
 
+import net.obvj.confectory.merger.ConfigurationMerger;
+import net.obvj.confectory.merger.GsonJsonObjectConfigurationMerger;
+
 /**
  * A specialized Configuration Helper that retrieves data from Gson's {@link JsonObject},
  * with JSONPath capabilities.
@@ -38,6 +41,12 @@ public class GsonJsonObjectHelper extends GenericJsonConfigurationHelper<JsonObj
     public GsonJsonObjectHelper(JsonObject jsonObject)
     {
         super(jsonObject, new GsonJsonProvider(), new GsonMappingProvider());
+    }
+
+    @Override
+    public ConfigurationMerger<JsonObject> configurationMerger()
+    {
+        return new GsonJsonObjectConfigurationMerger();
     }
 
 }

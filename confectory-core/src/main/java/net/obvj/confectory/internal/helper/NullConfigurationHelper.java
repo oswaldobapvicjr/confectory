@@ -16,7 +16,10 @@
 
 package net.obvj.confectory.internal.helper;
 
+import java.util.Optional;
+
 import net.obvj.confectory.ConfigurationException;
+import net.obvj.confectory.merger.ConfigurationMerger;
 
 /**
  * A "no-op" Configuration Helper object for situations where an optional
@@ -29,6 +32,31 @@ import net.obvj.confectory.ConfigurationException;
  */
 public class NullConfigurationHelper<T> implements ConfigurationHelper<T>
 {
+
+    private Optional<ConfigurationHelper<T>> originalHelper;
+
+    /**
+     * Builds a {@code NullConfigurationHelper}.
+     *
+     * @since 2.2.0
+     */
+    public NullConfigurationHelper()
+    {
+        this(null);
+    }
+
+    /**
+     * Builds a {@code NullConfigurationHelper} with a reference to the original/expected
+     * {@code ConfigurationHelper}.
+     *
+     * @param originalHelper the initial {@code ConfigurationHelper} that should be applied if
+     *                       the actual bean was available
+     * @since 2.2.0
+     */
+    public NullConfigurationHelper(ConfigurationHelper<T> originalHelper)
+    {
+        this.originalHelper = Optional.ofNullable(originalHelper);
+    }
 
     /**
      * @return {@code null}, always
@@ -141,6 +169,16 @@ public class NullConfigurationHelper<T> implements ConfigurationHelper<T>
     private ConfigurationException newConfigurationException()
     {
         return new ConfigurationException("Not found");
+    }
+
+    /**
+     * @throws UnsupportedOperationException if no original helper is specified for this
+     *                                       {@code NullConfigurationHelper}.
+     */
+    @Override
+    public ConfigurationMerger<T> configurationMerger()
+    {
+        return originalHelper.orElseThrow(UnsupportedOperationException::new).configurationMerger();
     }
 
 }

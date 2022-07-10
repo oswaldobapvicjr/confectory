@@ -15,6 +15,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import net.obvj.confectory.ConfigurationBuilder;
 import net.obvj.confectory.ConfigurationException;
 import net.obvj.confectory.mapper.JacksonJsonNodeMapper;
+import net.obvj.confectory.merger.JacksonJsonNodeConfigurationMerger;
 import net.obvj.confectory.source.StringSource;
 
 /**
@@ -129,6 +130,13 @@ class JacksonJsonNodeHelperTest
     void getString_unknownKey_null()
     {
         assertThat(HELPER.getString("$.unknown"), equalTo(null));
+    }
+
+    @Test
+    void configurationMerger_jacksonConfigurationMerger()
+    {
+        assertThat(HELPER.configurationMerger().getClass(),
+                equalTo(JacksonJsonNodeConfigurationMerger.class));
     }
 
 }

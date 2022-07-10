@@ -30,7 +30,7 @@ import net.obvj.confectory.ConfigurationException;
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 0.3.0
  */
-public class GenericJsonConfigurationHelper<J> implements ConfigurationHelper<J>
+public abstract class GenericJsonConfigurationHelper<J> implements ConfigurationHelper<J>
 {
     protected final J json;
     protected final JsonProvider jsonProvider;

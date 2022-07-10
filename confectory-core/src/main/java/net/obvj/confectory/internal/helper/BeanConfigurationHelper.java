@@ -17,6 +17,7 @@
 package net.obvj.confectory.internal.helper;
 
 import net.obvj.confectory.ConfigurationException;
+import net.obvj.confectory.merger.ConfigurationMerger;
 
 /**
  * A Configuration Helper implementation for user-defined beans.
@@ -75,6 +76,12 @@ public class BeanConfigurationHelper<T> extends BasicConfigurationHelper<T>
     {
         return new ConfigurationException("Operation not supported for bean of type '%s'",
                 super.bean.getClass().getName());
+    }
+
+    @Override
+    public ConfigurationMerger<T> configurationMerger()
+    {
+        throw new UnsupportedOperationException("Merge not supported (user-defined bean)");
     }
 
 }

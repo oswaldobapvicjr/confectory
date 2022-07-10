@@ -1,5 +1,6 @@
 package net.obvj.confectory.internal.helper;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -11,6 +12,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import net.obvj.confectory.merger.PropertiesConfigurationMerger;
 
 /**
  * Unit tests for the {@link PropertiesConfigurationHelper}.
@@ -101,6 +104,12 @@ class PropertiesConfigurationHelperTest
     void getString_unknownKey_null()
     {
         assertNull(HELPER.getString(PROP_UNKNOWN));
+    }
+
+    @Test
+    void configurationMerger_propertiesConfigurationMerger()
+    {
+        assertThat(HELPER.configurationMerger().getClass(), equalTo(PropertiesConfigurationMerger.class));
     }
 
 }

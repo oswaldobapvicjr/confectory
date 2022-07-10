@@ -22,8 +22,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import net.obvj.confectory.internal.helper.ConfigurationHelper;
-import net.obvj.confectory.internal.helper.NullConfigurationHelper;
 import net.obvj.confectory.mapper.Mapper;
+import net.obvj.confectory.merger.ConfigurationMerger;
 import net.obvj.confectory.source.Source;
 
 /**
@@ -74,7 +74,8 @@ import net.obvj.confectory.source.Source;
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 0.1.0
  */
-public final class Configuration<T> implements ConfigurationDataRetriever<T>, ConfigurationMetadataRetriever<T>
+public final class Configuration<T>
+        implements ConfigurationDataRetriever<T>, ConfigurationMetadataRetriever<T>
 {
     private final String namespace;
     private final int precedence;
@@ -83,7 +84,7 @@ public final class Configuration<T> implements ConfigurationDataRetriever<T>, Co
     private final boolean optional;
     private final boolean lazy;
 
-    private ConfigurationDataRetriever<T> service;
+    private ConfigurationService<T> service;
 
     /**
      * Builds a new {@code Configuration} from the specified {@link ConfigurationBuilder}.
@@ -274,10 +275,39 @@ public final class Configuration<T> implements ConfigurationDataRetriever<T>, Co
     }
 
     /**
-     * @return the actual implementation (the Service part in the Proxy Design Pattern)
+     * Combines this {@code Configuration} with another one, producing a new
+     * {@code Configuration}, with the following characteristics:
+     * <ul>
+     * <li>The resulting {@code Configuration} will receive all the elements from both
+     * {@code Configuration} objects</li>
+     * <li>In case of conflicting keys, the values at the highest-precedence
+     * {@code Configuration} will be selected</li>
+     * <li>The metadata of the highest-precedence {@code Configuration} (namespace and
+     * precedence) will be applied to the new {@code Configuration}</li>
+     * </ul>
+     * <p>
+     * <strong>Note: </strong> The other {@link Configuration} must be of the same type as the
+     * current one.
+     *
+     * @param other the {@code Configuration} to be merged with this one; not {@code null}
+     *
+     * @return a new {@code Configuration} resulting from the combination of this object and
+     *         the specified one
+     * @throws NullPointerException if the other {@code Configuration} is {@code null}
+     *
+     * @since 2.2.0
+     * @see ConfigurationMerger
+     */
+    public Configuration<T> merge(Configuration<T> other)
+    {
+        return getService().getHelper().configurationMerger().merge(this, other);
+    }
+
+    /**
+     * @return the actual configuration
      * @since 0.4.0
      */
-    private ConfigurationDataRetriever<T> getService()
+    private ConfigurationService<T> getService()
     {
         if (service == null)
         {
@@ -289,7 +319,8 @@ public final class Configuration<T> implements ConfigurationDataRetriever<T>, Co
 }
 
 /**
- * Actual implementation (the Service part in the Proxy Design Pattern).
+ * Actual implementation (the Service part in the Proxy Design Pattern), which allows the
+ * lazy loading of {@code Configuration} data.
  *
  * @param <T> the target configuration type
  *
@@ -324,12 +355,16 @@ final class ConfigurationService<T> implements ConfigurationDataRetriever<T>
     ConfigurationService(T bean, Mapper<T> mapper)
     {
         this.bean = bean;
-        this.helper = getConfigurationHelper(bean, mapper);
+        this.helper = ConfigurationHelper.newInstance(bean, mapper);
     }
 
-    static <T> ConfigurationHelper<T> getConfigurationHelper(T bean, Mapper<T> mapper)
+    /**
+     * @return the {@link ConfigurationHelper} assigned to this service
+     * @since 2.2.0
+     */
+    ConfigurationHelper<T> getHelper()
     {
-        return bean != null ? mapper.configurationHelper(bean) : new NullConfigurationHelper<>();
+        return helper;
     }
 
     @Override

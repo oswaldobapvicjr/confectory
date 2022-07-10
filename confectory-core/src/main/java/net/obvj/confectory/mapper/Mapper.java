@@ -20,9 +20,15 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import net.obvj.confectory.internal.helper.ConfigurationHelper;
+import net.obvj.confectory.source.Source;
 
 /**
  * The base interface for a configuration mapper.
+ * <p>
+ * A {@code Mapper} is an object that carries the business logic for parsing the input
+ * stream open by a {@link Source} and producing the final object, which can be typically
+ * an "object container" (such as a HashMap or JSON object, for example), or even POJOs
+ * (user-defined beans), depending on the selected implementation.
  *
  * @param <T> the configuration output type
  *

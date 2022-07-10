@@ -23,6 +23,9 @@ import org.json.JSONObject;
 import com.jayway.jsonpath.spi.json.JsonOrgJsonProvider;
 import com.jayway.jsonpath.spi.mapper.JsonOrgMappingProvider;
 
+import net.obvj.confectory.merger.ConfigurationMerger;
+import net.obvj.confectory.merger.JsonOrgJSONObjectConfigurationMerger;
+
 /**
  * A specialized Configuration Helper that retrieves data from JSON.org's
  * {@link JSONObject}, with JSONPath capabilities.
@@ -61,6 +64,12 @@ public class JsonOrgJSONObjectHelper extends GenericJsonConfigurationHelper<JSON
     {
         // JSON-Java parses double values as BigDecimals by default
         return getValue(jsonPath, BigDecimal.class, optional);
+    }
+
+    @Override
+    public ConfigurationMerger<JSONObject> configurationMerger()
+    {
+        return new JsonOrgJSONObjectConfigurationMerger();
     }
 
 }
