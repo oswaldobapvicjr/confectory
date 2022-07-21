@@ -20,10 +20,11 @@ import java.util.function.Supplier;
 
 import net.obvj.confectory.Configuration;
 import net.obvj.confectory.mapper.DummyMapper;
+import net.obvj.confectory.merger.options.MergeOption;
 import net.obvj.confectory.source.DummySource;
 
 /**
- * A abstract {@link ConfigurationMerger} that contains common infrastructure logic for
+ * An abstract {@link ConfigurationMerger} that contains common infrastructure logic for
  * the merging of two {@link Configuration} objects, delegating the actual combination to
  * a concrete implementation.
  *
@@ -34,11 +35,14 @@ import net.obvj.confectory.source.DummySource;
  */
 public abstract class AbstractConfigurationMerger<T> implements ConfigurationMerger<T>
 {
+    /**
+     * @throws NullPointerException if a null {@code Configuration} is received
+     */
     @Override
-    public final Configuration<T> merge(Configuration<T> config1, Configuration<T> config2)
+    public final Configuration<T> merge(Configuration<T> config1, Configuration<T> config2, MergeOption... mergeOptions)
     {
         checkParameters(config1, config2);
-        T mergedObject = doMerge(config1, config2);
+        T mergedObject = doMerge(config1, config2, mergeOptions);
         Configuration<T> higherPrecedenceConfig = getHighestPrecedenceConfig(config1, config2);
         return newConfiguration(mergedObject, higherPrecedenceConfig);
     }
@@ -63,12 +67,13 @@ public abstract class AbstractConfigurationMerger<T> implements ConfigurationMer
      * Combines two {@code Configuration} objects, with focus on the actual documents inside
      * each {@code Configuration}.
      *
-     * @param config1 the first {@code Configuration}
-     * @param config2 the second {@code Configuration}
+     * @param config1      the first {@code Configuration}
+     * @param config2      the second {@code Configuration}
+     * @param mergeOptions an array of options on how to merge the objects (optional)
      * @return a new bean resulting from the combination of the actual beans inside
      *         {@code config1} and {@code config2}
      */
-    abstract T doMerge(Configuration<T> config1, Configuration<T> config2);
+    abstract T doMerge(Configuration<T> config1, Configuration<T> config2, MergeOption... mergeOptions);
 
     /**
      * Returns the highest-precedence object from the input parameters.

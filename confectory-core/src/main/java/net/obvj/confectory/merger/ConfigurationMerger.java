@@ -17,6 +17,7 @@
 package net.obvj.confectory.merger;
 
 import net.obvj.confectory.Configuration;
+import net.obvj.confectory.merger.options.MergeOption;
 
 /**
  * Base abstraction for merging two {@link Configuration} objects of the same type
@@ -30,8 +31,8 @@ import net.obvj.confectory.Configuration;
 public interface ConfigurationMerger<T>
 {
     /**
-     * Combines two {@code Configuration} objects into a new {@code Configuration} with the
-     * following characteristics:
+     * Combines two {@code Configuration} objects into a new {@code Configuration}.
+     * <p>
      * <ul>
      * <li>The resulting object will receive all the elements of the input
      * {@code Configuration} objects</li>
@@ -41,13 +42,13 @@ public interface ConfigurationMerger<T>
      * precedence) will be applied to the new {@code Configuration}</li>
      * </ul>
      *
-     * @param config1 the first {@code Configuration}; not null
-     * @param config2 the second {@code Configuration}; not null
+     * @param config1      the first {@code Configuration}; not null
+     * @param config2      the second {@code Configuration}; not null
+     * @param mergeOptions an array of options on how to merge the objects (optional)
      *
      * @return a new {@code Configuration} resulting from the combination of {@code config1}
      *         and {@code config2}
-     *
-     * @throws NullPointerException if a null {@code Configuration} is received
      */
-    Configuration<T> merge(final Configuration<T> config1, final Configuration<T> config2);
+    Configuration<T> merge(final Configuration<T> config1, final Configuration<T> config2,
+            final MergeOption... mergeOptions);
 }

@@ -19,6 +19,7 @@ package net.obvj.confectory.merger;
 import java.util.Properties;
 
 import net.obvj.confectory.Configuration;
+import net.obvj.confectory.merger.options.MergeOption;
 
 /**
  * A specialized {@code ConfigurationMerger} that combines two {@link Configuration}
@@ -31,8 +32,12 @@ import net.obvj.confectory.Configuration;
 public class PropertiesConfigurationMerger extends AbstractConfigurationMerger<Properties>
 {
 
+    /**
+     * @param mergeOptions not in use for this merger
+     */
     @Override
-    Properties doMerge(Configuration<Properties> config1, Configuration<Properties> config2)
+    Properties doMerge(Configuration<Properties> config1, Configuration<Properties> config2,
+            MergeOption... mergeOptions)
     {
         Properties properties1 = getPropertiesSafely(config1);
         Properties properties2 = getPropertiesSafely(config2);

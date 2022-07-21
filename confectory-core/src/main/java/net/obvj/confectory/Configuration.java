@@ -24,6 +24,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import net.obvj.confectory.internal.helper.ConfigurationHelper;
 import net.obvj.confectory.mapper.Mapper;
 import net.obvj.confectory.merger.ConfigurationMerger;
+import net.obvj.confectory.merger.options.MergeOption;
 import net.obvj.confectory.source.Source;
 
 /**
@@ -49,8 +50,8 @@ import net.obvj.confectory.source.Source;
  * will be instantiated even if the resource cannot be loaded (not default behavior).
  * <p>
  * <strong>IMPORTANT:</strong> Use a {@link ConfigurationBuilder} to create a
- * {@code Configuration} object. A builder instance can be retrieved by calling
- * {@link Configuration#builder()}. For example:
+ * {@code Configuration} object. A builder instance can be retrieved by calling the static
+ * method {@link Configuration#builder()}. For example:
  *
  * <blockquote>
  *
@@ -276,7 +277,8 @@ public final class Configuration<T>
 
     /**
      * Combines this {@code Configuration} with another one, producing a new
-     * {@code Configuration}, with the following characteristics:
+     * {@code Configuration}.
+     * <p>
      * <ul>
      * <li>The resulting {@code Configuration} will receive all the elements from both
      * {@code Configuration} objects</li>
@@ -299,6 +301,11 @@ public final class Configuration<T>
      * @see ConfigurationMerger
      */
     public Configuration<T> merge(Configuration<T> other)
+    {
+        return getService().getHelper().configurationMerger().merge(this, other);
+    }
+
+    public Configuration<T> merge(Configuration<T> other, MergeOption... mergeOptions)
     {
         return getService().getHelper().configurationMerger().merge(this, other);
     }

@@ -16,29 +16,23 @@
 
 package net.obvj.confectory.merger;
 
-import java.util.Collections;
-import java.util.Map;
-
 import org.json.JSONObject;
-
-import com.jayway.jsonpath.InvalidPathException;
 
 import net.obvj.confectory.Configuration;
 import net.obvj.confectory.util.JsonOrgJsonProvider;
-import net.obvj.confectory.util.JsonProvider;
 
 /**
  * A specialized {@code ConfigurationMerger} that combines two {@link Configuration}
  * objects of type {@link JSONObject} ({@code json.org} implementation) into a single one.
  * <p>
  * For additional information, refer to the superclass
- * {@link GenericJSONConfigurationMerger}.
+ * {@link GenericJsonConfigurationMerger}.
  *
- * @see GenericJSONConfigurationMerger
+ * @see GenericJsonConfigurationMerger
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 2.2.0
  */
-public class JsonOrgJSONObjectConfigurationMerger extends GenericJSONConfigurationMerger<JSONObject>
+public class JsonOrgJSONObjectConfigurationMerger extends GenericJsonConfigurationMerger<JSONObject>
 {
 
     /**
@@ -47,25 +41,6 @@ public class JsonOrgJSONObjectConfigurationMerger extends GenericJSONConfigurati
      */
     public JsonOrgJSONObjectConfigurationMerger()
     {
-        this(Collections.emptyMap());
-    }
-
-    /**
-     * Creates a new JSON Configuration Merger for {@link JSONObject} using the
-     * {@code json.org} implementation with a preset map of distinct keys.
-     * <p>
-     * For additional information, refer to
-     * {@link GenericJSONConfigurationMerger#GenericJSONConfigurationMerger(JsonProvider, Map)}.
-     *
-     * @param distinctObjectKeysInsideArrays a map that associates JsonPath expressions and
-     *                                       distinct keys during the merge of an array;
-     *                                       {@code null} is allowed
-     *
-     * @throws IllegalArgumentException if the map contains a null or empty expression
-     * @throws InvalidPathException     if the specified JsonPath expression is invalid
-     */
-    public JsonOrgJSONObjectConfigurationMerger(Map<String, String> distinctObjectKeysInsideArrays)
-    {
-        super(new JsonOrgJsonProvider(), distinctObjectKeysInsideArrays);
+        super(new JsonOrgJsonProvider());
     }
 }
