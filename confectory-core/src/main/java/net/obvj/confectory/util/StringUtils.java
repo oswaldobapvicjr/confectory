@@ -58,8 +58,9 @@ public class StringUtils
     }
 
     /**
-     * Checks that the specified string is not {@code null} or blank. If the string is valid,
-     * returns a copy of it, trimmed; otherwise, throws an {@link IllegalArgumentException}.
+     * Checks that the specified string is not {@code null}, empty ({@code ""}), or blank
+     * (containing whitespace only). If the string is valid, returns a copy of it, trimmed;
+     * otherwise, throws an {@link IllegalArgumentException}.
      * <p>
      * This method is designed primarily for doing parameter validation in methods and
      * constructors with multiple parameters, as demonstrated below:
@@ -76,9 +77,10 @@ public class StringUtils
      * </blockquote>
      *
      * @param string  the string to check
-     * @param message detail message to be used in the event of an
-     *                {@code IllegalArgumentException}
+     * @param message detail message for the exception to be used if the string a blank
+     *
      * @return {@code string}, trimmed, if not {@code null} or blank
+     *
      * @throws IllegalArgumentException if {@code string} is {@code null} or blank
      * @since 2.3.0
      */

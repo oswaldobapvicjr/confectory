@@ -38,7 +38,8 @@ public abstract class AbstractConfigurationMerger<T> implements ConfigurationMer
      * @throws NullPointerException if a null {@code Configuration} is received
      */
     @Override
-    public final Configuration<T> merge(Configuration<T> config1, Configuration<T> config2, MergeOption... mergeOptions)
+    public final Configuration<T> merge(Configuration<T> config1, Configuration<T> config2,
+            MergeOption... mergeOptions)
     {
         checkParameters(config1, config2);
         T mergedObject = doMerge(config1, config2, mergeOptions);
@@ -72,7 +73,8 @@ public abstract class AbstractConfigurationMerger<T> implements ConfigurationMer
      * @return a new bean resulting from the combination of the actual beans inside
      *         {@code config1} and {@code config2}
      */
-    abstract T doMerge(Configuration<T> config1, Configuration<T> config2, MergeOption... mergeOptions);
+    abstract T doMerge(Configuration<T> config1, Configuration<T> config2,
+            MergeOption... mergeOptions);
 
     /**
      * Returns the highest-precedence object from the input parameters.

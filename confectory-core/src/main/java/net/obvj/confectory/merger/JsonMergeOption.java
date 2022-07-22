@@ -141,7 +141,7 @@ public class JsonMergeOption implements MergeOption
     }
 
     /**
-     * @return a pair of distinct key and path
+     * @return a pair of distinct key and path for merging a JSON array.
      */
     public Optional<Pair<String, JsonPathExpression>> getDistinctKey()
     {

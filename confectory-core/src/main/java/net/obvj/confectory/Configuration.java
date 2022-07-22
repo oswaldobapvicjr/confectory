@@ -78,6 +78,8 @@ import net.obvj.confectory.source.Source;
 public final class Configuration<T>
         implements ConfigurationDataRetriever<T>, ConfigurationMetadataRetriever<T>
 {
+    private static final MergeOption[] NO_MERGE_OPTION = new MergeOption[0];
+
     private final String namespace;
     private final int precedence;
     private final Source<T> source;
@@ -302,7 +304,7 @@ public final class Configuration<T>
      */
     public Configuration<T> merge(Configuration<T> other)
     {
-        return merge(other, new MergeOption[0]);
+        return merge(other, NO_MERGE_OPTION);
     }
 
     /**

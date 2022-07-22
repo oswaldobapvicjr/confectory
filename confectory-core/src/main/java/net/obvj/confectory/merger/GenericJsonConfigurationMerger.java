@@ -61,9 +61,12 @@ import net.obvj.confectory.util.JsonProvider;
  * object from the highest-precedence {@code Configuration} will be selected as
  * fallback</li>
  * </ul>
+ * <p>
+ * <b>Note: </b> For advanced merge options, refer to {@link JsonMergeOption}.
  *
- * @see JsonProvider
  * @see ConfigurationMerger
+ * @see JsonProvider
+ * @see JsonMergeOption
  *
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 2.1.0

@@ -4,7 +4,6 @@ import java.util.Properties;
 
 import net.obvj.confectory.Configuration;
 import net.obvj.confectory.mapper.PropertiesMapper;
-import net.obvj.confectory.merger.PropertiesConfigurationMerger;
 import net.obvj.confectory.source.StringSource;
 
 public class ConfectoryTestDriveClasspathPropertiesMerger
