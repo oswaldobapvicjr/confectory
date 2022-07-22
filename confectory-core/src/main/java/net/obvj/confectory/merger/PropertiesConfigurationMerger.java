@@ -19,7 +19,6 @@ package net.obvj.confectory.merger;
 import java.util.Properties;
 
 import net.obvj.confectory.Configuration;
-import net.obvj.confectory.merger.options.MergeOption;
 
 /**
  * A specialized {@code ConfigurationMerger} that combines two {@link Configuration}

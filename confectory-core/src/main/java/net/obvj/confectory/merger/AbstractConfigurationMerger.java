@@ -20,7 +20,6 @@ import java.util.function.Supplier;
 
 import net.obvj.confectory.Configuration;
 import net.obvj.confectory.mapper.DummyMapper;
-import net.obvj.confectory.merger.options.MergeOption;
 import net.obvj.confectory.source.DummySource;
 
 /**

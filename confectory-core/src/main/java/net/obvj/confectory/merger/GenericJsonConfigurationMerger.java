@@ -33,8 +33,6 @@ import org.slf4j.LoggerFactory;
 
 import net.obvj.confectory.Configuration;
 import net.obvj.confectory.mapper.JSONObjectMapper;
-import net.obvj.confectory.merger.options.JsonMergeOption;
-import net.obvj.confectory.merger.options.MergeOption;
 import net.obvj.confectory.util.ConfigurationComparator;
 import net.obvj.confectory.util.JsonPathExpression;
 import net.obvj.confectory.util.JsonProvider;

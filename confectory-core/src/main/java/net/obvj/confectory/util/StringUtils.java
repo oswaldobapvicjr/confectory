@@ -84,7 +84,7 @@ public class StringUtils
      */
     public static String requireNonBlankAndTrim(String string, String message)
     {
-        if (string == null || string.isBlank())
+        if (org.apache.commons.lang3.StringUtils.isBlank(string))
         {
             throw new IllegalArgumentException(message);
         }

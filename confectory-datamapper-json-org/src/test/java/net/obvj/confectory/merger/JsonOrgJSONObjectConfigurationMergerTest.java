@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 
 import net.obvj.confectory.Configuration;
 import net.obvj.confectory.mapper.JsonOrgJSONObjectMapper;
-import net.obvj.confectory.merger.options.JsonMergeOption;
 import net.obvj.confectory.source.StringSource;
 import net.obvj.confectory.util.JsonOrgJsonProvider;
 
@@ -298,8 +297,10 @@ class JsonOrgJSONObjectConfigurationMergerTest
     @Test
     void merge_json8LowWithJson9HighAndDistinctKey_success()
     {
-        Configuration<JSONObject> result = merger.merge(newConfiguration(JSON_8, 9), newConfiguration(JSON_9, 10),
-                JsonMergeOption.distinctKey("name", "$.array"));
+        Configuration<JSONObject> result = merger
+                .merge(newConfiguration(JSON_8, 9),
+                       newConfiguration(JSON_9, 10),
+                       JsonMergeOption.distinctKey("name", "$.array"));
 
         assertEquals("Json9Value1", result.getString("$.array[?(@.name=='name1')].value"));
         assertArray(Arrays.asList("element1", "element2"), result, "$.array[*]", false);

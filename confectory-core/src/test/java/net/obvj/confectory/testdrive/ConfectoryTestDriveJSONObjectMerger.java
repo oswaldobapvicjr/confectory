@@ -4,7 +4,7 @@ import net.minidev.json.JSONObject;
 import net.obvj.confectory.Configuration;
 import net.obvj.confectory.mapper.JSONObjectMapper;
 import net.obvj.confectory.merger.JSONObjectConfigurationMerger;
-import net.obvj.confectory.merger.options.JsonMergeOption;
+import net.obvj.confectory.merger.JsonMergeOption;
 import net.obvj.confectory.source.StringSource;
 
 public class ConfectoryTestDriveJSONObjectMerger

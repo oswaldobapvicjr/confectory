@@ -2,7 +2,7 @@
   "enabled": false,
   "agents": [
     {
-      "class": "Agent3",
+      "class": "Agent2",
       "interval": "30 minutes"
     }
   ]

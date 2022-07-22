@@ -13,7 +13,6 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 
 import net.obvj.confectory.Configuration;
 import net.obvj.confectory.mapper.JacksonJsonNodeMapper;
-import net.obvj.confectory.merger.options.JsonMergeOption;
 import net.obvj.confectory.source.StringSource;
 import net.obvj.confectory.util.JacksonJsonNodeJsonProvider;
 

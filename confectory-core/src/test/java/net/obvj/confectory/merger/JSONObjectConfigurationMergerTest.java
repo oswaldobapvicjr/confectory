@@ -12,7 +12,6 @@ import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import net.obvj.confectory.Configuration;
 import net.obvj.confectory.mapper.JSONObjectMapper;
-import net.obvj.confectory.merger.options.JsonMergeOption;
 import net.obvj.confectory.source.StringSource;
 
 /**

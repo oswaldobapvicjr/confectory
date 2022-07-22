@@ -17,7 +17,6 @@
 package net.obvj.confectory.merger;
 
 import net.obvj.confectory.Configuration;
-import net.obvj.confectory.merger.options.MergeOption;
 
 /**
  * Base abstraction for merging two {@link Configuration} objects of the same type
