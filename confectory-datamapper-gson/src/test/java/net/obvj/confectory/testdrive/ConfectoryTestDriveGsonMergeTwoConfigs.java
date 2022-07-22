@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 
 import net.obvj.confectory.Configuration;
 import net.obvj.confectory.mapper.GsonJsonObjectMapper;
+import net.obvj.confectory.merger.JsonMergeOption;
 
 public class ConfectoryTestDriveGsonMergeTwoConfigs
 {
@@ -22,7 +23,8 @@ public class ConfectoryTestDriveGsonMergeTwoConfigs
                 .mapper(new GsonJsonObjectMapper())
                 .build();
 
-        Configuration<JsonObject> config = config1.merge(config2);
+        Configuration<JsonObject> config = config1.merge(config2,
+                JsonMergeOption.distinctKey("class", "$.agents"));
 
         System.out.println(new GsonBuilder().setPrettyPrinting().create().toJson(config.getBean()));
         System.out.println(config.getBoolean("enabled"));

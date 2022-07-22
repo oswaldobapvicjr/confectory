@@ -15,6 +15,7 @@ class StringUtilsTest
 {
     private static final String TEST = "test";
     private static final String TEST_$_UNKNOWN = "test=${unknown}";
+    private static final String MESSAGE = "message";
 
     @Test
     void constructor_instantiationNotAllowed()
@@ -41,4 +42,36 @@ class StringUtilsTest
                 (allOf(startsWith("test="), not(containsAny(("${PATH}"))))));
     }
 
+    @Test
+    void requireNonBlank_validString_validString()
+    {
+        assertThat(StringUtils.requireNonBlankAndTrim(TEST, MESSAGE), equalTo(TEST));
+    }
+
+    @Test
+    void requireNonBlank_validStringContainingBlankCharacter_trimmed()
+    {
+        assertThat(StringUtils.requireNonBlankAndTrim(" string ", MESSAGE), equalTo("string"));
+    }
+
+    @Test
+    void requireNonBlank_null_illegalArgumentException()
+    {
+        assertThat(() -> StringUtils.requireNonBlankAndTrim(null, MESSAGE),
+                throwsException(IllegalArgumentException.class).withMessage(MESSAGE));
+    }
+
+    @Test
+    void requireNonBlank_empty_illegalArgumentException()
+    {
+        assertThat(() -> StringUtils.requireNonBlankAndTrim("", MESSAGE),
+                throwsException(IllegalArgumentException.class).withMessage(MESSAGE));
+    }
+
+    @Test
+    void requireNonBlank_blank_illegalArgumentException()
+    {
+        assertThat(() -> StringUtils.requireNonBlankAndTrim("\t", MESSAGE),
+                throwsException(IllegalArgumentException.class).withMessage(MESSAGE));
+    }
 }

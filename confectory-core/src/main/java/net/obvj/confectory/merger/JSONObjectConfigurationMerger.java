@@ -16,14 +16,8 @@
 
 package net.obvj.confectory.merger;
 
-import java.util.Collections;
-import java.util.Map;
-
-import com.jayway.jsonpath.InvalidPathException;
-
 import net.minidev.json.JSONObject;
 import net.obvj.confectory.Configuration;
-import net.obvj.confectory.util.JsonProvider;
 import net.obvj.confectory.util.JsonSmartJsonProvider;
 
 /**
@@ -32,13 +26,13 @@ import net.obvj.confectory.util.JsonSmartJsonProvider;
  * single one.
  * <p>
  * For additional information, refer to the superclass
- * {@link GenericJSONConfigurationMerger}.
+ * {@link GenericJsonConfigurationMerger}.
  *
- * @see GenericJSONConfigurationMerger
+ * @see GenericJsonConfigurationMerger
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 2.1.0
  */
-public class JSONObjectConfigurationMerger extends GenericJSONConfigurationMerger<JSONObject>
+public class JSONObjectConfigurationMerger extends GenericJsonConfigurationMerger<JSONObject>
 {
 
     /**
@@ -47,25 +41,6 @@ public class JSONObjectConfigurationMerger extends GenericJSONConfigurationMerge
      */
     public JSONObjectConfigurationMerger()
     {
-        this(Collections.emptyMap());
-    }
-
-    /**
-     * Creates a new JSON Configuration Merger for {@link JSONObject} using {@code json-smart}
-     * implementation with a preset map of distinct keys.
-     * <p>
-     * For additional information, refer to
-     * {@link GenericJSONConfigurationMerger#GenericJSONConfigurationMerger(JsonProvider, Map)}.
-     *
-     * @param distinctObjectKeysInsideArrays a map that associates JsonPath expressions and
-     *                                       distinct keys during the merge of an array;
-     *                                       {@code null} is allowed
-     *
-     * @throws IllegalArgumentException if the map contains a null or empty expression
-     * @throws InvalidPathException     if the specified JsonPath expression is invalid
-     */
-    public JSONObjectConfigurationMerger(Map<String, String> distinctObjectKeysInsideArrays)
-    {
-        super(new JsonSmartJsonProvider(), distinctObjectKeysInsideArrays);
+        super(new JsonSmartJsonProvider());
     }
 }

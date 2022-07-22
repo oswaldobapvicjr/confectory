@@ -57,4 +57,40 @@ public class StringUtils
         return ENVIRONMENT_VARIABLE_SUBSTITUTOR.replace(string);
     }
 
+    /**
+     * Checks that the specified string is not {@code null}, empty ({@code ""}), or blank
+     * (containing whitespace only). If the string is valid, returns a copy of it, trimmed;
+     * otherwise, throws an {@link IllegalArgumentException}.
+     * <p>
+     * This method is designed primarily for doing parameter validation in methods and
+     * constructors with multiple parameters, as demonstrated below:
+     * <p>
+     * <blockquote>
+     *
+     * <pre>
+     * public Foo(Bar bar)
+     * {
+     *     this.bar = StringUtils.requireNonBlankAndTrim(bar, "bar must not be blank");
+     * }
+     * </pre>
+     *
+     * </blockquote>
+     *
+     * @param string  the string to check
+     * @param message detail message for the exception to be used if the string a blank
+     *
+     * @return {@code string}, trimmed, if not {@code null} or blank
+     *
+     * @throws IllegalArgumentException if {@code string} is {@code null} or blank
+     * @since 2.3.0
+     */
+    public static String requireNonBlankAndTrim(String string, String message)
+    {
+        if (org.apache.commons.lang3.StringUtils.isBlank(string))
+        {
+            throw new IllegalArgumentException(message);
+        }
+        return string.trim();
+    }
+
 }

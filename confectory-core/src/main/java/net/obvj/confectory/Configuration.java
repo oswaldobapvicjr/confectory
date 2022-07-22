@@ -24,6 +24,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import net.obvj.confectory.internal.helper.ConfigurationHelper;
 import net.obvj.confectory.mapper.Mapper;
 import net.obvj.confectory.merger.ConfigurationMerger;
+import net.obvj.confectory.merger.MergeOption;
 import net.obvj.confectory.source.Source;
 
 /**
@@ -49,8 +50,8 @@ import net.obvj.confectory.source.Source;
  * will be instantiated even if the resource cannot be loaded (not default behavior).
  * <p>
  * <strong>IMPORTANT:</strong> Use a {@link ConfigurationBuilder} to create a
- * {@code Configuration} object. A builder instance can be retrieved by calling
- * {@link Configuration#builder()}. For example:
+ * {@code Configuration} object. A builder instance can be retrieved by calling the static
+ * method {@link Configuration#builder()}. For example:
  *
  * <blockquote>
  *
@@ -77,6 +78,8 @@ import net.obvj.confectory.source.Source;
 public final class Configuration<T>
         implements ConfigurationDataRetriever<T>, ConfigurationMetadataRetriever<T>
 {
+    private static final MergeOption[] NO_MERGE_OPTION = new MergeOption[0];
+
     private final String namespace;
     private final int precedence;
     private final Source<T> source;
@@ -276,7 +279,8 @@ public final class Configuration<T>
 
     /**
      * Combines this {@code Configuration} with another one, producing a new
-     * {@code Configuration}, with the following characteristics:
+     * {@code Configuration}.
+     * <p>
      * <ul>
      * <li>The resulting {@code Configuration} will receive all the elements from both
      * {@code Configuration} objects</li>
@@ -289,7 +293,7 @@ public final class Configuration<T>
      * <strong>Note: </strong> The other {@link Configuration} must be of the same type as the
      * current one.
      *
-     * @param other the {@code Configuration} to be merged with this one; not {@code null}
+     * @param other the {@code Configuration} to be merged with this one; not null
      *
      * @return a new {@code Configuration} resulting from the combination of this object and
      *         the specified one
@@ -300,7 +304,38 @@ public final class Configuration<T>
      */
     public Configuration<T> merge(Configuration<T> other)
     {
-        return getService().getHelper().configurationMerger().merge(this, other);
+        return merge(other, NO_MERGE_OPTION);
+    }
+
+    /**
+     * Combines this {@code Configuration} with another one, producing a new
+     * {@code Configuration}, using advanced options.
+     * <p>
+     * <ul>
+     * <li>The resulting {@code Configuration} will receive all the elements from both
+     * {@code Configuration} objects</li>
+     * <li>In case of conflicting keys, the values at the highest-precedence
+     * {@code Configuration} will be selected</li>
+     * <li>The metadata of the highest-precedence {@code Configuration} (namespace and
+     * precedence) will be applied to the new {@code Configuration}</li>
+     * </ul>
+     * <p>
+     * <strong>Note: </strong> The other {@link Configuration} must be of the same type as the
+     * current one.
+     *
+     * @param other        the {@code Configuration} to be merged with this one; not null
+     * @param mergeOptions an array of options on how to merge the objects (optional)
+     *
+     * @return a new {@code Configuration} resulting from the combination of this object and
+     *         the specified one
+     * @throws NullPointerException if the other {@code Configuration} is {@code null}
+     *
+     * @since 2.2.0
+     * @see ConfigurationMerger
+     */
+    public Configuration<T> merge(Configuration<T> other, MergeOption... mergeOptions)
+    {
+        return getService().getHelper().configurationMerger().merge(this, other, mergeOptions);
     }
 
     /**

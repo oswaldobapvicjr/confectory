@@ -1,11 +1,9 @@
 package net.obvj.confectory.testdrive;
 
-import java.util.HashMap;
-
 import net.minidev.json.JSONObject;
 import net.obvj.confectory.Configuration;
 import net.obvj.confectory.mapper.JSONObjectMapper;
-import net.obvj.confectory.merger.JSONObjectConfigurationMerger;
+import net.obvj.confectory.merger.JsonMergeOption;
 import net.obvj.confectory.source.StringSource;
 
 public class ConfectoryTestDriveJSONObjectMerger
@@ -42,10 +40,8 @@ public class ConfectoryTestDriveJSONObjectMerger
                 .mapper(new JSONObjectMapper()).build();
 
 
-
-        HashMap<String, String> distinctObjectsByArrayPath = new HashMap<>();
-        distinctObjectsByArrayPath.put("$.agents", "class");
-        Configuration<JSONObject> config = new JSONObjectConfigurationMerger(distinctObjectsByArrayPath).merge(config1, config2);
+        Configuration<JSONObject> config = config1.merge(config2,
+                JsonMergeOption.distinctKey("class", "$.agents"));
 
         System.out.println(config.getBean());
     }

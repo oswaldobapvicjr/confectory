@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -217,9 +216,10 @@ class JSONObjectConfigurationMergerTest
     @Test
     void merge_json3HighWithJson4LowAndDistinctKey_success()
     {
-        Configuration<JSONObject> result = new JSONObjectConfigurationMerger(
-                Collections.singletonMap("$.agents", "class")).merge(newConfiguration(JSON_3, 9),
-                        newConfiguration(JSON_4, 1));
+        Configuration<JSONObject> result = merger
+                .merge(newConfiguration(JSON_3, 9),
+                       newConfiguration(JSON_4, 1),
+                       JsonMergeOption.distinctKey("class", "$.agents"));
 
         assertTrue(result.getBoolean("enabled")); // from JSON_4
         assertArray(Arrays.asList("Json3Agent1", "Json3Agent2"), result, "$.agents[*].description");
@@ -228,9 +228,10 @@ class JSONObjectConfigurationMergerTest
     @Test
     void merge_json3LowWithJson4HighAndDistinctKey_success()
     {
-        Configuration<JSONObject> result = new JSONObjectConfigurationMerger(
-                Collections.singletonMap("$.agents", "class")).merge(newConfiguration(JSON_3, 2),
-                        newConfiguration(JSON_4, 3));
+        Configuration<JSONObject> result = merger
+                .merge(newConfiguration(JSON_3, 2),
+                       newConfiguration(JSON_4, 3),
+                       JsonMergeOption.distinctKey("class", "$.agents"));
 
         assertTrue(result.getBoolean("enabled")); // from JSON_4
         assertArray(Arrays.asList("Json4Agent1", "Json3Agent2"), result, "$.agents[*].description");
@@ -277,9 +278,10 @@ class JSONObjectConfigurationMergerTest
     @Test
     void merge_json8HighWithJson9LowAndDistinctKey_success()
     {
-        Configuration<JSONObject> result = new JSONObjectConfigurationMerger(
-                Collections.singletonMap("$.array", "name")).merge(newConfiguration(JSON_8, 9),
-                        newConfiguration(JSON_9, 1));
+        Configuration<JSONObject> result = merger
+                .merge(newConfiguration(JSON_8, 9),
+                       newConfiguration(JSON_9, 1),
+                       JsonMergeOption.distinctKey("name", "$.array"));
 
         assertEquals("Json8Value1", result.getString("$.array[?(@.name=='name1')].value"));
         assertArray(Arrays.asList("element1", "element2"), result, "$.array[*]", false);
@@ -288,9 +290,10 @@ class JSONObjectConfigurationMergerTest
     @Test
     void merge_json8LowWithJson9HighAndDistinctKey_success()
     {
-        Configuration<JSONObject> result = new JSONObjectConfigurationMerger(
-                Collections.singletonMap("$.array", "name")).merge(newConfiguration(JSON_8, 9),
-                        newConfiguration(JSON_9, 10));
+        Configuration<JSONObject> result = merger
+                .merge(newConfiguration(JSON_8, 9),
+                       newConfiguration(JSON_9, 10),
+                       JsonMergeOption.distinctKey("name", "$.array"));
 
         assertEquals("Json9Value1", result.getString("$.array[?(@.name=='name1')].value"));
         assertArray(Arrays.asList("element1", "element2"), result, "$.array[*]", false);

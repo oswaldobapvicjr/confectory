@@ -4,7 +4,6 @@ import java.util.Properties;
 
 import net.obvj.confectory.Configuration;
 import net.obvj.confectory.mapper.PropertiesMapper;
-import net.obvj.confectory.merger.PropertiesConfigurationMerger;
 import net.obvj.confectory.source.StringSource;
 
 public class ConfectoryTestDriveClasspathPropertiesMerger
@@ -25,7 +24,7 @@ public class ConfectoryTestDriveClasspathPropertiesMerger
                                          + "doubleValue=9.88\n"))
                 .mapper(new PropertiesMapper()).build();
 
-        Configuration<Properties> config = new PropertiesConfigurationMerger().merge(config1, config2);
+        Configuration<Properties> config = config1.merge(config2);
 
         System.out.println(config1);
         System.out.println(config2);
