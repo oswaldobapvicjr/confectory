@@ -33,7 +33,7 @@ import net.obvj.confectory.mapper.Mapper;
  */
 public class StringSource<T> extends AbstractSource<T> implements Source<T>
 {
-    private String uuid;
+    private final String uuid;
     /**
      * Builds a new configuration source from the specified string.
      *
