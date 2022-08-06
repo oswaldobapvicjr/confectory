@@ -219,7 +219,7 @@ class JSONObjectConfigurationMergerTest
         Configuration<JSONObject> result = merger
                 .merge(newConfiguration(JSON_3, 9),
                        newConfiguration(JSON_4, 1),
-                       JsonMergeOption.distinctKey("class", "$.agents"));
+                       JsonMergeOption.distinctKey("$.agents", "class"));
 
         assertTrue(result.getBoolean("enabled")); // from JSON_4
         assertArray(Arrays.asList("Json3Agent1", "Json3Agent2"), result, "$.agents[*].description");
@@ -231,7 +231,7 @@ class JSONObjectConfigurationMergerTest
         Configuration<JSONObject> result = merger
                 .merge(newConfiguration(JSON_3, 2),
                        newConfiguration(JSON_4, 3),
-                       JsonMergeOption.distinctKey("class", "$.agents"));
+                       JsonMergeOption.distinctKey("$.agents", "class"));
 
         assertTrue(result.getBoolean("enabled")); // from JSON_4
         assertArray(Arrays.asList("Json4Agent1", "Json3Agent2"), result, "$.agents[*].description");
@@ -281,7 +281,7 @@ class JSONObjectConfigurationMergerTest
         Configuration<JSONObject> result = merger
                 .merge(newConfiguration(JSON_8, 9),
                        newConfiguration(JSON_9, 1),
-                       JsonMergeOption.distinctKey("name", "$.array"));
+                       JsonMergeOption.distinctKey("$.array", "name"));
 
         assertEquals("Json8Value1", result.getString("$.array[?(@.name=='name1')].value"));
         assertArray(Arrays.asList("element1", "element2"), result, "$.array[*]", false);
@@ -293,9 +293,70 @@ class JSONObjectConfigurationMergerTest
         Configuration<JSONObject> result = merger
                 .merge(newConfiguration(JSON_8, 9),
                        newConfiguration(JSON_9, 10),
-                       JsonMergeOption.distinctKey("name", "$.array"));
+                       JsonMergeOption.distinctKey("$.array", "name"));
 
         assertEquals("Json9Value1", result.getString("$.array[?(@.name=='name1')].value"));
         assertArray(Arrays.asList("element1", "element2"), result, "$.array[*]", false);
+    }
+
+    @Test
+    void merge_json8LowWithJson9HighAndUnknownDistinctKey_success()
+    {
+        Configuration<JSONObject> result = merger
+                .merge(newConfiguration(JSON_8, 9),
+                       newConfiguration(JSON_9, 10),
+                       JsonMergeOption.distinctKey("$.array", "unknown"));
+
+        // No exception expected, but the merge will consider no distinct key
+        assertTrue(((JSONArray) result.get("$.array[?(@.name=='name1')].value"))
+                .containsAll(Arrays.asList("Json9Value1", "Json8Value1")));
+    }
+
+    @Test
+    void merge_jsonFilesWithTwoDistinctKeys_success()
+    {
+        Configuration<JSONObject> config = Configuration.<JSONObject>builder()
+                .source("testfiles/drive1.json")
+                .mapper(new JSONObjectMapper())
+                .precedence(1).build()
+                    .merge(Configuration.<JSONObject>builder()
+                        .source("testfiles/drive2.json")
+                        .mapper(new JSONObjectMapper())
+                        .precedence(2).build(),
+                        JsonMergeOption.distinctKeys("$.files", "id", "version"));
+
+        assertEquals(Arrays.asList("1", "2", "3"),
+                config.get("$.files[?(@.id=='d2b638be-40d2-4965-906e-291521f8a19d')].version"));
+
+        assertEquals(Arrays.asList("1", "2"),
+                config.get("$.files[?(@.id=='9570cc646-1586-11ed-861d-0242ac120002')].version"));
+
+        // drive2.json
+        assertEquals("2017-07-07T10:14:59", config.getString(
+                "$.files[?(@.id=='9570cc646-1586-11ed-861d-0242ac120002' && @.version=='1')].date"));
+    }
+
+    @Test
+    void merge_jsonFilesWithTwoDistinctKeysAlt_success()
+    {
+        Configuration<JSONObject> config = Configuration.<JSONObject>builder()
+                .source("testfiles/drive1.json")
+                .mapper(new JSONObjectMapper())
+                .precedence(2).build()
+                    .merge(Configuration.<JSONObject>builder()
+                        .source("testfiles/drive2.json")
+                        .mapper(new JSONObjectMapper())
+                        .precedence(0).build(),
+                        JsonMergeOption.distinctKeys("$.files", "id", "version"));
+
+        assertEquals(Arrays.asList("1", "2", "3"),
+                config.get("$.files[?(@.id=='d2b638be-40d2-4965-906e-291521f8a19d')].version"));
+
+        assertEquals(Arrays.asList("1", "2"),
+                config.get("$.files[?(@.id=='9570cc646-1586-11ed-861d-0242ac120002')].version"));
+
+        // drive1.json
+        assertEquals("2022-08-06T09:51:40", config.getString(
+                "$.files[?(@.id=='9570cc646-1586-11ed-861d-0242ac120002' && @.version=='1')].date"));
     }
 }
