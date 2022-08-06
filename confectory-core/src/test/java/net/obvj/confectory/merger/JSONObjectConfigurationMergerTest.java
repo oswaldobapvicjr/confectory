@@ -1,6 +1,5 @@
 package net.obvj.confectory.merger;
 
-import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -14,7 +13,6 @@ import net.minidev.json.JSONObject;
 import net.obvj.confectory.Configuration;
 import net.obvj.confectory.mapper.JSONObjectMapper;
 import net.obvj.confectory.source.StringSource;
-import net.obvj.confectory.testdrive.ConfectoryTestDriveINIToJSONObject;
 
 /**
  * Unit tests for the {@link JSONObjectConfigurationMerger}.
@@ -299,6 +297,19 @@ class JSONObjectConfigurationMergerTest
 
         assertEquals("Json9Value1", result.getString("$.array[?(@.name=='name1')].value"));
         assertArray(Arrays.asList("element1", "element2"), result, "$.array[*]", false);
+    }
+
+    @Test
+    void merge_json8LowWithJson9HighAndUnknownDistinctKey_success()
+    {
+        Configuration<JSONObject> result = merger
+                .merge(newConfiguration(JSON_8, 9),
+                       newConfiguration(JSON_9, 10),
+                       JsonMergeOption.distinctKey("$.array", "unknown"));
+
+        // No exception expected, but the merge will consider no distinct key
+        assertTrue(((JSONArray) result.get("$.array[?(@.name=='name1')].value"))
+                .containsAll(Arrays.asList("Json9Value1", "Json8Value1")));
     }
 
     @Test

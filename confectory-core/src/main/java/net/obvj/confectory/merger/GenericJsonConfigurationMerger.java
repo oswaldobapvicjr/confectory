@@ -21,6 +21,7 @@ import static java.util.Arrays.stream;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toMap;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -88,7 +89,7 @@ public class GenericJsonConfigurationMerger<T> extends AbstractConfigurationMerg
         this.jsonProvider = requireNonNull(jsonProvider, "The JsonProvider cannot be null");
     }
 
-    private Map<JsonPathExpression, List<String>> parseDistintKeys(MergeOption[] mergeOptions)
+    private Map<JsonPathExpression, List<String>> parseDistinctKeys(MergeOption[] mergeOptions)
     {
         return stream(mergeOptions)
                 .filter(JsonMergeOption.class::isInstance)
@@ -102,7 +103,7 @@ public class GenericJsonConfigurationMerger<T> extends AbstractConfigurationMerg
     @Override
     T doMerge(Configuration<T> config1, Configuration<T> config2, MergeOption... mergeOptions)
     {
-        Map<JsonPathExpression, List<String>> distinctKeys = parseDistintKeys(mergeOptions);
+        Map<JsonPathExpression, List<String>> distinctKeys = parseDistinctKeys(mergeOptions);
         List<T> sortedJSONObjects = getSortedJSONObjects(config1, config2);
         JSONMerger merger = new JSONMerger(JsonPathExpression.ROOT, distinctKeys, jsonProvider);
         return (T) merger.merge(sortedJSONObjects.get(0), sortedJSONObjects.get(1));
@@ -114,24 +115,24 @@ public class GenericJsonConfigurationMerger<T> extends AbstractConfigurationMerg
     static class JSONMerger
     {
         private final JsonPathExpression absolutePath;
-        private final Map<JsonPathExpression, List<String>> distinctKeys;
+        private final Map<JsonPathExpression, List<String>> distinctKeysByJsonPath;
         private final JsonProvider jsonProvider;
 
         /**
          * Creates a new {@link JSONObjectMapper} for an absolute path.
          *
-         * @param absolutePath the absolute path of the current JSON object or array inside the
-         *                     root JSON object}; not {@code null}
-         * @param distinctKeys a map that associates JsonPath expressions inside the JSON object
-         *                     and distinct keys for object identification during the merge of an
-         *                     array; not {@code null}
-         * @param jsonProvider the {@link JsonProvider} to use; not {@code null}
+         * @param absolutePath           the absolute path of the current JSON object or array
+         *                               inside the root JSON object}; not {@code null}
+         * @param distinctKeysByJsonPath a map that associates JsonPath expressions inside the
+         *                               JSON object and distinct keys for object identification
+         *                               during the merge of an array; not {@code null}
+         * @param jsonProvider           the {@link JsonProvider} to use; not {@code null}
          */
         JSONMerger(JsonPathExpression absolutePath,
-                Map<JsonPathExpression, List<String>> distinctKeys, JsonProvider jsonProvider)
+                Map<JsonPathExpression, List<String>> distinctKeysByJsonPath, JsonProvider jsonProvider)
         {
             this.absolutePath = absolutePath;
-            this.distinctKeys = distinctKeys;
+            this.distinctKeysByJsonPath = distinctKeysByJsonPath;
             this.jsonProvider = jsonProvider;
         }
 
@@ -163,13 +164,13 @@ public class GenericJsonConfigurationMerger<T> extends AbstractConfigurationMerg
                 if (jsonProvider.isJsonObject(value1))
                 {
                     JSONMerger merger = new JSONMerger(absolutePath.appendChild(key),
-                            distinctKeys, jsonProvider);
+                            distinctKeysByJsonPath, jsonProvider);
                     jsonProvider.put(result, key, merger.mergeSafely(value1, value2));
                 }
                 else if (jsonProvider.isJsonArray(value1))
                 {
                     JSONMerger merger = new JSONMerger(absolutePath.appendChild(key),
-                            distinctKeys, jsonProvider);
+                            distinctKeysByJsonPath, jsonProvider);
                     jsonProvider.put(result, key, merger.mergeArray(value1, value2));
                 }
                 else
@@ -239,7 +240,7 @@ public class GenericJsonConfigurationMerger<T> extends AbstractConfigurationMerg
             // The 1st array is always the highest-precedence one
             Object result = jsonProvider.newJsonArray(array1);
 
-            List<String> keys = distinctKeys.get(absolutePath);
+            List<String> keys = distinctKeysByJsonPath.get(absolutePath);
             if (keys != null)
             {
                 // Here we add objects from the 2nd array only if they are not present in the 1st one.
@@ -278,10 +279,13 @@ public class GenericJsonConfigurationMerger<T> extends AbstractConfigurationMerg
         {
             if (jsonProvider.isJsonObject(object))
             {
-                Map<String, Object> distinctValues = keys.stream()
-                        .collect(toMap(key -> key, key -> jsonProvider.get(object, key)));
-
-                if (!findMatchingObjectOnArray(distinctValues, array).isPresent())
+                Map<String, Object> values = new HashMap<>();
+                for (String key : keys)
+                {
+                    Object value = jsonProvider.get(object, key);
+                    values.put(key, value);
+                }
+                if (!findMatchingObjectOnArray(values, array).isPresent())
                 {
                     jsonProvider.add(array, object);
                 }
