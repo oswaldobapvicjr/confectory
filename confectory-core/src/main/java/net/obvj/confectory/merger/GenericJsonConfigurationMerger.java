@@ -88,20 +88,21 @@ public class GenericJsonConfigurationMerger<T> extends AbstractConfigurationMerg
         this.jsonProvider = requireNonNull(jsonProvider, "The JsonProvider cannot be null");
     }
 
-    private Map<JsonPathExpression, String> parseDistintKeys(MergeOption[] mergeOptions)
+    private Map<JsonPathExpression, List<String>> parseDistintKeys(MergeOption[] mergeOptions)
     {
         return stream(mergeOptions)
                 .filter(JsonMergeOption.class::isInstance)
                 .map(JsonMergeOption.class::cast)
-                .map(JsonMergeOption::getDistinctKey)
+                .map(JsonMergeOption::getDistinctKeys)
                 .filter(Optional::isPresent)
-                .map(Optional::get).collect(toMap(Pair::getRight, Pair::getLeft));
+                .map(Optional::get)
+                .collect(toMap(Pair::getLeft, Pair::getRight));
     }
 
     @Override
     T doMerge(Configuration<T> config1, Configuration<T> config2, MergeOption... mergeOptions)
     {
-        Map<JsonPathExpression, String> distinctKeys = parseDistintKeys(mergeOptions);
+        Map<JsonPathExpression, List<String>> distinctKeys = parseDistintKeys(mergeOptions);
         List<T> sortedJSONObjects = getSortedJSONObjects(config1, config2);
         JSONMerger merger = new JSONMerger(JsonPathExpression.ROOT, distinctKeys, jsonProvider);
         return (T) merger.merge(sortedJSONObjects.get(0), sortedJSONObjects.get(1));
@@ -113,7 +114,7 @@ public class GenericJsonConfigurationMerger<T> extends AbstractConfigurationMerg
     static class JSONMerger
     {
         private final JsonPathExpression absolutePath;
-        private final Map<JsonPathExpression, String> distinctKeys;
+        private final Map<JsonPathExpression, List<String>> distinctKeys;
         private final JsonProvider jsonProvider;
 
         /**
@@ -127,7 +128,7 @@ public class GenericJsonConfigurationMerger<T> extends AbstractConfigurationMerg
          * @param jsonProvider the {@link JsonProvider} to use; not {@code null}
          */
         JSONMerger(JsonPathExpression absolutePath,
-                Map<JsonPathExpression, String> distinctKeys, JsonProvider jsonProvider)
+                Map<JsonPathExpression, List<String>> distinctKeys, JsonProvider jsonProvider)
         {
             this.absolutePath = absolutePath;
             this.distinctKeys = distinctKeys;
@@ -238,13 +239,13 @@ public class GenericJsonConfigurationMerger<T> extends AbstractConfigurationMerg
             // The 1st array is always the highest-precedence one
             Object result = jsonProvider.newJsonArray(array1);
 
-            String distinctKey = distinctKeys.get(absolutePath);
-            if (distinctKey != null)
+            List<String> keys = distinctKeys.get(absolutePath);
+            if (keys != null)
             {
                 // Here we add objects from the 2nd array only if they are not present in the 1st one.
                 // Because the user specified a distinct key, then use it to find the "equal" objects.
                 jsonProvider.forEachElementInArray(array2,
-                        object -> addDistinctObject(object, distinctKey, result));
+                        object -> addDistinctObject(object, keys, result));
             }
             else
             {
@@ -268,17 +269,19 @@ public class GenericJsonConfigurationMerger<T> extends AbstractConfigurationMerg
          * Adds a distinct object, identified by a specific key, to the target array.
          *
          * @param object the object to be added, given it is not already is the {@code array}
-         * @param key    a distinctive key inside the JSON object to be used for "equal" objects
-         *               identification in the target array
+         * @param keys   a list of distinctive keys inside the JSON object to be used for "equal"
+         *               objects identification in the target array
          * @param array  the array to which the object will be added, provided that it contains no
          *               other object with the same value for the specified {@code key}
          */
-        private void addDistinctObject(Object object, String key, Object array)
+        private void addDistinctObject(Object object, List<String> keys, Object array)
         {
             if (jsonProvider.isJsonObject(object))
             {
-                Object value = jsonProvider.get(object, key);
-                if (value != null && !findMatchingObjectOnArray(value, key, array).isPresent())
+                Map<String, Object> distinctValues = keys.stream()
+                        .collect(toMap(key -> key, key -> jsonProvider.get(object, key)));
+
+                if (!findMatchingObjectOnArray(distinctValues, array).isPresent())
                 {
                     jsonProvider.add(array, object);
                 }
@@ -292,16 +295,37 @@ public class GenericJsonConfigurationMerger<T> extends AbstractConfigurationMerg
         }
 
         /**
-         * @param value the value to search
-         * @param key   a distinctive key inside the JSON object to be used for "equal" objects
-         *              identification in the given array
-         * @param array the array to be searched
+         * @param distinctValues a map of distinctive key-value pairs inside the JSON object to be
+         *                       used for "equal" objects identification in the given array
+         * @param array          the array to be searched
          * @return the first JSON object matching the specified criteria
          */
-        private Optional<Object> findMatchingObjectOnArray(Object value, String key, Object array)
+        private Optional<Object> findMatchingObjectOnArray(Map<String, Object> distinctValues,
+                Object array)
         {
             return jsonProvider.stream(array).filter(jsonProvider::isJsonObject)
-                    .filter(json -> value.equals(jsonProvider.get(json, key))).findFirst();
+                    .filter(json -> jsonObjectContains(distinctValues, json)).findFirst();
+        }
+
+        /**
+         * @param distinctValues a map of expected keys and values to be found in the JSON
+         * @param json           the JSON object to be evaluated
+         * @return {@code true} if the all of the distinct key-value pairs specified are found in
+         *         the given JSON object; otherwise, {@code false}
+         * @since 2.3.0
+         */
+        private boolean jsonObjectContains(Map<String, Object> distinctValues, Object json)
+        {
+            for (Entry<String, Object> entry : distinctValues.entrySet())
+            {
+                String key = entry.getKey();
+                Object value = entry.getValue();
+                if (value == null || !value.equals(jsonProvider.get(json, key)))
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
     }

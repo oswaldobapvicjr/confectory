@@ -16,8 +16,11 @@
 
 package net.obvj.confectory.merger;
 
+import static java.util.stream.Collectors.toList;
 import static net.obvj.confectory.util.StringUtils.requireNonBlankAndTrim;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.lang3.tuple.Pair;
@@ -36,11 +39,11 @@ import net.obvj.confectory.util.JsonPathExpression;
  */
 public class JsonMergeOption implements MergeOption
 {
-    private Optional<Pair<String, JsonPathExpression>> distinctKey = Optional.empty();
+    private Optional<Pair<JsonPathExpression, List<String>>> distinctKeys = Optional.empty();
 
     /**
      * Specifies a distinct key for objects inside an array identified by a given
-     * {@code JsonPath}.
+     * {@code JsonPath} expression.
      * <p>
      * For example, consider the following document: <blockquote>
      *
@@ -64,7 +67,7 @@ public class JsonMergeOption implements MergeOption
      * <p>
      * A {@code MergeOption} of key {@code "param"} associated with the {@code JsonPath}
      * expression {@code "$.params"} tells the algorithm to check for distinct objects
-     * identified by the value inside the {@code "param"} field during the merge of the
+     * identified by the same value inside the {@code "param"} field during the merge of the
      * {@code "$.params"} array.
      * <p>
      * In other words, if two JSON documents contain different objects identified by the same
@@ -75,35 +78,42 @@ public class JsonMergeOption implements MergeOption
      * but complex expressions containing filters, script, subscript, or union operations, are
      * not supported.
      *
-     * @param key      the key to be considered unique for objects inside an array; not blank
      * @param jsonPath a {@code JsonPath} expression that identifies the array; not empty
+     * @param key      the key to be considered unique for objects inside an array
      *
-     * @return a new {@link JsonMergeOption} with the specified pair of distinct key and path
+     * @return a new {@link JsonMergeOption} with the specified pair of distinct path and key
      *
      * @throws IllegalArgumentException if one of the parameters is null or blank
      * @throws InvalidPathException     if the specified JsonPath expression is invalid
      */
-    public static JsonMergeOption distinctKey(String key, String jsonPath)
+    public static JsonMergeOption distinctKey(String jsonPath, String key)
     {
-        return distinctKey(key, new JsonPathExpression(jsonPath));
+        return distinctKeys(jsonPath, key);
     }
 
     /**
-     * Specifies a distinct key for objects inside an array identified by a given
-     * {@code JsonPathExpression}.
+     * Specifies one or more distinct keys for objects inside an array identified by a given
+     * {@code JsonPath} expression.
      * <p>
      * For example, consider the following document: <blockquote>
      *
      * <pre>
      * {
-     *   "params": [
+     *   "files": [
      *     {
-     *       "param": "name",
-     *       "value": "John Doe"
+     *       "id": "d2b638be-40d2-4965-906e-291521f8a19d",
+     *       "version": "1",
+     *       "date": "2022-07-07T10:42:21"
      *     },
      *     {
-     *       "param": "age",
-     *       "value": 33
+     *       "id": "d2b638be-40d2-4965-906e-291521f8a19d",
+     *       "version": "2",
+     *       "date": "2022-08-06T09:40:01"
+     *     },
+     *     {
+     *       "id": "9570cc646-1586-11ed-861d-0242ac120002",
+     *       "version": "1",
+     *       "date": "2022-08-06T09:51:40"
      *     }
      *   ]
      * }
@@ -112,40 +122,61 @@ public class JsonMergeOption implements MergeOption
      * </blockquote>
      *
      * <p>
-     * A {@code MergeOption} of key {@code "param"} associated with the {@code JsonPath}
-     * expression {@code "$.params"} tells the algorithm to check for distinct objects
-     * identified by the value inside the {@code "param"} field during the merge of the
-     * {@code "$.params"} array.
+     * A {@code MergeOption} of keys {@code "id"} and {@code "version"} associated with the
+     * {@code JsonPath} expression {@code "$.files"} tells the algorithm to check for distinct
+     * objects identified by the same values in both fields {@code "id"} and {@code "version"}
+     * during the merge of the {@code "$.files"} array.
      * <p>
      * In other words, if two JSON documents contain different objects identified by the same
-     * key inside that array, then only the object from the highest-precedence
+     * keys inside that array, then only the object from the highest-precedence
      * {@link Configuration} will be selected.
      * <p>
-     * <b>Note:</b> Complex {@code JsonPath} expressions containing filters, script,
-     * subscript, or union operations, are not supported.
+     * A {@code JsonPath} expression can be specified using either dot- or bracket-notation,
+     * but complex expressions containing filters, script, subscript, or union operations, are
+     * not supported.
      *
-     * @param key  the key to be considered unique for objects inside an array; not blank
+     * @param jsonPath a {@code JsonPath} expression that identifies the array; not empty
+     * @param keys     one or more keys to be considered unique for objects inside an array
+     *
+     * @return a new {@link JsonMergeOption} with the specified pair of path and distinct keys
+     *
+     * @throws IllegalArgumentException if one of the parameters is null or blank
+     * @throws InvalidPathException     if the specified JsonPath expression is invalid
+     */
+    public static JsonMergeOption distinctKeys(String jsonPath, String... keys)
+    {
+        return distinctKeys(new JsonPathExpression(jsonPath), keys);
+    }
+
+    /**
+     * Specifies one or more distinct keys for objects inside an array identified by a given
+     * {@code JsonPathExpression}.
+     *
      * @param path a {@link JsonPathExpression} that identifies the array; not empty
+     * @param keys one or more keys to be considered unique for objects inside an array
      *
      * @return a new {@link JsonMergeOption} with the specified pair of distinct key and path
      *
      * @throws IllegalArgumentException if one of the specified parameters is null or blank
      * @throws InvalidPathException     if the specified JsonPath expression is invalid
      */
-    public static JsonMergeOption distinctKey(String key, JsonPathExpression path)
+    private static JsonMergeOption distinctKeys(JsonPathExpression path, String... keys)
     {
-        String trimmedKey = requireNonBlankAndTrim(key, "The key must not be null or blank");
+        List<String> trimmedKeys = Arrays.stream(keys)
+                .map(key -> requireNonBlankAndTrim(key, "The key must not be null or blank"))
+                .collect(toList());
+
         JsonMergeOption option = new JsonMergeOption();
-        option.distinctKey = Optional.of(Pair.of(trimmedKey, path));
+        option.distinctKeys = Optional.of(Pair.of(path, trimmedKeys));
         return option;
     }
 
     /**
-     * @return a pair of distinct key and path for merging a JSON array.
+     * @return a pair of JsonPath and associated distinct keys for merging a JSON array.
      */
-    public Optional<Pair<String, JsonPathExpression>> getDistinctKey()
+    public Optional<Pair<JsonPathExpression, List<String>>> getDistinctKeys()
     {
-        return distinctKey;
+        return distinctKeys;
     }
 
 }

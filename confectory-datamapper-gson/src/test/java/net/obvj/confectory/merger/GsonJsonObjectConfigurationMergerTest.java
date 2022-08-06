@@ -222,7 +222,7 @@ class GsonJsonObjectConfigurationMergerTest
         Configuration<JsonObject> result = merger
                 .merge(newConfiguration(JSON_3, 9),
                        newConfiguration(JSON_4, 1),
-                       JsonMergeOption.distinctKey("class", "$.agents"));
+                       JsonMergeOption.distinctKey("$.agents", "class"));
 
         assertTrue(result.getBoolean("enabled")); // from JSON_4
         assertArray(Arrays.asList("Json3Agent1", "Json3Agent2"), result, "$.agents[*].description");
@@ -234,7 +234,7 @@ class GsonJsonObjectConfigurationMergerTest
         Configuration<JsonObject> result = merger
                 .merge(newConfiguration(JSON_3, 2),
                        newConfiguration(JSON_4, 3),
-                       JsonMergeOption.distinctKey("class", "$.agents"));
+                       JsonMergeOption.distinctKey("$.agents", "class"));
 
         assertTrue(result.getBoolean("enabled")); // from JSON_4
         assertArray(Arrays.asList("Json4Agent1", "Json3Agent2"), result, "$.agents[*].description");
@@ -284,7 +284,7 @@ class GsonJsonObjectConfigurationMergerTest
         Configuration<JsonObject> result = merger
                 .merge(newConfiguration(JSON_8, 9),
                        newConfiguration(JSON_9, 1),
-                       JsonMergeOption.distinctKey("name", "$.array"));
+                       JsonMergeOption.distinctKey("$.array", "name"));
 
         assertEquals("Json8Value1", result.getString("$.array[?(@.name=='name1')].value"));
         assertArray(Arrays.asList("element1", "element2"), result, "$.array[*]", false);
@@ -296,7 +296,7 @@ class GsonJsonObjectConfigurationMergerTest
         Configuration<JsonObject> result = merger
                 .merge(newConfiguration(JSON_8, 9),
                        newConfiguration(JSON_9, 10),
-                       JsonMergeOption.distinctKey("name", "$.array"));
+                       JsonMergeOption.distinctKey("$.array", "name"));
 
         assertEquals("Json9Value1", result.getString("$.array[?(@.name=='name1')].value"));
         assertArray(Arrays.asList("element1", "element2"), result, "$.array[*]", false);
