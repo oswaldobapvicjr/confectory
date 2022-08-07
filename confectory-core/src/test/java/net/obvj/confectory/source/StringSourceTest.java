@@ -1,6 +1,9 @@
 package net.obvj.confectory.source;
 
+import static net.obvj.junit.utils.matchers.AdvancedMatchers.containsAll;
+import static net.obvj.junit.utils.matchers.AdvancedMatchers.containsNone;
 import static net.obvj.junit.utils.matchers.AdvancedMatchers.throwsException;
+import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.BDDMockito.then;
@@ -14,6 +17,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import net.obvj.confectory.Configuration;
 import net.obvj.confectory.mapper.Mapper;
 import net.obvj.confectory.mapper.StringMapper;
 
@@ -25,6 +29,7 @@ import net.obvj.confectory.mapper.StringMapper;
 @ExtendWith(MockitoExtension.class)
 class StringSourceTest
 {
+    private static final String STRING_CONTENTS = "stringContents";
     private static final String STRING1 = "string1";
     private static final StringSource<String> STRING_SOURCE1 = new StringSource<String>(STRING1);
     private static final StringMapper STRING_MAPPER = new StringMapper();
@@ -60,6 +65,14 @@ class StringSourceTest
     {
         stringSource.load(inputStream, mapper);
         then(mapper).should().apply(inputStream);
+    }
+
+    @Test
+    void toString_validString()
+    {
+        assertThat(new StringSource<>(STRING_CONTENTS).toString().replaceAll("\"", ""),
+                allOf(containsAll("StringSource"),
+                      containsNone(STRING_CONTENTS)));
     }
 
 }

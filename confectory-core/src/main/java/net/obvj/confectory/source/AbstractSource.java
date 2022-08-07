@@ -124,7 +124,18 @@ public abstract class AbstractSource<T> implements Source<T>
     @Override
     public String toString()
     {
-        return new StringBuilder().append(getClass().getSimpleName()).append("(").append(parameter).append(")")
+        return toString(this.parameter);
+    }
+
+    /**
+     * @param parameter the actual parameter to compose the string
+     * @return a string representation with the given parameter
+     */
+    String toString(String parameter)
+    {
+        return new StringBuilder()
+                .append(getClass().getSimpleName())
+                .append("(").append(parameter).append(")")
                 .toString();
     }
 

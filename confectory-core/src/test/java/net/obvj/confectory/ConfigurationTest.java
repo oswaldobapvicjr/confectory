@@ -68,6 +68,7 @@ class ConfigurationTest
             .source(new FileSource<>("unknown.properties")).optional()
             .precedence(9).mapper(new PropertiesMapper()).build();
 
+
     @Test
     void equals_sameObjectAndSimilarObject_true()
     {
@@ -106,11 +107,15 @@ class ConfigurationTest
     @Test
     void toString_validString()
     {
-        assertThat(CONFIG_NS1_STRING_1.toString().replaceAll("\"", ""),
-                containsAll("namespace:" + NAMESPACE1, "source:StringSource", "precedence:1"));
+        StringSource<String> source = new StringSource<>(STRING1);
+        Configuration<String> config = Configuration.<String>builder()
+                .source(source).mapper(new StringMapper())
+                .namespace(NAMESPACE1)
+                .precedence(999)
+                .build();
 
-        assertThat(CONFIG_NS1_STRING_1B.toString().replaceAll("\"", ""),
-                containsAll("namespace:" + NAMESPACE1, "source:StringSource", "precedence:2"));
+        assertThat(config.toString().replaceAll("\"", ""),
+                containsAll("namespace:" + NAMESPACE1, source.toString(), "precedence:999"));
     }
 
     @Test

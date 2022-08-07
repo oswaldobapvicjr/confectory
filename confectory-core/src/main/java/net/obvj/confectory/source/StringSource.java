@@ -33,7 +33,13 @@ import net.obvj.confectory.mapper.Mapper;
  */
 public class StringSource<T> extends AbstractSource<T> implements Source<T>
 {
+    /*
+     * Implementation note: It's OK for the UUID not to be considered in the
+     * equality test performed by the superclass. The test is done by the
+     * actual contents passed to the parent class during construction time.
+     */
     private final String uuid;
+
     /**
      * Builds a new configuration source from the specified string.
      *
@@ -62,7 +68,6 @@ public class StringSource<T> extends AbstractSource<T> implements Source<T>
     @Override
     public String toString()
     {
-        return new StringBuilder().append(getClass().getSimpleName()).append("(").append(uuid).append(")")
-              .toString();
+        return toString(uuid);
     }
 }
