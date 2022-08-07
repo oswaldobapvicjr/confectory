@@ -89,7 +89,8 @@ public class GenericJsonConfigurationMerger<T> extends AbstractConfigurationMerg
         this.jsonProvider = requireNonNull(jsonProvider, "The JsonProvider cannot be null");
     }
 
-    private Map<JsonPathExpression, List<String>> parseDistinctKeys(MergeOption[] mergeOptions)
+    private static Map<JsonPathExpression, List<String>> parseDistinctKeys(
+            MergeOption[] mergeOptions)
     {
         return stream(mergeOptions)
                 .filter(JsonMergeOption.class::isInstance)
@@ -104,15 +105,15 @@ public class GenericJsonConfigurationMerger<T> extends AbstractConfigurationMerg
     T doMerge(Configuration<T> config1, Configuration<T> config2, MergeOption... mergeOptions)
     {
         Map<JsonPathExpression, List<String>> distinctKeys = parseDistinctKeys(mergeOptions);
-        List<T> sortedJSONObjects = getSortedJSONObjects(config1, config2);
-        JSONMerger merger = new JSONMerger(JsonPathExpression.ROOT, distinctKeys, jsonProvider);
-        return (T) merger.merge(sortedJSONObjects.get(0), sortedJSONObjects.get(1));
+        List<T> jsonObjects = sortJsonObjects(config1, config2);
+        JsonMerger merger = new JsonMerger(JsonPathExpression.ROOT, distinctKeys, jsonProvider);
+        return (T) merger.merge(jsonObjects.get(0), jsonObjects.get(1));
     }
 
     /**
      * An internal class that merges two JSON objects with recursion support.
      */
-    static class JSONMerger
+    static class JsonMerger
     {
         private final JsonPathExpression absolutePath;
         private final Map<JsonPathExpression, List<String>> distinctKeysByJsonPath;
@@ -128,7 +129,7 @@ public class GenericJsonConfigurationMerger<T> extends AbstractConfigurationMerg
          *                               during the merge of an array; not {@code null}
          * @param jsonProvider           the {@link JsonProvider} to use; not {@code null}
          */
-        JSONMerger(JsonPathExpression absolutePath,
+        JsonMerger(JsonPathExpression absolutePath,
                 Map<JsonPathExpression, List<String>> distinctKeysByJsonPath, JsonProvider jsonProvider)
         {
             this.absolutePath = absolutePath;
@@ -163,13 +164,13 @@ public class GenericJsonConfigurationMerger<T> extends AbstractConfigurationMerg
 
                 if (jsonProvider.isJsonObject(value1))
                 {
-                    JSONMerger merger = new JSONMerger(absolutePath.appendChild(key),
+                    JsonMerger merger = new JsonMerger(absolutePath.appendChild(key),
                             distinctKeysByJsonPath, jsonProvider);
                     jsonProvider.put(result, key, merger.mergeSafely(value1, value2));
                 }
                 else if (jsonProvider.isJsonArray(value1))
                 {
-                    JSONMerger merger = new JSONMerger(absolutePath.appendChild(key),
+                    JsonMerger merger = new JsonMerger(absolutePath.appendChild(key),
                             distinctKeysByJsonPath, jsonProvider);
                     jsonProvider.put(result, key, merger.mergeArray(value1, value2));
                 }
@@ -184,6 +185,8 @@ public class GenericJsonConfigurationMerger<T> extends AbstractConfigurationMerg
             {
                 jsonProvider.putIfAbsent(result, entry.getKey(), entry.getValue());
             }
+
+            LOGGER.debug("Merge completed for {}", absolutePath);
             return result;
         }
 
@@ -204,6 +207,7 @@ public class GenericJsonConfigurationMerger<T> extends AbstractConfigurationMerg
             // The second object is either null or has an incompatible type,
             // so simply assume object with the highest precedence.
             // Create a copy of it for safety.
+            LOGGER.warn("Incompatible types on path: {}. Selecting the object with higher precedence...", absolutePath);
             return jsonProvider.newJsonObject(json);
         }
 
@@ -220,11 +224,14 @@ public class GenericJsonConfigurationMerger<T> extends AbstractConfigurationMerg
             LOGGER.debug("Merging array on path: {}", absolutePath);
             if (jsonProvider.isJsonArray(object))
             {
-                return mergeArraySafely(array, object);
+                Object result = mergeArraySafely(array, object);
+                LOGGER.debug("Merge completed for {}", absolutePath);
+                return result;
             }
             // The second object is either null or has an incompatible type,
             // so simply assume the array from the highest-precedence object.
             // Create a copy of it for safety.
+            LOGGER.warn("Incompatible types on path: {}. Selecting the object with higher precedence...", absolutePath);
             return jsonProvider.newJsonArray(array);
         }
 
@@ -243,6 +250,13 @@ public class GenericJsonConfigurationMerger<T> extends AbstractConfigurationMerg
             List<String> keys = distinctKeysByJsonPath.get(absolutePath);
             if (keys != null)
             {
+                if (LOGGER.isDebugEnabled())
+                {
+                    int size = keys.size();
+                    LOGGER.debug("Checking distinct objects inside {} with {} {}: {}", absolutePath,
+                            size, size == 1 ? "key" : "keys", keys);
+                }
+
                 // Here we add objects from the 2nd array only if they are not present in the 1st one.
                 // Because the user specified a distinct key, then use it to find the "equal" objects.
                 jsonProvider.forEachElementInArray(array2,
@@ -250,11 +264,13 @@ public class GenericJsonConfigurationMerger<T> extends AbstractConfigurationMerg
             }
             else
             {
+                LOGGER.debug("No merge option found for {}", absolutePath);
                 jsonProvider.forEachElementInArray(array2, object ->
                 {
                     addDistinctObjectToArray(result, object);
                 });
             }
+
             return result;
         }
 
@@ -324,7 +340,13 @@ public class GenericJsonConfigurationMerger<T> extends AbstractConfigurationMerg
             {
                 String key = entry.getKey();
                 Object value = entry.getValue();
-                if (value == null || !value.equals(jsonProvider.get(json, key)))
+
+                if (value == null)
+                {
+                    LOGGER.warn("No value found for key '{}' during merge of {}", key, absolutePath);
+                    return false;
+                }
+                if (!value.equals(jsonProvider.get(json, key)))
                 {
                     return false;
                 }
@@ -334,13 +356,13 @@ public class GenericJsonConfigurationMerger<T> extends AbstractConfigurationMerg
 
     }
 
-    private List<T> getSortedJSONObjects(Configuration<T> config1, Configuration<T> config2)
+    private List<T> sortJsonObjects(Configuration<T> config1, Configuration<T> config2)
     {
         return asList(config1, config2).stream().sorted(new ConfigurationComparator())
-                .map(this::getJSONObjectSafely).collect(Collectors.toList());
+                .map(this::getJsonObjectSafely).collect(Collectors.toList());
     }
 
-    private T getJSONObjectSafely(Configuration<T> config)
+    private T getJsonObjectSafely(Configuration<T> config)
     {
         return getBeanSafely(config, () -> (T) jsonProvider.newJsonObject());
     }

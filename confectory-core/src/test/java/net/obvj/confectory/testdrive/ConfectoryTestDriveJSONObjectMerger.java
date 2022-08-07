@@ -41,7 +41,7 @@ public class ConfectoryTestDriveJSONObjectMerger
 
 
         Configuration<JSONObject> config = config1.merge(config2,
-                JsonMergeOption.distinctKey("class", "$.agents"));
+                JsonMergeOption.distinctKey("$.agents", "class"));
 
         System.out.println(config.getBean());
     }
