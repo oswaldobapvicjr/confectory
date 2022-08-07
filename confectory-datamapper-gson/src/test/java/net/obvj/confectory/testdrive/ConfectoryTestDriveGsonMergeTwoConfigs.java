@@ -24,12 +24,11 @@ public class ConfectoryTestDriveGsonMergeTwoConfigs
                 .build();
 
         Configuration<JsonObject> config = config1.merge(config2,
-                JsonMergeOption.distinctKey("class", "$.agents"));
+                JsonMergeOption.distinctKey("$.agents", "class"));
 
         System.out.println(new GsonBuilder().setPrettyPrinting().create().toJson(config.getBean()));
         System.out.println(config.getBoolean("enabled"));
         System.out.println(config.get("$.agents[?(@.class=='Agent1')]"));
         System.out.println(config.get("$.agents[?(@.class=='Agent2')]"));
-        System.out.println(config.get("$.agents[?(@.class=='Agent3')]"));
     }
 }
