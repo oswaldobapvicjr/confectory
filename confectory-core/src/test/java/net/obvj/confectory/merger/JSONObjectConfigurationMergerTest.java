@@ -13,6 +13,7 @@ import net.minidev.json.JSONObject;
 import net.obvj.confectory.Configuration;
 import net.obvj.confectory.mapper.JSONObjectMapper;
 import net.obvj.confectory.source.StringSource;
+import net.obvj.jsonmerge.JsonMergeOption;
 
 /**
  * Unit tests for the {@link JSONObjectConfigurationMerger}.

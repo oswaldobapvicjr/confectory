@@ -13,7 +13,8 @@ import org.junit.jupiter.api.Test;
 import net.obvj.confectory.Configuration;
 import net.obvj.confectory.mapper.JsonOrgJSONObjectMapper;
 import net.obvj.confectory.source.StringSource;
-import net.obvj.confectory.util.JsonOrgJsonProvider;
+import net.obvj.jsonmerge.JsonMergeOption;
+import net.obvj.jsonmerge.provider.JsonOrgJsonProvider;
 
 /**
  * Unit tests for the {@link JsonOrgJSONObjectConfigurationMerger}.

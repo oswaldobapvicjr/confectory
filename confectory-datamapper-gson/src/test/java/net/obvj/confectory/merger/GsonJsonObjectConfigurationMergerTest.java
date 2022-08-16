@@ -15,6 +15,7 @@ import com.google.gson.JsonObject;
 import net.obvj.confectory.Configuration;
 import net.obvj.confectory.mapper.GsonJsonObjectMapper;
 import net.obvj.confectory.source.StringSource;
+import net.obvj.jsonmerge.JsonMergeOption;
 
 /**
  * Unit tests for the {@link GsonJsonObjectConfigurationMerger}.

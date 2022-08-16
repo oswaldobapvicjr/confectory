@@ -24,8 +24,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import net.obvj.confectory.internal.helper.ConfigurationHelper;
 import net.obvj.confectory.mapper.Mapper;
 import net.obvj.confectory.merger.ConfigurationMerger;
-import net.obvj.confectory.merger.MergeOption;
 import net.obvj.confectory.source.Source;
+import net.obvj.jsonmerge.JsonMergeOption;
 
 /**
  * An object that contains configuration data from a specific source, as well as related
@@ -78,7 +78,7 @@ import net.obvj.confectory.source.Source;
 public final class Configuration<T>
         implements ConfigurationDataRetriever<T>, ConfigurationMetadataRetriever<T>
 {
-    private static final MergeOption[] NO_MERGE_OPTION = new MergeOption[0];
+    private static final JsonMergeOption[] NO_MERGE_OPTION = new JsonMergeOption[0];
 
     private final String namespace;
     private final int precedence;
@@ -333,7 +333,7 @@ public final class Configuration<T>
      * @since 2.2.0
      * @see ConfigurationMerger
      */
-    public Configuration<T> merge(Configuration<T> other, MergeOption... mergeOptions)
+    public Configuration<T> merge(Configuration<T> other, JsonMergeOption... mergeOptions)
     {
         return getService().getHelper().configurationMerger().merge(this, other, mergeOptions);
     }

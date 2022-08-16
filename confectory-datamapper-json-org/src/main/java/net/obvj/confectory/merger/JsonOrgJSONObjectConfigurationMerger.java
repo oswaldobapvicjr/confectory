@@ -19,7 +19,7 @@ package net.obvj.confectory.merger;
 import org.json.JSONObject;
 
 import net.obvj.confectory.Configuration;
-import net.obvj.confectory.util.JsonOrgJsonProvider;
+import net.obvj.jsonmerge.provider.JsonOrgJsonProvider;
 
 /**
  * A specialized {@code ConfigurationMerger} that combines two {@link Configuration}

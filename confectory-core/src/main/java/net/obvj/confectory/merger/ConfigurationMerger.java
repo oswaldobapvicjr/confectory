@@ -17,6 +17,7 @@
 package net.obvj.confectory.merger;
 
 import net.obvj.confectory.Configuration;
+import net.obvj.jsonmerge.JsonMergeOption;
 
 /**
  * Base abstraction for merging two {@link Configuration} objects of the same type
@@ -43,11 +44,11 @@ public interface ConfigurationMerger<T>
      *
      * @param config1      the first {@code Configuration}; not null
      * @param config2      the second {@code Configuration}; not null
-     * @param mergeOptions an array of options on how to merge the objects (optional)
+     * @param mergeOptions an array of options on how to merge JSON objects (optional)
      *
      * @return a new {@code Configuration} resulting from the combination of {@code config1}
      *         and {@code config2}
      */
     Configuration<T> merge(final Configuration<T> config1, final Configuration<T> config2,
-            final MergeOption... mergeOptions);
+            final JsonMergeOption... mergeOptions);
 }

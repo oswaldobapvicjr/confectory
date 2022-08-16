@@ -5,7 +5,7 @@ import com.google.gson.JsonObject;
 
 import net.obvj.confectory.Configuration;
 import net.obvj.confectory.mapper.GsonJsonObjectMapper;
-import net.obvj.confectory.merger.JsonMergeOption;
+import net.obvj.jsonmerge.JsonMergeOption;
 
 public class ConfectoryTestDriveGsonMergeTwoConfigs
 {
