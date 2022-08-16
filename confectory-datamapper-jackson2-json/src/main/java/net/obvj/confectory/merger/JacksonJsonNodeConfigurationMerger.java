@@ -19,7 +19,7 @@ package net.obvj.confectory.merger;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import net.obvj.confectory.Configuration;
-import net.obvj.confectory.util.JacksonJsonNodeJsonProvider;
+import net.obvj.jsonmerge.provider.JacksonJsonNodeJsonProvider;
 
 /**
  * A specialized {@code ConfigurationMerger} that combines two {@link Configuration}

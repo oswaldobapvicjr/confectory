@@ -3,8 +3,8 @@ package net.obvj.confectory.testdrive;
 import net.minidev.json.JSONObject;
 import net.obvj.confectory.Configuration;
 import net.obvj.confectory.mapper.JSONObjectMapper;
-import net.obvj.confectory.merger.JsonMergeOption;
 import net.obvj.confectory.source.StringSource;
+import net.obvj.jsonmerge.JsonMergeOption;
 
 public class ConfectoryTestDriveJSONObjectMerger
 {

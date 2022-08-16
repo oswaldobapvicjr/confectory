@@ -19,7 +19,7 @@ package net.obvj.confectory.merger;
 import com.google.gson.JsonObject;
 
 import net.obvj.confectory.Configuration;
-import net.obvj.confectory.util.GsonJsonProvider;
+import net.obvj.jsonmerge.provider.GsonJsonProvider;
 
 /**
  * A specialized {@code ConfigurationMerger} that combines two {@link Configuration}

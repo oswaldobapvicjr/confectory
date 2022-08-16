@@ -17,26 +17,16 @@
 package net.obvj.confectory.merger;
 
 import static java.util.Arrays.asList;
-import static java.util.Arrays.stream;
 import static java.util.Objects.requireNonNull;
-import static java.util.stream.Collectors.toMap;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.tuple.Pair;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import net.obvj.confectory.Configuration;
-import net.obvj.confectory.mapper.JSONObjectMapper;
 import net.obvj.confectory.util.ConfigurationComparator;
-import net.obvj.confectory.util.JsonPathExpression;
-import net.obvj.confectory.util.JsonProvider;
+import net.obvj.jsonmerge.JsonMergeOption;
+import net.obvj.jsonmerge.JsonMerger;
+import net.obvj.jsonmerge.provider.JsonProvider;
 
 /**
  * A generic {@code ConfigurationMerger} that combines two {@link Configuration} objects
@@ -74,7 +64,6 @@ import net.obvj.confectory.util.JsonProvider;
  */
 public class GenericJsonConfigurationMerger<T> extends AbstractConfigurationMerger<T>
 {
-    private static final Logger LOGGER = LoggerFactory.getLogger(GenericJsonConfigurationMerger.class);
 
     private final JsonProvider jsonProvider;
 
@@ -89,271 +78,12 @@ public class GenericJsonConfigurationMerger<T> extends AbstractConfigurationMerg
         this.jsonProvider = requireNonNull(jsonProvider, "The JsonProvider cannot be null");
     }
 
-    private static Map<JsonPathExpression, List<String>> parseDistinctKeys(
-            MergeOption[] mergeOptions)
-    {
-        return stream(mergeOptions)
-                .filter(JsonMergeOption.class::isInstance)
-                .map(JsonMergeOption.class::cast)
-                .map(JsonMergeOption::getDistinctKeys)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .collect(toMap(Pair::getLeft, Pair::getRight));
-    }
-
     @Override
-    T doMerge(Configuration<T> config1, Configuration<T> config2, MergeOption... mergeOptions)
+    T doMerge(Configuration<T> config1, Configuration<T> config2, JsonMergeOption... mergeOptions)
     {
-        Map<JsonPathExpression, List<String>> distinctKeys = parseDistinctKeys(mergeOptions);
         List<T> jsonObjects = sortJsonObjects(config1, config2);
-        JsonMerger merger = new JsonMerger(JsonPathExpression.ROOT, distinctKeys, jsonProvider);
-        return (T) merger.merge(jsonObjects.get(0), jsonObjects.get(1));
-    }
-
-    /**
-     * An internal class that merges two JSON objects with recursion support.
-     */
-    static class JsonMerger
-    {
-        private final JsonPathExpression absolutePath;
-        private final Map<JsonPathExpression, List<String>> distinctKeysByJsonPath;
-        private final JsonProvider jsonProvider;
-
-        /**
-         * Creates a new {@link JSONObjectMapper} for an absolute path.
-         *
-         * @param absolutePath           the absolute path of the current JSON object or array
-         *                               inside the root JSON object}; not {@code null}
-         * @param distinctKeysByJsonPath a map that associates JsonPath expressions inside the
-         *                               JSON object and distinct keys for object identification
-         *                               during the merge of an array; not {@code null}
-         * @param jsonProvider           the {@link JsonProvider} to use; not {@code null}
-         */
-        JsonMerger(JsonPathExpression absolutePath,
-                Map<JsonPathExpression, List<String>> distinctKeysByJsonPath, JsonProvider jsonProvider)
-        {
-            this.absolutePath = absolutePath;
-            this.distinctKeysByJsonPath = distinctKeysByJsonPath;
-            this.jsonProvider = jsonProvider;
-        }
-
-        /**
-         * Merges two JSON objects.
-         *
-         * @param json1 the highest-precedence JSON object
-         * @param json2 the lowest-precedence JSON object
-         * @return a combination of the two JSON objects
-         */
-        private Object merge(Object json1, Object json2)
-        {
-            LOGGER.debug("Merging object on path: {}", absolutePath);
-
-            if (jsonProvider.isEmpty(json2))
-            {
-                return jsonProvider.newJsonObject(json1);
-            }
-
-            Object result = jsonProvider.newJsonObject();
-
-            // First iterate through the first json
-            for (Entry<String, Object> entry : jsonProvider.entrySet(json1))
-            {
-                String key = entry.getKey();
-                Object value1 = entry.getValue();
-                Object value2 = jsonProvider.get(json2, key);
-
-                if (jsonProvider.isJsonObject(value1))
-                {
-                    JsonMerger merger = new JsonMerger(absolutePath.appendChild(key),
-                            distinctKeysByJsonPath, jsonProvider);
-                    jsonProvider.put(result, key, merger.mergeSafely(value1, value2));
-                }
-                else if (jsonProvider.isJsonArray(value1))
-                {
-                    JsonMerger merger = new JsonMerger(absolutePath.appendChild(key),
-                            distinctKeysByJsonPath, jsonProvider);
-                    jsonProvider.put(result, key, merger.mergeArray(value1, value2));
-                }
-                else
-                {
-                    jsonProvider.put(result, key, value1); // Get from the highest-precedence json
-                }
-            }
-
-            // Then iterate through the second json to find additional keys
-            for (Entry<String, Object> entry : jsonProvider.entrySet(json2))
-            {
-                jsonProvider.putIfAbsent(result, entry.getKey(), entry.getValue());
-            }
-
-            LOGGER.debug("Merge completed for {}", absolutePath);
-            return result;
-        }
-
-        /**
-         * Support method for type-safety during the merge of a JSON object.
-         *
-         * @param json   the highest-precedence JSON object to be merged
-         * @param object the lowest-precedence object to be merged
-         * @return a combination of the two objects, provided that the second object is a JSON
-         *         object too
-         */
-        private Object mergeSafely(Object json, Object object)
-        {
-            if (jsonProvider.isJsonObject(object))
-            {
-                return merge(json, object);
-            }
-            // The second object is either null or has an incompatible type,
-            // so simply assume object with the highest precedence.
-            // Create a copy of it for safety.
-            LOGGER.warn("Incompatible types on path: {}. Selecting the object with higher precedence...", absolutePath);
-            return jsonProvider.newJsonObject(json);
-        }
-
-        /**
-         * Support method for type-safety during the merge a JSON array.
-         *
-         * @param array  the highest-precedence JSON array to be merged
-         * @param object the lowest-precedence object to be merged
-         * @return a combination of the two objects, provided that the second object is a JSON
-         *         array too
-         */
-        private Object mergeArray(Object array, Object object)
-        {
-            LOGGER.debug("Merging array on path: {}", absolutePath);
-            if (jsonProvider.isJsonArray(object))
-            {
-                Object result = mergeArraySafely(array, object);
-                LOGGER.debug("Merge completed for {}", absolutePath);
-                return result;
-            }
-            // The second object is either null or has an incompatible type,
-            // so simply assume the array from the highest-precedence object.
-            // Create a copy of it for safety.
-            LOGGER.warn("Incompatible types on path: {}. Selecting the object with higher precedence...", absolutePath);
-            return jsonProvider.newJsonArray(array);
-        }
-
-        /**
-         * Merges two JSON array instances.
-         *
-         * @param array1 the highest-precedence JSON array
-         * @param array2 the lowest-precedence JSON array
-         * @return a combination of the two JSON arrays
-         */
-        private Object mergeArraySafely(Object array1, Object array2)
-        {
-            // The 1st array is always the highest-precedence one
-            Object result = jsonProvider.newJsonArray(array1);
-
-            List<String> keys = distinctKeysByJsonPath.get(absolutePath);
-            if (keys != null)
-            {
-                if (LOGGER.isDebugEnabled())
-                {
-                    int size = keys.size();
-                    LOGGER.debug("Checking distinct objects inside {} with {} {}: {}", absolutePath,
-                            size, size == 1 ? "key" : "keys", keys);
-                }
-
-                // Here we add objects from the 2nd array only if they are not present in the 1st one.
-                // Because the user specified a distinct key, then use it to find the "equal" objects.
-                jsonProvider.forEachElementInArray(array2,
-                        object -> addDistinctObject(object, keys, result));
-            }
-            else
-            {
-                LOGGER.debug("No merge option found for {}", absolutePath);
-                jsonProvider.forEachElementInArray(array2, object ->
-                {
-                    addDistinctObjectToArray(result, object);
-                });
-            }
-
-            return result;
-        }
-
-        private void addDistinctObjectToArray(Object array, Object object)
-        {
-            if (!jsonProvider.arrayContains(array, object))
-            {
-                jsonProvider.add(array, object);
-            }
-        }
-
-        /**
-         * Adds a distinct object, identified by a specific key, to the target array.
-         *
-         * @param object the object to be added, given it is not already is the {@code array}
-         * @param keys   a list of distinctive keys inside the JSON object to be used for "equal"
-         *               objects identification in the target array
-         * @param array  the array to which the object will be added, provided that it contains no
-         *               other object with the same value for the specified {@code key}
-         */
-        private void addDistinctObject(Object object, List<String> keys, Object array)
-        {
-            if (jsonProvider.isJsonObject(object))
-            {
-                Map<String, Object> values = new HashMap<>();
-                for (String key : keys)
-                {
-                    Object value = jsonProvider.get(object, key);
-                    values.put(key, value);
-                }
-                if (!findMatchingObjectOnArray(values, array).isPresent())
-                {
-                    jsonProvider.add(array, object);
-                }
-                // Do nothing if the key is already present.
-                // It was populated from the highest-precedence json.
-            }
-            else
-            {
-                addDistinctObjectToArray(array, object);
-            }
-        }
-
-        /**
-         * @param distinctValues a map of distinctive key-value pairs inside the JSON object to be
-         *                       used for "equal" objects identification in the given array
-         * @param array          the array to be searched
-         * @return the first JSON object matching the specified criteria
-         */
-        private Optional<Object> findMatchingObjectOnArray(Map<String, Object> distinctValues,
-                Object array)
-        {
-            return jsonProvider.stream(array).filter(jsonProvider::isJsonObject)
-                    .filter(json -> jsonObjectContains(distinctValues, json)).findFirst();
-        }
-
-        /**
-         * @param distinctValues a map of expected keys and values to be found in the JSON
-         * @param json           the JSON object to be evaluated
-         * @return {@code true} if the all of the distinct key-value pairs specified are found in
-         *         the given JSON object; otherwise, {@code false}
-         * @since 2.3.0
-         */
-        private boolean jsonObjectContains(Map<String, Object> distinctValues, Object json)
-        {
-            for (Entry<String, Object> entry : distinctValues.entrySet())
-            {
-                String key = entry.getKey();
-                Object value = entry.getValue();
-
-                if (value == null)
-                {
-                    LOGGER.warn("No value found for key '{}' during merge of {}", key, absolutePath);
-                    return false;
-                }
-                if (!value.equals(jsonProvider.get(json, key)))
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-
+        JsonMerger<T> merger = new JsonMerger<>(jsonProvider);
+        return merger.merge(jsonObjects.get(0), jsonObjects.get(1), mergeOptions);
     }
 
     private List<T> sortJsonObjects(Configuration<T> config1, Configuration<T> config2)

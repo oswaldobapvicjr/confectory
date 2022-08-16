@@ -21,6 +21,7 @@ import java.util.function.Supplier;
 import net.obvj.confectory.Configuration;
 import net.obvj.confectory.mapper.DummyMapper;
 import net.obvj.confectory.source.DummySource;
+import net.obvj.jsonmerge.JsonMergeOption;
 
 /**
  * An abstract {@link ConfigurationMerger} that contains common infrastructure logic for
@@ -39,7 +40,7 @@ public abstract class AbstractConfigurationMerger<T> implements ConfigurationMer
      */
     @Override
     public final Configuration<T> merge(Configuration<T> config1, Configuration<T> config2,
-            MergeOption... mergeOptions)
+            JsonMergeOption... mergeOptions)
     {
         checkParameters(config1, config2);
         T mergedObject = doMerge(config1, config2, mergeOptions);
@@ -69,12 +70,12 @@ public abstract class AbstractConfigurationMerger<T> implements ConfigurationMer
      *
      * @param config1      the first {@code Configuration}
      * @param config2      the second {@code Configuration}
-     * @param mergeOptions an array of options on how to merge the objects (optional)
+     * @param mergeOptions an array of options on how to merge JSON objects (optional)
      * @return a new bean resulting from the combination of the actual beans inside
      *         {@code config1} and {@code config2}
      */
     abstract T doMerge(Configuration<T> config1, Configuration<T> config2,
-            MergeOption... mergeOptions);
+            JsonMergeOption... mergeOptions);
 
     /**
      * Returns the highest-precedence object from the input parameters.

@@ -18,7 +18,7 @@ package net.obvj.confectory.merger;
 
 import net.minidev.json.JSONObject;
 import net.obvj.confectory.Configuration;
-import net.obvj.confectory.util.JsonSmartJsonProvider;
+import net.obvj.jsonmerge.provider.JsonSmartJsonProvider;
 
 /**
  * A specialized {@code ConfigurationMerger} that combines two {@link Configuration}
