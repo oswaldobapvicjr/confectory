@@ -16,11 +16,12 @@
 
 package net.obvj.confectory.testdrive;
 
+import static net.obvj.jsonmerge.JsonMergeOption.onPath;
+
 import net.minidev.json.JSONObject;
 import net.obvj.confectory.Configuration;
 import net.obvj.confectory.mapper.JSONObjectMapper;
 import net.obvj.confectory.source.StringSource;
-import net.obvj.jsonmerge.JsonMergeOption;
 
 public class ConfectoryTestDriveJSONObjectMerger
 {
@@ -57,7 +58,8 @@ public class ConfectoryTestDriveJSONObjectMerger
 
 
         Configuration<JSONObject> config = config1.merge(config2,
-                JsonMergeOption.distinctKey("$.agents", "class"));
+                onPath("$.agents").findObjectsIdentifiedBy("class")
+                        .thenPickTheHighestPrecedenceOne());
 
         System.out.println(config.getBean());
     }

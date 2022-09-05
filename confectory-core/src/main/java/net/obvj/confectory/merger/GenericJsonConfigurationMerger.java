@@ -65,7 +65,7 @@ import net.obvj.jsonmerge.provider.JsonProvider;
 public class GenericJsonConfigurationMerger<T> extends AbstractConfigurationMerger<T>
 {
 
-    private final JsonProvider jsonProvider;
+    private final JsonProvider<T> jsonProvider;
 
     /**
      * Creates a new JSON Configuration Merger for a specific provider.
@@ -73,7 +73,7 @@ public class GenericJsonConfigurationMerger<T> extends AbstractConfigurationMerg
      * @param jsonProvider the {@link JsonProvider} to use; not {@code null}
      * @throws NullPointerException if the specified JsonProvider is null
      */
-    public GenericJsonConfigurationMerger(JsonProvider jsonProvider)
+    public GenericJsonConfigurationMerger(JsonProvider<T> jsonProvider)
     {
         this.jsonProvider = requireNonNull(jsonProvider, "The JsonProvider cannot be null");
     }

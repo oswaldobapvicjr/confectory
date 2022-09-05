@@ -16,6 +16,7 @@
 
 package net.obvj.confectory.merger;
 
+import static net.obvj.jsonmerge.JsonMergeOption.onPath;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -30,7 +31,6 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import net.obvj.confectory.Configuration;
 import net.obvj.confectory.mapper.JacksonJsonNodeMapper;
 import net.obvj.confectory.source.StringSource;
-import net.obvj.jsonmerge.JsonMergeOption;
 import net.obvj.jsonmerge.provider.JacksonJsonNodeJsonProvider;
 
 /**
@@ -245,7 +245,8 @@ class JacksonJsonNodeConfigurationMergerTest
         Configuration<JsonNode> result = merger
                 .merge(newConfiguration(JSON_3, 9),
                        newConfiguration(JSON_4, 1),
-                        JsonMergeOption.distinctKey("$.agents", "class"));
+                        onPath("$.agents").findObjectsIdentifiedBy("class")
+                                .thenPickTheHighestPrecedenceOne());
 
         assertTrue(result.getBoolean("enabled")); // from JSON_4
         assertArray(Arrays.asList("Json3Agent1", "Json3Agent2"), result, "$.agents[*].description");
@@ -257,7 +258,8 @@ class JacksonJsonNodeConfigurationMergerTest
         Configuration<JsonNode> result = merger
                 .merge(newConfiguration(JSON_3, 2),
                        newConfiguration(JSON_4, 3),
-                        JsonMergeOption.distinctKey("$.agents", "class"));
+                        onPath("$.agents").findObjectsIdentifiedBy("class")
+                                .thenPickTheHighestPrecedenceOne());
 
         assertTrue(result.getBoolean("enabled")); // from JSON_4
         assertArray(Arrays.asList("Json4Agent1", "Json3Agent2"), result, "$.agents[*].description");
@@ -307,7 +309,8 @@ class JacksonJsonNodeConfigurationMergerTest
         Configuration<JsonNode> result = merger
                 .merge(newConfiguration(JSON_8, 9),
                        newConfiguration(JSON_9, 1),
-                        JsonMergeOption.distinctKey("$.array", "name"));
+                        onPath("$.array").findObjectsIdentifiedBy("name")
+                                .thenPickTheHighestPrecedenceOne());
 
         assertEquals("Json8Value1", result.getString("$.array[?(@.name=='name1')].value"));
         assertArray(Arrays.asList("element1", "element2"), result, "$.array[*]", false);
@@ -319,7 +322,8 @@ class JacksonJsonNodeConfigurationMergerTest
         Configuration<JsonNode> result = merger
                 .merge(newConfiguration(JSON_8, 9),
                        newConfiguration(JSON_9, 10),
-                        JsonMergeOption.distinctKey("$.array", "name"));
+                        onPath("$.array").findObjectsIdentifiedBy("name")
+                                .thenPickTheHighestPrecedenceOne());
 
         assertEquals("Json9Value1", result.getString("$.array[?(@.name=='name1')].value"));
         assertArray(Arrays.asList("element1", "element2"), result, "$.array[*]", false);

@@ -16,12 +16,13 @@
 
 package net.obvj.confectory.testdrive;
 
+import static net.obvj.jsonmerge.JsonMergeOption.onPath;
+
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
 import net.obvj.confectory.Configuration;
 import net.obvj.confectory.mapper.GsonJsonObjectMapper;
-import net.obvj.jsonmerge.JsonMergeOption;
 
 public class ConfectoryTestDriveGsonMergeTwoConfigs
 {
@@ -40,7 +41,8 @@ public class ConfectoryTestDriveGsonMergeTwoConfigs
                 .build();
 
         Configuration<JsonObject> config = config1.merge(config2,
-                JsonMergeOption.distinctKey("$.agents", "class"));
+                onPath("$.agents").findObjectsIdentifiedBy("class")
+                        .thenPickTheHighestPrecedenceOne());
 
         System.out.println(new GsonBuilder().setPrettyPrinting().create().toJson(config.getBean()));
         System.out.println(config.getBoolean("enabled"));
