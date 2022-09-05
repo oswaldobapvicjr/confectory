@@ -33,7 +33,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import net.obvj.confectory.Configuration;
 import net.obvj.confectory.mapper.Mapper;
 import net.obvj.confectory.mapper.StringMapper;
 
