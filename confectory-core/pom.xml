@@ -32,7 +32,7 @@
     <properties>
         <commons-lang.version>3.12.0</commons-lang.version>
         <commons-io.version>2.11.0</commons-io.version>
-        <commons-text.version>1.9</commons-text.version>
+        <commons-text.version>1.10.0</commons-text.version>
         <jsonmerge.version>1.1.0</jsonmerge.version>
         <json-path.version>2.7.0</json-path.version>
         <performetrics.version>2.3.0</performetrics.version>
