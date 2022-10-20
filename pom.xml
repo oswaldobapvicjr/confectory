@@ -51,7 +51,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!-- Compile dependencies -->
-        <jackson2.version>2.13.4</jackson2.version>
+        <jackson2.version>[2.13.4,2.13.4.2]</jackson2.version>
         <slf4j.version>1.7.36</slf4j.version>
         
         <!-- Test dependencies -->
