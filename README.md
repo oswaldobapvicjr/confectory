@@ -1,6 +1,6 @@
 ![confectory-logo](resources/confectory-logo.svg)
 
-![Contributors](https://img.shields.io/github/contributors-anon/oswaldobapvicjr/confectory)
+[![Contributors](https://img.shields.io/github/contributors-anon/oswaldobapvicjr/confectory)](https://github.com/oswaldobapvicjr/confectory/graphs/contributors)
 [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/oswaldobapvicjr/confectory/Java%20CI%20with%20Maven)](https://github.com/oswaldobapvicjr/confectory/actions/workflows/maven.yml)
 [![Coverage](https://img.shields.io/codecov/c/github/oswaldobapvicjr/confectory)](https://codecov.io/gh/oswaldobapvicjr/confectory)
 [![License](https://img.shields.io/badge/license-apache%202.0-brightgreen.svg)](https://opensource.org/licenses/Apache-2.0)
