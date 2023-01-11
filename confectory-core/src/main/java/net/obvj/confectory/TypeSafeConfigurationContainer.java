@@ -16,16 +16,18 @@
 
 package net.obvj.confectory;
 
+import net.obvj.confectory.settings.ConfectorySettings;
+
 /**
  * An object that holds multiple {@code Configuration} objects of the same generic type
- * {@code <T>} and selects the highest-precedence available ones. This is particularly
- * useful for source prioritization or handling multiple versions of the same
- * configuration object.
+ * {@code <T>} and selects the highest-precedence available ones when {@code getBean()} is
+ * called. This is particularly useful for source prioritization or handling multiple
+ * versions of the same configuration bean.
  * <p>
  * To create a new empty container, use the default constructor
  * {@code new TypeSafeConfigurationContainer<T>()}. To create a new container with preset
- * {@code Configuration} objects, pass them as "var-args", provided that all objects have
- * the same mapped bean type {@code <T>}
+ * {@code Configuration<T>} objects, pass them as "var-args", provided that all objects
+ * have the same mapped bean type {@code <T>}
  * <p>
  * Use the {@code add(Configuration<T>)} method at any time to register new objects inside
  * the container.
@@ -45,7 +47,7 @@ public final class TypeSafeConfigurationContainer<T>
     private ConfigurationContainer container;
 
     /**
-     * Builds a new {@code TypeSageConfigurationContainer} with an arbitrary number of preset
+     * Builds a new {@code TypeSafeConfigurationContainer} with an arbitrary number of preset
      * {@code Configuration} objects to be registered.
      *
      * @param configs an arbitrary number of {@code Configuration} objects (zero or more) to
@@ -54,7 +56,26 @@ public final class TypeSafeConfigurationContainer<T>
     @SafeVarargs
     public TypeSafeConfigurationContainer(Configuration<T>... configs)
     {
-        container = new ConfigurationContainer(DataFetchStrategy.STRICT, configs);
+        this(null, configs);
+    }
+
+    /**
+     * Builds a new {@code TypeSageConfigurationContainer} with a custom
+     * {@link DataFetchStrategy} and an arbitrary number of preset {@code Configuration}
+     * objects.
+     *
+     * @param dataFetchStrategy an optional {@link DataFetchStrategy} to be applied by this
+     *                          container; {@code null} is allowed and indicates that the
+     *                          default strategy defined in {@link Confectory#settings()} will
+     *                          be applied
+     * @param configs           an arbitrary number of {@code Configuration} objects (zero or
+     *                          more) to be registered at constructor time
+     * @since 2.4.0
+     * @see ConfectorySettings
+     */
+    public TypeSafeConfigurationContainer(DataFetchStrategy dataFetchStrategy, Configuration<?>... configs)
+    {
+        container = new ConfigurationContainer(dataFetchStrategy, configs);
     }
 
     /**
@@ -138,7 +159,7 @@ public final class TypeSafeConfigurationContainer<T>
      * @return the internal {@link ConfigurationContainer}, mainly for testing or
      *         troubleshooting purposes
      */
-    protected ConfigurationContainer getInternal()
+    ConfigurationContainer getInternal()
     {
         return container;
     }

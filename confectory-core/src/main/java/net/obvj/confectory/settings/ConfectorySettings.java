@@ -30,9 +30,9 @@ public class ConfectorySettings
 {
 
     /**
-     * The initial {@link DataFetchStrategy} to be applied by default
+     * The initial {@link DataFetchStrategy} applied by default
      */
-    protected static final DataFetchStrategy INITIAL_DATA_FETCH_STRATEGY = DataFetchStrategy.STRICT;
+    static final DataFetchStrategy INITIAL_DATA_FETCH_STRATEGY = DataFetchStrategy.LENIENT;
 
     private static final ConfectorySettings INSTANCE = new ConfectorySettings();
 
