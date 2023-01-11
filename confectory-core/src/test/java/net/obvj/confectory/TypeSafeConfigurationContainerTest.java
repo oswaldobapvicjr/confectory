@@ -60,27 +60,58 @@ class TypeSafeConfigurationContainerTest
     {
         container = new TypeSafeConfigurationContainer<>();
         assertThat(container.size(), equalTo(0L));
-        assertThat(container.getInternal().getDataFetchStrategy(), equalTo(DataFetchStrategy.STRICT));
+        assertThat(container.getInternal().getDataFetchStrategy(),
+                equalTo(Confectory.settings().getDefaultDataFetchStrategy()));
     }
 
     @Test
-    void getBean_noArgumentAndOnlyConfigsWithNamespace_null()
+    void constructor_dataFetchStrategy_customStrategy()
+    {
+        container = new TypeSafeConfigurationContainer<>(DataFetchStrategy.STRICT_UNSORTED);
+        assertThat(container.size(), equalTo(0L));
+        assertThat(container.getInternal().getDataFetchStrategy(),
+                equalTo(DataFetchStrategy.STRICT_UNSORTED));
+    }
+
+    @Test
+    void getBean_lenientAndNoArgumentAndOnlyConfigsWithNamespace_highestPrecedence()
     {
         container = new TypeSafeConfigurationContainer<>(CONF_NS1_BEAN_1, CONF_NS2_BEAN_1);
+        assertThat(container.getBean(), equalTo(BEAN_1_1));
+    }
+
+    @Test
+    void getBean_strictAndNoArgumentAndOnlyConfigsWithNamespace_null()
+    {
+        container = new TypeSafeConfigurationContainer<>(DataFetchStrategy.STRICT, CONF_NS1_BEAN_1, CONF_NS2_BEAN_1);
         assertThat(container.getBean(), equalTo(null));
     }
 
     @Test
-    void getBean_noArgument_configWithoutNamespace()
+    void getBean_lenientAndNoArgument_highestPrecedence()
     {
         container = new TypeSafeConfigurationContainer<>(CONF_NS1_BEAN_1, CONF_NS2_BEAN_1, CONF_BEAN_3);
+        assertThat(container.getBean(), equalTo(BEAN_1_1));
+    }
+
+    @Test
+    void getBean_strictAndNoArgument_configWithoutNamespace()
+    {
+        container = new TypeSafeConfigurationContainer<>(DataFetchStrategy.STRICT, CONF_NS1_BEAN_1, CONF_NS2_BEAN_1, CONF_BEAN_3);
         assertThat(container.getBean(), equalTo(BEAN_3));
     }
 
     @Test
-    void getBean_invalidNamespace_null()
+    void getBean_lenientAndInvalidNamespace_highestPrecedence()
     {
         container = new TypeSafeConfigurationContainer<>(CONF_NS1_BEAN_1, CONF_NS2_BEAN_1, CONF_BEAN_3);
+        assertThat(container.getBean("invalid"), equalTo(null));
+    }
+
+    @Test
+    void getBean_strictAndinvalidNamespace_null()
+    {
+        container = new TypeSafeConfigurationContainer<>(DataFetchStrategy.STRICT, CONF_NS1_BEAN_1, CONF_NS2_BEAN_1, CONF_BEAN_3);
         assertThat(container.getBean("invalid"), equalTo(null));
     }
 

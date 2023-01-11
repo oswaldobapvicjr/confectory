@@ -147,7 +147,7 @@ class ConfigurationContainerTest
     @Test
     void getString_keyOnlyAndStrict_configurationWithoutNamespace()
     {
-        container = new ConfigurationContainer(CONF_NS1_PROPERTIES_1, CONF_NS2_PROPERTIES_1, CONF_PROPERTIES_1);
+        container = new ConfigurationContainer(DataFetchStrategy.STRICT, CONF_NS1_PROPERTIES_1, CONF_NS2_PROPERTIES_1, CONF_PROPERTIES_1);
         assertThat(container.getString(KEY_TEST), equalTo("ok01")); // CONF_PROPERTIES1 (strict)
         assertThat(container.getString(KEY_STRING), equalTo(null)); // not found (strict)
     }
@@ -155,7 +155,7 @@ class ConfigurationContainerTest
     @Test
     void getString_keyOnlyAndLenient_configurationWithoutNamespace()
     {
-        container = new ConfigurationContainer(DataFetchStrategy.LENIENT, CONF_NS1_PROPERTIES_1, CONF_NS1_PROPERTIES_2, CONF_NS2_PROPERTIES_1, CONF_PROPERTIES_1);
+        container = new ConfigurationContainer(CONF_NS1_PROPERTIES_1, CONF_NS1_PROPERTIES_2, CONF_NS2_PROPERTIES_1, CONF_PROPERTIES_1);
         assertThat(container.getString(KEY_TEST), equalTo("ok21")); // CONF_NS2_PROPERTIES_1 (lenient)
         assertThat(container.getString(KEY_STRING), equalTo("string2")); // CONF_NS1_PROPERTIES_2 (lenient)
     }
@@ -199,9 +199,16 @@ class ConfigurationContainerTest
     }
 
     @Test
-    void getInteger_keyOnly_configurationWithoutNamespace()
+    void getInteger_keyOnlyAndLenient_configurationWithoutNamespace()
     {
         container = new ConfigurationContainer(CONF_NS1_PROPERTIES_1, CONF_NS2_PROPERTIES_1, CONF_PROPERTIES_1);
+        assertThat(container.getInteger(KEY_INT), equalTo(1)); // CONF_NS1_PROPERTIES_1
+    }
+
+    @Test
+    void getInteger_keyOnlyAndStrict_configurationWithoutNamespace()
+    {
+        container = new ConfigurationContainer(DataFetchStrategy.STRICT, CONF_NS1_PROPERTIES_1, CONF_NS2_PROPERTIES_1, CONF_PROPERTIES_1);
         assertThat(container.getInteger(KEY_INT), equalTo(10)); // CONF_PROPERTIES1
     }
 
@@ -220,9 +227,16 @@ class ConfigurationContainerTest
     }
 
     @Test
-    void getBoolean_keyOnly_configurationWithoutNamespace()
+    void getBoolean_keyOnlyAndLenient_configurationWithoutNamespace()
     {
         container = new ConfigurationContainer(CONF_NS1_PROPERTIES_1, CONF_NS2_PROPERTIES_1, CONF_PROPERTIES_1);
+        assertThat(container.getBoolean(KEY_BOOLEAN), equalTo(false)); // CONF_NS1_PROPERTIES_1
+    }
+
+    @Test
+    void getBoolean_keyOnlyAndStrict_configurationWithoutNamespace()
+    {
+        container = new ConfigurationContainer(DataFetchStrategy.STRICT, CONF_NS1_PROPERTIES_1, CONF_NS2_PROPERTIES_1, CONF_PROPERTIES_1);
         assertThat(container.getBoolean(KEY_BOOLEAN), equalTo(true)); // CONF_PROPERTIES1
     }
 
@@ -241,9 +255,16 @@ class ConfigurationContainerTest
     }
 
     @Test
-    void getDouble_keyOnly_configurationWithoutNamespace()
+    void getDouble_keyOnlyAndLenient_configurationWithoutNamespace()
     {
         container = new ConfigurationContainer(CONF_NS1_PROPERTIES_1, CONF_NS2_PROPERTIES_1, CONF_PROPERTIES_1);
+        assertThat(container.getDouble(KEY_DOUBLE), equalTo(10.1)); // CONF_PROPERTIES1
+    }
+
+    @Test
+    void getDouble_keyOnlyAndString_configurationWithoutNamespace()
+    {
+        container = new ConfigurationContainer(DataFetchStrategy.STRICT, CONF_NS1_PROPERTIES_1, CONF_NS2_PROPERTIES_1, CONF_PROPERTIES_1);
         assertThat(container.getDouble(KEY_DOUBLE), equalTo(10.1)); // CONF_PROPERTIES1
     }
 
@@ -262,9 +283,16 @@ class ConfigurationContainerTest
     }
 
     @Test
-    void getLong_keyOnly_configurationWithoutNamespace()
+    void getLong_keyOnlyAndLenient_configurationWithoutNamespace()
     {
         container = new ConfigurationContainer(CONF_NS1_PROPERTIES_1, CONF_NS2_PROPERTIES_1, CONF_PROPERTIES_1);
+        assertThat(container.getLong(KEY_LONG), equalTo(111L)); // CONF_NS1_PROPERTIES_1
+    }
+
+    @Test
+    void getLong_keyOnlyAndStrict_configurationWithoutNamespace()
+    {
+        container = new ConfigurationContainer(DataFetchStrategy.STRICT, CONF_NS1_PROPERTIES_1, CONF_NS2_PROPERTIES_1, CONF_PROPERTIES_1);
         assertThat(container.getLong(KEY_LONG), equalTo(1010L)); // CONF_PROPERTIES1
     }
 
