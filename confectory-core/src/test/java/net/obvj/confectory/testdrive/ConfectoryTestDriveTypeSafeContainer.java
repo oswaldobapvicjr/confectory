@@ -17,7 +17,6 @@
 package net.obvj.confectory.testdrive;
 
 import net.obvj.confectory.Configuration;
-import net.obvj.confectory.DataFetchStrategy;
 import net.obvj.confectory.TypeSafeConfigurationContainer;
 import net.obvj.confectory.mapper.PropertiesToObjectMapper;
 import net.obvj.confectory.testdrive.model.MyProperties;

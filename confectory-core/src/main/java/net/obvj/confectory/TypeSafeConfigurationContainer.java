@@ -73,6 +73,7 @@ public final class TypeSafeConfigurationContainer<T>
      * @since 2.4.0
      * @see ConfectorySettings
      */
+    @SafeVarargs
     public TypeSafeConfigurationContainer(DataFetchStrategy dataFetchStrategy, Configuration<?>... configs)
     {
         container = new ConfigurationContainer(dataFetchStrategy, configs);

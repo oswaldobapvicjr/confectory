@@ -125,12 +125,9 @@ public enum DataFetchStrategy
     };
 
 
-
     /**
      * Retrieves a stream of sorted {@link Configuration} objects based on the specified
      * {@code namespace}.
-     * <p>
-     * The {@link Configuration} objects will be sorted by precedence (highest to lowest).
      *
      * @param namespace the namespace to be searched
      * @param configMap the source map
@@ -142,7 +139,7 @@ public enum DataFetchStrategy
 
     /**
      * Returns either the passed namespace, or a default value, if the passed argument is
-     * empty or null
+     * empty or null.
      *
      * @param namespace the namespace to the checked
      * @return the passed namespace, or the value of

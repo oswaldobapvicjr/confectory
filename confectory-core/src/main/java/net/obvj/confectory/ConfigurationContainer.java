@@ -90,10 +90,12 @@ public class ConfigurationContainer
      * an arbitrary number of preset {@code Configuration} objects.
      *
      * @param dataFetchStrategy an optional {@link DataFetchStrategy} to be applied by this
-     *                          container; {@code null} is allowed and means the default
-     *                          strategy will be applied
+     *                          container; {@code null} is allowed and indicates that the
+     *                          default strategy defined in {@link Confectory#settings()} will
+     *                          be applied
      * @param configs           an arbitrary number of {@code Configuration} objects (zero or
      *                          more) to be registered at constructor time
+     * @see ConfectorySettings
      */
     public ConfigurationContainer(DataFetchStrategy dataFetchStrategy, Configuration<?>... configs)
     {
