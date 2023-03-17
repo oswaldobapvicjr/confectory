@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 obvj.net
+ * Copyright 2023 obvj.net
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,54 +16,49 @@
 
 package net.obvj.confectory.internal.helper;
 
-import com.jayway.jsonpath.*;
-import com.jayway.jsonpath.spi.json.JsonProvider;
-import com.jayway.jsonpath.spi.mapper.MappingProvider;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import com.jayway.jsonpath.InvalidPathException;
 
 import net.obvj.confectory.ConfigurationException;
+import net.obvj.confectory.merger.ConfigurationMerger;
+import net.obvj.confectory.util.ParseFactory;
 
 /**
- * A generic Configuration Helper that retrieves data from a JSON document, with JSONPath
- * capabilities.
+ * A generic Configuration Helper that retrieves data from an XML {@link Document} using
+ * XPath.
  *
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
- * @since 0.3.0
+ * @since 2.4.0
  */
-public abstract class GenericJsonConfigurationHelper<J> implements ConfigurationHelper<J>
+public class XmlConfigurationHelper implements ConfigurationHelper<Document>
 {
-    protected final J json;
-    protected final JsonProvider jsonProvider;
-    protected final MappingProvider mappingProvider;
-    protected final Configuration jsonPathConfiguration;
-    protected final ParseContext jsonPathContext;
-    protected final DocumentContext documentContext;
+    protected final Document document;
 
     /**
-     * Creates a new helper for the given JSON.
+     * Creates a new helper for the given XML {@link Document}.
      *
-     * @param json            the JSON document to set
-     * @param jsonProvider    the {@link JsonProvider} to set
-     * @param mappingProvider the JSON {@link MappingProvider} to set
+     * @param document the JSON document to set
      */
-    protected GenericJsonConfigurationHelper(J json, JsonProvider jsonProvider, MappingProvider mappingProvider)
+    protected XmlConfigurationHelper(Document document)
     {
-        this.json = json;
-        this.jsonProvider = jsonProvider;
-        this.mappingProvider = mappingProvider;
-
-        jsonPathConfiguration = Configuration.builder().jsonProvider(jsonProvider).mappingProvider(mappingProvider)
-                .options(Option.SUPPRESS_EXCEPTIONS, Option.ALWAYS_RETURN_LIST).build();
-        jsonPathContext = JsonPath.using(jsonPathConfiguration);
-        documentContext = jsonPathContext.parse(json);
+        this.document = document;
     }
 
     /**
-     * @return the JSON document in context
+     * @return the XML {@link Document} in context
      */
     @Override
-    public J getBean()
+    public Document getBean()
     {
-        return json;
+        return document;
     }
 
     /**
@@ -277,7 +272,6 @@ public abstract class GenericJsonConfigurationHelper<J> implements Configuration
      * @throws InvalidPathException     if the {@code jsonPath} expression is not valid
      * @throws ConfigurationException   if not value found or the {@code jsonPath} expression
      *                                  returns more than a single element
-     * @since 0.4.0
      */
     @Override
     public String getMandatoryString(String jsonPath)
@@ -286,22 +280,21 @@ public abstract class GenericJsonConfigurationHelper<J> implements Configuration
     }
 
     /**
-     * Returns the value associated with the specified {@code jsonPath} in the JSON document
-     * in context, provided that the expression returns a single element that can be mapped to
-     * the specified class type.
+     * Returns the value associated with the specified {@code XPath} expression in the XML
+     * document in context, provided that the expression returns a single element that can be
+     * mapped to the specified class type.
      *
-     * @param jsonPath   the path to read
+     * @param xPath      the {@code XPath} expression to read
      * @param targetType the type the expression result should be mapped to
+     * @param mandatory  a flag determining whether or not an exception should be thrown in
+     *                   case the value is not found
      *
-     * @return the mapped value associated with the specified {@code jsonPath}
+     * @return the value associated with the specified {@code XPath}; never null
      *
-     * @throws IllegalArgumentException if {@code jsonPath} is null or empty
-     * @throws InvalidPathException     if the {@code jsonPath} expression is not valid
-     * @throws ConfigurationException   if not value found or the {@code jsonPath} expression
-     *                                  returns more than a single element
-     * @throws ClassCastException       if the {@code jsonPath} result cannot be assigned to
-     *                                  the specified {@code targetType}
-     * @since 0.4.0
+     * @throws IllegalArgumentException if the {@code XPath} expression is null or empty
+     * @throws InvalidPathException     if the {@code XPath} expression is not valid
+     * @throws ConfigurationException   if the {@code XPath} expression returns no value or
+     *                                  more than a single element
      */
     protected <T> T getValue(String jsonPath, Class<T> targetType)
     {
@@ -309,62 +302,83 @@ public abstract class GenericJsonConfigurationHelper<J> implements Configuration
     }
 
     /**
-     * Returns the value associated with the specified {@code jsonPath} in the JSON document
-     * in context, provided that the expression returns a single element that can be mapped to
-     * the specified class type.
+     * Returns the value associated with the specified {@code XPath} expression in the XML
+     * document in context, provided that the expression returns a single element that can be
+     * mapped to the specified class type.
      *
-     * @param jsonPath   the path to read
+     * @param xPath      the {@code XPath} expression to read
      * @param targetType the type the expression result should be mapped to
+     * @param mandatory  a flag determining whether or not an exception should be thrown in
+     *                   case the value is not found
      *
-     * @return the mapped value associated with the specified {@code jsonPath}
+     * @return the value associated with the specified {@code XPath}
      *
-     * @throws IllegalArgumentException if {@code jsonPath} is null or empty
-     * @throws InvalidPathException     if the {@code jsonPath} expression is not valid
-     * @throws ConfigurationException   if the {@code jsonPath} expression returns more than a
+     * @throws IllegalArgumentException if the {@code XPath} expression is null or empty
+     * @throws InvalidPathException     if the {@code XPath} expression is not valid
+     * @throws ConfigurationException   if the {@code XPath} expression returns no value (with
+     *                                  the {@code mandatory} flag enabled) or more than a
      *                                  single element
-     * @throws ClassCastException       if the {@code jsonPath} result cannot be assigned to
-     *                                  the specified {@code targetType}
      */
-    protected <T> T getValue(String jsonPath, Class<T> targetType, boolean mandatory)
+    protected <T> T getValue(String xPath, Class<T> targetType, boolean mandatory)
     {
-        Object result = get(jsonPath);
-        switch (jsonProvider.length(result))
+        NodeList result = get(xPath);
+        switch (result.getLength())
         {
         case 0:
             if (mandatory)
             {
-                throw new ConfigurationException("No value found for path: %s", jsonPath);
+                throw new ConfigurationException("No value found for path: %s", xPath);
             }
             return null;
         case 1:
-            Object element = jsonProvider.getArrayIndex(result, 0);
-            return mappingProvider.map(element, targetType, jsonPathConfiguration);
+            Node node = result.item(0);
+            return ParseFactory.parse(targetType, node.getTextContent());
         default:
-            throw new ConfigurationException("Multiple values found for path: %s", jsonPath);
+            throw new ConfigurationException("Multiple values found for path: %s", xPath);
         }
     }
 
     /**
-     * Returns the object associated with the specified @code jsonPath} in the JSON document
-     * in context.
-     * <p>
-     * <b>Note:</b> The actual return type may vary depending on the JSON implementation, but
-     * usually it should be an array.
+     * Returns the {@link NodeList} object associated with the specified @{code XPath} in the
+     * XML document in context.
      *
-     * @param jsonPath the path to read
+     * @param xPath the {@code XPath} expression to read
      *
-     * @return the object associated with the specified {@code key}; or an empty array if the
-     *         path is not found
+     * @return the object associated with the specified {@code XPath}; or an empty array if
+     *         the path is not found
      *
-     * @throws IllegalArgumentException if {@code jsonPath} is null or empty
-     * @throws InvalidPathException     if the {@code jsonPath} expression is not valid
-     *
-     * @since 1.2.0
+     * @throws NullPointerException   if the {@code XPath} expression is null
+     * @throws ConfigurationException if the {@code XPath} expression is not valid
      */
     @Override
-    public Object get(String jsonPath)
+    public NodeList get(String xPath)
     {
-        return documentContext.read(jsonPath);
+        try
+        {
+            return (NodeList) compileXPath(xPath).evaluate(document, XPathConstants.NODESET);
+        }
+        catch (XPathExpressionException exception)
+        {
+            throw new ConfigurationException(exception);
+        }
+    }
+
+    /**
+     * Compiles the given XPath expression.
+     *
+     * @param expression the XPath expression to be compiled
+     * @return an {@code XPathExpression} object that can be used for further evaluation
+     * @throws XPathExpressionException if the expression cannot be compiled
+     */
+    public static XPathExpression compileXPath(String expression) throws XPathExpressionException
+    {
+        return XPathFactory.newInstance().newXPath().compile(expression);
+    }
+
+    @Override
+    public ConfigurationMerger<Document> configurationMerger()
+    {
+        throw new UnsupportedOperationException("Merge not supported for XML");
     }
 
 }
