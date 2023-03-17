@@ -26,6 +26,7 @@ import java.io.StringReader;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPathExpressionException;
 
 import org.hamcrest.Matcher;
 import org.junit.jupiter.api.Test;
@@ -51,6 +52,8 @@ class XmlConfigurationHelperTest
             + "        <author>Giada De Laurentiis</author>\n"
             + "        <year>2005</year>\n"
             + "        <price>30.00</price>\n"
+            + "        <active>True</active>\n"
+            + "        <isbn>9876543210999</isbn>\n"
             + "    </book>\n"
             + "    <book category=\"children\">\n"
             + "        <title lang=\"en\">Harry Potter</title>\n"
@@ -103,6 +106,28 @@ class XmlConfigurationHelperTest
     }
 
     @Test
+    void getBean_validDocument()
+    {
+        assertThat(HELPER.getBean(), equalTo(BOOKS_XML));
+    }
+
+    @Test
+    void configurationMerger_unsupportedOperationException()
+    {
+        assertThat(() -> HELPER.configurationMerger(),
+                throwsException(UnsupportedOperationException.class)
+                        .withMessage("Merge not supported for XML"));
+    }
+
+    @Test
+    void getString_invalidXPath_exception()
+    {
+        assertThat(() -> HELPER.getString("?"),
+                throwsException(ConfigurationException.class)
+                        .withCause(XPathExpressionException.class));
+    }
+
+    @Test
     void getString_singleElement_success()
     {
         assertThat(HELPER.getString("/bookstore/book[@category='cooking']/title/text()"),
@@ -151,6 +176,14 @@ class XmlConfigurationHelperTest
     }
 
     @Test
+    void getDouble_unparsableDouble_exception()
+    {
+        assertThat(() -> HELPER.getDouble("/bookstore/book[1]/title"),
+                throwsException(NumberFormatException.class)
+                        .withMessageContaining("For input string"));
+    }
+
+    @Test
     void getMandatoryDouble_singleElement_success()
     {
         assertThat(HELPER.getMandatoryDouble("/bookstore/book[author='James Linn']/price"),
@@ -161,6 +194,107 @@ class XmlConfigurationHelperTest
     void getMandatoryDouble_pathNotFound_exception()
     {
         assertThat(() -> HELPER.getMandatoryDouble(PATH_UNKNOWN),
+                EXCEPTION_NO_VALUE_FOUND_PATH_UNKNOWN);
+    }
+
+    @Test
+    void getInteger_pathNotFound_null()
+    {
+        assertThat(HELPER.getInteger(PATH_UNKNOWN), equalTo(null));
+    }
+
+    @Test
+    void getInteger_unparsableInteger_exception()
+    {
+        assertThat(() -> HELPER.getInteger("/bookstore/book[1]/price"),
+                throwsException(NumberFormatException.class)
+                        .withMessageContaining("For input string"));
+    }
+
+    @Test
+    void getInteger_singleElement_success()
+    {
+        assertThat(HELPER.getInteger("/bookstore/book[author='James Linn']/year"),
+                equalTo(2003));
+    }
+
+    @Test
+    void getMandatoryInteger_singleElement_success()
+    {
+        assertThat(HELPER.getMandatoryInteger("/bookstore/book[author='James Linn']/year"),
+                equalTo(2003));
+    }
+
+    @Test
+    void getMandatoryInteger_pathNotFound_exception()
+    {
+        assertThat(() -> HELPER.getMandatoryInteger(PATH_UNKNOWN),
+                EXCEPTION_NO_VALUE_FOUND_PATH_UNKNOWN);
+    }
+
+    @Test
+    void getLong_pathNotFound_null()
+    {
+        assertThat(HELPER.getLong(PATH_UNKNOWN), equalTo(null));
+    }
+
+    @Test
+    void getLong_unparsableLong_exception()
+    {
+        assertThat(() -> HELPER.getLong("/bookstore/book[2]/price"),
+                throwsException(NumberFormatException.class)
+                        .withMessageContaining("For input string"));
+    }
+
+    @Test
+    void getLong_singleElement_success()
+    {
+        assertThat(HELPER.getLong("/bookstore/book[1]/isbn"),
+                equalTo(9876543210999L));
+    }
+
+    @Test
+    void getMandatoryLong_singleElement_success()
+    {
+        assertThat(HELPER.getMandatoryLong("/bookstore/book[1]/isbn"),
+                equalTo(9876543210999L));
+    }
+
+    @Test
+    void getMandatoryLong_pathNotFound_exception()
+    {
+        assertThat(() -> HELPER.getMandatoryLong(PATH_UNKNOWN),
+                EXCEPTION_NO_VALUE_FOUND_PATH_UNKNOWN);
+    }
+
+    @Test
+    void getBoolean_pathNotFound_null()
+    {
+        assertThat(HELPER.getBoolean(PATH_UNKNOWN), equalTo(null));
+    }
+
+    @Test
+    void getBoolean_unparsableBoolean_false()
+    {
+        assertThat(HELPER.getBoolean("/bookstore/book[2]/price"), equalTo(false));
+    }
+
+    @Test
+    void getBoolean_singleElement_success()
+    {
+        assertThat(HELPER.getBoolean("/bookstore/book[1]/active"), equalTo(true));
+    }
+
+    @Test
+    void getMandatoryBoolean_singleElement_success()
+    {
+        assertThat(HELPER.getMandatoryBoolean("/bookstore/book[1]/active"), equalTo(true));
+    }
+
+    @Test
+    void getMandatoryBoolean_pathNotFound_exception()
+    {
+        assertThat(() -> HELPER.getMandatoryBoolean(PATH_UNKNOWN),
                 EXCEPTION_NO_VALUE_FOUND_PATH_UNKNOWN);
     }
 

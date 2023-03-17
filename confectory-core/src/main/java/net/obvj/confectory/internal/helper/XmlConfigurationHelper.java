@@ -25,8 +25,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.jayway.jsonpath.InvalidPathException;
-
 import net.obvj.confectory.ConfigurationException;
 import net.obvj.confectory.merger.ConfigurationMerger;
 import net.obvj.confectory.util.ParseFactory;
@@ -62,279 +60,286 @@ public class XmlConfigurationHelper implements ConfigurationHelper<Document>
     }
 
     /**
-     * Returns the {@code Boolean} object associated with the specified {@code jsonPath} in
-     * the {@code JsonNode} in context, provided that the expression returns a single element
-     * that can be mapped to {@code boolean}.
+     * Returns the {@code Boolean} object associated with the specified {@code XPath}
+     * expression in the XML document in context, provided that the expression returns a
+     * single element that can be converted to {@code boolean}.
+     * <p>
+     * <strong>Note:</strong> If the evaluation result is a valid string it will parsed
+     * according to {@link Boolean#parseBoolean(String)}, it will return {@code false} for any
+     * string different than {@code "true"} (ignoring case).
      *
-     * @param jsonPath the path to read
-     * @return the {@code Boolean} object associated with the specified {@code jsonPath};
-     *         {@code null} if the path is not found
+     * @param xpath the {@code XPath} expression to evaluate
+     * @return the {@code Boolean} object from the evaluation result of the specified
+     *         {@code XPath} expression; {@code null} if the expression is not found
      *
-     * @throws IllegalArgumentException if {@code jsonPath} is null or empty
-     * @throws InvalidPathException     if the {@code jsonPath} expression is not valid
-     * @throws ConfigurationException   if the {@code jsonPath} expression returns more than a
-     *                                  single element
-     * @throws ClassCastException       if the {@code jsonPath} result cannot be assigned to
-     *                                  {@code boolean}
+     * @throws NullPointerException   if the {@code XPath} expression is null
+     * @throws ConfigurationException if the {@code XPath} expression is either invalid, or it
+     *                                evaluates to more than a single element
      */
     @Override
-    public Boolean getBoolean(String jsonPath)
+    public Boolean getBoolean(String xpath)
     {
-        return getValue(jsonPath, Boolean.class, false);
+        return getValue(xpath, Boolean.class, false);
     }
 
     /**
-     * Returns the {@code Boolean} object associated with the specified {@code jsonPath} in
-     * the {@code JsonNode} in context, provided that the expression returns a single element
-     * that can be mapped to {@code boolean}.
+     * Returns the {@code Boolean} object associated with the specified {@code XPath}
+     * expression in the XML document in context, provided that the expression returns a
+     * single element that can be converted to {@code boolean}.
+     * <p>
+     * If no value is found for the given expression, then an exception will be thrown.
+     * <p>
+     * <strong>Note:</strong> If the evaluation result is a valid string it will parsed
+     * according to {@link Boolean#parseBoolean(String)}, it will return {@code false} for any
+     * string different than {@code "true"} (ignoring case).
      *
-     * @param jsonPath the path to read
-     * @return the {@code Boolean} object associated with the specified {@code jsonPath};
-     *         never {@code null}
+     * @param xpath the {@code XPath} expression to evaluate
+     * @return the {@code Boolean} object from the evaluation result of the the specified
+     *         {@code XPath} expression; never {@code null}
      *
-     * @throws IllegalArgumentException if {@code jsonPath} is null or empty
-     * @throws InvalidPathException     if the {@code jsonPath} expression is not valid
-     * @throws ConfigurationException   if not value found or the {@code jsonPath} expression
-     *                                  returns more than a single element
-     * @throws ClassCastException       if the {@code jsonPath} result cannot be assigned to
-     *                                  {@code boolean}
-     * @since 0.4.0
+     * @throws NullPointerException   if the {@code XPath} expression is null
+     * @throws ConfigurationException if the {@code XPath} expression is either invalid, not
+     *                                found, or it evaluates to more than a single element
      */
     @Override
-    public Boolean getMandatoryBoolean(String jsonPath)
+    public Boolean getMandatoryBoolean(String xpath)
     {
-        return getValue(jsonPath, Boolean.class);
+        return getValue(xpath, Boolean.class);
     }
 
     /**
-     * Returns the {@code Integer} object associated with the specified {@code jsonPath} in
-     * the {@code JsonNode} in context, provided that the expression returns a single element
-     * that can be mapped to {@code int}.
+     * Returns the {@code Integer} object associated with the specified {@code XPath}
+     * expression in the XML document in context, provided that the expression returns a
+     * single element that can be converted to {@code int}.
      *
-     * @param jsonPath the path to read
-     * @return the {@code Integer} object associated with the specified {@code jsonPath};
-     *         {@code null} if the path is not found
+     * @param xpath the {@code XPath} expression to evaluate
+     * @return the {@code Integer} object from the evaluation result of the specified
+     *         {@code XPath} expression; {@code null} if the expression is not found
      *
-     * @throws IllegalArgumentException if {@code jsonPath} is null or empty
-     * @throws InvalidPathException     if the {@code jsonPath} expression is not valid
-     * @throws ConfigurationException   if the {@code jsonPath} expression returns more than a
-     *                                  single element
-     * @throws ClassCastException       if the {@code jsonPath} result cannot be assigned to
-     *                                  {@code int}
+     * @throws NullPointerException   if the {@code XPath} expression is null
+     * @throws ConfigurationException if the {@code XPath} expression is either invalid, or it
+     *                                evaluates to more than a single element
+     * @throws NumberFormatException  if the {@code XPath} result cannot be assigned to
+     *                                {@code int}
      */
     @Override
-    public Integer getInteger(String jsonPath)
+    public Integer getInteger(String xpath)
     {
-        return getValue(jsonPath, Integer.class, false);
+        return getValue(xpath, Integer.class, false);
     }
 
     /**
-     * Returns the {@code Integer} object associated with the specified {@code jsonPath} in
-     * the {@code JsonNode} in context, provided that the expression returns a single element
-     * that can be mapped to {@code int}.
+     * Returns the {@code Integer} object associated with the specified {@code XPath}
+     * expression in the XML document in context, provided that the expression returns a
+     * single element that can be converted to {@code int}.
+     * <p>
+     * If no value is found for the given expression, then an exception will be thrown.
      *
-     * @param jsonPath the path to read
-     * @return the {@code Integer} object associated with the specified {@code jsonPath};
-     *         never {@code null}
+     * @param xpath the {@code XPath} expression to evaluate
+     * @return the {@code Integer} object from the evaluation result of the the specified
+     *         {@code XPath} expression; never {@code null}
      *
-     * @throws IllegalArgumentException if {@code jsonPath} is null or empty
-     * @throws InvalidPathException     if the {@code jsonPath} expression is not valid
-     * @throws ConfigurationException   if not value found or the {@code jsonPath} expression
-     *                                  returns more than a single element
-     * @throws ClassCastException       if the {@code jsonPath} result cannot be assigned to
-     *                                  {@code int}
-     * @since 0.4.0
+     * @throws NullPointerException   if the {@code XPath} expression is null
+     * @throws ConfigurationException if the {@code XPath} expression is either invalid, not
+     *                                found, or it evaluates to more than a single element
+     * @throws NumberFormatException  if the {@code XPath} result cannot be assigned to
+     *                                {@code int}
      */
     @Override
-    public Integer getMandatoryInteger(String jsonPath)
+    public Integer getMandatoryInteger(String xpath)
     {
-        return getValue(jsonPath, Integer.class);
+        return getValue(xpath, Integer.class);
     }
 
     /**
-     * Returns the {@code Long} object associated with the specified {@code jsonPath} in the
-     * {@code JsonNode} in context, provided that the expression returns a single element that
-     * can be mapped to {@code long}.
+     * Returns the {@code Long} object associated with the specified {@code XPath} expression
+     * in the XML document in context, provided that the expression returns a single element
+     * that can be converted to {@code long}.
      *
-     * @param jsonPath the path to read
-     * @return the {@code Long} object associated with the specified {@code jsonPath};
-     *         {@code null} if the path is not found
+     * @param xpath the {@code XPath} expression to evaluate
+     * @return the {@code Long} object from the evaluation result of the specified
+     *         {@code XPath} expression; {@code null} if the expression is not found
      *
-     * @throws IllegalArgumentException if {@code jsonPath} is null or empty
-     * @throws InvalidPathException     if the {@code jsonPath} expression is not valid
-     * @throws ConfigurationException   if the {@code jsonPath} expression returns more than a
-     *                                  single element
-     * @throws ClassCastException       if the {@code jsonPath} result cannot be assigned to
-     *                                  {@code long}
+     * @throws NullPointerException   if the {@code XPath} expression is null
+     * @throws ConfigurationException if the {@code XPath} expression is either invalid, or it
+     *                                evaluates to more than a single element
+     * @throws NumberFormatException  if the {@code XPath} result cannot be assigned to
+     *                                {@code long}
      */
     @Override
-    public Long getLong(String jsonPath)
+    public Long getLong(String xpath)
     {
-        return getValue(jsonPath, Long.class, false);
+        return getValue(xpath, Long.class, false);
     }
 
     /**
-     * Returns the {@code Long} object associated with the specified {@code jsonPath} in the
-     * {@code JsonNode} in context, provided that the expression returns a single element that
-     * can be mapped to {@code long}.
+     * Returns the {@code Long} object associated with the specified {@code XPath} expression
+     * in the XML document in context, provided that the expression returns a single element
+     * that can be converted to {@code long}.
+     * <p>
+     * If no value is found for the given expression, then an exception will be thrown.
      *
-     * @param jsonPath the path to read
-     * @return the {@code Long} object associated with the specified {@code jsonPath}; never
-     *         {@code null}
+     * @param xpath the {@code XPath} expression to evaluate
+     * @return the {@code Long} object from the evaluation result of the the specified
+     *         {@code XPath} expression; never {@code null}
      *
-     * @throws IllegalArgumentException if {@code jsonPath} is null or empty
-     * @throws InvalidPathException     if the {@code jsonPath} expression is not valid
-     * @throws ConfigurationException   if not value found or the {@code jsonPath} expression
-     *                                  returns more than a single element
-     * @throws ClassCastException       if the {@code jsonPath} result cannot be assigned to
-     *                                  {@code long}
-     * @since 0.4.0
+     * @throws NullPointerException   if the {@code XPath} expression is null
+     * @throws ConfigurationException if the {@code XPath} expression is either invalid, not
+     *                                found, or it evaluates to more than a single element
+     * @throws NumberFormatException  if the {@code XPath} result cannot be assigned to
+     *                                {@code long}
      */
     @Override
-    public Long getMandatoryLong(String jsonPath)
+    public Long getMandatoryLong(String xpath)
     {
-        return getValue(jsonPath, Long.class);
+        return getValue(xpath, Long.class);
     }
 
     /**
-     * Returns the {@code Double} object associated with the specified {@code jsonPath} in the
-     * {@code JsonNode} in context, provided that the expression returns a single element that
-     * can be mapped to {@code double}.
+     * Returns the {@code Double} object associated with the specified {@code XPath}
+     * expression in the XML document in context, provided that the expression returns a
+     * single element that can be converted to {@code double}.
      *
-     * @param jsonPath the path to read
-     * @return the {@code Double} object associated with the specified {@code jsonPath};
-     *         {@code null} if the path is not found
+     * @param xpath the {@code XPath} expression to evaluate
+     * @return the {@code Double} object from the evaluation result of the specified
+     *         {@code XPath} expression; {@code null} if the expression is not found
      *
-     * @throws IllegalArgumentException if {@code jsonPath} is null or empty
-     * @throws InvalidPathException     if the {@code jsonPath} expression is not valid
-     * @throws ConfigurationException   if the {@code jsonPath} expression returns more than a
-     *                                  single element
-     * @throws ClassCastException       if the {@code jsonPath} result cannot be assigned to
-     *                                  {@code double}
+     * @throws NullPointerException   if the {@code XPath} expression is null
+     * @throws ConfigurationException if the {@code XPath} expression is either invalid, or it
+     *                                evaluates to more than a single element
+     * @throws NumberFormatException  if the {@code XPath} result cannot be assigned to
+     *                                {@code double}
      */
     @Override
-    public Double getDouble(String jsonPath)
+    public Double getDouble(String xpath)
     {
-        return getValue(jsonPath, Double.class, false);
+        return getValue(xpath, Double.class, false);
     }
 
     /**
-     * Returns the {@code Double} object associated with the specified {@code jsonPath} in the
-     * {@code JsonNode} in context, provided that the expression returns a single element that
-     * can be mapped to {@code double}.
+     * Returns the {@code Double} object associated with the specified {@code XPath}
+     * expression in the XML document in context, provided that the expression returns a
+     * single element that can be converted to {@code double}.
+     * <p>
+     * If no value is found for the given expression, then an exception will be thrown.
      *
-     * @param jsonPath the path to read
-     * @return the {@code Double} object associated with the specified {@code jsonPath}; never
-     *         {@code null}
+     * @param xpath the {@code XPath} expression to evaluate
+     * @return the {@code Double} object from the evaluation result of the the specified
+     *         {@code XPath} expression; never {@code null}
      *
-     * @throws IllegalArgumentException if {@code jsonPath} is null or empty
-     * @throws InvalidPathException     if the {@code jsonPath} expression is not valid
-     * @throws ConfigurationException   if not value found or the {@code jsonPath} expression
-     *                                  returns more than a single element
-     * @throws ClassCastException       if the {@code jsonPath} result cannot be assigned to
-     *                                  {@code double}
-     * @since 0.4.0
+     * @throws NullPointerException   if the {@code XPath} expression is null
+     * @throws ConfigurationException if the {@code XPath} expression is either invalid, not
+     *                                found, or it evaluates to more than a single element
+     * @throws NumberFormatException  if the {@code XPath} result cannot be assigned to
+     *                                {@code double}
      */
     @Override
-    public Double getMandatoryDouble(String jsonPath)
+    public Double getMandatoryDouble(String xpath)
     {
-        return getValue(jsonPath, Double.class);
+        return getValue(xpath, Double.class);
     }
 
     /**
-     * Returns the {@code String} object associated with the specified {@code jsonPath} in the
-     * {@code JsonNode} in context, provided that the expression returns a single element.
+     * Returns the {@code String} object associated with the specified {@code XPath}
+     * expression in the XML document in context, provided that the expression returns a
+     * single element.
      *
-     * @param jsonPath the path to read
-     * @return the {@code String} object associated with the specified {@code jsonPath};
-     *         {@code null} if the path is not found
+     * @param xpath the {@code XPath} expression to evaluate
+     * @return the {@code String} value associated with the specified {@code XPath}
+     *         expression; {@code null} if the expression is not found
      *
-     * @throws IllegalArgumentException if {@code jsonPath} is null or empty
-     * @throws InvalidPathException     if the {@code jsonPath} expression is not valid
-     * @throws ConfigurationException   if the {@code jsonPath} expression returns more than a
-     *                                  single element
+     * @throws NullPointerException   if the {@code XPath} expression is null
+     * @throws ConfigurationException if the {@code XPath} expression is either invalid, or it
+     *                                evaluates to more than a single element
      */
     @Override
-    public String getString(String jsonPath)
+    public String getString(String xpath)
     {
-        return getValue(jsonPath, String.class, false);
+        return getValue(xpath, String.class, false);
     }
 
     /**
-     * Returns the {@code String} object associated with the specified {@code jsonPath} in the
-     * {@code JsonNode} in context, provided that the expression returns a single element.
+     * Returns the {@code String} object associated with the specified {@code XPath}
+     * expression in the XML document in context, provided that the expression returns a
+     * single element.
+     * <p>
+     * If no value is found for the given expression, then an exception will be thrown.
      *
-     * @param jsonPath the path to read
-     * @return the {@code String} value associated with the specified {@code jsonPath}; never
-     *         {@code null}
+     * @param xpath the {@code XPath} expression to evaluate
+     * @return the {@code String} value associated with the specified {@code XPath}
+     *         expression; never {@code null}
      *
-     * @throws IllegalArgumentException if {@code jsonPath} is null or empty
-     * @throws InvalidPathException     if the {@code jsonPath} expression is not valid
-     * @throws ConfigurationException   if not value found or the {@code jsonPath} expression
-     *                                  returns more than a single element
+     * @throws NullPointerException   if the {@code XPath} expression is null
+     * @throws ConfigurationException if the {@code XPath} expression is either invalid, not
+     *                                found, or it evaluates to more than a single element
      */
     @Override
-    public String getMandatoryString(String jsonPath)
+    public String getMandatoryString(String xpath)
     {
-        return getValue(jsonPath, String.class);
+        return getValue(xpath, String.class);
     }
 
     /**
      * Returns the value associated with the specified {@code XPath} expression in the XML
      * document in context, provided that the expression returns a single element that can be
      * mapped to the specified class type.
+     * <p>
+     * If no value is found for the given expression, then an exception will be thrown.
      *
-     * @param xPath      the {@code XPath} expression to read
-     * @param targetType the type the expression result should be mapped to
-     * @param mandatory  a flag determining whether or not an exception should be thrown in
-     *                   case the value is not found
+     * @param xpath      the {@code XPath} expression to evaluate
+     * @param targetType the type the evaluation result should be converted to
      *
-     * @return the value associated with the specified {@code XPath}; never null
+     * @return the object that is the result of evaluating the given {@code XPath} expression
+     *         and converting the result to the specified {@code targetType}; never null
      *
-     * @throws IllegalArgumentException if the {@code XPath} expression is null or empty
-     * @throws InvalidPathException     if the {@code XPath} expression is not valid
-     * @throws ConfigurationException   if the {@code XPath} expression returns no value or
-     *                                  more than a single element
+     * @throws NullPointerException   if the {@code XPath} expression is null
+     * @throws ConfigurationException if the {@code XPath} expression is either invalid, not
+     *                                found, or it evaluates to more than a single element
      */
-    protected <T> T getValue(String jsonPath, Class<T> targetType)
+    protected <T> T getValue(String xpath, Class<T> targetType)
     {
-        return getValue(jsonPath, targetType, true);
+        return getValue(xpath, targetType, true);
     }
 
     /**
      * Returns the value associated with the specified {@code XPath} expression in the XML
      * document in context, provided that the expression returns a single element that can be
      * mapped to the specified class type.
+     * <p>
+     * If no value is found for the given expression and the {@code mandatory} flag is
+     * {@code true}, an exception will be thrown; if the flag is not set, then the method
+     * returns {@code null}.
      *
-     * @param xPath      the {@code XPath} expression to read
-     * @param targetType the type the expression result should be mapped to
-     * @param mandatory  a flag determining whether or not an exception should be thrown in
-     *                   case the value is not found
+     * @param xpath      the {@code XPath} expression to evaluate
+     * @param targetType the type the evaluation result should be converted to
+     * @param mandatory  a flag determining whether or not an exception should be raised in
+     *                   case the expression returns no data
      *
-     * @return the value associated with the specified {@code XPath}
+     * @return the object that is the result of evaluating the given {@code XPath} expression
+     *         and converting the result to the specified {@code targetType}; it may be
+     *         {@code null} if no value is found and the {@code mandatory} flag is set
      *
-     * @throws IllegalArgumentException if the {@code XPath} expression is null or empty
-     * @throws InvalidPathException     if the {@code XPath} expression is not valid
-     * @throws ConfigurationException   if the {@code XPath} expression returns no value (with
-     *                                  the {@code mandatory} flag enabled) or more than a
-     *                                  single element
+     * @throws NullPointerException   if the {@code XPath} expression is null
+     * @throws ConfigurationException if the {@code XPath} expression is either invalid, not
+     *                                found (with the {@code mandatory} flag set), or it
+     *                                evaluates to more than a single element
      */
-    protected <T> T getValue(String xPath, Class<T> targetType, boolean mandatory)
+    protected <T> T getValue(String xpath, Class<T> targetType, boolean mandatory)
     {
-        NodeList result = get(xPath);
+        NodeList result = get(xpath);
         switch (result.getLength())
         {
         case 0:
             if (mandatory)
             {
-                throw new ConfigurationException("No value found for path: %s", xPath);
+                throw new ConfigurationException("No value found for path: %s", xpath);
             }
             return null;
         case 1:
             Node node = result.item(0);
             return ParseFactory.parse(targetType, node.getTextContent());
         default:
-            throw new ConfigurationException("Multiple values found for path: %s", xPath);
+            throw new ConfigurationException("Multiple values found for path: %s", xpath);
         }
     }
 
@@ -342,20 +347,19 @@ public class XmlConfigurationHelper implements ConfigurationHelper<Document>
      * Returns the {@link NodeList} object associated with the specified @{code XPath} in the
      * XML document in context.
      *
-     * @param xPath the {@code XPath} expression to read
+     * @param xpath the {@code XPath} expression to read
      *
-     * @return the object associated with the specified {@code XPath}; or an empty array if
-     *         the path is not found
+     * @return the {@link NodeList} object associated with the specified {@code XPath}
      *
      * @throws NullPointerException   if the {@code XPath} expression is null
      * @throws ConfigurationException if the {@code XPath} expression is not valid
      */
     @Override
-    public NodeList get(String xPath)
+    public NodeList get(String xpath)
     {
         try
         {
-            return (NodeList) compileXPath(xPath).evaluate(document, XPathConstants.NODESET);
+            return (NodeList) compileXPath(xpath).evaluate(document, XPathConstants.NODESET);
         }
         catch (XPathExpressionException exception)
         {
