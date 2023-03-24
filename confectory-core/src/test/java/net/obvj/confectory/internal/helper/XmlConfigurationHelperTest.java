@@ -20,21 +20,15 @@ import static net.obvj.junit.utils.matchers.AdvancedMatchers.throwsException;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-import java.io.IOException;
-import java.io.StringReader;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 
 import org.hamcrest.Matcher;
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
 import net.obvj.confectory.ConfigurationException;
+import net.obvj.confectory.mapper.XmlMapper;
+import net.obvj.confectory.source.StringSource;
 
 /**
  * Unit tests for the {@link XmlConfigurationHelper}.
@@ -89,20 +83,11 @@ class XmlConfigurationHelperTest
      * Parse the specified string into an XML {@link Document}
      *
      * @param string the string to parse
-     * @return a new DOM Document from the specified string
+     * @return a new {@link Document} from the specified string
      */
     private static Document parseXml(String string)
     {
-        try
-        {
-            DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder builder = builderFactory.newDocumentBuilder();
-            return builder.parse(new InputSource(new StringReader(string)));
-        }
-        catch (ParserConfigurationException | SAXException | IOException e)
-        {
-            throw new AssertionError("Unable to parse test XML", e);
-        }
+        return new StringSource<Document>(string).load(new XmlMapper());
     }
 
     @Test

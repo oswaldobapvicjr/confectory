@@ -45,7 +45,7 @@ public class XmlConfigurationHelper implements ConfigurationHelper<Document>
      *
      * @param document the JSON document to set
      */
-    protected XmlConfigurationHelper(Document document)
+    public XmlConfigurationHelper(Document document)
     {
         this.document = document;
     }
