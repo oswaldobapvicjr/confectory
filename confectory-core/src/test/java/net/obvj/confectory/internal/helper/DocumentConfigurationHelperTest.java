@@ -27,16 +27,16 @@ import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 
 import net.obvj.confectory.ConfigurationException;
-import net.obvj.confectory.mapper.XmlMapper;
+import net.obvj.confectory.mapper.DocumentMapper;
 import net.obvj.confectory.source.StringSource;
 
 /**
- * Unit tests for the {@link XmlConfigurationHelper}.
+ * Unit tests for the {@link DocumentConfigurationHelper}.
  *
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 2.4.0
  */
-class XmlConfigurationHelperTest
+class DocumentConfigurationHelperTest
 {
     private static final Document BOOKS_XML = parseXml(
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
@@ -73,7 +73,7 @@ class XmlConfigurationHelperTest
             + "    </book>\n"
             + "</bookstore>");
 
-    private static final ConfigurationHelper<Document> HELPER = new XmlConfigurationHelper(BOOKS_XML);
+    private static final ConfigurationHelper<Document> HELPER = new DocumentConfigurationHelper(BOOKS_XML);
 
     private static final String PATH_UNKNOWN = "/unknown";
     private static final Matcher<Runnable> EXCEPTION_NO_VALUE_FOUND_PATH_UNKNOWN = throwsException(
@@ -87,7 +87,7 @@ class XmlConfigurationHelperTest
      */
     private static Document parseXml(String string)
     {
-        return new StringSource<Document>(string).load(new XmlMapper());
+        return new StringSource<Document>(string).load(new DocumentMapper());
     }
 
     @Test

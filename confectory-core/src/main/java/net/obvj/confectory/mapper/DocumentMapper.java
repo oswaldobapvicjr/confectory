@@ -28,7 +28,7 @@ import org.xml.sax.SAXException;
 
 import net.obvj.confectory.ConfigurationException;
 import net.obvj.confectory.internal.helper.ConfigurationHelper;
-import net.obvj.confectory.internal.helper.XmlConfigurationHelper;
+import net.obvj.confectory.internal.helper.DocumentConfigurationHelper;
 
 /**
  * A specialized {@code Mapper} that loads the contents of a valid XML {@code Source}
@@ -40,7 +40,7 @@ import net.obvj.confectory.internal.helper.XmlConfigurationHelper;
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 2.4.0
  */
-public class XmlMapper implements Mapper<Document>
+public class DocumentMapper implements Mapper<Document>
 {
 
     @Override
@@ -62,7 +62,7 @@ public class XmlMapper implements Mapper<Document>
     @Override
     public ConfigurationHelper<Document> configurationHelper(Document document)
     {
-        return new XmlConfigurationHelper(document);
+        return new DocumentConfigurationHelper(document);
     }
 
 }

@@ -36,7 +36,7 @@ import net.obvj.confectory.util.ParseFactory;
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 2.4.0
  */
-public class XmlConfigurationHelper implements ConfigurationHelper<Document>
+public class DocumentConfigurationHelper implements ConfigurationHelper<Document>
 {
     protected final Document document;
 
@@ -45,7 +45,7 @@ public class XmlConfigurationHelper implements ConfigurationHelper<Document>
      *
      * @param document the JSON document to set
      */
-    public XmlConfigurationHelper(Document document)
+    public DocumentConfigurationHelper(Document document)
     {
         this.document = document;
     }
