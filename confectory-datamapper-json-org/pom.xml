@@ -30,7 +30,7 @@
     </description>
 
     <properties>
-        <json-org.version>20211205</json-org.version>
+        <json-org.version>20230227</json-org.version>
     </properties>
 
     <dependencies>
