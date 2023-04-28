@@ -33,7 +33,6 @@ public class ConfectoryTestDriveXmlDocumentXPath
                 + "        <employee id=\"3\">Robert De Niro</employee>\r\n"
                 + "        <employee id=\"4\">Kevin Spacey</employee>\r\n"
                 + "        <employee id=\"5\">Denzel Washington</employee>\r\n"
-                + "        \r\n"
                 + "    </employees>\r\n"
                 + "    <foo:companies>\r\n"
                 + "        <foo:company id=\"9\">Microsoft</foo:company>\r\n"
