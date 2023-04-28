@@ -33,7 +33,7 @@
         <commons-lang.version>3.12.0</commons-lang.version>
         <commons-io.version>2.11.0</commons-io.version>
         <commons-text.version>1.10.0</commons-text.version>
-        <jsonmerge.version>1.2.0</jsonmerge.version>
+        <jsonmerge.version>1.2.1</jsonmerge.version>
         <json-path.version>2.8.0</json-path.version>
         <json-smart.version>2.4.10</json-smart.version>
         <performetrics.version>2.4.0</performetrics.version>
