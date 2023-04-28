@@ -57,7 +57,8 @@
         <!-- Test dependencies -->
         <junit.version>5.9.3</junit.version>
         <junit-utils.version>1.4.0</junit-utils.version>
-        <mockito.version>5.2.0</mockito.version>
+        <!-- Newer versions of Mockito do not support JDK8s -->
+        <mockito.version>4.8.1</mockito.version>
         <tinylog.version>2.6.1</tinylog.version>
         
     </properties>
