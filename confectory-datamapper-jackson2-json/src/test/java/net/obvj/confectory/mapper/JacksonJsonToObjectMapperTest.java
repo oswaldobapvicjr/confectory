@@ -16,18 +16,32 @@
 
 package net.obvj.confectory.mapper;
 
+import static java.util.Collections.singletonList;
+import static net.obvj.junit.utils.matchers.AdvancedMatchers.containsAll;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.when;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
+
+import com.fasterxml.jackson.core.Version;
+import com.fasterxml.jackson.databind.Module;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.exc.InvalidDefinitionException;
 
 import net.obvj.confectory.internal.helper.BeanConfigurationHelper;
 import net.obvj.confectory.mapper.model.MyBean;
+import net.obvj.confectory.mapper.model.MyBeanWithMoney;
 
 /**
  * Unit tests for the {@link JacksonJsonToObjectMapper} class.
@@ -46,7 +60,21 @@ class JacksonJsonToObjectMapperTest
                                                   + "  ]"
                                                   + "}";
 
+    private static final String TEST_JSON_SAMPLE2 = "{"
+                                                  + "  \"product\": \"Notebook\","
+                                                  + "  \"price\": {"
+                                                  + "    \"amount\": 4999.95,"
+                                                  + "    \"currency\": \"BRL\""
+                                                  + "  }"
+                                                  + "}";
+
     private Mapper<MyBean> mapper = new JacksonJsonToObjectMapper<>(MyBean.class);
+
+    @AfterEach
+    private void cleanup()
+    {
+        JacksonJsonToObjectMapper.resetModulesCache();
+    }
 
     private ByteArrayInputStream toInputStream(String content)
     {
@@ -54,7 +82,7 @@ class JacksonJsonToObjectMapperTest
     }
 
     @Test
-    void apply_validInputStream_validJsonNode() throws IOException
+    void apply_validInputStream_validObject() throws IOException
     {
         MyBean result = mapper.apply(toInputStream(TEST_JSON_SAMPLE1));
         assertThat(result.intValue, equalTo(9));
@@ -62,6 +90,55 @@ class JacksonJsonToObjectMapperTest
         List<String> array = result.array;
         assertThat(array.size(), equalTo(2));
         assertThat(array.containsAll(Arrays.asList("string1", "string2")), equalTo(true));
+    }
+
+    @Test
+    void apply_jsonSample2WithModuleSupport_validObject() throws IOException
+    {
+        MyBeanWithMoney result = new JacksonJsonToObjectMapper<>(MyBeanWithMoney.class)
+                .apply(toInputStream(TEST_JSON_SAMPLE2));
+
+        assertThat(result.product, equalTo("Notebook"));
+        assertThat(result.price.getNumber().doubleValueExact(), equalTo(4999.95));
+        assertThat(result.price.getCurrency().getCurrencyCode(), equalTo("BRL"));
+    }
+
+    @Test
+    void apply_jsonSample2WithoutModuleSupport_validObject()
+    {
+        JacksonJsonToObjectMapper<MyBeanWithMoney> mapper = new JacksonJsonToObjectMapper<>(
+                MyBeanWithMoney.class, true);
+        try
+        {
+            mapper.apply(toInputStream(TEST_JSON_SAMPLE2));
+        }
+        catch (IOException exception)
+        {
+            assertThat(exception.getClass(), equalTo(InvalidDefinitionException.class));
+            assertThat(exception.getMessage(),
+                    containsAll("Cannot construct instance of `javax.money.MonetaryAmount`"));
+        }
+    }
+
+    @Test
+    void reloadModulesCache_verify() throws IOException
+    {
+        Module module = mock(Module.class);
+        when(module.getModuleName()).thenReturn("Module1");
+        when(module.version()).thenReturn(mock(Version.class));
+        List<com.fasterxml.jackson.databind.Module> modules = singletonList(module);
+
+        try (MockedStatic<ObjectMapper> mocked = mockStatic(ObjectMapper.class))
+        {
+            mocked.when(ObjectMapper::findModules).thenReturn(modules);
+
+            new JacksonJsonToObjectMapper<>(MyBean.class).apply(toInputStream(TEST_JSON_SAMPLE1));
+            new JacksonJsonToObjectMapper<>(MyBean.class).apply(toInputStream(TEST_JSON_SAMPLE1));
+            mocked.verify(ObjectMapper::findModules, times(1));
+
+            JacksonJsonToObjectMapper.reloadModulesCache();
+            mocked.verify(ObjectMapper::findModules, times(2));
+        }
     }
 
     @Test

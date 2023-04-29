@@ -28,6 +28,8 @@ import net.obvj.confectory.internal.helper.JacksonJsonNodeHelper;
  * {@link TomlMapper}.
  * <p>
  * Additional details may be found at Jackson's official documentation.
+ * <p>
+ * <b>Note:</b> Support for Jackson modules lookup is disabled for this type of mapper.
  *
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 1.1.0
@@ -40,7 +42,7 @@ public class JacksonTOMLToJsonNodeMapper extends JacksonTOMLToObjectMapper<JsonN
      */
     public JacksonTOMLToJsonNodeMapper()
     {
-        super(JsonNode.class);
+        super(JsonNode.class, true);
     }
 
     @Override
