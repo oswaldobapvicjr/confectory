@@ -17,7 +17,6 @@
 package net.obvj.confectory.internal.helper;
 
 import com.jayway.jsonpath.*;
-import com.jayway.jsonpath.internal.filter.ValueNodes.JsonNode;
 import com.jayway.jsonpath.spi.json.JsonProvider;
 import com.jayway.jsonpath.spi.mapper.MappingProvider;
 
@@ -40,7 +39,7 @@ public abstract class GenericJsonConfigurationHelper<J> implements Configuration
     protected final DocumentContext documentContext;
 
     /**
-     * Creates a new helper for the given {@link JsonNode}.
+     * Creates a new helper for the given JSON.
      *
      * @param json            the JSON document to set
      * @param jsonProvider    the {@link JsonProvider} to set
