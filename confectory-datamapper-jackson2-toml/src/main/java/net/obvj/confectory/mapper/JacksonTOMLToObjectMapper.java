@@ -19,7 +19,6 @@ package net.obvj.confectory.mapper;
 import java.io.IOException;
 import java.io.InputStream;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.toml.TomlMapper;
 
 /**
@@ -76,8 +75,7 @@ public class JacksonTOMLToObjectMapper<T> extends JacksonJsonToObjectMapper<T> i
     @Override
     public T apply(InputStream inputStream) throws IOException
     {
-        ObjectMapper mapper = new TomlMapper();
-        return mapper.readValue(inputStream, super.targetType);
+        return super.apply(inputStream, new TomlMapper());
     }
 
 }

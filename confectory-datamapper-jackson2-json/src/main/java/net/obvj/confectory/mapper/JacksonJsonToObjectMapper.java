@@ -21,6 +21,8 @@ import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 
+import com.fasterxml.jackson.core.exc.StreamReadException;
+import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 
@@ -86,7 +88,28 @@ public class JacksonJsonToObjectMapper<T> implements Mapper<T>
     @Override
     public T apply(InputStream inputStream) throws IOException
     {
-        ObjectMapper mapper = new JsonMapper();
+        return apply(inputStream, new JsonMapper());
+    }
+
+    /**
+     * Applies the specified {@link ObjectMapper} into the given input.
+     * <p>
+     * The {@link ObjectMapper} may be filled with Jackson modules by this method if the
+     * {@code disableModules} flag is not set.
+     * <p>
+     * <strong>Note:</strong> The input stream must be closed by the caller after the mapping
+     * operation.
+     *
+     * @param input  the input stream to be mapped
+     * @param mapper the {@link ObjectMapper} to be used
+     * @return the mapped object
+     *
+     * @throws IOException if a low-level I/O problem (such and unexpected end-of-input, or
+     *                     network error) occurs
+     * @since 2.4.0
+     */
+    protected T apply(InputStream inputStream, ObjectMapper mapper) throws IOException
+    {
         if (!disableModules)
         {
             mapper.registerModules(reloadModulesIfNull());

@@ -104,7 +104,7 @@ class JacksonJsonToObjectMapperTest
     }
 
     @Test
-    void apply_jsonSample2WithoutModuleSupport_validObject()
+    void apply_jsonSample2WithoutModuleSupport_exception()
     {
         JacksonJsonToObjectMapper<MyBeanWithMoney> mapper = new JacksonJsonToObjectMapper<>(
                 MyBeanWithMoney.class, true);
