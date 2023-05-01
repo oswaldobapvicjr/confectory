@@ -14,7 +14,16 @@ The modular, multi-format configuration framework for Java applications.
 
 ## Overview
 
-Confectory is a modular framework, designed to hide the complexity of handling multiple configuration files for Java applications in general, providing a **reliable** and **fast** API for parsing data from different **Sources** (file or URL) in a variety of formats and querying data transparently, using a **unified data query language**: JSONPath.
+**Confectory** is a modular framework designed to hide the complexity of handling multiple configuration files for Java applications in general, providing a **reliable** and **fast** API for parsing data from different **sources** (file or URL) in a variety of formats, and allowing data access using a **unified query language**.
+
+## Features
+
+- Easy configuration setup via **intuitive API**
+- Simple data query using **JSONPath**, **XPath**, or user-defined beans
+- Support for the **best providers** available in the community (e.g.: Jackson, GSON)
+- **Multiple configuration formats** (e.g.: XML, JSON, or YAML) with custom **precedence levels**
+- **Lazy loading** of configuration sources
+
 
 ## Examples
 
@@ -47,13 +56,6 @@ System.out.println(config.getString("$.time"));
 ````
 
 > ℹ️ [Find more examples in the wiki.](https://github.com/oswaldobapvicjr/confectory/wiki/Examples/)
-
-## Features
-
-- Easy configuration setup
-- Seamless data query using **JSONPath** or user-defined beans
-- Support for the **best providers** available in the community (e.g.: Jackson, GSON)
-- Accept **multiple configuration formats** (e.g.: XML, JSON, or YAML) and define **precedence levels** for each one
 
 
 ## How to include it
