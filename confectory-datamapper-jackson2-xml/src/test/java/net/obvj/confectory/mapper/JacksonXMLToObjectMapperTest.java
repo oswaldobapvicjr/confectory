@@ -55,7 +55,7 @@ class JacksonXMLToObjectMapperTest
     private static final String TEST_XML_SAMPLE2
             = "<root>\n"
             + "  <product>Notebook</product>\n"
-            + "  <price amount=\"4999.95\" currency=\"BRL\">\n"
+            + "  <price amount=\"4999.95\" currency=\"BRL\"/>\n"
             + "</root>\n";
 
     private Mapper<MyBean> mapper = new JacksonXMLToObjectMapper<>(MyBean.class);
