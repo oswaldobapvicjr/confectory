@@ -26,6 +26,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.exc.InvalidDefinitionException;
@@ -56,6 +57,12 @@ class JacksonTOMLToObjectMapperTest
             + "releaseDate= \"" + DATE1 + "\"\n";;
 
     private Mapper<Bean> mapper = new JacksonTOMLToObjectMapper<>(Bean.class);
+
+    @AfterEach
+    private void cleanup()
+    {
+        JacksonTOMLToObjectMapper.resetModulesCache();
+    }
 
     private ByteArrayInputStream toInputStream(String content)
     {

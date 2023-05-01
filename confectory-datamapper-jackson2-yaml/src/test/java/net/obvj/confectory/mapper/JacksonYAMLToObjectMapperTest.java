@@ -16,6 +16,7 @@
 
 package net.obvj.confectory.mapper;
 
+import static net.obvj.junit.utils.matchers.AdvancedMatchers.containsAll;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -24,10 +25,14 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+
+import com.fasterxml.jackson.databind.exc.InvalidDefinitionException;
 
 import net.obvj.confectory.internal.helper.BeanConfigurationHelper;
 import net.obvj.confectory.mapper.model.MyBean;
+import net.obvj.confectory.mapper.model.MyBeanWithMoney;
 
 /**
  * Unit tests for the {@link JacksonYAMLToObjectMapper} class.
@@ -44,7 +49,19 @@ class JacksonYAMLToObjectMapperTest
             + "  - string1\r\n"
             + "  - string2";
 
+    private static final String TEST_YAML_SAMPLE2
+            = "product: Notebook\n"
+            + "price:\r\n"
+            + "  amount: 4999.95\n"
+            + "  currency: BRL";
+
     private Mapper<MyBean> mapper = new JacksonYAMLToObjectMapper<>(MyBean.class);
+
+    @AfterEach
+    private void cleanup()
+    {
+        JacksonYAMLToObjectMapper.resetModulesCache();
+    }
 
     private ByteArrayInputStream toInputStream(String content)
     {
@@ -60,6 +77,34 @@ class JacksonYAMLToObjectMapperTest
         List<String> array = result.array;
         assertThat(array.size(), equalTo(2));
         assertThat(array.containsAll(Arrays.asList("string1", "string2")), equalTo(true));
+    }
+
+    @Test
+    void apply_jsonSample2WithModuleSupport_validObject() throws IOException
+    {
+        MyBeanWithMoney result = new JacksonYAMLToObjectMapper<>(MyBeanWithMoney.class)
+                .apply(toInputStream(TEST_YAML_SAMPLE2));
+
+        assertThat(result.product, equalTo("Notebook"));
+        assertThat(result.price.getNumber().doubleValueExact(), equalTo(4999.95));
+        assertThat(result.price.getCurrency().getCurrencyCode(), equalTo("BRL"));
+    }
+
+    @Test
+    void apply_jsonSample2WithoutModuleSupport_exception()
+    {
+        JacksonJsonToObjectMapper<MyBeanWithMoney> mapper = new JacksonYAMLToObjectMapper<>(
+                MyBeanWithMoney.class, true);
+        try
+        {
+            mapper.apply(toInputStream(TEST_YAML_SAMPLE2));
+        }
+        catch (IOException exception)
+        {
+            assertThat(exception.getClass(), equalTo(InvalidDefinitionException.class));
+            assertThat(exception.getMessage(),
+                    containsAll("Cannot construct instance of `javax.money.MonetaryAmount`"));
+        }
     }
 
     @Test

@@ -40,7 +40,7 @@ public class JacksonYAMLToJsonNodeMapper extends JacksonYAMLToObjectMapper<JsonN
      */
     public JacksonYAMLToJsonNodeMapper()
     {
-        super(JsonNode.class);
+        super(JsonNode.class, true);
     }
 
     @Override
