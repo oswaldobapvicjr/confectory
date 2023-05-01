@@ -28,6 +28,8 @@ import net.obvj.confectory.internal.helper.JacksonJsonNodeHelper;
  * {@link YAMLMapper}.
  * <p>
  * Additional details may be found at Jackson's official documentation.
+ * <p>
+ * <b>Note:</b> Support for Jackson modules lookup is disabled for this type of mapper.
  *
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 0.3.0

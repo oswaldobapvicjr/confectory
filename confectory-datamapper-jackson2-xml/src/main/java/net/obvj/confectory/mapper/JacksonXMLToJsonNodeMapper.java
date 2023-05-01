@@ -41,8 +41,12 @@ import net.obvj.confectory.internal.helper.JacksonJsonNodeHelper;
  * <a href="https://github.com/FasterXML/jackson-dataformat-xml#known-limitations">
  * Jackson's official documentation</a>.
  * <p>
- * <strong>Note:</strong> Conversion from XML to JSON may vary depending on the
- * {@link Mapper} implementation.
+ * <strong>Notes:</strong>
+ * <ul>
+ * <li>Conversion from XML to JSON may vary depending on the {@link Mapper}
+ * implementation.</li>
+ * <li>Support for Jackson modules lookup is disabled for this type of mapper.</li>
+ * </ul>
  *
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 0.3.0
@@ -55,7 +59,7 @@ public class JacksonXMLToJsonNodeMapper extends JacksonXMLToObjectMapper<JsonNod
      */
     public JacksonXMLToJsonNodeMapper()
     {
-        super(JsonNode.class);
+        super(JsonNode.class, true);
     }
 
     @Override

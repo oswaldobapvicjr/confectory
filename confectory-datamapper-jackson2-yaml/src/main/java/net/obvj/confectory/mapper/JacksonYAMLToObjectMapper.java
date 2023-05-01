@@ -32,7 +32,7 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
  * <b>default</b>. However, since modules lookup is considered a potentially expensive
  * operation, it can be disabled by setting the {@code disableModules} flag in the
  * constructor:
- * <blockquote>{@code new JacksonTOMLToObjectMapper(Class<?>, boolean)}</blockquote>
+ * <blockquote>{@code new JacksonYAMLToObjectMapper(Class<?>, boolean)}</blockquote>
  * <p>
  * <b>Note:</b> To avoid a performance overhead, Jackson modules lookup happens
  * automatically at the first instantiation of a {@code JacksonJsonToObjectMapper} with
