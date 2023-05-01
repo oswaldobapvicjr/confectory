@@ -94,7 +94,7 @@ class JacksonTOMLToObjectMapperTest
     @Test
     void apply_tomlSample2WithoutModuleSupport_exception()
     {
-        JacksonJsonToObjectMapper<MyBeanWithDate> mapper = new JacksonTOMLToObjectMapper<>(
+        Mapper<MyBeanWithDate> mapper = new JacksonTOMLToObjectMapper<>(
                 MyBeanWithDate.class, true);
         try
         {

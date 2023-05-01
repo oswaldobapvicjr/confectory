@@ -93,7 +93,7 @@ class JacksonYAMLToObjectMapperTest
     @Test
     void apply_jsonSample2WithoutModuleSupport_exception()
     {
-        JacksonJsonToObjectMapper<MyBeanWithMoney> mapper = new JacksonYAMLToObjectMapper<>(
+        Mapper<MyBeanWithMoney> mapper = new JacksonYAMLToObjectMapper<>(
                 MyBeanWithMoney.class, true);
         try
         {
