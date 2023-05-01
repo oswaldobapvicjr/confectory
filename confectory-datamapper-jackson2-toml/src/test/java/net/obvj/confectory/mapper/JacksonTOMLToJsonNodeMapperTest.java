@@ -17,6 +17,7 @@
 package net.obvj.confectory.mapper;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.io.ByteArrayInputStream;
@@ -38,7 +39,7 @@ import net.obvj.confectory.internal.helper.JacksonJsonNodeHelper;
  * @since 1.1.0
  */
 @ExtendWith(MockitoExtension.class)
-class JacksonYAMLToJsonNodeMapperTest
+class JacksonTOMLToJsonNodeMapperTest
 {
     private static final String TEST_TOML_SAMPLE1
             = "intValue = 9\n"
@@ -74,6 +75,9 @@ class JacksonYAMLToJsonNodeMapperTest
         assertThat(array.get(1).asText(), equalTo("string2"));
 
         assertThat(result.get("section").get("string").asText(), equalTo("mySectionStringValue1"));
+
+        // Jackson modules cache shall not be populated by this type of mapper
+        assertThat(JacksonTOMLToObjectMapper.getCachedModules(), nullValue());
     }
 
     @Test

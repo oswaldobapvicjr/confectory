@@ -27,6 +27,8 @@ import net.obvj.confectory.internal.helper.JacksonJsonNodeHelper;
  * (e.g.: file, URL, string) as a {@link JsonNode}, using Jackson's {@link JsonMapper}.
  * <p>
  * Additional details may be found at Jackson's official documentation.
+ * <p>
+ * <b>Note:</b> Support for Jackson modules lookup is disabled for this type of mapper.
  *
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 0.3.0
@@ -35,11 +37,11 @@ public class JacksonJsonNodeMapper extends JacksonJsonToObjectMapper<JsonNode> i
 {
 
     /**
-     * Builds a new JSON mapper.
+     * Builds a new Jackson {@code JsonNode} mapper.
      */
     public JacksonJsonNodeMapper()
     {
-        super(JsonNode.class);
+        super(JsonNode.class, true);
     }
 
     @Override

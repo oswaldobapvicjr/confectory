@@ -17,6 +17,7 @@
 package net.obvj.confectory.mapper;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.io.ByteArrayInputStream;
@@ -71,6 +72,9 @@ class JacksonYAMLToJsonNodeMapperTest
         assertThat(array.size(), equalTo(2));
         assertThat(array.get(0).asText(), equalTo("string1"));
         assertThat(array.get(1).asText(), equalTo("string2"));
+
+        // Jackson modules cache shall not be populated by this type of mapper
+        assertThat(JacksonJsonToObjectMapper.getCachedModules(), nullValue());
     }
 
     @Test
