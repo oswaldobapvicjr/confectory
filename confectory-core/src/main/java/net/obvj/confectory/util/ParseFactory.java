@@ -18,10 +18,6 @@ package net.obvj.confectory.util;
 
 import java.sql.Timestamp;
 import java.time.*;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
-import java.time.temporal.TemporalAccessor;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -47,7 +43,8 @@ import org.apache.commons.lang3.ClassUtils;
  * <li>{@code java.time.Month} such as {@code "DECEMBER"}</li>
  * <li>{@code java.time.OffsetDateTime} such as {@code "2007-12-03T10:15:30-03:00"}</li>
  * <li>{@code java.time.ZonedDateTime} such as {@code "2007-12-03T10:15:30-03:00[America/Sao_Paulo]"}</li>
- * <li>{@code java.util.Date} such as {@code "2007-12-03T10:15:30+01:00"}</li>
+ * <li>{@code java.util.Date} such as {@code "2007-12-03T10:15:30+01:00"} (accepting valid
+ * date-time representations in RFC 3339 formats)</li>
  * </ul>
  *
  * @author oswaldo.bapvic.jr
@@ -71,7 +68,7 @@ public class ParseFactory
 
         // Legacy java.util.Date may accept the either of the formats
         // "2007-12-03T10:15:30+01:00", or "2007-12-03T09:15:30Z"
-        PARSERS.put(java.util.Date.class, ParseFactory::parseDate);
+        PARSERS.put(java.util.Date.class, DateUtils::parseDateRfc3339);
 
         // java.sql.Date, such as: "2007-2-28" or "2005-12-1"
         PARSERS.put(java.sql.Date.class, java.sql.Date::valueOf);
@@ -94,12 +91,6 @@ public class ParseFactory
         PARSERS.put(Month.class, Month::valueOf);
         PARSERS.put(DayOfWeek.class, DayOfWeek::valueOf);
     }
-
-    // A custom DateTimeFormatter is required while Java 8 is still supported
-    private static final DateTimeFormatter DATE_FORMAT = new DateTimeFormatterBuilder()
-            .append(DateTimeFormatter.ISO_LOCAL_DATE_TIME).optionalStart()
-            .appendOffset("+HH:MM", "Z") // The format +HH:MM is not standard in Java 8
-            .optionalEnd().toFormatter();
 
     /**
      * Private constructor to hide the public, implicit one.
@@ -143,13 +134,6 @@ public class ParseFactory
             throw new UnsupportedOperationException("Unsupported type: " + type);
         }
         return parser;
-    }
-
-    private static Date parseDate(String string)
-    {
-        TemporalAccessor temporalAccessor = DATE_FORMAT.parse(string);
-        Instant instant = Instant.from(temporalAccessor);
-        return Date.from(instant);
     }
 
 }

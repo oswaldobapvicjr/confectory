@@ -85,7 +85,7 @@ class ParseFactoryTest
     }
 
     @Test
-    void pase_unknownType_unsupportedOperation()
+    void parse_unknownType_unsupportedOperation()
     {
         assertThat(() -> ParseFactory.parse(Object.class, STR_123),
                 throwsException(UnsupportedOperationException.class).withMessageContaining("Unsupported type"));
