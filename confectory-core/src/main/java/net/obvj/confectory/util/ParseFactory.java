@@ -16,6 +16,9 @@
 
 package net.obvj.confectory.util;
 
+import java.sql.Timestamp;
+import java.time.*;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -26,25 +29,69 @@ import org.apache.commons.lang3.ClassUtils;
 /**
  * A class that contains built-in parsers from string into common object types, typically
  * for Reflection purposes.
+ * <p>
+ * It supports all of the primitive types (including their wrappers) as well as the
+ * following object types:
+ * <p>
+ * <b><i>Since 2.5.0:</i></b>
+ * <ul>
+ * <li>{@code java.sql.Date} such as {@code "2007-12-03"}</li>
+ * <li>{@code java.sql.Timestamp} such as {@code "2007-12-03 10:15:30.998"}</li>
+ * <li>{@code java.time.DayOfWeek} such as {@code "FRIDAY"}</li>
+ * <li>{@code java.time.Duration} such as {@code "PT15M"} (15 minutes)</li>
+ * <li>{@code java.time.Instant} such as {@code "2007-12-03T13:15:30Z"}</li>
+ * <li>{@code java.time.LocalDate} such as {@code "2007-12-03"}</li>
+ * <li>{@code java.time.LocalDateTime} such as {@code "2007-12-03T10:15:30"}</li>
+ * <li>{@code java.time.Month} such as {@code "DECEMBER"}</li>
+ * <li>{@code java.time.OffsetDateTime} such as {@code "2007-12-03T10:15:30-03:00"}</li>
+ * <li>{@code java.time.ZonedDateTime} such as {@code "2007-12-03T10:15:30-03:00[America/Sao_Paulo]"}</li>
+ * <li>{@code java.util.Date} such as {@code "2007-12-03T10:15:30+01:00"}</li>
+ * </ul>
  *
  * @author oswaldo.bapvic.jr
  * @since 1.2.0
  */
 public class ParseFactory
 {
-    private static final Map<Class<?>, Function<String, ?>> factory = new HashMap<>();
+    private static final Map<Class<?>, Function<String, ?>> PARSERS = new HashMap<>();
 
     static
     {
-        factory.put(Boolean.class, Boolean::valueOf);
-        factory.put(Byte.class, Byte::valueOf);
-        factory.put(Short.class, Short::valueOf);
-        factory.put(Integer.class, Integer::valueOf);
-        factory.put(Long.class, Long::valueOf);
-        factory.put(Float.class, Float::valueOf);
-        factory.put(Double.class, Double::valueOf);
-        factory.put(Character.class, string -> string.isEmpty() ? 0 : Character.valueOf(string.charAt(0)));
-        factory.put(String.class, Function.identity());
+        PARSERS.put(Boolean.class, Boolean::valueOf);
+        PARSERS.put(Byte.class, Byte::valueOf);
+        PARSERS.put(Short.class, Short::valueOf);
+        PARSERS.put(Integer.class, Integer::valueOf);
+        PARSERS.put(Long.class, Long::valueOf);
+        PARSERS.put(Float.class, Float::valueOf);
+        PARSERS.put(Double.class, Double::valueOf);
+        PARSERS.put(Character.class, string -> string.isEmpty() ? 0 : Character.valueOf(string.charAt(0)));
+        PARSERS.put(String.class, Function.identity());
+
+        // Legacy java.util.Date may accept the either of the formats
+        // "2007-12-03T10:15:30+01:00", or "2007-12-03T09:15:30Z"
+        PARSERS.put(java.util.Date.class, string -> Date.from(Instant.parse(string)));
+
+        // java.sql.Date, such as: "2007-2-28" or "2005-12-1"
+        PARSERS.put(java.sql.Date.class, java.sql.Date::valueOf);
+        // java.sql.Timestamp, such as: "2007-12-03 09:15:30.99"
+        PARSERS.put(Timestamp.class, Timestamp::valueOf);
+
+        // LocalDate, such as: "2007-12-03"
+        PARSERS.put(LocalDate.class, LocalDate::parse);
+        // LocalDateTime, such as: "2007-12-03T10:15:30"
+        PARSERS.put(LocalDateTime.class, LocalDateTime::parse);
+        // OffsetDateTime, such as: "2007-12-03T10:15:30+01:00"
+        PARSERS.put(OffsetDateTime.class, OffsetDateTime::parse);
+        // ZonedDateTime, such as: "2007-12-03T10:15:30+01:00[Europe/Paris]"
+        PARSERS.put(ZonedDateTime.class, ZonedDateTime::parse);
+        // Instant, such as: "2007-12-03T10:15:30.00Z"
+        PARSERS.put(Instant.class, Instant::parse);
+        // Duration, such as: "PT15M" (15 minutes)
+        PARSERS.put(Duration.class, Duration::parse);
+
+        PARSERS.put(Month.class, Month::valueOf);
+        PARSERS.put(DayOfWeek.class, DayOfWeek::valueOf);
+
     }
 
     /**
@@ -69,9 +116,9 @@ public class ParseFactory
     public static <T> T parse(Class<T> type, String string)
     {
         Class<?> objectType = ClassUtils.primitiveToWrapper(type);
-        Function<String, ?> function = getFunction(objectType)
+        Function<String, ?> parser = getParser(objectType)
                 .orElseThrow(() -> new UnsupportedOperationException("Unsupported type: " + type));
-        Object object = function.apply(string);
+        Object object = parser.apply(string);
         return (T) object;
     }
 
@@ -83,8 +130,9 @@ public class ParseFactory
      * @return the {@link Function} to be applied for the specified type, or
      *         {@link Optional#empty()} if the specified type is not supported
      */
-    private static Optional<Function<String, ?>> getFunction(Class<?> type)
+    private static Optional<Function<String, ?>> getParser(Class<?> type)
     {
-        return Optional.ofNullable(factory.get(type));
+        return Optional.ofNullable(PARSERS.get(type));
     }
+
 }

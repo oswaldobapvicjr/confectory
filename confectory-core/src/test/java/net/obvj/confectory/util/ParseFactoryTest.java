@@ -22,6 +22,14 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.MatcherAssert.assertThat;
 
+import java.sql.Timestamp;
+import java.time.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
+
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -32,9 +40,43 @@ import org.junit.jupiter.api.Test;
  */
 class ParseFactoryTest
 {
+
+    private static final String STR_UTC = "UTC";
+
     private static final String STR_TRUE = "true";
     private static final String STR_123 = "123";
     private static final String STR_A = "A";
+
+    private static final String DATE_2022_12_03 = "2022-12-03";
+    private static final String DATE_2022_12_03_10_15_30 = "2022-12-03 10:15:30";
+    private static final String DATE_2022_12_03T10_15_30 = "2022-12-03T10:15:30";
+    private static final String DATE_2022_12_03T10_15_30_MINUS_03_00 = "2022-12-03T10:15:30-03:00";
+    private static final String DATE_2022_12_03T10_15_30_MINUS_03_00_AMERICA_SP = "2022-12-03T10:15:30-03:00[America/Sao_Paulo]";
+    private static final String DATE_2022_12_03T13_15_30Z = "2022-12-03T13:15:30Z";
+
+    private static final Date DATE_2023_12_03T13_15_30Z_AS_DATE = toDateUtc(2022, 12, 03, 13, 15, 30, 0);
+    private static final long DATE_2022_12_03T13_15_30Z_TIMESTAMP = DATE_2023_12_03T13_15_30Z_AS_DATE.getTime();
+
+    @BeforeAll
+    public static void setup()
+    {
+        Locale.setDefault(Locale.UK);
+        TimeZone.setDefault(TimeZone.getTimeZone(STR_UTC));
+    }
+
+    private static Date toDateUtc(int year, int month, int day, int hour, int minute, int second, int millisecond)
+    {
+        return toCalendarUtc(year, month, day, hour, minute, second, millisecond).getTime();
+    }
+
+    private static Calendar toCalendarUtc(int year, int month, int day, int hour, int minute, int second, int millisecond)
+    {
+        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(STR_UTC));
+        calendar.set(year, month - 1, day, hour, minute, second);
+        calendar.set(Calendar.MILLISECOND, millisecond);
+        return calendar;
+    }
+
 
     @Test
     void constructor_instantiationNotAllowed()
@@ -81,6 +123,87 @@ class ParseFactoryTest
     void parse_characterEmptyString_zero()
     {
         assertThat(ParseFactory.parse(Character.class, ""), equalTo('\0'));
+    }
+
+    @Test
+    void parse_localDate_success()
+    {
+        assertThat(ParseFactory.parse(LocalDate.class, DATE_2022_12_03),
+                equalTo(LocalDate.of(2022, 12, 3)));
+    }
+
+    @Test
+    void parse_localDateTime_success()
+    {
+        assertThat(ParseFactory.parse(LocalDateTime.class, DATE_2022_12_03T10_15_30),
+                equalTo(LocalDateTime.of(2022, 12, 3, 10, 15, 30, 0)));
+    }
+
+    @Test
+    void parse_offsetDateTime_success()
+    {
+        assertThat(ParseFactory.parse(OffsetDateTime.class, DATE_2022_12_03T10_15_30_MINUS_03_00),
+                equalTo(OffsetDateTime.of(2022, 12, 3, 10, 15, 30, 0, ZoneOffset.ofHours(-3))));
+    }
+
+    @Test
+    void parse_zonedDateTime_success()
+    {
+        assertThat(ParseFactory.parse(ZonedDateTime.class, DATE_2022_12_03T10_15_30_MINUS_03_00_AMERICA_SP),
+                equalTo(ZonedDateTime.of(2022, 12, 3, 10, 15, 30, 0, ZoneId.of("America/Sao_Paulo"))));
+    }
+
+    @Test
+    void parse_instant_success()
+    {
+        assertThat(ParseFactory.parse(Instant.class, DATE_2022_12_03T13_15_30Z),
+                equalTo(Instant.ofEpochMilli(DATE_2022_12_03T13_15_30Z_TIMESTAMP)));
+    }
+
+    @Test
+    void parse_duration_success()
+    {
+        assertThat(ParseFactory.parse(Duration.class, "PT15M"), equalTo(Duration.ofMinutes(15)));
+    }
+
+    @Test
+    void parse_javaUtilDateWithOffset_success()
+    {
+        assertThat(ParseFactory.parse(Date.class, DATE_2022_12_03T10_15_30_MINUS_03_00),
+                equalTo(DATE_2023_12_03T13_15_30Z_AS_DATE));
+    }
+
+    @Test
+    void parse_javaUtilDateZulu_success()
+    {
+        assertThat(ParseFactory.parse(Date.class, DATE_2022_12_03T13_15_30Z),
+                equalTo(DATE_2023_12_03T13_15_30Z_AS_DATE));
+    }
+
+    @Test
+    void parse_javaSqlDate_success()
+    {
+        assertThat(ParseFactory.parse(java.sql.Date.class, DATE_2022_12_03),
+                equalTo(toDateUtc(2022, 12, 3, 0, 0, 0, 0)));
+    }
+
+    @Test
+    void parse_timestamp_success()
+    {
+        assertThat(ParseFactory.parse(Timestamp.class, DATE_2022_12_03_10_15_30),
+                equalTo(new Timestamp(toDateUtc(2022, 12, 3, 10, 15, 30, 0).getTime())));
+    }
+
+    @Test
+    void parse_month_success()
+    {
+        assertThat(ParseFactory.parse(Month.class, "JULY"), equalTo(Month.JULY));
+    }
+
+    @Test
+    void parse_dayOfWeek_success()
+    {
+        assertThat(ParseFactory.parse(DayOfWeek.class, "FRIDAY"), equalTo(DayOfWeek.FRIDAY));
     }
 
 }
