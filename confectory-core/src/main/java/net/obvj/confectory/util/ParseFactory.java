@@ -18,10 +18,12 @@ package net.obvj.confectory.util;
 
 import java.sql.Timestamp;
 import java.time.*;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.temporal.TemporalAccessor;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Function;
 
 import org.apache.commons.lang3.ClassUtils;
@@ -69,7 +71,7 @@ public class ParseFactory
 
         // Legacy java.util.Date may accept the either of the formats
         // "2007-12-03T10:15:30+01:00", or "2007-12-03T09:15:30Z"
-        PARSERS.put(java.util.Date.class, string -> Date.from(Instant.parse(string)));
+        PARSERS.put(java.util.Date.class, ParseFactory::parseDate);
 
         // java.sql.Date, such as: "2007-2-28" or "2005-12-1"
         PARSERS.put(java.sql.Date.class, java.sql.Date::valueOf);
@@ -91,8 +93,13 @@ public class ParseFactory
 
         PARSERS.put(Month.class, Month::valueOf);
         PARSERS.put(DayOfWeek.class, DayOfWeek::valueOf);
-
     }
+
+    // A custom DateTimeFormatter is required while Java 8 is still supported
+    private static final DateTimeFormatter DATE_FORMAT = new DateTimeFormatterBuilder()
+            .append(DateTimeFormatter.ISO_LOCAL_DATE_TIME).optionalStart()
+            .appendOffset("+HH:MM", "Z") // The format +HH:MM is not standard in Java 8
+            .optionalEnd().toFormatter();
 
     /**
      * Private constructor to hide the public, implicit one.
@@ -110,29 +117,39 @@ public class ParseFactory
      * @param string the string to be parsed
      * @return an object containing the result of the parsing of the specified string into the
      *         specified type
-     * @throws UnsupportedOperationException if the requested target type is not supported
+     * @throws UnsupportedOperationException if the specified type is not supported
      */
     @SuppressWarnings("unchecked")
     public static <T> T parse(Class<T> type, String string)
     {
         Class<?> objectType = ClassUtils.primitiveToWrapper(type);
-        Function<String, ?> parser = getParser(objectType)
-                .orElseThrow(() -> new UnsupportedOperationException("Unsupported type: " + type));
+        Function<String, ?> parser = getParser(objectType);
         Object object = parser.apply(string);
         return (T) object;
     }
 
     /**
-     * Returns an {@link Optional} possibly containing a {@link Function} to parse the
-     * specified target type.
+     * Returns a {@link Function} to parse the specified type.
      *
      * @param type the target type
-     * @return the {@link Function} to be applied for the specified type, or
-     *         {@link Optional#empty()} if the specified type is not supported
+     * @return the {@link Function} to be applied for the specified type; not null
+     * @throws UnsupportedOperationException if the specified type is not supported
      */
-    private static Optional<Function<String, ?>> getParser(Class<?> type)
+    private static Function<String, ?> getParser(Class<?> type)
     {
-        return Optional.ofNullable(PARSERS.get(type));
+        Function<String, ?> parser = PARSERS.get(type);
+        if (parser == null)
+        {
+            throw new UnsupportedOperationException("Unsupported type: " + type);
+        }
+        return parser;
+    }
+
+    private static Date parseDate(String string)
+    {
+        TemporalAccessor temporalAccessor = DATE_FORMAT.parse(string);
+        Instant instant = Instant.from(temporalAccessor);
+        return Date.from(instant);
     }
 
 }
