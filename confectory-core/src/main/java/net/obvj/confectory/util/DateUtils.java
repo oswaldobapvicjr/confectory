@@ -61,9 +61,6 @@ public class DateUtils
      *
      * @param string the string to parse; not null
      * @return the parsed {@link Date}; not null
-     *
-     * @throws DateTimeParseException if unable to parse the requested string
-     * @throws DateTimeException      if unable to convert the date/time object
      */
     public static Date parseDateRfc3339(String string)
     {
@@ -85,9 +82,6 @@ public class DateUtils
      *
      * @param string the string to parse; not null
      * @return the parsed {@link Instant}; not null
-     *
-     * @throws DateTimeParseException if unable to parse the requested string
-     * @throws DateTimeException      if unable to convert to the date/time object
      */
     public static Instant parseInstantRfc3339(String string)
     {
