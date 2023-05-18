@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 import org.apache.commons.lang3.ClassUtils;
+import org.apache.commons.lang3.EnumUtils;
 
 /**
  * A class that contains built-in parsers from string into common object types, typically
@@ -35,17 +36,28 @@ import org.apache.commons.lang3.ClassUtils;
  * <ul>
  * <li>{@code java.sql.Date} such as {@code "2007-12-03"}</li>
  * <li>{@code java.sql.Timestamp} such as {@code "2007-12-03 10:15:30.998"}</li>
- * <li>{@code java.time.DayOfWeek} such as {@code "FRIDAY"}</li>
  * <li>{@code java.time.Duration} such as {@code "PT15M"} (15 minutes)</li>
  * <li>{@code java.time.Instant} such as {@code "2007-12-03T13:15:30Z"}</li>
  * <li>{@code java.time.LocalDate} such as {@code "2007-12-03"}</li>
  * <li>{@code java.time.LocalDateTime} such as {@code "2007-12-03T10:15:30"}</li>
- * <li>{@code java.time.Month} such as {@code "DECEMBER"}</li>
  * <li>{@code java.time.OffsetDateTime} such as {@code "2007-12-03T10:15:30-03:00"}</li>
- * <li>{@code java.time.ZonedDateTime} such as {@code "2007-12-03T10:15:30-03:00[America/Sao_Paulo]"}</li>
+ * <li>{@code java.time.ZonedDateTime} such as
+ * {@code "2007-12-03T10:15:30-03:00[America/Sao_Paulo]"}</li>
  * <li>{@code java.util.Date} such as {@code "2007-12-03T10:15:30+01:00"} (accepting valid
  * date-time representations in RFC 3339 formats)</li>
  * </ul>
+ * <p>
+ * <b>Enum</b> elements can also be retrieved based on their constant names (and performs
+ * case-insensitive matching of the name).
+ * <p>
+ * For example:
+ * <p>
+ * <blockquote>
+ * <pre>
+ * {@code ParseFactory.parse(Month.class, "january");    // returns Month.JANUARY}
+ * {@code ParseFactory.parse(DayOfWeek.class, "friday"); // returns DayOfWeek.FRIDAY}
+ * </pre>
+ * </blockquote>
  *
  * @author oswaldo.bapvic.jr
  * @since 1.2.0
@@ -87,9 +99,6 @@ public class ParseFactory
         PARSERS.put(Instant.class, Instant::parse);
         // Duration, such as: "PT15M" (15 minutes)
         PARSERS.put(Duration.class, Duration::parse);
-
-        PARSERS.put(Month.class, Month::valueOf);
-        PARSERS.put(DayOfWeek.class, DayOfWeek::valueOf);
     }
 
     /**
@@ -114,6 +123,10 @@ public class ParseFactory
     @SuppressWarnings("unchecked")
     public static <T> T parse(Class<T> type, String string)
     {
+        if (type.isEnum())
+        {
+            return getEnumElement(type, string);
+        }
         Class<?> objectType = ClassUtils.primitiveToWrapper(type);
         Function<String, ?> parser = getParser(objectType);
         try
@@ -125,6 +138,12 @@ public class ParseFactory
         {
             throw new ParseException(exception, "Unparsable %s: \"%s\"", type.getCanonicalName(), string);
         }
+    }
+
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    private static <T> T getEnumElement(Class<T> type, String string)
+    {
+        return (T) EnumUtils.getEnumIgnoreCase((Class<Enum>) type, string);
     }
 
     /**

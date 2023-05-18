@@ -23,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.time.DayOfWeek;
 import java.time.format.DateTimeParseException;
 import java.util.Date;
 import java.util.Locale;
@@ -54,7 +55,9 @@ class PropertiesToObjectMapperTest
                     + "intValue=1910\n";
 
     private static final Date DATE_UTC = TestUtils.toDateUtc(2023, 05, 12, 18, 50, 59, 0);
-    private static final String TEST_PROPERTIES_DATE = "myDate=2023-05-12T15:50:59-03:00\n";
+    private static final String TEST_PROPERTIES_DATE = "myDate=2023-05-12T15:50:59-03:00\n"
+                                                     + "dayOfWeek=friday\n";
+
     private static final String TEST_PROPERTIES_INVALID_DATE = "myDate=2023a05-12T15:50:59-03:00\n";
 
 
@@ -113,6 +116,7 @@ class PropertiesToObjectMapperTest
     static class MyBeanDate
     {
         Date myDate;
+        DayOfWeek dayOfWeek;
 
         public MyBeanDate() {}
     }
@@ -195,6 +199,7 @@ class PropertiesToObjectMapperTest
                 .apply(newInputStream(TEST_PROPERTIES_DATE));
 
         assertThat(bean.myDate, equalTo(DATE_UTC));
+        assertThat(bean.dayOfWeek, equalTo(DayOfWeek.FRIDAY));
     }
 
     @Test
