@@ -33,7 +33,6 @@
         <commons-lang.version>3.12.0</commons-lang.version>
         <commons-text.version>1.10.0</commons-text.version>
         <commons-io.version>2.11.0</commons-io.version>
-        <commons-collections.version>4.4</commons-collections.version>
         <jsonmerge.version>1.2.1</jsonmerge.version>
         <json-path.version>2.8.0</json-path.version>
         <json-smart.version>2.4.10</json-smart.version>
@@ -58,12 +57,6 @@
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>${commons-io.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-collections4</artifactId>
-            <version>${commons-collections.version}</version>
         </dependency>
 
         <dependency>
