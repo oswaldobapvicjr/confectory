@@ -180,15 +180,18 @@ class ParseFactoryTest
     }
 
     @Test
-    void parse_month_success()
+    void parse_enumTypesCaseInsensitive_success()
     {
         assertThat(ParseFactory.parse(Month.class, "JULY"), equalTo(Month.JULY));
+        assertThat(ParseFactory.parse(Month.class, "aUguSt"), equalTo(Month.AUGUST));
+        assertThat(ParseFactory.parse(DayOfWeek.class, "FRIDAY"), equalTo(DayOfWeek.FRIDAY));
+        assertThat(ParseFactory.parse(DayOfWeek.class, "saturday"), equalTo(DayOfWeek.SATURDAY));
     }
 
     @Test
-    void parse_dayOfWeek_success()
+    void parse_invalidEnumElement_null()
     {
-        assertThat(ParseFactory.parse(DayOfWeek.class, "FRIDAY"), equalTo(DayOfWeek.FRIDAY));
+        assertThat(ParseFactory.parse(Month.class, "unknown"), equalTo(null));
     }
 
 }
