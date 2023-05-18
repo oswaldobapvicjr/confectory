@@ -24,13 +24,14 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.sql.Timestamp;
 import java.time.*;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import net.obvj.confectory.TestUtils;
 
 /**
  * Unit tests for the {@link ParseFactory}.
@@ -40,9 +41,6 @@ import org.junit.jupiter.api.Test;
  */
 class ParseFactoryTest
 {
-
-    private static final String STR_UTC = "UTC";
-
     private static final String STR_TRUE = "true";
     private static final String STR_123 = "123";
     private static final String STR_A = "A";
@@ -54,29 +52,16 @@ class ParseFactoryTest
     private static final String DATE_2022_12_03T10_15_30_MINUS_03_00_AMERICA_SP = "2022-12-03T10:15:30-03:00[America/Sao_Paulo]";
     private static final String DATE_2022_12_03T13_15_30Z = "2022-12-03T13:15:30Z";
 
-    private static final Date DATE_2023_12_03T13_15_30Z_AS_DATE = toDateUtc(2022, 12, 03, 13, 15, 30, 0);
+    private static final Date DATE_2023_12_03T13_15_30Z_AS_DATE = TestUtils.toDateUtc(2022, 12, 03,
+            13, 15, 30, 0);
     private static final long DATE_2022_12_03T13_15_30Z_TIMESTAMP = DATE_2023_12_03T13_15_30Z_AS_DATE.getTime();
 
     @BeforeAll
     public static void setup()
     {
         Locale.setDefault(Locale.UK);
-        TimeZone.setDefault(TimeZone.getTimeZone(STR_UTC));
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
     }
-
-    private static Date toDateUtc(int year, int month, int day, int hour, int minute, int second, int millisecond)
-    {
-        return toCalendarUtc(year, month, day, hour, minute, second, millisecond).getTime();
-    }
-
-    private static Calendar toCalendarUtc(int year, int month, int day, int hour, int minute, int second, int millisecond)
-    {
-        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(STR_UTC));
-        calendar.set(year, month - 1, day, hour, minute, second);
-        calendar.set(Calendar.MILLISECOND, millisecond);
-        return calendar;
-    }
-
 
     @Test
     void constructor_instantiationNotAllowed()
@@ -184,14 +169,14 @@ class ParseFactoryTest
     void parse_javaSqlDate_success()
     {
         assertThat(ParseFactory.parse(java.sql.Date.class, DATE_2022_12_03),
-                equalTo(toDateUtc(2022, 12, 3, 0, 0, 0, 0)));
+                equalTo(TestUtils.toDateUtc(2022, 12, 3, 0, 0, 0, 0)));
     }
 
     @Test
     void parse_timestamp_success()
     {
         assertThat(ParseFactory.parse(Timestamp.class, DATE_2022_12_03_10_15_30),
-                equalTo(new Timestamp(toDateUtc(2022, 12, 3, 10, 15, 30, 0).getTime())));
+                equalTo(new Timestamp(TestUtils.toDateUtc(2022, 12, 3, 10, 15, 30, 0).getTime())));
     }
 
     @Test

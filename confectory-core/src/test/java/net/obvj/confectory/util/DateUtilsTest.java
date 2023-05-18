@@ -20,13 +20,14 @@ import static net.obvj.junit.utils.matchers.AdvancedMatchers.instantiationNotAll
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import net.obvj.confectory.TestUtils;
 
 /**
  * Unit tests for the {@link DateUtils}.
@@ -36,26 +37,11 @@ import org.junit.jupiter.api.Test;
  */
 class DateUtilsTest
 {
-    private static final String STR_UTC = "UTC";
-
     @BeforeAll
     public static void setup()
     {
         Locale.setDefault(Locale.UK);
-        TimeZone.setDefault(TimeZone.getTimeZone(STR_UTC));
-    }
-
-    private static Date toDateUtc(int year, int month, int day, int hour, int minute, int second, int millisecond)
-    {
-        return toCalendarUtc(year, month, day, hour, minute, second, millisecond).getTime();
-    }
-
-    private static Calendar toCalendarUtc(int year, int month, int day, int hour, int minute, int second, int millisecond)
-    {
-        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(STR_UTC));
-        calendar.set(year, month - 1, day, hour, minute, second);
-        calendar.set(Calendar.MILLISECOND, millisecond);
-        return calendar;
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
     }
 
     @Test
@@ -68,8 +54,8 @@ class DateUtilsTest
     @Test
     void parseDateRfc3339_validRepresentations_success()
     {
-        Date expectedDateMillis = toDateUtc(2019, 9, 7, 13, 21, 59, 987);
-        Date expectedDateSeconds = toDateUtc(2019, 9, 7, 13, 21, 59, 0);
+        Date expectedDateMillis = TestUtils.toDateUtc(2019, 9, 7, 13, 21, 59, 987);
+        Date expectedDateSeconds = TestUtils.toDateUtc(2019, 9, 7, 13, 21, 59, 0);
 
         assertThat(DateUtils.parseDateRfc3339("2019-09-07T13:21:59.987Z"), equalTo(expectedDateMillis));
         assertThat(DateUtils.parseDateRfc3339("2019-09-07 13:21:59.987Z"), equalTo(expectedDateMillis));

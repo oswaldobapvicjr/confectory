@@ -109,14 +109,22 @@ public class ParseFactory
      * @return an object containing the result of the parsing of the specified string into the
      *         specified type
      * @throws UnsupportedOperationException if the specified type is not supported
+     * @throws ParseException                if an error is encountered while parsing
      */
     @SuppressWarnings("unchecked")
     public static <T> T parse(Class<T> type, String string)
     {
         Class<?> objectType = ClassUtils.primitiveToWrapper(type);
         Function<String, ?> parser = getParser(objectType);
-        Object object = parser.apply(string);
-        return (T) object;
+        try
+        {
+            Object object = parser.apply(string);
+            return (T) object;
+        }
+        catch (Exception exception)
+        {
+            throw new ParseException(exception, "Unparsable %s: \"%s\"", type.getCanonicalName(), string);
+        }
     }
 
     /**
