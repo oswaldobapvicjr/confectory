@@ -65,6 +65,8 @@ import net.obvj.confectory.util.ReflectionUtils;
  */
 public class PropertiesToObjectMapper<T> implements Mapper<T>
 {
+    private static final String MSG_UNABLE_TO_PARSE_PROPERTY = "Unable to parse the value of the property '%s' into a field of type '%s'";
+
     private final Class<T> targetType;
 
     /**
@@ -136,8 +138,7 @@ public class PropertiesToObjectMapper<T> implements Mapper<T>
             }
             catch (ParseException exception)
             {
-                throw new ConfigurationException(exception,
-                        "Unable to parse the value of the property '%s' into a field of type '%s'",
+                throw new ConfigurationException(exception, MSG_UNABLE_TO_PARSE_PROPERTY,
                         propertyKey, fieldType.getCanonicalName());
             }
         }

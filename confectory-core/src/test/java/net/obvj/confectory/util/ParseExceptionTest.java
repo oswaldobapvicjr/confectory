@@ -39,7 +39,7 @@ class ParseExceptionTest
         {
             throw new ParseException(DETAILED_MESSAGE1);
         },
-                throwsException(ParseException.class)
+        throwsException(ParseException.class)
                 .withMessage(DETAILED_MESSAGE1)
                 .withCause(null));
     }
@@ -51,7 +51,7 @@ class ParseExceptionTest
         {
             throw new ParseException(new IllegalArgumentException(ROOT_CAUSE_MESSAGE1));
         },
-                throwsException(ParseException.class)
+        throwsException(ParseException.class)
                 .withMessage(endsWith(ROOT_CAUSE_MESSAGE1))
                 .withCause(IllegalArgumentException.class));
     }
@@ -64,7 +64,7 @@ class ParseExceptionTest
             throw new ParseException(new IllegalArgumentException(ROOT_CAUSE_MESSAGE1),
                     DETAILED_MESSAGE1);
         },
-                throwsException(ParseException.class)
+        throwsException(ParseException.class)
                 .withMessage(DETAILED_MESSAGE1)
                 .withCause(IllegalArgumentException.class));
     }
