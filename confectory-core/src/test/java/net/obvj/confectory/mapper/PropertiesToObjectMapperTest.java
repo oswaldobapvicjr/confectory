@@ -19,14 +19,22 @@ package net.obvj.confectory.mapper;
 import static net.obvj.junit.utils.matchers.AdvancedMatchers.throwsException;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.time.format.DateTimeParseException;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import net.obvj.confectory.ConfigurationException;
+import net.obvj.confectory.TestUtils;
 import net.obvj.confectory.internal.helper.BeanConfigurationHelper;
+import net.obvj.confectory.util.ParseException;
 import net.obvj.confectory.util.Property;
 
 /**
@@ -44,6 +52,11 @@ class PropertiesToObjectMapperTest
                     = "booleanValue=true\n"
                     + "stringValue=string1\n"
                     + "intValue=1910\n";
+
+    private static final Date DATE_UTC = TestUtils.toDateUtc(2023, 05, 12, 18, 50, 59, 0);
+    private static final String TEST_PROPERTIES_DATE = "myDate=2023-05-12T15:50:59-03:00\n";
+    private static final String TEST_PROPERTIES_INVALID_DATE = "myDate=2023a05-12T15:50:59-03:00\n";
+
 
     static class MyBeanNoExplicitMapping
     {
@@ -89,7 +102,28 @@ class PropertiesToObjectMapperTest
 
     private static ByteArrayInputStream newInputStream()
     {
-        return new ByteArrayInputStream(TEST_PROPERTIES_CONTENT.getBytes());
+        return newInputStream(TEST_PROPERTIES_CONTENT);
+    }
+
+    private static ByteArrayInputStream newInputStream(String string)
+    {
+        return new ByteArrayInputStream(string.getBytes());
+    }
+
+    static class MyBeanDate
+    {
+        Date myDate;
+
+        public MyBeanDate() {}
+    }
+
+    private static final String STR_UTC = "UTC";
+
+    @BeforeAll
+    public static void setup()
+    {
+        Locale.setDefault(Locale.UK);
+        TimeZone.setDefault(TimeZone.getTimeZone(STR_UTC));
     }
 
     @Test
@@ -152,6 +186,38 @@ class PropertiesToObjectMapperTest
                 throw new AssertionError("IOException happened, but ConfigurationException was expected", e);
             }
         }, throwsException(ConfigurationException.class).withCause(ReflectiveOperationException.class));
+    }
+
+    @Test
+    void apply_propertiesWithDate_success() throws IOException
+    {
+        MyBeanDate bean = new PropertiesToObjectMapper<>(MyBeanDate.class)
+                .apply(newInputStream(TEST_PROPERTIES_DATE));
+
+        assertThat(bean.myDate, equalTo(DATE_UTC));
+    }
+
+    @Test
+    void apply_propertiesWithInvalidDate_exception() throws IOException
+    {
+        Mapper<MyBeanDate> mapper = new PropertiesToObjectMapper<>(MyBeanDate.class);
+        ByteArrayInputStream input = newInputStream(TEST_PROPERTIES_INVALID_DATE);
+
+        ConfigurationException exception = assertThrows(ConfigurationException.class,
+                () -> mapper.apply(input));
+
+        assertThat(exception.getMessage(), equalTo(
+                "Unable to parse the value of the property 'myDate' into a field of type 'java.util.Date'"));
+
+        Throwable cause = exception.getCause();
+        assertThat(cause.getClass(), equalTo(ParseException.class));
+        assertThat(cause.getMessage(),
+                equalTo("Unparsable java.util.Date: \"2023a05-12T15:50:59-03:00\""));
+
+        Throwable rootCause = cause.getCause();
+        assertThat(rootCause.getClass(), equalTo(DateTimeParseException.class));
+        assertThat(rootCause.getMessage(),
+                equalTo("Text '2023a05-12T15:50:59-03:00' could not be parsed at index 4"));
     }
 
     @Test

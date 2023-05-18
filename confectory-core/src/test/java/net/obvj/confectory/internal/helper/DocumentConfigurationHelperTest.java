@@ -29,6 +29,7 @@ import org.w3c.dom.Document;
 import net.obvj.confectory.ConfigurationException;
 import net.obvj.confectory.mapper.DocumentMapper;
 import net.obvj.confectory.source.StringSource;
+import net.obvj.confectory.util.ParseException;
 
 /**
  * Unit tests for the {@link DocumentConfigurationHelper}.
@@ -164,8 +165,9 @@ class DocumentConfigurationHelperTest
     void getDouble_unparsableDouble_exception()
     {
         assertThat(() -> HELPER.getDouble("/bookstore/book[1]/title"),
-                throwsException(NumberFormatException.class)
-                        .withMessageContaining("For input string"));
+                throwsException(ParseException.class)
+                        .withMessageContaining("Unparsable java.lang.Double: \"Everyday Italian\"")
+                        .withCause(NumberFormatException.class));
     }
 
     @Test
@@ -192,8 +194,9 @@ class DocumentConfigurationHelperTest
     void getInteger_unparsableInteger_exception()
     {
         assertThat(() -> HELPER.getInteger("/bookstore/book[1]/price"),
-                throwsException(NumberFormatException.class)
-                        .withMessageContaining("For input string"));
+                throwsException(ParseException.class)
+                        .withMessageContaining("Unparsable java.lang.Integer: \"30.00\"")
+                        .withCause(NumberFormatException.class));
     }
 
     @Test
@@ -227,8 +230,9 @@ class DocumentConfigurationHelperTest
     void getLong_unparsableLong_exception()
     {
         assertThat(() -> HELPER.getLong("/bookstore/book[2]/price"),
-                throwsException(NumberFormatException.class)
-                        .withMessageContaining("For input string"));
+                throwsException(ParseException.class)
+                        .withMessageContaining("Unparsable java.lang.Long: \"29.99\"")
+                        .withCause(NumberFormatException.class));
     }
 
     @Test

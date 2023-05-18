@@ -27,6 +27,7 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 import net.obvj.confectory.ConfigurationException;
 import net.obvj.confectory.internal.helper.BeanConfigurationHelper;
 import net.obvj.confectory.internal.helper.ConfigurationHelper;
+import net.obvj.confectory.util.ParseException;
 import net.obvj.confectory.util.ParseFactory;
 import net.obvj.confectory.util.Property;
 import net.obvj.confectory.util.ReflectionUtils;
@@ -63,7 +64,7 @@ import net.obvj.confectory.util.ReflectionUtils;
 public class INIToObjectMapper<T> extends AbstractINIMapper<T> implements Mapper<T>
 {
     private static final String MSG_UNABLE_TO_BUILD_OBJECT = "Unable to build object of type: %s";
-    private static final String MSG_UNPARSABLE_PROPERTY_VALUE = "The value defined for property %s cannot be parsed as '%s'";
+    private static final String MSG_UNPARSABLE_PROPERTY_VALUE = "Unable to parse the value of the property %s into a field of type '%s'";
 
     private final Class<T> targetType;
 
@@ -106,10 +107,10 @@ public class INIToObjectMapper<T> extends AbstractINIMapper<T> implements Mapper
         {
             return field != null ? ParseFactory.parse(field.getType(), value) : null;
         }
-        catch (NumberFormatException exception)
+        catch (ParseException exception)
         {
             throw new ConfigurationException(exception, MSG_UNPARSABLE_PROPERTY_VALUE,
-                    currentFieldIdentifierToString(context), field.getType());
+                    currentFieldIdentifierToString(context), field.getType().getCanonicalName());
         }
     }
 

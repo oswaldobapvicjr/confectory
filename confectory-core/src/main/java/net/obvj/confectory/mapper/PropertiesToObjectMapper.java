@@ -28,6 +28,7 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 import net.obvj.confectory.ConfigurationException;
 import net.obvj.confectory.internal.helper.BeanConfigurationHelper;
 import net.obvj.confectory.internal.helper.ConfigurationHelper;
+import net.obvj.confectory.util.ParseException;
 import net.obvj.confectory.util.ParseFactory;
 import net.obvj.confectory.util.Property;
 import net.obvj.confectory.util.ReflectionUtils;
@@ -64,6 +65,8 @@ import net.obvj.confectory.util.ReflectionUtils;
  */
 public class PropertiesToObjectMapper<T> implements Mapper<T>
 {
+    private static final String MSG_UNABLE_TO_PARSE_PROPERTY = "Unable to parse the value of the property '%s' into a field of type '%s'";
+
     private final Class<T> targetType;
 
     /**
@@ -128,8 +131,16 @@ public class PropertiesToObjectMapper<T> implements Mapper<T>
         if (propertyValue != null)
         {
             Class<?> fieldType = field.getType();
-            Object parsedValue = ParseFactory.parse(fieldType, propertyValue);
-            FieldUtils.writeDeclaredField(targetObject, field.getName(), parsedValue, true);
+            try
+            {
+                Object parsedValue = ParseFactory.parse(fieldType, propertyValue);
+                FieldUtils.writeDeclaredField(targetObject, field.getName(), parsedValue, true);
+            }
+            catch (ParseException exception)
+            {
+                throw new ConfigurationException(exception, MSG_UNABLE_TO_PARSE_PROPERTY,
+                        propertyKey, fieldType.getCanonicalName());
+            }
         }
         // Do nothing if the property is not found
     }

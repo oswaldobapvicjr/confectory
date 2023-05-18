@@ -21,9 +21,12 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 
 import org.junit.jupiter.api.Test;
 
@@ -31,6 +34,8 @@ import net.obvj.confectory.ConfigurationException;
 import net.obvj.confectory.ConfigurationSourceException;
 import net.obvj.confectory.internal.helper.BeanConfigurationHelper;
 import net.obvj.confectory.mapper.model.MyIni;
+import net.obvj.confectory.util.ParseException;
+import net.obvj.confectory.util.Property;
 
 /**
  * Unit tests for the {@link INIToObjectMapper} class.
@@ -89,6 +94,10 @@ class INIToObjectMapperTest
                                               + "section_number = 2\n"
                                               + "section_bool = true\n";
 
+    private static final LocalDate DATE = LocalDate.of(2023, 5, 15);
+    private static final String VALID_INI_DATE = "my_date = 2023-05-15\n";
+    private static final String INVALID_INI_DATE = "my_date = 2023a05-15\n";
+
     static class MyBeanPrivateConstructor
     {
         private MyBeanPrivateConstructor() {}
@@ -102,6 +111,14 @@ class INIToObjectMapperTest
         {
             private Section() {} // unsupported
         }
+    }
+
+    static class MyIniDate
+    {
+        @Property("my_date")
+        LocalDate myDate;
+
+        public MyIniDate() {}
     }
 
     private Mapper<MyIni> mapper = new INIToObjectMapper<>(MyIni.class);
@@ -172,19 +189,37 @@ class INIToObjectMapperTest
     @Test
     void apply_invalidType_exception() throws IOException
     {
-        assertThat(() -> testWithString(INVALID_INI_5),
-                throwsException(ConfigurationException.class).withMessage(equalTo(
-                        "The value defined for property ['number'] cannot be parsed as 'double'"))
-                        .withCause(NumberFormatException.class));
+        ConfigurationException exception = assertThrows(ConfigurationException.class,
+                () -> testWithString(INVALID_INI_5));
+
+        assertThat(exception.getMessage(), equalTo(
+                "Unable to parse the value of the property ['number'] into a field of type 'double'"));
+
+        Throwable cause = exception.getCause();
+        assertThat(cause.getClass(), equalTo(ParseException.class));
+        assertThat(cause.getMessage(), equalTo("Unparsable double: \"abc\""));
+
+        Throwable rootCause = cause.getCause();
+        assertThat(rootCause.getClass(), equalTo(NumberFormatException.class));
+        assertThat(rootCause.getMessage(), equalTo("For input string: \"abc\""));
     }
 
     @Test
     void apply_invalidTypeInsideSection_exception() throws IOException
     {
-        assertThat(() -> testWithString(INVALID_INI_6),
-                throwsException(ConfigurationException.class).withMessage(equalTo(
-                        "The value defined for property ['section1']['section_number'] cannot be parsed as 'int'"))
-                        .withCause(NumberFormatException.class));
+        ConfigurationException exception = assertThrows(ConfigurationException.class,
+                () -> testWithString(INVALID_INI_6));
+
+        assertThat(exception.getMessage(), equalTo(
+                "Unable to parse the value of the property ['section1']['section_number'] into a field of type 'int'"));
+
+        Throwable cause = exception.getCause();
+        assertThat(cause.getClass(), equalTo(ParseException.class));
+        assertThat(cause.getMessage(), equalTo("Unparsable int: \"abc\""));
+
+        Throwable rootCause = cause.getCause();
+        assertThat(rootCause.getClass(), equalTo(NumberFormatException.class));
+        assertThat(rootCause.getMessage(), equalTo("For input string: \"abc\""));
     }
 
     @Test
@@ -228,6 +263,37 @@ class INIToObjectMapperTest
                 throw new AssertionError("IOException happened, but ConfigurationException was expected", e);
             }
         }, throwsException(ConfigurationException.class).withCause(ReflectiveOperationException.class));
+    }
+
+    @Test
+    void apply_validIniDate_validObject() throws IOException
+    {
+        Mapper<MyIniDate> mapper = new INIToObjectMapper<>(MyIniDate.class);
+        MyIniDate result = mapper.apply(toInputStream(VALID_INI_DATE));
+        assertThat(result.myDate, equalTo(DATE));
+    }
+
+    @Test
+    void apply_invalidDate_exception() throws IOException
+    {
+        Mapper<MyIniDate> mapper = new INIToObjectMapper<>(MyIniDate.class);
+        ByteArrayInputStream ini = toInputStream(INVALID_INI_DATE);
+
+        ConfigurationException exception = assertThrows(ConfigurationException.class,
+                () -> mapper.apply(ini));
+
+        assertThat(exception.getMessage(), equalTo(
+                "Unable to parse the value of the property ['my_date'] into a field of type 'java.time.LocalDate'"));
+
+        Throwable cause = exception.getCause();
+        assertThat(cause.getClass(), equalTo(ParseException.class));
+        assertThat(cause.getMessage(),
+                equalTo("Unparsable java.time.LocalDate: \"2023a05-15\""));
+
+        Throwable rootCause = cause.getCause();
+        assertThat(rootCause.getClass(), equalTo(DateTimeParseException.class));
+        assertThat(rootCause.getMessage(),
+                equalTo("Text '2023a05-15' could not be parsed at index 4"));
     }
 
     @Test
