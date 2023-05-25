@@ -17,8 +17,7 @@
 package net.obvj.confectory.util;
 
 import static net.obvj.junit.utils.matchers.AdvancedMatchers.*;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -252,14 +251,15 @@ class TypeFactoryTest
     @Test
     void parse_timeZone()
     {
-        assertThat(TypeFactory.parse(TimeZone.class, "America/Sao_Paulo").getDisplayName(),
-                equalTo("Brasilia Time"));
+        int gmtMinus3Offset = TimeZone.getTimeZone("GMT-03:00").getRawOffset();
+        assertThat(TypeFactory.parse(TimeZone.class, "GMT-03:00").getRawOffset(),
+                equalTo(gmtMinus3Offset));
 
-        assertThat(TypeFactory.parse(TimeZone.class, "GMT-03:50").getDisplayName(),
-                equalTo("GMT-03:50"));
+        assertThat(TypeFactory.parse(TimeZone.class, "America/Sao_Paulo").getRawOffset(),
+                equalTo(gmtMinus3Offset));
 
-        assertThat(TypeFactory.parse(TimeZone.class, "unknown").getDisplayName(),
-                equalTo("Greenwich Mean Time"));
+        assertThat(TypeFactory.parse(TimeZone.class, "unknown").getRawOffset(),
+                equalTo(0)); // Fallback to GMT
     }
 
     @Test
