@@ -60,6 +60,8 @@ class TypeFactoryTest
 
     private static final String TIME_10_15 = "10:15";
     private static final String TIME_10_15_30 = "10:15:30";
+    private static final String TIME_10_15_30_MINUS_03_00 = "10:15:30-03:00";
+
     private static final long TIME_10_15_30_AS_TIMESTAMP = TestUtils.toDateUtc(1970, 01, 01, 10, 15, 30, 0).getTime();
 
     @BeforeAll
@@ -124,6 +126,15 @@ class TypeFactoryTest
     }
 
     @Test
+    void parse_localTime_success()
+    {
+        assertThat(TypeFactory.parse(LocalTime.class, TIME_10_15),
+                equalTo(LocalTime.of(10, 15, 0)));
+        assertThat(TypeFactory.parse(LocalTime.class, TIME_10_15_30),
+                equalTo(LocalTime.of(10, 15, 30)));
+    }
+
+    @Test
     void parse_localDateTime_success()
     {
         assertThat(TypeFactory.parse(LocalDateTime.class, DATE_2022_12_03T10_15_30),
@@ -135,6 +146,13 @@ class TypeFactoryTest
     {
         assertThat(TypeFactory.parse(OffsetDateTime.class, DATE_2022_12_03T10_15_30_MINUS_03_00),
                 equalTo(OffsetDateTime.of(2022, 12, 3, 10, 15, 30, 0, ZoneOffset.ofHours(-3))));
+    }
+
+    @Test
+    void parse_offsetTime_success()
+    {
+        assertThat(TypeFactory.parse(OffsetTime.class, TIME_10_15_30_MINUS_03_00),
+                equalTo(OffsetTime.of(10, 15, 30, 0, ZoneOffset.ofHours(-3))));
     }
 
     @Test
