@@ -25,6 +25,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.net.Inet4Address;
+import java.net.InetAddress;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
@@ -98,6 +100,9 @@ class INIToObjectMapperTest
     private static final String VALID_INI_DATE = "my_date = 2023-05-15\n";
     private static final String INVALID_INI_DATE = "my_date = 2023a05-15\n";
 
+    private static final String VALID_INI_OTHER_TYPES = "my_class = java.lang.IllegalStateException\n"
+                                                      + "my_ip = 127.0.0.1";
+
     static class MyBeanPrivateConstructor
     {
         private MyBeanPrivateConstructor() {}
@@ -119,6 +124,16 @@ class INIToObjectMapperTest
         LocalDate myDate;
 
         public MyIniDate() {}
+    }
+
+    static class MyIniOtherTypes
+    {
+        @Property("my_class")
+        Class<? extends Exception> myClass;
+        @Property("my_ip")
+        InetAddress myIp;
+
+        public MyIniOtherTypes() {}
     }
 
     private Mapper<MyIni> mapper = new INIToObjectMapper<>(MyIni.class);
@@ -294,6 +309,15 @@ class INIToObjectMapperTest
         assertThat(rootCause.getClass(), equalTo(DateTimeParseException.class));
         assertThat(rootCause.getMessage(),
                 equalTo("Text '2023a05-15' could not be parsed at index 4"));
+    }
+
+    @Test
+    void apply_validIniOtherTypes_validObject() throws IOException
+    {
+        Mapper<MyIniOtherTypes> mapper = new INIToObjectMapper<>(MyIniOtherTypes.class);
+        MyIniOtherTypes result = mapper.apply(toInputStream(VALID_INI_OTHER_TYPES));
+        assertThat(result.myClass, equalTo(IllegalStateException.class));
+        assertThat(result.myIp, equalTo(Inet4Address.getByAddress(new byte[] { 127, 0, 0, 1 })));
     }
 
     @Test
