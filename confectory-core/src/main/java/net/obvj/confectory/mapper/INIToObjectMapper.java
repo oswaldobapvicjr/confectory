@@ -28,7 +28,7 @@ import net.obvj.confectory.ConfigurationException;
 import net.obvj.confectory.internal.helper.BeanConfigurationHelper;
 import net.obvj.confectory.internal.helper.ConfigurationHelper;
 import net.obvj.confectory.util.ParseException;
-import net.obvj.confectory.util.ParseFactory;
+import net.obvj.confectory.util.TypeFactory;
 import net.obvj.confectory.util.Property;
 import net.obvj.confectory.util.ReflectionUtils;
 
@@ -105,7 +105,7 @@ public class INIToObjectMapper<T> extends AbstractINIMapper<T> implements Mapper
         Field field = findField(getCurrentType(context), context.currentKey);
         try
         {
-            return field != null ? ParseFactory.parse(field.getType(), value) : null;
+            return field != null ? TypeFactory.parse(field.getType(), value) : null;
         }
         catch (ParseException exception)
         {

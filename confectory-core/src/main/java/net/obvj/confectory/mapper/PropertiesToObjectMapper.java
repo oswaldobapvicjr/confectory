@@ -29,7 +29,7 @@ import net.obvj.confectory.ConfigurationException;
 import net.obvj.confectory.internal.helper.BeanConfigurationHelper;
 import net.obvj.confectory.internal.helper.ConfigurationHelper;
 import net.obvj.confectory.util.ParseException;
-import net.obvj.confectory.util.ParseFactory;
+import net.obvj.confectory.util.TypeFactory;
 import net.obvj.confectory.util.Property;
 import net.obvj.confectory.util.ReflectionUtils;
 
@@ -133,7 +133,7 @@ public class PropertiesToObjectMapper<T> implements Mapper<T>
             Class<?> fieldType = field.getType();
             try
             {
-                Object parsedValue = ParseFactory.parse(fieldType, propertyValue);
+                Object parsedValue = TypeFactory.parse(fieldType, propertyValue);
                 FieldUtils.writeDeclaredField(targetObject, field.getName(), parsedValue, true);
             }
             catch (ParseException exception)

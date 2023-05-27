@@ -27,7 +27,7 @@ import org.w3c.dom.NodeList;
 
 import net.obvj.confectory.ConfigurationException;
 import net.obvj.confectory.merger.ConfigurationMerger;
-import net.obvj.confectory.util.ParseFactory;
+import net.obvj.confectory.util.TypeFactory;
 
 /**
  * A generic Configuration Helper that retrieves data from an XML {@link Document} using
@@ -337,7 +337,7 @@ public class DocumentConfigurationHelper implements ConfigurationHelper<Document
             return null;
         case 1:
             Node node = result.item(0);
-            return ParseFactory.parse(targetType, node.getTextContent());
+            return TypeFactory.parse(targetType, node.getTextContent());
         default:
             throw new ConfigurationException("Multiple values found for path: %s", xpath);
         }
