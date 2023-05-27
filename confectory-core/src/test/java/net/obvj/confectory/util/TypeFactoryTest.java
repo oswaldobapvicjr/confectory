@@ -16,14 +16,23 @@
 
 package net.obvj.confectory.util;
 
-import static net.obvj.junit.utils.matchers.AdvancedMatchers.*;
-import static org.hamcrest.CoreMatchers.*;
+import static net.obvj.junit.utils.matchers.AdvancedMatchers.containsAny;
+import static net.obvj.junit.utils.matchers.AdvancedMatchers.instantiationNotAllowed;
+import static net.obvj.junit.utils.matchers.AdvancedMatchers.throwsException;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.*;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.charset.UnsupportedCharsetException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.*;
@@ -44,9 +53,12 @@ import net.obvj.confectory.TestUtils;
  */
 class TypeFactoryTest
 {
+    private static final String INVALID = "invalid";
     private static final String STR_TRUE = "true";
     private static final String STR_123 = "123";
     private static final String STR_A = "A";
+    private static final String STR_ZONE_AMERICA_SP = "America/Sao_Paulo";
+    private static final String FILE1_PATH = "testfiles/drive1.json";
 
     private static final String DATE_2022_12_03 = "2022-12-03";
     private static final String DATE_2022_12_03_10_15_30 = "2022-12-03 10:15:30";
@@ -63,6 +75,10 @@ class TypeFactoryTest
     private static final String TIME_10_15_30_MINUS_03_00 = "10:15:30-03:00";
 
     private static final long TIME_10_15_30_AS_TIMESTAMP = TestUtils.toDateUtc(1970, 01, 01, 10, 15, 30, 0).getTime();
+
+    private static final ZoneOffset ZONE_OFFSET_MINUS_3 = ZoneOffset.ofHours(-3);
+    private static final ZoneId ZONE_ID_MINUS_3 = ZoneId.of("-3");
+    private static final ZoneId ZONE_ID_AMERICA_SP = ZoneId.of(STR_ZONE_AMERICA_SP);
 
     @BeforeAll
     public static void setup()
@@ -145,21 +161,40 @@ class TypeFactoryTest
     void parse_offsetDateTime_success()
     {
         assertThat(TypeFactory.parse(OffsetDateTime.class, DATE_2022_12_03T10_15_30_MINUS_03_00),
-                equalTo(OffsetDateTime.of(2022, 12, 3, 10, 15, 30, 0, ZoneOffset.ofHours(-3))));
+                equalTo(OffsetDateTime.of(2022, 12, 3, 10, 15, 30, 0, ZONE_OFFSET_MINUS_3)));
     }
 
     @Test
     void parse_offsetTime_success()
     {
         assertThat(TypeFactory.parse(OffsetTime.class, TIME_10_15_30_MINUS_03_00),
-                equalTo(OffsetTime.of(10, 15, 30, 0, ZoneOffset.ofHours(-3))));
+                equalTo(OffsetTime.of(10, 15, 30, 0, ZONE_OFFSET_MINUS_3)));
+    }
+
+    @Test
+    void parse_zoneOffset_sucess()
+    {
+        assertThat(TypeFactory.parse(ZoneOffset.class, "-3"), equalTo(ZONE_OFFSET_MINUS_3));
+        assertThat(TypeFactory.parse(ZoneOffset.class, "-03"), equalTo(ZONE_OFFSET_MINUS_3));
+        assertThat(TypeFactory.parse(ZoneOffset.class, "-0300"), equalTo(ZONE_OFFSET_MINUS_3));
+        assertThat(TypeFactory.parse(ZoneOffset.class, "-03:00"), equalTo(ZONE_OFFSET_MINUS_3));
+    }
+
+    @Test
+    void parse_zoneId_sucess()
+    {
+        assertThat(TypeFactory.parse(ZoneId.class, "-3"), equalTo(ZONE_ID_MINUS_3));
+        assertThat(TypeFactory.parse(ZoneId.class, "-03"), equalTo(ZONE_ID_MINUS_3));
+        assertThat(TypeFactory.parse(ZoneId.class, "-0300"), equalTo(ZONE_ID_MINUS_3));
+        assertThat(TypeFactory.parse(ZoneId.class, "-03:00"), equalTo(ZONE_ID_MINUS_3));
+        assertThat(TypeFactory.parse(ZoneId.class, STR_ZONE_AMERICA_SP), equalTo(ZONE_ID_AMERICA_SP));
     }
 
     @Test
     void parse_zonedDateTime_success()
     {
         assertThat(TypeFactory.parse(ZonedDateTime.class, DATE_2022_12_03T10_15_30_MINUS_03_00_AMERICA_SP),
-                equalTo(ZonedDateTime.of(2022, 12, 3, 10, 15, 30, 0, ZoneId.of("America/Sao_Paulo"))));
+                equalTo(ZonedDateTime.of(2022, 12, 3, 10, 15, 30, 0, ZoneId.of(STR_ZONE_AMERICA_SP))));
     }
 
     @Test
@@ -221,7 +256,7 @@ class TypeFactoryTest
     @Test
     void parse_invalidEnumElement_null()
     {
-        assertThat(TypeFactory.parse(Month.class, "unknown"), equalTo(null));
+        assertThat(TypeFactory.parse(Month.class, INVALID), equalTo(null));
     }
 
     @Test
@@ -260,7 +295,7 @@ class TypeFactoryTest
         assertThat(TypeFactory.parse(Currency.class, "BRL").getDisplayName(),
                 equalTo("Brazilian Real"));
 
-        assertThat(() -> TypeFactory.parse(Currency.class, "invalid"),
+        assertThat(() -> TypeFactory.parse(Currency.class, INVALID),
                 throwsException(ParseException.class)
                         .withMessage("Unparsable java.util.Currency: \"invalid\"")
                         .withCause(IllegalArgumentException.class));
@@ -273,10 +308,10 @@ class TypeFactoryTest
         assertThat(TypeFactory.parse(TimeZone.class, "GMT-03:00").getRawOffset(),
                 equalTo(gmtMinus3Offset));
 
-        assertThat(TypeFactory.parse(TimeZone.class, "America/Sao_Paulo").getRawOffset(),
+        assertThat(TypeFactory.parse(TimeZone.class, STR_ZONE_AMERICA_SP).getRawOffset(),
                 equalTo(gmtMinus3Offset));
 
-        assertThat(TypeFactory.parse(TimeZone.class, "unknown").getRawOffset(),
+        assertThat(TypeFactory.parse(TimeZone.class, INVALID).getRawOffset(),
                 equalTo(0)); // Fallback to GMT
     }
 
@@ -286,7 +321,7 @@ class TypeFactoryTest
         assertThat(TypeFactory.parse(UUID.class, "937c6fd1-cc61-43be-994a-ae67d7df3547"),
                 equalTo(UUID.fromString("937c6fd1-cc61-43be-994a-ae67d7df3547")));
 
-        assertThat(() -> TypeFactory.parse(UUID.class, "invalid"),
+        assertThat(() -> TypeFactory.parse(UUID.class, INVALID),
                 throwsException(ParseException.class)
                         .withMessage("Unparsable java.util.UUID: \"invalid\"")
                         .withCause(IllegalArgumentException.class));
@@ -316,10 +351,32 @@ class TypeFactoryTest
                 equalTo(new URL("https://example.com/docs")));
 
         Throwable throwable = assertThrows(ParseException.class,
-                () -> TypeFactory.parse(URL.class, "invalid"));
+                () -> TypeFactory.parse(URL.class, INVALID));
         Throwable rootCause = ExceptionUtils.getRootCause(throwable);
         assertThat(rootCause.getClass(), equalTo(MalformedURLException.class));
         assertThat(rootCause.getMessage(), containsAny("no protocol"));
+    }
+
+    @Test
+    void parse_charset()
+    {
+        assertThat(TypeFactory.parse(Charset.class, "UTF-8"), equalTo(StandardCharsets.UTF_8));
+        assertThat(TypeFactory.parse(Charset.class, "ASCII"), equalTo(StandardCharsets.US_ASCII));
+
+        assertThat(() -> TypeFactory.parse(Charset.class, INVALID),
+                throwsException(ParseException.class).withCause(UnsupportedCharsetException.class));
+    }
+
+    @Test
+    void parse_file()
+    {
+        assertThat(TypeFactory.parse(File.class, FILE1_PATH), equalTo(new File(FILE1_PATH)));
+    }
+
+    @Test
+    void parse_path()
+    {
+        assertThat(TypeFactory.parse(Path.class, FILE1_PATH), equalTo(Paths.get(FILE1_PATH)));
     }
 
 }

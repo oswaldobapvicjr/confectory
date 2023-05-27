@@ -49,7 +49,7 @@ import org.apache.commons.lang3.function.Failable;
  * <li>{@code java.time.OffsetTime} such as {@code "10:15:30+01:00"}</li>
  * <li>{@code java.time.ZonedDateTime} such as {@code "2007-12-03T10:15:30-03:00[America/Sao_Paulo]"}</li>
  * <li>{@code java.time.ZoneId} such as {@code "Europe/Paris"} or {@code "+01:00"}</li>
- * <li>{@code java.time.ZoneOffset} such as {@code "+01"} or {@code "+01:00"}</li>
+ * <li>{@code java.time.ZoneOffset} such as {@code "+01"}, {@code "+0100"} or {@code "+01:00"}</li>
  * </ul>
  * <p>
  * <b><i>From the {@code java.sql} package:</i></b>
