@@ -16,25 +16,25 @@
 
 package net.obvj.confectory.util;
 
+import static net.obvj.junit.utils.matchers.AdvancedMatchers.instantiationNotAllowed;
+import static org.hamcrest.MatcherAssert.assertThat;
+
+import org.junit.jupiter.api.Test;
+
 /**
- * This interface defines the contract for classes that know how to convert a String into
- * some domain object.
+ * Unit tests for the {@link DateUtils}.
  *
- * @param <T> the type of the object that is the result of the conversion.
- *
- * @since 2.5.0
  * @author oswaldo.bapvic.jr
+ * @since 2.5.0
  */
-public interface TypeConverter<T>
+class PropertyUtilsTest
 {
-    /**
-     * Converts the specified command line argument value to some domain object.
-     *
-     * @param value the command line argument String value
-     * @return the resulting domain object
-     *
-     * @throws ParseException when type conversion fails, to have more control over the error
-     *                        message that is logged
-     */
-    T convert(String value) throws ParseException;
+
+    @Test
+    void constructor_instantiationNotAllowed()
+    {
+        assertThat(PropertyUtils.class,
+                instantiationNotAllowed().throwing(UnsupportedOperationException.class));
+    }
+
 }
