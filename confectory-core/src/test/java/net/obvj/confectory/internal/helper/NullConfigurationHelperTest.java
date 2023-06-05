@@ -30,6 +30,7 @@ import net.minidev.json.JSONObject;
 import net.obvj.confectory.ConfigurationException;
 import net.obvj.confectory.merger.JSONObjectConfigurationMerger;
 import net.obvj.confectory.merger.PropertiesConfigurationMerger;
+import net.obvj.junit.utils.Procedure;
 
 /**
  * Unit tests for the {@link NullConfigurationHelper}.
@@ -41,8 +42,9 @@ class NullConfigurationHelperTest
 {
     private static final String KEY1 = "key1";
 
-    private static final Matcher<Runnable> EXCEPTION_NOT_FOUND = throwsException(ConfigurationException.class)
-            .withMessageContaining("Not found");
+    private static final Matcher<Procedure> EXCEPTION_NOT_FOUND = throwsException(
+            ConfigurationException.class)
+                .withMessageContaining("Not found");
 
     private NullConfigurationHelper<Object> helper = new NullConfigurationHelper<>();
 

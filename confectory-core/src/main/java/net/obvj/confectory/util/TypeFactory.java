@@ -204,7 +204,7 @@ public class TypeFactory
      * @throws ParseException                if an error is encountered while parsing
      */
     @SuppressWarnings("unchecked")
-    public static <T> T parse(Class<T> type, String string)
+    public static <T> T parse(Class<T> type, String string) throws ParseException
     {
         if (type.isEnum())
         {

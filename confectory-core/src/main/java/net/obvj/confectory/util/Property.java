@@ -56,8 +56,77 @@ public @interface Property
 {
 
     /**
-     * @return the property key from the source file/URL to be associated with this field
+     * Defines the property key from the source file/URL to be associated with this field.
+     * <p>
+     * <b>NOTE:</b> The name "{@code value}" is used here to allow the following notation:
+     * <p>
+     * <blockquote>
+     *
+     * <pre>
+     * &#64;Property("host")
+     * </pre>
+     *
+     * </blockquote> which is supposed to have the same effect of the following (when no other
+     * attribute is present):
+     * <p>
+     * <blockquote>
+     *
+     * <pre>
+     * &#64;Property(key = "host")
+     * </pre>
+     *
+     * </blockquote>
+     *
+     *
+     * @return the key from the source file/URL to be associated with the annotated field
      */
     String value() default "";
+
+    /**
+     * Defines the property key from the source file/URL to be associated with this field.
+     * <p>
+     * This is recommended when the class field name differs from the actual property key and
+     * other attributes (such as the converter) are present in the annotation.
+     * <p>
+     * For example:
+     * <p>
+     * <blockquote>
+     *
+     * <pre>
+     * &#64;Property(key = "theKey", converter = MyConverter.class)
+     * </pre>
+     *
+     * </blockquote>
+     *
+     * @return the key from the source file/URL to be associated with the annotated field
+     * @since 2.5.0
+     */
+    String key() default "";
+
+    /**
+     * Optionally specify a {@link TypeConverter} class to convert this property value into a
+     * strongly typed object.
+     * <p>
+     * This is useful when a particular field should use a custom conversion that is different
+     * from the normal conversion for the field's type (which is applied by the
+     * {@link TypeFactory}).
+     * <p>
+     * Examples:
+     * <p>
+     * <blockquote>
+     *
+     * <pre>
+     * &#64;Property(converter = MyConverter.class)
+     * &#64;Property(key = "theKey", converter = MyConverter.class)
+     * </pre>
+     *
+     * </blockquote>
+     *
+     * @return the class to convert String value into a strongly-typed object for the
+     *         annotated field
+     *
+     * @since 2.5.0
+     */
+    Class<? extends TypeConverter<?>>[] converter() default {};
 
 }

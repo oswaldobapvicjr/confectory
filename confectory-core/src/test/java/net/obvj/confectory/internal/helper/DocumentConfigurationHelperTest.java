@@ -30,6 +30,7 @@ import net.obvj.confectory.ConfigurationException;
 import net.obvj.confectory.mapper.DocumentMapper;
 import net.obvj.confectory.source.StringSource;
 import net.obvj.confectory.util.ParseException;
+import net.obvj.junit.utils.Procedure;
 
 /**
  * Unit tests for the {@link DocumentConfigurationHelper}.
@@ -77,7 +78,7 @@ class DocumentConfigurationHelperTest
     private static final ConfigurationHelper<Document> HELPER = new DocumentConfigurationHelper(BOOKS_XML);
 
     private static final String PATH_UNKNOWN = "/unknown";
-    private static final Matcher<Runnable> EXCEPTION_NO_VALUE_FOUND_PATH_UNKNOWN = throwsException(
+    private static final Matcher<Procedure> EXCEPTION_NO_VALUE_FOUND_PATH_UNKNOWN = throwsException(
             ConfigurationException.class).withMessageContaining("No value found", PATH_UNKNOWN);
 
     /**
@@ -165,9 +166,10 @@ class DocumentConfigurationHelperTest
     void getDouble_unparsableDouble_exception()
     {
         assertThat(() -> HELPER.getDouble("/bookstore/book[1]/title"),
-                throwsException(ParseException.class)
-                        .withMessageContaining("Unparsable java.lang.Double: \"Everyday Italian\"")
-                        .withCause(NumberFormatException.class));
+                throwsException(ConfigurationException.class)
+                        .withMessageContaining(
+                                "was found but the object can not be converted into class java.lang.Double")
+                        .withCause(ParseException.class));
     }
 
     @Test
@@ -194,9 +196,10 @@ class DocumentConfigurationHelperTest
     void getInteger_unparsableInteger_exception()
     {
         assertThat(() -> HELPER.getInteger("/bookstore/book[1]/price"),
-                throwsException(ParseException.class)
-                        .withMessageContaining("Unparsable java.lang.Integer: \"30.00\"")
-                        .withCause(NumberFormatException.class));
+                throwsException(ConfigurationException.class)
+                        .withMessageContaining(
+                                "was found but the object can not be converted into class java.lang.Integer")
+                        .withCause(ParseException.class));
     }
 
     @Test
@@ -230,9 +233,10 @@ class DocumentConfigurationHelperTest
     void getLong_unparsableLong_exception()
     {
         assertThat(() -> HELPER.getLong("/bookstore/book[2]/price"),
-                throwsException(ParseException.class)
-                        .withMessageContaining("Unparsable java.lang.Long: \"29.99\"")
-                        .withCause(NumberFormatException.class));
+                throwsException(ConfigurationException.class)
+                        .withMessageContaining(
+                                "was found but the object can not be converted into class java.lang.Long")
+                        .withCause(ParseException.class));
     }
 
     @Test

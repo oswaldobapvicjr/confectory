@@ -31,6 +31,7 @@ import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import net.obvj.confectory.ConfigurationException;
 import net.obvj.confectory.merger.JSONObjectConfigurationMerger;
+import net.obvj.junit.utils.Procedure;
 
 /**
  * Unit tests for the {@link JsonSmartConfigurationHelper}.
@@ -61,7 +62,7 @@ class JsonSmartConfigurationHelperTest
             TEST_JSON_SAMPLE1);
 
     private static final String PATH_UNKNOWN = "$.unknown";
-    private static final Matcher<Runnable> EXCEPTION_NO_VALUE_FOUND_PATH_UNKNOWN = throwsException(
+    private static final Matcher<Procedure> EXCEPTION_NO_VALUE_FOUND_PATH_UNKNOWN = throwsException(
             ConfigurationException.class).withMessageContaining("No value found", PATH_UNKNOWN);
 
     @Test
