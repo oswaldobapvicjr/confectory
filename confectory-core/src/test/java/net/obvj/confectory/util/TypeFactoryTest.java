@@ -93,18 +93,6 @@ class TypeFactoryTest
         assertThat(TypeFactory.class, instantiationNotAllowed().throwing(UnsupportedOperationException.class));
     }
 
-    public static <T> T parse(Class<T> type, String string)
-    {
-        try
-        {
-            return TypeFactory.parse(type, string);
-        }
-        catch (ParseException e)
-        {
-            throw new AssertionError("Unexpected ParseException", e);
-        }
-    }
-
     @Test
     void parse_unknownType_unsupportedOperation()
     {
@@ -206,9 +194,7 @@ class TypeFactoryTest
     @Test
     void parse_zonedDateTime_success() throws ParseException
     {
-        assertThat(
-                TypeFactory.parse(ZonedDateTime.class,
-                        DATE_2022_12_03T10_15_30_MINUS_03_00_AMERICA_SP),
+        assertThat(TypeFactory.parse(ZonedDateTime.class, DATE_2022_12_03T10_15_30_MINUS_03_00_AMERICA_SP),
                 equalTo(ZonedDateTime.of(2022, 12, 3, 10, 15, 30, 0, ZoneId.of(STR_ZONE_AMERICA_SP))));
     }
 
