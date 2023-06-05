@@ -32,7 +32,7 @@ public class PropertyUtils
 
     private PropertyUtils()
     {
-        throw new IllegalStateException("Instantiation not allowed");
+        throw new UnsupportedOperationException("Instantiation not allowed");
     }
 
     /**
@@ -42,16 +42,20 @@ public class PropertyUtils
      * @param property the {@link Property} annotation to be evaluated (null is allowed)
      * @param field    the {@link Field} to be evaluated (not null)
      *
-     * @return the field name, or the value specified in the {@code @}{@link Property}
+     * @return the field name, or the key specified in the {@code @}{@link Property}
      *         annotation, if present in the field.
      *
      * @throws NullPointerException if the field is null
      */
     public static String getPropertyOrFieldName(Property property, Field field)
     {
-        if (property != null && StringUtils.isNotEmpty(property.value()))
+        if (property != null)
         {
-            return property.value();
+            String key = StringUtils.defaultIfEmpty(property.value(), property.key());
+            if (StringUtils.isNotEmpty(key))
+            {
+                return key;
+            }
         }
         return field.getName();
     }

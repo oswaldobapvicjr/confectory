@@ -22,7 +22,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.jupiter.api.Test;
 
 /**
- * Unit tests for the {@link DateUtils}.
+ * Unit tests for the {@link PropertyUtils}.
  *
  * @author oswaldo.bapvic.jr
  * @since 2.5.0

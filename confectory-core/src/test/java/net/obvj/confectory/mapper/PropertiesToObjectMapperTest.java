@@ -16,6 +16,9 @@
 
 package net.obvj.confectory.mapper;
 
+import static java.util.Arrays.asList;
+import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.toList;
 import static net.obvj.junit.utils.matchers.AdvancedMatchers.throwsException;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -26,9 +29,11 @@ import java.io.IOException;
 import java.time.DayOfWeek;
 import java.time.format.DateTimeParseException;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -37,6 +42,7 @@ import net.obvj.confectory.TestUtils;
 import net.obvj.confectory.internal.helper.BeanConfigurationHelper;
 import net.obvj.confectory.util.ParseException;
 import net.obvj.confectory.util.Property;
+import net.obvj.confectory.util.TypeConverter;
 
 /**
  * Unit tests for the {@link PropertiesToObjectMapper} class.
@@ -60,6 +66,8 @@ class PropertiesToObjectMapperTest
 
     private static final String TEST_PROPERTIES_INVALID_DATE = "myDate=2023a05-12T15:50:59-03:00\n";
 
+    private static final String TEST_PROPERTIES_CUSTOM = "myInts=0,1,2,3,4\n"
+                                                       + "myPair=agent1->0 0 * * SUN\n";
 
     static class MyBeanNoExplicitMapping
     {
@@ -119,6 +127,39 @@ class PropertiesToObjectMapperTest
         DayOfWeek dayOfWeek;
 
         public MyBeanDate() {}
+    }
+
+    static class MyBeanCustomConverters
+    {
+        @Property(converter = MyIntsConverter.class)
+        List<Integer> myInts;
+        @Property(key = "myPair", converter = MyPairConverter.class)
+        Pair<String, String> thePair;
+
+        public MyBeanCustomConverters() {}
+    }
+
+    static class MyIntsConverter implements TypeConverter<List<Integer>>
+    {
+        public MyIntsConverter() {}
+
+        @Override
+        public List<Integer> convert(String value) throws ParseException
+        {
+            return stream(value.split(",")).map(Integer::parseInt).collect(toList());
+        }
+    }
+
+    static class MyPairConverter implements TypeConverter<Pair<String, String>>
+    {
+        public MyPairConverter() {}
+
+        @Override
+        public Pair<String, String> convert(String value) throws ParseException
+        {
+            String[] values = value.split("->");
+            return Pair.of(values[0], values[1]);
+        }
     }
 
     private static final String STR_UTC = "UTC";
@@ -223,6 +264,17 @@ class PropertiesToObjectMapperTest
         assertThat(rootCause.getClass(), equalTo(DateTimeParseException.class));
         assertThat(rootCause.getMessage(),
                 equalTo("Text '2023a05-12T15:50:59-03:00' could not be parsed at index 4"));
+    }
+
+    @Test
+    void apply_propertiesWithCustomConverters_success() throws IOException
+    {
+        MyBeanCustomConverters bean = new PropertiesToObjectMapper<>(MyBeanCustomConverters.class)
+                .apply(newInputStream(TEST_PROPERTIES_CUSTOM));
+
+        assertThat(bean.myInts, equalTo(asList(0, 1, 2, 3, 4)));
+        assertThat(bean.thePair.getLeft(), equalTo("agent1"));
+        assertThat(bean.thePair.getRight(), equalTo("0 0 * * SUN"));
     }
 
     @Test
