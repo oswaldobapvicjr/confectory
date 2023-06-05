@@ -27,6 +27,7 @@ import org.w3c.dom.NodeList;
 
 import net.obvj.confectory.ConfigurationException;
 import net.obvj.confectory.merger.ConfigurationMerger;
+import net.obvj.confectory.util.ParseException;
 import net.obvj.confectory.util.TypeFactory;
 
 /**
@@ -336,8 +337,17 @@ public class DocumentConfigurationHelper implements ConfigurationHelper<Document
             }
             return null;
         case 1:
-            Node node = result.item(0);
-            return TypeFactory.parse(targetType, node.getTextContent());
+            try
+            {
+                Node node = result.item(0);
+                return TypeFactory.parse(targetType, node.getTextContent());
+            }
+            catch (ParseException parseException)
+            {
+                throw new ConfigurationException(parseException,
+                        "The path %s was found but the object can not be converted into %s",
+                        xpath, targetType);
+            }
         default:
             throw new ConfigurationException("Multiple values found for path: %s", xpath);
         }

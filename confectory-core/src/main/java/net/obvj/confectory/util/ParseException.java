@@ -23,7 +23,7 @@ package net.obvj.confectory.util;
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 2.5.0
  */
-public class ParseException extends RuntimeException
+public class ParseException extends Exception
 {
     private static final long serialVersionUID = -4528618103182440263L;
 

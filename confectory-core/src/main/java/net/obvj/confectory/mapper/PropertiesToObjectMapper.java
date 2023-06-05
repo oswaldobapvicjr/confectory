@@ -21,7 +21,6 @@ import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.Properties;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.ConstructorUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
@@ -29,8 +28,8 @@ import net.obvj.confectory.ConfigurationException;
 import net.obvj.confectory.internal.helper.BeanConfigurationHelper;
 import net.obvj.confectory.internal.helper.ConfigurationHelper;
 import net.obvj.confectory.util.ParseException;
-import net.obvj.confectory.util.TypeFactory;
 import net.obvj.confectory.util.Property;
+import net.obvj.confectory.util.PropertyUtils;
 import net.obvj.confectory.util.ReflectionUtils;
 
 /**
@@ -117,23 +116,27 @@ public class PropertiesToObjectMapper<T> implements Mapper<T>
      * @param targetObject an instantiated object to reflect; not null
      * @param field        the field form the target object to be possibly written; not null
      * @param properties   the properties which field is to be fetched
-     * @throws IllegalAccessException if the field is not made accessible
-     * @throws NullPointerException   if any of the parameters is null
+     * @throws ReflectiveOperationException if the field is not made accessible or the custom
+     *                                      converter (if specified in the {@code @Property}
+     *                                      annotation) could not be instantiated
+     * @throws NullPointerException         if any of the parameters is null
      */
-    private void writeField(T targetObject, Field field, Properties properties) throws IllegalAccessException
+    private void writeField(T targetObject, Field field, Properties properties)
+            throws ReflectiveOperationException
     {
         if (ReflectionUtils.isTransient(field))
         {
             return; // Ignore transient fields
         }
-        String propertyKey = getAnnotationPropertyKeyOrFieldName(field);
+        Property anootation = getPropertyAnnotation(field);
+        String propertyKey = PropertyUtils.getPropertyOrFieldName(anootation, field);
         String propertyValue = properties.getProperty(propertyKey);
         if (propertyValue != null)
         {
             Class<?> fieldType = field.getType();
             try
             {
-                Object parsedValue = TypeFactory.parse(fieldType, propertyValue);
+                Object parsedValue = PropertyUtils.parseValue(propertyValue, fieldType, anootation);
                 FieldUtils.writeDeclaredField(targetObject, field.getName(), parsedValue, true);
             }
             catch (ParseException exception)
@@ -145,23 +148,9 @@ public class PropertiesToObjectMapper<T> implements Mapper<T>
         // Do nothing if the property is not found
     }
 
-    /**
-     * Evaluates a given {@link Field}, then returns either the field name, or the value
-     * specified in the {@code @}{@link Property} annotation, if present in the field.
-     *
-     * @param field the {@link Field} to be evaluated
-     * @return the field name, or the value specified in the {@code @}{@link Property}
-     *         annotation, if present in the field.
-     * @throws NullPointerException if the field is null
-     */
-    private static String getAnnotationPropertyKeyOrFieldName(Field field)
+    private static Property getPropertyAnnotation(Field field)
     {
-        Property property = field.getDeclaredAnnotation(Property.class);
-        if (property != null && StringUtils.isNotEmpty(property.value()))
-        {
-            return property.value();
-        }
-        return field.getName();
+        return field.getDeclaredAnnotation(Property.class);
     }
 
     @Override

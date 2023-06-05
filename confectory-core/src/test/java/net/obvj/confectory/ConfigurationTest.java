@@ -38,6 +38,7 @@ import net.obvj.confectory.mapper.StringMapper;
 import net.obvj.confectory.source.FileSource;
 import net.obvj.confectory.source.Source;
 import net.obvj.confectory.source.StringSource;
+import net.obvj.junit.utils.Procedure;
 
 /**
  * Unit tests for the {@link Configuration} class.
@@ -48,7 +49,7 @@ import net.obvj.confectory.source.StringSource;
 class ConfigurationTest
 {
 
-    private static final Matcher<Runnable> CONFIGURATION_EXCEPTION_NO_VALUE_FOUND = throwsException(
+    private static final Matcher<Procedure> CONFIGURATION_EXCEPTION_NO_VALUE_FOUND = throwsException(
             ConfigurationException.class).withMessageContaining("No value found");
 
     private static final String UNKNOWN = "unknown";

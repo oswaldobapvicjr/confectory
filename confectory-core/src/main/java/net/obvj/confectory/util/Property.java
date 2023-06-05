@@ -60,4 +60,18 @@ public @interface Property
      */
     String value() default "";
 
+    /**
+     * Optionally specify a {@link TypeConverter} class to convert this property value into a
+     * strongly typed object.
+     * <p>
+     * This is useful when a particular field should use a custom conversion that is different
+     * from the normal conversion for the field's type (which is applied by the
+     * {@link TypeFactory}).
+     *
+     * @return the type converter to convert String values into a strongly typed object for
+     *         this property
+     * @since 2.5.0
+     */
+    Class<? extends TypeConverter<?>>[] converter() default {};
+
 }
