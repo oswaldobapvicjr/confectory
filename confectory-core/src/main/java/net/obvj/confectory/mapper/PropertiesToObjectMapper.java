@@ -128,15 +128,15 @@ public class PropertiesToObjectMapper<T> implements Mapper<T>
         {
             return; // Ignore transient fields
         }
-        Property anootation = getPropertyAnnotation(field);
-        String propertyKey = PropertyUtils.getPropertyKeyOrFieldName(anootation, field);
+        Property annotation = getPropertyAnnotation(field);
+        String propertyKey = PropertyUtils.getPropertyKeyOrFieldName(annotation, field);
         String propertyValue = properties.getProperty(propertyKey);
         if (propertyValue != null)
         {
             Class<?> fieldType = field.getType();
             try
             {
-                Object parsedValue = PropertyUtils.parseValue(propertyValue, fieldType, anootation);
+                Object parsedValue = PropertyUtils.parseValue(propertyValue, fieldType, annotation);
                 FieldUtils.writeDeclaredField(targetObject, field.getName(), parsedValue, true);
             }
             catch (ParseException exception)

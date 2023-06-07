@@ -41,7 +41,7 @@ public class ReflectionUtils
      *         {@code false}, otherwise
      * @throws NullPointerException if the field is null
      */
-    public static boolean isTransient(Field field)
+    public static boolean isTransient(final Field field)
     {
         return Modifier.isTransient(field.getModifiers());
     }

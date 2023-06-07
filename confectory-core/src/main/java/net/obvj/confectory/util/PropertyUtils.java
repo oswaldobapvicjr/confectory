@@ -51,7 +51,7 @@ public class PropertyUtils
      *
      * @throws NullPointerException if the field is null
      */
-    public static String getPropertyKeyOrFieldName(Property property, Field field)
+    public static String getPropertyKeyOrFieldName(final Property property, final Field field)
     {
         return defaultIfEmpty(getPropertyKey(property), field::getName);
     }
@@ -63,7 +63,7 @@ public class PropertyUtils
      * @param property the {@link Property} annotation to be evaluated (null is allowed)
      * @return the property key defined in the annotation, or an empty string (not null)
      */
-    public static String getPropertyKey(Property property)
+    public static String getPropertyKey(final Property property)
     {
         return property != null
                 ? StringUtils.defaultIfEmpty(property.value(), property.key())
@@ -83,7 +83,7 @@ public class PropertyUtils
      * @param name the field name to obtain; not null
      * @return the {@link Field} object; can be null
      */
-    public static Field findFieldByPropertyKeyOrName(Class<?> type, String name)
+    public static Field findFieldByPropertyKeyOrName(final Class<?> type, final String name)
     {
         return findFieldByPropertyKey(type, name)
                 .orElseGet(() -> FieldUtils.getField(type, name, true));
@@ -102,7 +102,7 @@ public class PropertyUtils
      * @param name the field name to obtain; {@code null}
      * @return an Optional possibly containing a {@link Field} object; can be empty
      */
-    public static Optional<Field> findFieldByPropertyKey(Class<?> type, String name)
+    public static Optional<Field> findFieldByPropertyKey(final Class<?> type, final String name)
     {
         return FieldUtils.getFieldsListWithAnnotation(type, Property.class).stream()
                 .filter(field -> isFieldAnnotated(field, name)).findAny();
@@ -117,7 +117,7 @@ public class PropertyUtils
      * @return {@code true} if the field is annotated with a Property annotation which key
      *         matches the specified name
      */
-    public static boolean isFieldAnnotated(Field field, String name)
+    public static boolean isFieldAnnotated(final Field field, final String name)
     {
         Property property = field.getDeclaredAnnotation(Property.class);
         return PropertyUtils.getPropertyKey(property).equals(name);
@@ -138,7 +138,7 @@ public class PropertyUtils
      * @throws ReflectiveOperationException if an error occurs in the reflective operation
      * @throws ParseException               if an error is encountered while parsing
      */
-    public static Object parseValue(String string, Field field)
+    public static Object parseValue(final String string, final Field field)
             throws ReflectiveOperationException, ParseException
     {
         return parseValue(string, field.getType(), field.getAnnotation(Property.class));
@@ -160,8 +160,8 @@ public class PropertyUtils
      * @throws ReflectiveOperationException if an error occurs in the reflective operation
      * @throws ParseException               if an error is encountered while parsing
      */
-    public static Object parseValue(String string, Class<?> targetType, Property property)
-            throws ReflectiveOperationException, ParseException
+    public static Object parseValue(final String string, final Class<?> targetType,
+            final Property property) throws ReflectiveOperationException, ParseException
     {
         if (property != null && property.converter().length > 0)
         {
