@@ -16,6 +16,8 @@
 
 package net.obvj.confectory.util;
 
+import java.util.function.Supplier;
+
 import org.apache.commons.text.StringSubstitutor;
 import org.apache.commons.text.lookup.StringLookupFactory;
 
@@ -52,9 +54,37 @@ public class StringUtils
      * @param string the string to be expanded; {@code null} returns {@code null}
      * @return the expanded string
      */
-    public static String expandEnvironmentVariables(String string)
+    public static String expandEnvironmentVariables(final String string)
     {
         return ENVIRONMENT_VARIABLE_SUBSTITUTOR.replace(string);
+    }
+
+    /**
+     * Returns either the passed in string, or if the string is empty ({@code ""}) or
+     * {@code null}, the value returned by the specified supplier.
+     * <p>
+     * For example:
+     * <blockquote>
+     *
+     * <pre>
+     * StringUtils.defaultIfEmpty(null,() -&gt; "default") = "default"
+     * StringUtils.defaultIfEmpty("",  () -&gt; "default") = "default"
+     * StringUtils.defaultIfEmpty("a", () -&gt; "default") = "a"
+     * </pre>
+     *
+     * </blockquote>
+     *
+     * @param string          the string to check; may be {@code null}
+     * @param defaultSupplier a string supplier function to be executed only if the original
+     *                        string is empty or {@code null}
+     *
+     * @return the passed in string, or the value returned by the specified supplier
+     * @throws NullPointerException if the passed in supplier is null
+     * @since 2.5.0
+     */
+    public static String defaultIfEmpty(final String string, final Supplier<String> defaultSupplier)
+    {
+        return string == null || string.isEmpty() ? defaultSupplier.get() : string;
     }
 
 }

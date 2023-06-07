@@ -129,7 +129,7 @@ public class PropertiesToObjectMapper<T> implements Mapper<T>
             return; // Ignore transient fields
         }
         Property anootation = getPropertyAnnotation(field);
-        String propertyKey = PropertyUtils.getPropertyOrFieldName(anootation, field);
+        String propertyKey = PropertyUtils.getPropertyKeyOrFieldName(anootation, field);
         String propertyValue = properties.getProperty(propertyKey);
         if (propertyValue != null)
         {
