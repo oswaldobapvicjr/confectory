@@ -219,18 +219,11 @@ class PropertiesToObjectMapperTest
     @Test
     void apply_beanWithPrivateConstructor_configurationException()
     {
-        assertThat(() ->
-        {
-            try
-            {
-                new PropertiesToObjectMapper<>(MyBeanPrivateConstructor.class)
-                        .apply(newInputStream());
-            }
-            catch (IOException e)
-            {
-                throw new AssertionError("IOException happened, but ConfigurationException was expected", e);
-            }
-        }, throwsException(ConfigurationException.class).withCause(ReflectiveOperationException.class));
+        assertThat(
+                () -> new PropertiesToObjectMapper<>(MyBeanPrivateConstructor.class)
+                        .apply(newInputStream()),
+                throwsException(ConfigurationException.class)
+                        .withCause(ReflectiveOperationException.class));
     }
 
     @Test

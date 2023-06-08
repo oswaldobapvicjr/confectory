@@ -16,6 +16,7 @@
 
 package net.obvj.confectory.mapper;
 
+import static java.util.Arrays.asList;
 import static net.obvj.junit.utils.matchers.AdvancedMatchers.throwsException;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -25,16 +26,21 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.util.List;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Test;
 
 import net.obvj.confectory.ConfigurationException;
 import net.obvj.confectory.ConfigurationSourceException;
 import net.obvj.confectory.internal.helper.BeanConfigurationHelper;
+import net.obvj.confectory.mapper.PropertiesToObjectMapperTest.MyIntsConverter;
+import net.obvj.confectory.mapper.PropertiesToObjectMapperTest.MyPairConverter;
 import net.obvj.confectory.mapper.model.MyIni;
 import net.obvj.confectory.util.ParseException;
 import net.obvj.confectory.util.Property;
@@ -103,6 +109,11 @@ class INIToObjectMapperTest
     private static final String VALID_INI_OTHER_TYPES = "my_class = java.lang.IllegalStateException\n"
                                                       + "my_ip = 127.0.0.1";
 
+    private static final String VALID_INI_CUSTOM = "myInts=0,1,2,3,4\n"
+                                                 + "myPair=agent1->0 0 * * SUN\n"
+                                                 + "[section1]\n"
+                                                 + "myBigDecimal=123456789.987654321";
+
     static class MyBeanPrivateConstructor
     {
         private MyBeanPrivateConstructor() {}
@@ -135,6 +146,27 @@ class INIToObjectMapperTest
 
         public MyIniOtherTypes() {}
     }
+
+    static class MyBeanCustomConverters
+    {
+        @Property(converter = MyIntsConverter.class)
+        List<Integer> myInts;
+        @Property(key = "myPair", converter = MyPairConverter.class)
+        Pair<String, String> thePair;
+        @Property("section1")
+        Section section;
+
+        public MyBeanCustomConverters() {}
+
+        static class Section
+        {
+            @Property("myBigDecimal")
+            BigDecimal myDecimal;
+
+            public Section() {}
+        }
+    }
+
 
     private Mapper<MyIni> mapper = new INIToObjectMapper<>(MyIni.class);
 
@@ -251,33 +283,21 @@ class INIToObjectMapperTest
     @Test
     void apply_beanWithPrivateConstructor_configurationException()
     {
-        assertThat(() ->
-        {
-            try
-            {
-                new INIToObjectMapper<>(MyBeanPrivateConstructor.class).apply(toInputStream(VALID_INI_1));
-            }
-            catch (IOException e)
-            {
-                throw new AssertionError("IOException happened, but ConfigurationException was expected", e);
-            }
-        }, throwsException(ConfigurationException.class).withCause(ReflectiveOperationException.class));
+        assertThat(
+                () -> new INIToObjectMapper<>(MyBeanPrivateConstructor.class)
+                        .apply(toInputStream(VALID_INI_1)),
+                throwsException(ConfigurationException.class)
+                        .withCause(ReflectiveOperationException.class));
     }
 
     @Test
     void apply_beanWithPrivateConstructorInSection_configurationException()
     {
-        assertThat(() ->
-        {
-            try
-            {
-                new INIToObjectMapper<>(MyBeanPrivateSection.class).apply(toInputStream(VALID_INI_1));
-            }
-            catch (IOException e)
-            {
-                throw new AssertionError("IOException happened, but ConfigurationException was expected", e);
-            }
-        }, throwsException(ConfigurationException.class).withCause(ReflectiveOperationException.class));
+        assertThat(
+                () -> new INIToObjectMapper<>(MyBeanPrivateSection.class)
+                        .apply(toInputStream(VALID_INI_1)),
+                throwsException(ConfigurationException.class)
+                        .withCause(ReflectiveOperationException.class));
     }
 
     @Test
@@ -318,6 +338,18 @@ class INIToObjectMapperTest
         MyIniOtherTypes result = mapper.apply(toInputStream(VALID_INI_OTHER_TYPES));
         assertThat(result.myClass, equalTo(IllegalStateException.class));
         assertThat(result.myIp, equalTo(Inet4Address.getByAddress(new byte[] { 127, 0, 0, 1 })));
+    }
+
+    @Test
+    void apply_validIniWithCustomConverters_success() throws IOException
+    {
+        MyBeanCustomConverters bean = new INIToObjectMapper<>(MyBeanCustomConverters.class)
+                .apply(toInputStream(VALID_INI_CUSTOM));
+
+        assertThat(bean.myInts, equalTo(asList(0, 1, 2, 3, 4)));
+        assertThat(bean.thePair.getLeft(), equalTo("agent1"));
+        assertThat(bean.thePair.getRight(), equalTo("0 0 * * SUN"));
+        assertThat(bean.section.myDecimal, equalTo(new BigDecimal("123456789.987654321")));
     }
 
     @Test

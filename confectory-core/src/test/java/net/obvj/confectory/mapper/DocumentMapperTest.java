@@ -19,7 +19,6 @@ package net.obvj.confectory.mapper;
 import static net.obvj.junit.utils.matchers.AdvancedMatchers.throwsException;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -76,17 +75,8 @@ class DocumentMapperTest
     @Test
     void apply_invalidJSON_configurationException() throws IOException
     {
-        assertThat(() ->
-        {
-            try
-            {
-                mapper.apply(toInputStream(TEST_XML_INVALID));
-            }
-            catch (IOException e)
-            {
-                fail("Expected ConfigurationException, but was IOException.");
-            }
-        }, throwsException(ConfigurationException.class).withCause(SAXParseException.class));
+        assertThat(() -> mapper.apply(toInputStream(TEST_XML_INVALID)),
+                throwsException(ConfigurationException.class).withCause(SAXParseException.class));
     }
 
     @Test

@@ -19,7 +19,6 @@ package net.obvj.confectory.mapper;
 import static net.obvj.junit.utils.matchers.AdvancedMatchers.throwsException;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -38,22 +37,14 @@ import net.obvj.confectory.internal.helper.JsonSmartConfigurationHelper;
  */
 class DummyMapperTest
 {
-    private Mapper<JSONObject> dummyJSONObjectMapper = new DummyMapper<>(JsonSmartConfigurationHelper::new);
+    private Mapper<JSONObject> dummyJSONObjectMapper = new DummyMapper<>(
+            JsonSmartConfigurationHelper::new);
 
     @Test
     void apply_configurationException() throws IOException
     {
-        assertThat(() ->
-        {
-            try
-            {
-                dummyJSONObjectMapper.apply(new ByteArrayInputStream("".getBytes()));
-            }
-            catch (IOException exception)
-            {
-                fail("Unexpected exception", exception);
-            }
-        }, throwsException(ConfigurationException.class).withMessage("Dummy mapper"));
+        assertThat(() -> dummyJSONObjectMapper.apply(new ByteArrayInputStream("".getBytes())),
+                throwsException(ConfigurationException.class).withMessage("Dummy mapper"));
     }
 
     @Test
