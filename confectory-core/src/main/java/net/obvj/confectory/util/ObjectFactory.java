@@ -19,7 +19,8 @@ package net.obvj.confectory.util;
 import org.apache.commons.lang3.reflect.ConstructorUtils;
 
 /**
- * A factory that encapsulates the logic to produce new objects for a given class.
+ * A factory that encapsulates the logic to reflectively produce new objects for a given
+ * class.
  *
  * @author oswaldo.bapvic.jr
  * @since 2.5.0
@@ -29,8 +30,8 @@ public enum ObjectFactory
     /**
      * Constructor-based object factory.
      * <p>
-     * It's safer but requires on the existence of a public, default constructor in the
-     * classes to allow the instantiation.
+     * It's safer but requires on the existence of a public, default constructor available in
+     * the class to allow the instantiation.
      */
     CLASSIC
     {
@@ -50,7 +51,7 @@ public enum ObjectFactory
      * <a href="https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html">
      * default values</a>).
      */
-    ENHANCED
+    UNSAFE
     {
         @Override
         public <T> T newObject(Class<T> type) throws ReflectiveOperationException

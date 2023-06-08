@@ -293,7 +293,7 @@ class INIToObjectMapperTest
     void apply_beanWithPrivateConstructorAndEnhancedFactory_success() throws IOException
     {
         MyBeanPrivateConstructor bean = new INIToObjectMapper<>(MyBeanPrivateConstructor.class,
-                ObjectFactory.ENHANCED).apply(toInputStream(VALID_INI_1));
+                ObjectFactory.UNSAFE).apply(toInputStream(VALID_INI_1));
         assertThat(bean.myString, equalTo("myRootValue"));
     }
 
@@ -311,7 +311,7 @@ class INIToObjectMapperTest
     void apply_beanWithPrivateConstructorInSectionAndEnhancedFactory_success() throws IOException
     {
         MyBeanPrivateSection bean = new INIToObjectMapper<>(MyBeanPrivateSection.class,
-                ObjectFactory.ENHANCED).apply(toInputStream(VALID_INI_1));
+                ObjectFactory.UNSAFE).apply(toInputStream(VALID_INI_1));
         assertThat(bean.section1.myString, equalTo("mySection1Value"));
     }
 

@@ -38,7 +38,7 @@ public class ConfectorySettings
     /**
      * The initial {@link ObjectFactory} applied by default
      */
-    static final ObjectFactory INITIAL_OBJECT_FACTORY = ObjectFactory.ENHANCED;
+    static final ObjectFactory INITIAL_OBJECT_FACTORY = ObjectFactory.UNSAFE;
 
     private static final ConfectorySettings INSTANCE = new ConfectorySettings();
 
@@ -78,7 +78,7 @@ public class ConfectorySettings
      *
      * @return the default {@link DataFetchStrategy} to be applied
      */
-    public DataFetchStrategy getDefaultDataFetchStrategy()
+    public DataFetchStrategy getDataFetchStrategy()
     {
         return defaultDataFetchStrategy;
     }
@@ -90,7 +90,7 @@ public class ConfectorySettings
      * @param strategy the default {@link DataFetchStrategy} to set; not null
      * @throws NullPointerException if the specified strategy is null
      */
-    public void setDefaultDataFetchStrategy(DataFetchStrategy strategy)
+    public void setDataFetchStrategy(DataFetchStrategy strategy)
     {
         this.defaultDataFetchStrategy = Objects.requireNonNull(strategy,
                 "the default DataFetchStrategy must not be null");

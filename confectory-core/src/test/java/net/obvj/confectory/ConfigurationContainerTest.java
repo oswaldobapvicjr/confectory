@@ -88,7 +88,7 @@ class ConfigurationContainerTest
     private void assertDefaultDataFetchStrategy()
     {
         assertThat(container.getDataFetchStrategy(),
-                equalTo(ConfectorySettings.instance().getDefaultDataFetchStrategy()));
+                equalTo(ConfectorySettings.instance().getDataFetchStrategy()));
     }
 
     @Test

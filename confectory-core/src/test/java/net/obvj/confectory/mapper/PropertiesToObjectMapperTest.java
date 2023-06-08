@@ -231,7 +231,7 @@ class PropertiesToObjectMapperTest
     void apply_beanWithPrivateConstructorAndEnhancedObjectFactory_success() throws IOException
     {
         MyBeanPrivateConstructor bean = new PropertiesToObjectMapper<>(
-                MyBeanPrivateConstructor.class, ObjectFactory.ENHANCED).apply(newInputStream());
+                MyBeanPrivateConstructor.class, ObjectFactory.UNSAFE).apply(newInputStream());
         assertThat(bean.booleanValue, equalTo(true));
         assertThat(bean.stringValue, equalTo("string1"));
         assertThat(bean.intValue, equalTo(1910));

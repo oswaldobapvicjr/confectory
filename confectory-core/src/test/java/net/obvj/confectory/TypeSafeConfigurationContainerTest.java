@@ -61,7 +61,7 @@ class TypeSafeConfigurationContainerTest
         container = new TypeSafeConfigurationContainer<>();
         assertThat(container.size(), equalTo(0L));
         assertThat(container.getInternal().getDataFetchStrategy(),
-                equalTo(Confectory.settings().getDefaultDataFetchStrategy()));
+                equalTo(Confectory.settings().getDataFetchStrategy()));
     }
 
     @Test
