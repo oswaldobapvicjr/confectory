@@ -42,6 +42,7 @@ import net.obvj.confectory.internal.helper.BeanConfigurationHelper;
 import net.obvj.confectory.mapper.PropertiesToObjectMapperTest.MyIntsConverter;
 import net.obvj.confectory.mapper.PropertiesToObjectMapperTest.MyPairConverter;
 import net.obvj.confectory.mapper.model.MyIni;
+import net.obvj.confectory.util.ObjectFactory;
 import net.obvj.confectory.util.ParseException;
 import net.obvj.confectory.util.Property;
 
@@ -116,6 +117,9 @@ class INIToObjectMapperTest
 
     static class MyBeanPrivateConstructor
     {
+        @Property("rootProperty")
+        String myString;
+
         private MyBeanPrivateConstructor() {}
     }
 
@@ -125,7 +129,10 @@ class INIToObjectMapperTest
 
         static class Section
         {
-            private Section() {} // unsupported
+            @Property("section_string")
+            String myString;
+
+            private Section() {} // unsupported in ObjectFactory.CLASSIC
         }
     }
 
@@ -133,8 +140,6 @@ class INIToObjectMapperTest
     {
         @Property("my_date")
         LocalDate myDate;
-
-        public MyIniDate() {}
     }
 
     static class MyIniOtherTypes
@@ -143,8 +148,6 @@ class INIToObjectMapperTest
         Class<? extends Exception> myClass;
         @Property("my_ip")
         InetAddress myIp;
-
-        public MyIniOtherTypes() {}
     }
 
     static class MyBeanCustomConverters
@@ -156,14 +159,10 @@ class INIToObjectMapperTest
         @Property("section1")
         Section section;
 
-        public MyBeanCustomConverters() {}
-
         static class Section
         {
             @Property("myBigDecimal")
             BigDecimal myDecimal;
-
-            public Section() {}
         }
     }
 
@@ -189,7 +188,7 @@ class INIToObjectMapperTest
     }
 
     @Test
-    void apply_validIni_validJSONObject() throws IOException
+    void apply_validIni_validObject() throws IOException
     {
         MyIni result = testWithString(VALID_INI_1);
         assertThat(result.getRootProperty(), is(equalTo("myRootValue")));
@@ -281,23 +280,39 @@ class INIToObjectMapperTest
     }
 
     @Test
-    void apply_beanWithPrivateConstructor_configurationException()
+    void apply_beanWithPrivateConstructorAndClassicFactory_configurationException()
     {
         assertThat(
-                () -> new INIToObjectMapper<>(MyBeanPrivateConstructor.class)
+                () -> new INIToObjectMapper<>(MyBeanPrivateConstructor.class, ObjectFactory.CLASSIC)
                         .apply(toInputStream(VALID_INI_1)),
                 throwsException(ConfigurationException.class)
                         .withCause(ReflectiveOperationException.class));
     }
 
     @Test
-    void apply_beanWithPrivateConstructorInSection_configurationException()
+    void apply_beanWithPrivateConstructorAndEnhancedFactory_success() throws IOException
+    {
+        MyBeanPrivateConstructor bean = new INIToObjectMapper<>(MyBeanPrivateConstructor.class,
+                ObjectFactory.ENHANCED).apply(toInputStream(VALID_INI_1));
+        assertThat(bean.myString, equalTo("myRootValue"));
+    }
+
+    @Test
+    void apply_beanWithPrivateConstructorInSectionAndClassicFactory_configurationException()
     {
         assertThat(
-                () -> new INIToObjectMapper<>(MyBeanPrivateSection.class)
+                () -> new INIToObjectMapper<>(MyBeanPrivateSection.class, ObjectFactory.CLASSIC)
                         .apply(toInputStream(VALID_INI_1)),
                 throwsException(ConfigurationException.class)
                         .withCause(ReflectiveOperationException.class));
+    }
+
+    @Test
+    void apply_beanWithPrivateConstructorInSectionAndEnhancedFactory_success() throws IOException
+    {
+        MyBeanPrivateSection bean = new INIToObjectMapper<>(MyBeanPrivateSection.class,
+                ObjectFactory.ENHANCED).apply(toInputStream(VALID_INI_1));
+        assertThat(bean.section1.myString, equalTo("mySection1Value"));
     }
 
     @Test

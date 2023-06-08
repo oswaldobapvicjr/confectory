@@ -48,7 +48,7 @@ class ConfectoryTest
     @Test
     void settings_sameInstanceDefaultConfiguration()
     {
-        assertThat(Confectory.settings(), equalTo(ConfectorySettings.getInstance()));
+        assertThat(Confectory.settings(), equalTo(ConfectorySettings.instance()));
     }
 
 }

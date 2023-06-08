@@ -29,7 +29,7 @@ public class ConfectoryTestDriveContainerLenient
 {
     public static void main(String[] args)
     {
-        ConfectorySettings.getInstance().setDefaultDataFetchStrategy(DataFetchStrategy.LENIENT);
+        ConfectorySettings.instance().setDefaultDataFetchStrategy(DataFetchStrategy.LENIENT);
 
         Configuration<Properties> config1 = Configuration.<Properties>builder()
                 .namespace("test")

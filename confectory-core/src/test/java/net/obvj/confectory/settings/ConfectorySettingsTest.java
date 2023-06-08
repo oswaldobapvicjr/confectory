@@ -41,7 +41,7 @@ class ConfectorySettingsTest
     @Mock
     private DataFetchStrategy dataFetchStrategy;
 
-    private ConfectorySettings settings = ConfectorySettings.getInstance();
+    private ConfectorySettings settings = ConfectorySettings.instance();
 
     @AfterEach
     void reset()

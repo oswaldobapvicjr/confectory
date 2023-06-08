@@ -40,6 +40,7 @@ import org.junit.jupiter.api.Test;
 import net.obvj.confectory.ConfigurationException;
 import net.obvj.confectory.TestUtils;
 import net.obvj.confectory.internal.helper.BeanConfigurationHelper;
+import net.obvj.confectory.util.ObjectFactory;
 import net.obvj.confectory.util.ParseException;
 import net.obvj.confectory.util.Property;
 import net.obvj.confectory.util.TypeConverter;
@@ -74,8 +75,6 @@ class PropertiesToObjectMapperTest
         Boolean booleanValue; // implicit mapping
         String stringValue;   // implicit mapping
         Integer intValue;     // implicit mapping
-
-        public MyBeanNoExplicitMapping() {}
     }
 
     static class MyBeanExplicitMapping
@@ -83,8 +82,6 @@ class PropertiesToObjectMapperTest
         @Property("booleanValue") boolean b; // explicit mapping
         @Property("stringValue") String s;   // explicit mapping
         @Property("intValue") int i;         // explicit mapping
-
-        public MyBeanExplicitMapping() {}
     }
 
     static class MyBeanHybrid
@@ -93,8 +90,6 @@ class PropertiesToObjectMapperTest
         @Property String stringValue;        // implicit mapping
         int intValue;                        // implicit mapping
         double unknownDouble;                // invalid property
-
-        public MyBeanHybrid() {}
     }
 
     static class MyBeanAllFieldsTransient
@@ -102,12 +97,18 @@ class PropertiesToObjectMapperTest
         transient boolean booleanValue; // implicit, but transient
         transient String stringValue;   // implicit, but transient
         transient int intValue;         // implicit, but transient
-
-        public MyBeanAllFieldsTransient() {}
     }
 
     static class MyBeanPrivateConstructor
     {
+        boolean booleanValue;
+        String stringValue;
+        int intValue;
+
+        // since this value is assigned during constructor,
+        // it will not happen when using the ObjectFactor.ENHANCED
+        double undefined = -1.0;
+
         private MyBeanPrivateConstructor() {}
     }
 
@@ -217,13 +218,24 @@ class PropertiesToObjectMapperTest
     }
 
     @Test
-    void apply_beanWithPrivateConstructor_configurationException()
+    void apply_beanWithPrivateConstructorAndClassicObjectFactory_configurationException()
     {
         assertThat(
-                () -> new PropertiesToObjectMapper<>(MyBeanPrivateConstructor.class)
+                () -> new PropertiesToObjectMapper<>(MyBeanPrivateConstructor.class, ObjectFactory.CLASSIC)
                         .apply(newInputStream()),
                 throwsException(ConfigurationException.class)
                         .withCause(ReflectiveOperationException.class));
+    }
+
+    @Test
+    void apply_beanWithPrivateConstructorAndEnhancedObjectFactory_success() throws IOException
+    {
+        MyBeanPrivateConstructor bean = new PropertiesToObjectMapper<>(
+                MyBeanPrivateConstructor.class, ObjectFactory.ENHANCED).apply(newInputStream());
+        assertThat(bean.booleanValue, equalTo(true));
+        assertThat(bean.stringValue, equalTo("string1"));
+        assertThat(bean.intValue, equalTo(1910));
+        assertThat(bean.undefined, equalTo(0.0));
     }
 
     @Test

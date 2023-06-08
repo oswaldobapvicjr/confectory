@@ -19,13 +19,14 @@ package net.obvj.confectory.mapper;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.util.Objects;
 
-import org.apache.commons.lang3.reflect.ConstructorUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
 import net.obvj.confectory.ConfigurationException;
 import net.obvj.confectory.internal.helper.BeanConfigurationHelper;
 import net.obvj.confectory.internal.helper.ConfigurationHelper;
+import net.obvj.confectory.settings.ConfectorySettings;
 import net.obvj.confectory.util.*;
 
 /**
@@ -66,6 +67,7 @@ public class INIToObjectMapper<T> extends AbstractINIMapper<T> implements Mapper
     private static final String MSG_UNPARSABLE_PROPERTY_VALUE = "Unable to parse the value of the property %s into a field of type '%s'";
 
     private final Class<T> targetType;
+    private final ObjectFactory objectFactory;
 
     /**
      * Builds a new {@code INIToObjectMapper} with the specified target type.
@@ -74,7 +76,22 @@ public class INIToObjectMapper<T> extends AbstractINIMapper<T> implements Mapper
      */
     public INIToObjectMapper(Class<T> targetType)
     {
+        this(targetType, ConfectorySettings.instance().getObjectFactory());
+    }
+
+    /**
+     * Builds a new {@code INIToObjectMapper} with the specified target type and a custom
+     * object factory.
+     *
+     * @param targetType    the target type to be produced by this {@code Mapper}
+     * @param objectFactory the {@link ObjectFactory} to produce objects; not null
+     * @since 2.5.0
+     */
+    public INIToObjectMapper(Class<T> targetType, ObjectFactory objectFactory)
+    {
         this.targetType = targetType;
+        this.objectFactory = Objects.requireNonNull(objectFactory,
+                "the ObjectFactory must not be null");
     }
 
     @Override
@@ -90,7 +107,7 @@ public class INIToObjectMapper<T> extends AbstractINIMapper<T> implements Mapper
         Class<?> type = getCurrentType(context);
         try
         {
-            return type != null ? ConstructorUtils.invokeConstructor(type) : null;
+            return type != null ? objectFactory.newObject(type) : null;
         }
         catch (ReflectiveOperationException exception)
         {
@@ -105,7 +122,7 @@ public class INIToObjectMapper<T> extends AbstractINIMapper<T> implements Mapper
         Field field = PropertyUtils.findFieldByPropertyKeyOrName(currentType, context.currentKey);
         try
         {
-            return field != null ? PropertyUtils.parseValue(value, field) : null;
+            return field != null ? PropertyUtils.parseValue(value, field, objectFactory) : null;
         }
         catch (ParseException | ReflectiveOperationException exception)
         {
