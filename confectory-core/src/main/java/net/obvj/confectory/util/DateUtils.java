@@ -62,7 +62,7 @@ public class DateUtils
      * @param string the string to parse; not null
      * @return the parsed {@link Date}; not null
      */
-    public static Date parseDateRfc3339(String string)
+    public static Date parseDateRfc3339(final String string)
     {
         Instant instant = parseInstantRfc3339(string);
         return Date.from(instant);
@@ -83,7 +83,7 @@ public class DateUtils
      * @param string the string to parse; not null
      * @return the parsed {@link Instant}; not null
      */
-    public static Instant parseInstantRfc3339(String string)
+    public static Instant parseInstantRfc3339(final String string)
     {
         TemporalAccessor temporalAccessor = RFC_3339_DATETIME_FORMATTER.parse(string);
         return Instant.from(temporalAccessor);

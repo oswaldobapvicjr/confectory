@@ -19,7 +19,6 @@ package net.obvj.confectory.mapper;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
-import java.util.Optional;
 
 import org.apache.commons.lang3.reflect.ConstructorUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -27,10 +26,7 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 import net.obvj.confectory.ConfigurationException;
 import net.obvj.confectory.internal.helper.BeanConfigurationHelper;
 import net.obvj.confectory.internal.helper.ConfigurationHelper;
-import net.obvj.confectory.util.ParseException;
-import net.obvj.confectory.util.TypeFactory;
-import net.obvj.confectory.util.Property;
-import net.obvj.confectory.util.ReflectionUtils;
+import net.obvj.confectory.util.*;
 
 /**
  * A specialized {@code Mapper} that loads the contents of a valid INI {@code Source}
@@ -63,6 +59,9 @@ import net.obvj.confectory.util.ReflectionUtils;
  */
 public class INIToObjectMapper<T> extends AbstractINIMapper<T> implements Mapper<T>
 {
+    private static final String DELIMITER_LEFT = "['";
+    private static final String DELIMITER_RIGHT = "']";
+
     private static final String MSG_UNABLE_TO_BUILD_OBJECT = "Unable to build object of type: %s";
     private static final String MSG_UNPARSABLE_PROPERTY_VALUE = "Unable to parse the value of the property %s into a field of type '%s'";
 
@@ -102,12 +101,13 @@ public class INIToObjectMapper<T> extends AbstractINIMapper<T> implements Mapper
     @Override
     Object parseValue(Context context, String value)
     {
-        Field field = findField(getCurrentType(context), context.currentKey);
+        Class<?> currentType = getCurrentType(context);
+        Field field = PropertyUtils.findFieldByPropertyKeyOrName(currentType, context.currentKey);
         try
         {
-            return field != null ? TypeFactory.parse(field.getType(), value) : null;
+            return field != null ? PropertyUtils.parseValue(value, field) : null;
         }
-        catch (ParseException exception)
+        catch (ParseException | ReflectiveOperationException exception)
         {
             throw new ConfigurationException(exception, MSG_UNPARSABLE_PROPERTY_VALUE,
                     currentFieldIdentifierToString(context), field.getType().getCanonicalName());
@@ -117,7 +117,7 @@ public class INIToObjectMapper<T> extends AbstractINIMapper<T> implements Mapper
     @Override
     void put(Object target, String name, Object value)
     {
-        Field field = findField(target.getClass(), name);
+        Field field = PropertyUtils.findFieldByPropertyKeyOrName(target.getClass(), name);
         if (field != null && !ReflectionUtils.isTransient(field))
         {
             try
@@ -142,59 +142,8 @@ public class INIToObjectMapper<T> extends AbstractINIMapper<T> implements Mapper
         {
             return targetType;
         }
-        Field field = findField(targetType, context.currentSectionName);
+        Field field = PropertyUtils.findFieldByPropertyKeyOrName(targetType, context.currentSectionName);
         return field != null ? field.getType() : null;
-    }
-
-    /**
-     * Find a field matching any of the following criteria in the specified type, or
-     * {@code null} if no match found:
-     * <ul>
-     * <li>the field is marked with the {@code @}{@link Property} annotation, and the
-     * annotation defines a custom name equal to the one specified in the parameter; or</li>
-     * <li>the field name is equal to the specified {@code name} parameter</li>
-     * </ul>
-     *
-     * @param type the class to reflect; not null
-     * @param name the field name to obtain; not null
-     * @return the {@link Field} object; can be null
-     */
-    private static Field findField(Class<?> type, String name)
-    {
-        return findFieldByAnnotation(type, name).orElseGet(() -> FieldUtils.getField(type, name, true));
-    }
-
-    /**
-     * Find a field matching the following criteria in the specified type, or {@code null} if
-     * no match found:
-     * <ul>
-     * <li>the field is marked with the {@code @}{@link Property} annotation, and the
-     * annotation defines a custom name equal to the one specified in the parameter</li>
-     * </ul>
-     *
-     * @param type the class to reflect; not null
-     * @param name the field name to obtain; not null
-     * @return an Optional possibly containing a {@link Field} object; can be empty
-     */
-    private static Optional<Field> findFieldByAnnotation(Class<?> type, String name)
-    {
-        return FieldUtils.getFieldsListWithAnnotation(type, Property.class).stream()
-                .filter(field -> isFieldAnnotated(field, name)).findAny();
-    }
-
-    /**
-     * Returns {@code true} if the field is annotated with a Property annotation which value
-     * matches the specified name.
-     *
-     * @param field the field to be checked; not null
-     * @param name  the name to be tested; not null
-     * @return {@code true} if the field is annotated with a Property annotation which value
-     *         matches the specified name
-     */
-    private static boolean isFieldAnnotated(Field field, String name)
-    {
-        Property property = field.getDeclaredAnnotation(Property.class);
-        return property != null && name.equals(property.value());
     }
 
     /**
@@ -205,9 +154,9 @@ public class INIToObjectMapper<T> extends AbstractINIMapper<T> implements Mapper
         StringBuilder builder = new StringBuilder();
         if (context.currentSectionName != null)
         {
-            builder.append("['").append(context.currentSectionName).append("']");
+            builder.append(DELIMITER_LEFT).append(context.currentSectionName).append(DELIMITER_RIGHT);
         }
-        builder.append("['").append(context.currentKey).append("']");
+        builder.append(DELIMITER_LEFT).append(context.currentKey).append(DELIMITER_RIGHT);
         return builder.toString();
     }
 

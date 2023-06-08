@@ -204,7 +204,7 @@ public class TypeFactory
      * @throws ParseException                if an error is encountered while parsing
      */
     @SuppressWarnings("unchecked")
-    public static <T> T parse(Class<T> type, String string) throws ParseException
+    public static <T> T parse(final Class<T> type, final String string) throws ParseException
     {
         if (type.isEnum())
         {
@@ -224,7 +224,7 @@ public class TypeFactory
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    private static <T> T getEnumElement(Class<T> type, String string)
+    private static <T> T getEnumElement(final Class<T> type, final String string)
     {
         return (T) EnumUtils.getEnumIgnoreCase((Class<Enum>) type, string);
     }
@@ -236,7 +236,7 @@ public class TypeFactory
      * @return the {@link Function} to be applied for the specified type; not null
      * @throws UnsupportedOperationException if the specified type is not supported
      */
-    private static Function<String, ?> getParser(Class<?> type)
+    private static Function<String, ?> getParser(final Class<?> type)
     {
         Function<String, ?> parser = PARSERS.get(type);
         if (parser == null)

@@ -23,18 +23,28 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.Mockito.verifyNoInteractions;
+
+import java.util.function.Supplier;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 /**
  * Unit tests for the {@link StringUtils} class.
  *
  * @author oswaldo.bapvic.jr
  */
+@ExtendWith(MockitoExtension.class)
 class StringUtilsTest
 {
     private static final String TEST = "test";
     private static final String TEST_$_UNKNOWN = "test=${unknown}";
+
+    @Mock
+    private Supplier<String> supplier;
 
     @Test
     void constructor_instantiationNotAllowed()
@@ -59,6 +69,20 @@ class StringUtilsTest
     {
         assertThat(StringUtils.expandEnvironmentVariables("test=${PATH}"),
                 (allOf(startsWith("test="), not(containsAny(("${PATH}"))))));
+    }
+
+    @Test
+    void defaultIfEmpty_stringNotEmpty_supplierNotUsed()
+    {
+        assertThat(StringUtils.defaultIfEmpty(TEST, supplier), equalTo(TEST));
+        verifyNoInteractions(supplier);
+    }
+
+    @Test
+    void defaultIfEmpty_stringEmpty_supplierUsed()
+    {
+        assertThat(StringUtils.defaultIfEmpty(null, () -> TEST), equalTo(TEST));
+        assertThat(StringUtils.defaultIfEmpty("", () -> TEST), equalTo(TEST));
     }
 
 }
