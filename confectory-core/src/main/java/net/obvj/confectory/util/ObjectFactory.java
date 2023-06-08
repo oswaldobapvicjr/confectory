@@ -17,10 +17,11 @@
 package net.obvj.confectory.util;
 
 import org.apache.commons.lang3.reflect.ConstructorUtils;
+import org.objenesis.ObjenesisStd;
 
 /**
- * A factory that encapsulates the logic to reflectively produce new objects for a given
- * class.
+ * A factory that encapsulates the logic to reflectively produce new objects depending on
+ * the desired strategy.
  *
  * @author oswaldo.bapvic.jr
  * @since 2.5.0
@@ -30,8 +31,8 @@ public enum ObjectFactory
     /**
      * Constructor-based object factory.
      * <p>
-     * It's safer but requires on the existence of a public, default constructor available in
-     * the class to allow the instantiation.
+     * It's safer but requires the existence of a public, default constructor available in the
+     * class to allow the instantiation.
      */
     CLASSIC
     {
@@ -43,20 +44,39 @@ public enum ObjectFactory
     },
 
     /**
-     * Enhanced object factory that can build objects without requiring a default constructor
-     * declared in the class.
+     * Object factory that builds objects by allocating an instance directly on the heap,
+     * without any constructor being called.
      * <p>
-     * The default constructor, if present, is bypassed and an empty instance is created (all
-     * fields assigned with
+     * Final fields are assigned with
      * <a href="https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html">
-     * default values</a>).
+     * default values</a>.
+     * <p>
+     * <b>Note:</b> This is the default strategy since 2.5.0.
      */
     UNSAFE
     {
         @Override
+        @SuppressWarnings("restriction")
         public <T> T newObject(Class<T> type) throws ReflectiveOperationException
         {
-            return (T) UnsafeAccessor.UNSAFE.allocateInstance(type);
+            return type.cast(UnsafeAccessor.UNSAFE.allocateInstance(type));
+        }
+    },
+
+    /**
+     * Alternative object factory that uses a variety of approaches to attempt to instantiate
+     * the object, depending on the type of object, JVM version, JVM vendor and Security
+     * Manager present.
+     * <p>
+     * <b>IMPORTANT:</b> This strategy requires the <b>optional dependency</b>
+     * {@code org.objenesis:objenesis} in the class path.
+     */
+    OBJENESIS
+    {
+        @Override
+        public <T> T newObject(Class<T> type)
+        {
+            return new ObjenesisStd().newInstance(type);
         }
     };
 
@@ -70,4 +90,5 @@ public enum ObjectFactory
      * @throws ReflectiveOperationException
      */
     public abstract <T> T newObject(Class<T> type) throws ReflectiveOperationException;
+
 }

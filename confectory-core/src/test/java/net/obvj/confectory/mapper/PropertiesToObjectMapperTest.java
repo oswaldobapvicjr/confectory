@@ -106,7 +106,7 @@ class PropertiesToObjectMapperTest
         int intValue;
 
         // since this value is assigned during constructor,
-        // it will not happen when using the ObjectFactor.ENHANCED
+        // it will not happen when using the ObjectFactor.UNSAFE
         double undefined = -1.0;
 
         private MyBeanPrivateConstructor() {}
@@ -228,14 +228,25 @@ class PropertiesToObjectMapperTest
     }
 
     @Test
-    void apply_beanWithPrivateConstructorAndEnhancedObjectFactory_success() throws IOException
+    void apply_beanWithPrivateConstructorAndUnsafedObjectFactory_success() throws IOException
     {
         MyBeanPrivateConstructor bean = new PropertiesToObjectMapper<>(
                 MyBeanPrivateConstructor.class, ObjectFactory.UNSAFE).apply(newInputStream());
         assertThat(bean.booleanValue, equalTo(true));
         assertThat(bean.stringValue, equalTo("string1"));
         assertThat(bean.intValue, equalTo(1910));
-        assertThat(bean.undefined, equalTo(0.0));
+        assertThat(bean.undefined, equalTo(0.0)); // Default value assigned
+    }
+
+    @Test
+    void apply_beanWithPrivateConstructorAndObjenesisObjectFactory_success() throws IOException
+    {
+        MyBeanPrivateConstructor bean = new PropertiesToObjectMapper<>(
+                MyBeanPrivateConstructor.class, ObjectFactory.OBJENESIS).apply(newInputStream());
+        assertThat(bean.booleanValue, equalTo(true));
+        assertThat(bean.stringValue, equalTo("string1"));
+        assertThat(bean.intValue, equalTo(1910));
+        assertThat(bean.undefined, equalTo(0.0)); // Default value assigned
     }
 
     @Test
