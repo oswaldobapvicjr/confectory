@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 obvj.net
+ * Copyright 2023 obvj.net
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,41 +14,26 @@
  * limitations under the License.
  */
 
-package net.obvj.confectory;
+package net.obvj.confectory.util;
 
 import static net.obvj.junit.utils.matchers.AdvancedMatchers.instantiationNotAllowed;
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.junit.jupiter.api.Test;
 
-import net.obvj.confectory.settings.ConfectorySettings;
-
 /**
- * Unit tests for the {@link Confectory} class.
+ * Unit tests for the {@link UnsafeAccessor} class.
  *
- * @author FernandoNSC (Fernando Tiannamen)
+ * @author oswaldo.bapvic.jr
+ * @since 2.5.0
  */
-class ConfectoryTest
+class UnsafeAccessorTest
 {
-
     @Test
     void constructor_instantiationNotAllowed()
     {
-        assertThat(Confectory.class, instantiationNotAllowed());
-    }
-
-    @Test
-    void ensure_global_default_configuration_exists()
-    {
-        assertNotNull(Confectory.container());
-    }
-
-    @Test
-    void settings_sameInstanceDefaultConfiguration()
-    {
-        assertThat(Confectory.settings(), equalTo(ConfectorySettings.instance()));
+        assertThat(UnsafeAccessor.class,
+                instantiationNotAllowed().throwing(UnsupportedOperationException.class));
     }
 
 }

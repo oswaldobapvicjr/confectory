@@ -42,6 +42,7 @@ import net.obvj.confectory.internal.helper.BeanConfigurationHelper;
 import net.obvj.confectory.mapper.PropertiesToObjectMapperTest.MyIntsConverter;
 import net.obvj.confectory.mapper.PropertiesToObjectMapperTest.MyPairConverter;
 import net.obvj.confectory.mapper.model.MyIni;
+import net.obvj.confectory.util.ObjectFactory;
 import net.obvj.confectory.util.ParseException;
 import net.obvj.confectory.util.Property;
 
@@ -116,6 +117,9 @@ class INIToObjectMapperTest
 
     static class MyBeanPrivateConstructor
     {
+        @Property("rootProperty")
+        String myString;
+
         private MyBeanPrivateConstructor() {}
     }
 
@@ -125,7 +129,10 @@ class INIToObjectMapperTest
 
         static class Section
         {
-            private Section() {} // unsupported
+            @Property("section_string")
+            String myString;
+
+            private Section() {} // unsupported in ObjectFactory.CLASSIC
         }
     }
 
@@ -133,8 +140,6 @@ class INIToObjectMapperTest
     {
         @Property("my_date")
         LocalDate myDate;
-
-        public MyIniDate() {}
     }
 
     static class MyIniOtherTypes
@@ -143,8 +148,6 @@ class INIToObjectMapperTest
         Class<? extends Exception> myClass;
         @Property("my_ip")
         InetAddress myIp;
-
-        public MyIniOtherTypes() {}
     }
 
     static class MyBeanCustomConverters
@@ -156,26 +159,24 @@ class INIToObjectMapperTest
         @Property("section1")
         Section section;
 
-        public MyBeanCustomConverters() {}
-
         static class Section
         {
             @Property("myBigDecimal")
             BigDecimal myDecimal;
-
-            public Section() {}
         }
     }
 
 
     private Mapper<MyIni> mapper = new INIToObjectMapper<>(MyIni.class);
+    private Mapper<MyIni> mapperClassic = new INIToObjectMapper<>(MyIni.class, ObjectFactory.CLASSIC);
+    private Mapper<MyIni> mapperUnsafe = new INIToObjectMapper<>(MyIni.class, ObjectFactory.UNSAFE);
 
     private ByteArrayInputStream toInputStream(String content)
     {
         return new ByteArrayInputStream(content.getBytes());
     }
 
-    private MyIni testWithString(String string)
+    private MyIni applyString(Mapper<MyIni> mapper, String string)
     {
         try
         {
@@ -189,9 +190,26 @@ class INIToObjectMapperTest
     }
 
     @Test
-    void apply_validIni_validJSONObject() throws IOException
+    void apply_validIniAndObjectFactoryClassic_validObject() throws IOException
     {
-        MyIni result = testWithString(VALID_INI_1);
+        MyIni result = applyString(mapperClassic, VALID_INI_1);
+        assertThat(result.getRootProperty(), is(equalTo("myRootValue")));
+
+        assertThat(result.getSection1().getSectionString(), is(equalTo("mySection1Value")));
+        assertThat(result.getSection1().getSectionNumber(), is(equalTo(1)));
+        assertThat(result.getSection1().isSectionBoolean(), is(equalTo(false)));
+        assertThat(result.getSection1().getTransientField(), is(equalTo(null)));
+
+        assertThat(result.getSection2().getSectionString(), is(equalTo("mySection2Value")));
+        assertThat(result.getSection2().getSectionNumber(), is(equalTo(2)));
+        assertThat(result.getSection2().isSectionBoolean(), is(equalTo(true)));
+        assertThat(result.getSection2().getTransientField(), is(equalTo(null)));
+    }
+
+    @Test
+    void apply_validIniAndObjectFactoryUnsafe_validObject() throws IOException
+    {
+        MyIni result = applyString(mapperUnsafe, VALID_INI_1);
         assertThat(result.getRootProperty(), is(equalTo("myRootValue")));
 
         assertThat(result.getSection1().getSectionString(), is(equalTo("mySection1Value")));
@@ -208,28 +226,32 @@ class INIToObjectMapperTest
     @Test
     void apply_missingTokenInSectionDeclaration_exception() throws IOException
     {
-        assertThat(() -> testWithString(INVALID_INI_1), throwsException(ConfigurationSourceException.class)
+        assertThat(() -> applyString(mapper, INVALID_INI_1),
+                throwsException(ConfigurationSourceException.class)
                 .withMessage(equalTo("Malformed INI: expected token ']' at line 2: \"[section1\"")));
     }
 
     @Test
     void apply_sectionDeclarationNoName_exception() throws IOException
     {
-        assertThat(() -> testWithString(INVALID_INI_2), throwsException(ConfigurationSourceException.class)
+        assertThat(() -> applyString(mapper, INVALID_INI_2),
+                throwsException(ConfigurationSourceException.class)
                 .withMessage(equalTo("Malformed INI: expected section name at line 2: \"[]\"")));
     }
 
     @Test
     void apply_valueWithoutProperty_exception() throws IOException
     {
-        assertThat(() -> testWithString(INVALID_INI_3), throwsException(ConfigurationSourceException.class)
+        assertThat(() -> applyString(mapper, INVALID_INI_3),
+                throwsException(ConfigurationSourceException.class)
                 .withMessage(equalTo("Malformed INI: expected property key at line 1: \"=value\"")));
     }
 
     @Test
     void apply_invalidLine_exception() throws IOException
     {
-        assertThat(() -> testWithString(INVALID_INI_4), throwsException(ConfigurationSourceException.class)
+        assertThat(() -> applyString(mapper, INVALID_INI_4),
+                throwsException(ConfigurationSourceException.class)
                 .withMessage(equalTo("Malformed INI: expected property at line 1: \"invalid line\"")));
     }
 
@@ -237,7 +259,7 @@ class INIToObjectMapperTest
     void apply_invalidType_exception() throws IOException
     {
         ConfigurationException exception = assertThrows(ConfigurationException.class,
-                () -> testWithString(INVALID_INI_5));
+                () -> applyString(mapper, INVALID_INI_5));
 
         assertThat(exception.getMessage(), equalTo(
                 "Unable to parse the value of the property ['number'] into a field of type 'double'"));
@@ -255,7 +277,7 @@ class INIToObjectMapperTest
     void apply_invalidTypeInsideSection_exception() throws IOException
     {
         ConfigurationException exception = assertThrows(ConfigurationException.class,
-                () -> testWithString(INVALID_INI_6));
+                () -> applyString(mapper, INVALID_INI_6));
 
         assertThat(exception.getMessage(), equalTo(
                 "Unable to parse the value of the property ['section1']['section_number'] into a field of type 'int'"));
@@ -272,7 +294,7 @@ class INIToObjectMapperTest
     @Test
     void apply_sectionNotMapped_sectionSkipped() throws IOException
     {
-        MyIni result = testWithString(VALID_INI_2);
+        MyIni result = applyString(mapper, VALID_INI_2);
         assertThat(result.getRootProperty(), is(equalTo("myRootValue")));
         assertThat(result.getSection1(), is(equalTo(null)));
         assertThat(result.getSection2().getSectionString(), is(equalTo("mySection2Value")));
@@ -281,23 +303,39 @@ class INIToObjectMapperTest
     }
 
     @Test
-    void apply_beanWithPrivateConstructor_configurationException()
+    void apply_beanWithPrivateConstructorAndClassicFactory_configurationException()
     {
         assertThat(
-                () -> new INIToObjectMapper<>(MyBeanPrivateConstructor.class)
+                () -> new INIToObjectMapper<>(MyBeanPrivateConstructor.class, ObjectFactory.CLASSIC)
                         .apply(toInputStream(VALID_INI_1)),
                 throwsException(ConfigurationException.class)
                         .withCause(ReflectiveOperationException.class));
     }
 
     @Test
-    void apply_beanWithPrivateConstructorInSection_configurationException()
+    void apply_beanWithPrivateConstructorAndEnhancedFactory_success() throws IOException
+    {
+        MyBeanPrivateConstructor bean = new INIToObjectMapper<>(MyBeanPrivateConstructor.class,
+                ObjectFactory.UNSAFE).apply(toInputStream(VALID_INI_1));
+        assertThat(bean.myString, equalTo("myRootValue"));
+    }
+
+    @Test
+    void apply_beanWithPrivateConstructorInSectionAndClassicFactory_configurationException()
     {
         assertThat(
-                () -> new INIToObjectMapper<>(MyBeanPrivateSection.class)
+                () -> new INIToObjectMapper<>(MyBeanPrivateSection.class, ObjectFactory.CLASSIC)
                         .apply(toInputStream(VALID_INI_1)),
                 throwsException(ConfigurationException.class)
                         .withCause(ReflectiveOperationException.class));
+    }
+
+    @Test
+    void apply_beanWithPrivateConstructorInSectionAndEnhancedFactory_success() throws IOException
+    {
+        MyBeanPrivateSection bean = new INIToObjectMapper<>(MyBeanPrivateSection.class,
+                ObjectFactory.UNSAFE).apply(toInputStream(VALID_INI_1));
+        assertThat(bean.section1.myString, equalTo("mySection1Value"));
     }
 
     @Test

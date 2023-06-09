@@ -16,13 +16,12 @@
 
 package net.obvj.confectory.util;
 
-import static net.obvj.confectory.util.StringUtils.*;
+import static net.obvj.confectory.util.StringUtils.defaultIfEmpty;
 
 import java.lang.reflect.Field;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.reflect.ConstructorUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
 /**
@@ -130,18 +129,20 @@ public class PropertyUtils
      * class configured in the {@link Property} annotation (if not null), or standard
      * conversion by using the {@link TypeFactory} by default.
      *
-     * @param string   the string to be parsed
-     * @param field    the target field (not null)
+     * @param string        the string to be parsed
+     * @param field         the target field (not null)
+     * @param objectFactory the {@link ObjectFactory} to produce a new instance of the custom
+     *                      converter class, if specified in the annotation (not null)
      *
      * @return the object resulting from the parse operation
      *
      * @throws ReflectiveOperationException if an error occurs in the reflective operation
      * @throws ParseException               if an error is encountered while parsing
      */
-    public static Object parseValue(final String string, final Field field)
-            throws ReflectiveOperationException, ParseException
+    public static Object parseValue(final String string, final Field field,
+            final ObjectFactory objectFactory) throws ReflectiveOperationException, ParseException
     {
-        return parseValue(string, field.getType(), field.getAnnotation(Property.class));
+        return parseValue(string, field.getType(), field.getAnnotation(Property.class), objectFactory);
     }
 
     /**
@@ -151,9 +152,11 @@ public class PropertyUtils
      * class configured in the {@link Property} annotation (if not null), or standard
      * conversion by using the {@link TypeFactory} by default.
      *
-     * @param string     the string to be parsed
-     * @param targetType the target type (not null)
-     * @param property   the {@link Property} annotation to be evaluated (null is allowed)
+     * @param string        the string to be parsed
+     * @param targetType    the target type (not null)
+     * @param property      the {@link Property} annotation to be evaluated (null is allowed)
+     * @param objectFactory the {@link ObjectFactory} to produce a new instance of the custom
+     *                      converter class, if specified in the annotation (not null)
      *
      * @return the object resulting from the parse operation
      *
@@ -161,15 +164,17 @@ public class PropertyUtils
      * @throws ParseException               if an error is encountered while parsing
      */
     public static Object parseValue(final String string, final Class<?> targetType,
-            final Property property) throws ReflectiveOperationException, ParseException
+            final Property property, ObjectFactory objectFactory)
+            throws ReflectiveOperationException, ParseException
     {
         if (property != null && property.converter().length > 0)
         {
             // Apply custom converter specified in the annotation
-            TypeConverter<?> converter = ConstructorUtils.invokeConstructor(property.converter()[0]);
+            TypeConverter<?> converter = objectFactory.newObject(property.converter()[0]);
             return converter.convert(string);
         }
         // Apply standard/default conversion
         return TypeFactory.parse(targetType, string);
     }
+
 }

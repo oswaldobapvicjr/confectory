@@ -37,6 +37,7 @@
         <json-path.version>2.8.0</json-path.version>
         <json-smart.version>2.4.10</json-smart.version>
         <performetrics.version>2.4.0</performetrics.version>
+        <objenesis.version>3.3</objenesis.version>
     </properties>
 
     <dependencies>
@@ -81,6 +82,13 @@
             <groupId>net.obvj</groupId>
             <artifactId>jsonmerge-core</artifactId>
             <version>${jsonmerge.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.objenesis</groupId>
+            <artifactId>objenesis</artifactId>
+            <version>${objenesis.version}</version>
+            <optional>true</optional>
         </dependency>
 
     </dependencies>

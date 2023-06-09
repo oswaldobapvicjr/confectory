@@ -19,18 +19,16 @@ package net.obvj.confectory.mapper;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.util.Objects;
 import java.util.Properties;
 
-import org.apache.commons.lang3.reflect.ConstructorUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
 import net.obvj.confectory.ConfigurationException;
 import net.obvj.confectory.internal.helper.BeanConfigurationHelper;
 import net.obvj.confectory.internal.helper.ConfigurationHelper;
-import net.obvj.confectory.util.ParseException;
-import net.obvj.confectory.util.Property;
-import net.obvj.confectory.util.PropertyUtils;
-import net.obvj.confectory.util.ReflectionUtils;
+import net.obvj.confectory.settings.ConfectorySettings;
+import net.obvj.confectory.util.*;
 
 /**
  * A specialized {@code Mapper} that loads the contents of a {@code Source} (e.g.: file,
@@ -67,6 +65,7 @@ public class PropertiesToObjectMapper<T> implements Mapper<T>
     private static final String MSG_UNABLE_TO_PARSE_PROPERTY = "Unable to parse the value of the property '%s' into a field of type '%s'";
 
     private final Class<T> targetType;
+    private final ObjectFactory objectFactory;
 
     /**
      * Builds a new Properties Mapper with the specified target type.
@@ -75,7 +74,22 @@ public class PropertiesToObjectMapper<T> implements Mapper<T>
      */
     public PropertiesToObjectMapper(Class<T> targetType)
     {
+        this(targetType, ConfectorySettings.instance().getObjectFactory());
+    }
+
+    /**
+     * Builds a new Properties Mapper with the specified target type and a custom object
+     * factory.
+     *
+     * @param targetType    the target type to be produced by this {@code Mapper}
+     * @param objectFactory the {@link ObjectFactory} to produce objects; not null
+     * @since 2.5.0
+     */
+    public PropertiesToObjectMapper(Class<T> targetType, ObjectFactory objectFactory)
+    {
         this.targetType = targetType;
+        this.objectFactory = Objects.requireNonNull(objectFactory,
+                "the ObjectFactory must not be null");
     }
 
     @Override
@@ -97,7 +111,7 @@ public class PropertiesToObjectMapper<T> implements Mapper<T>
         Field[] fields = FieldUtils.getAllFields(targetType);
         try
         {
-            T targetObject = ConstructorUtils.invokeConstructor(targetType);
+            T targetObject = objectFactory.newObject(targetType);
             for (Field field : fields)
             {
                 writeField(targetObject, field, properties);
@@ -136,7 +150,7 @@ public class PropertiesToObjectMapper<T> implements Mapper<T>
             Class<?> fieldType = field.getType();
             try
             {
-                Object parsedValue = PropertyUtils.parseValue(propertyValue, fieldType, annotation);
+                Object parsedValue = PropertyUtils.parseValue(propertyValue, fieldType, annotation, objectFactory);
                 FieldUtils.writeDeclaredField(targetObject, field.getName(), parsedValue, true);
             }
             catch (ParseException exception)

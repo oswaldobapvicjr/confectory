@@ -100,7 +100,7 @@ public class ConfigurationContainer
     public ConfigurationContainer(DataFetchStrategy dataFetchStrategy, Configuration<?>... configs)
     {
         ConfectorySettings settings = Confectory.settings();
-        setDataFetchStrategy(ObjectUtils.defaultIfNull(dataFetchStrategy, settings.getDefaultDataFetchStrategy()));
+        setDataFetchStrategy(ObjectUtils.defaultIfNull(dataFetchStrategy, settings.getDataFetchStrategy()));
 
         Arrays.stream(configs).forEach(this::add);
     }

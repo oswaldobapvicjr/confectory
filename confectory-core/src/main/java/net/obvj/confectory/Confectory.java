@@ -70,7 +70,7 @@ public final class Confectory
      */
     public static ConfectorySettings settings()
     {
-        return ConfectorySettings.getInstance();
+        return ConfectorySettings.instance();
     }
 
 }
