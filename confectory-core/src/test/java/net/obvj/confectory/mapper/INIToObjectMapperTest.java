@@ -168,13 +168,15 @@ class INIToObjectMapperTest
 
 
     private Mapper<MyIni> mapper = new INIToObjectMapper<>(MyIni.class);
+    private Mapper<MyIni> mapperClassic = new INIToObjectMapper<>(MyIni.class, ObjectFactory.CLASSIC);
+    private Mapper<MyIni> mapperUnsafe = new INIToObjectMapper<>(MyIni.class, ObjectFactory.UNSAFE);
 
     private ByteArrayInputStream toInputStream(String content)
     {
         return new ByteArrayInputStream(content.getBytes());
     }
 
-    private MyIni testWithString(String string)
+    private MyIni applyString(Mapper<MyIni> mapper, String string)
     {
         try
         {
@@ -188,9 +190,26 @@ class INIToObjectMapperTest
     }
 
     @Test
-    void apply_validIni_validObject() throws IOException
+    void apply_validIniAndObjectFactoryClassic_validObject() throws IOException
     {
-        MyIni result = testWithString(VALID_INI_1);
+        MyIni result = applyString(mapperClassic, VALID_INI_1);
+        assertThat(result.getRootProperty(), is(equalTo("myRootValue")));
+
+        assertThat(result.getSection1().getSectionString(), is(equalTo("mySection1Value")));
+        assertThat(result.getSection1().getSectionNumber(), is(equalTo(1)));
+        assertThat(result.getSection1().isSectionBoolean(), is(equalTo(false)));
+        assertThat(result.getSection1().getTransientField(), is(equalTo(null)));
+
+        assertThat(result.getSection2().getSectionString(), is(equalTo("mySection2Value")));
+        assertThat(result.getSection2().getSectionNumber(), is(equalTo(2)));
+        assertThat(result.getSection2().isSectionBoolean(), is(equalTo(true)));
+        assertThat(result.getSection2().getTransientField(), is(equalTo(null)));
+    }
+
+    @Test
+    void apply_validIniAndObjectFactoryUnsafe_validObject() throws IOException
+    {
+        MyIni result = applyString(mapperUnsafe, VALID_INI_1);
         assertThat(result.getRootProperty(), is(equalTo("myRootValue")));
 
         assertThat(result.getSection1().getSectionString(), is(equalTo("mySection1Value")));
@@ -207,28 +226,32 @@ class INIToObjectMapperTest
     @Test
     void apply_missingTokenInSectionDeclaration_exception() throws IOException
     {
-        assertThat(() -> testWithString(INVALID_INI_1), throwsException(ConfigurationSourceException.class)
+        assertThat(() -> applyString(mapper, INVALID_INI_1),
+                throwsException(ConfigurationSourceException.class)
                 .withMessage(equalTo("Malformed INI: expected token ']' at line 2: \"[section1\"")));
     }
 
     @Test
     void apply_sectionDeclarationNoName_exception() throws IOException
     {
-        assertThat(() -> testWithString(INVALID_INI_2), throwsException(ConfigurationSourceException.class)
+        assertThat(() -> applyString(mapper, INVALID_INI_2),
+                throwsException(ConfigurationSourceException.class)
                 .withMessage(equalTo("Malformed INI: expected section name at line 2: \"[]\"")));
     }
 
     @Test
     void apply_valueWithoutProperty_exception() throws IOException
     {
-        assertThat(() -> testWithString(INVALID_INI_3), throwsException(ConfigurationSourceException.class)
+        assertThat(() -> applyString(mapper, INVALID_INI_3),
+                throwsException(ConfigurationSourceException.class)
                 .withMessage(equalTo("Malformed INI: expected property key at line 1: \"=value\"")));
     }
 
     @Test
     void apply_invalidLine_exception() throws IOException
     {
-        assertThat(() -> testWithString(INVALID_INI_4), throwsException(ConfigurationSourceException.class)
+        assertThat(() -> applyString(mapper, INVALID_INI_4),
+                throwsException(ConfigurationSourceException.class)
                 .withMessage(equalTo("Malformed INI: expected property at line 1: \"invalid line\"")));
     }
 
@@ -236,7 +259,7 @@ class INIToObjectMapperTest
     void apply_invalidType_exception() throws IOException
     {
         ConfigurationException exception = assertThrows(ConfigurationException.class,
-                () -> testWithString(INVALID_INI_5));
+                () -> applyString(mapper, INVALID_INI_5));
 
         assertThat(exception.getMessage(), equalTo(
                 "Unable to parse the value of the property ['number'] into a field of type 'double'"));
@@ -254,7 +277,7 @@ class INIToObjectMapperTest
     void apply_invalidTypeInsideSection_exception() throws IOException
     {
         ConfigurationException exception = assertThrows(ConfigurationException.class,
-                () -> testWithString(INVALID_INI_6));
+                () -> applyString(mapper, INVALID_INI_6));
 
         assertThat(exception.getMessage(), equalTo(
                 "Unable to parse the value of the property ['section1']['section_number'] into a field of type 'int'"));
@@ -271,7 +294,7 @@ class INIToObjectMapperTest
     @Test
     void apply_sectionNotMapped_sectionSkipped() throws IOException
     {
-        MyIni result = testWithString(VALID_INI_2);
+        MyIni result = applyString(mapper, VALID_INI_2);
         assertThat(result.getRootProperty(), is(equalTo("myRootValue")));
         assertThat(result.getSection1(), is(equalTo(null)));
         assertThat(result.getSection2().getSectionString(), is(equalTo("mySection2Value")));
