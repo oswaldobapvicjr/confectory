@@ -87,7 +87,7 @@ public enum ObjectFactory
      * @param type the target type
      * @return a new instance of the specified class
      *
-     * @throws ReflectiveOperationException
+     * @throws ReflectiveOperationException in case of failure during the instantiation
      */
     public abstract <T> T newObject(Class<T> type) throws ReflectiveOperationException;
 
