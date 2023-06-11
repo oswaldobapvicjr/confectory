@@ -37,7 +37,7 @@ import net.obvj.confectory.mapper.model.MyBeanWithMoney;
 /**
  * Unit tests for the {@link JacksonXMLToObjectMapper} class.
  *
- * @author oswaldo.bapvic.jr
+ * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 0.3.0
  */
 class JacksonXMLToObjectMapperTest

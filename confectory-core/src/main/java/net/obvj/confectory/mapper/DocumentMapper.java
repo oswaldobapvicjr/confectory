@@ -32,7 +32,9 @@ import net.obvj.confectory.internal.helper.DocumentConfigurationHelper;
 
 /**
  * A specialized {@code Mapper} that loads the contents of a valid XML {@code Source}
- * (e.g.: file, URL) as a W3C {@link Document}.
+ * (e.g.: file, URL) as a W3C {@link Document}..
+ * <p>
+ * This allows fetching the contents using <b>XPath</b> expressions.
  * <p>
  * <b>NOTE:</b> DOCTYPE declarations (either internal or external) are disabled for
  * security reasons.

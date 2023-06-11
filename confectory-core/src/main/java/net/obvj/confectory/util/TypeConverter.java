@@ -23,7 +23,7 @@ package net.obvj.confectory.util;
  * @param <T> the type of the object that is the result of the conversion.
  *
  * @since 2.5.0
- * @author oswaldo.bapvic.jr
+ * @author oswaldo.bapvic.jr (Oswaldo Junior)
  */
 public interface TypeConverter<T>
 {

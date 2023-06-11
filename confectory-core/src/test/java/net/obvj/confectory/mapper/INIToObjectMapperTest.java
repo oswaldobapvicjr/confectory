@@ -168,8 +168,8 @@ class INIToObjectMapperTest
 
 
     private Mapper<MyIni> mapper = new INIToObjectMapper<>(MyIni.class);
-    private Mapper<MyIni> mapperClassic = new INIToObjectMapper<>(MyIni.class, ObjectFactory.CLASSIC);
-    private Mapper<MyIni> mapperUnsafe = new INIToObjectMapper<>(MyIni.class, ObjectFactory.UNSAFE);
+    private Mapper<MyIni> mapperClassic = new INIToObjectMapper<>(MyIni.class, ObjectFactory.CONSTRUCTOR_BASED);
+    private Mapper<MyIni> mapperFast = new INIToObjectMapper<>(MyIni.class, ObjectFactory.FAST);
 
     private ByteArrayInputStream toInputStream(String content)
     {
@@ -209,7 +209,7 @@ class INIToObjectMapperTest
     @Test
     void apply_validIniAndObjectFactoryUnsafe_validObject() throws IOException
     {
-        MyIni result = applyString(mapperUnsafe, VALID_INI_1);
+        MyIni result = applyString(mapperFast, VALID_INI_1);
         assertThat(result.getRootProperty(), is(equalTo("myRootValue")));
 
         assertThat(result.getSection1().getSectionString(), is(equalTo("mySection1Value")));
@@ -303,28 +303,28 @@ class INIToObjectMapperTest
     }
 
     @Test
-    void apply_beanWithPrivateConstructorAndClassicFactory_configurationException()
+    void apply_beanWithPrivateConstructorAndObjectFactoryClassic_configurationException()
     {
         assertThat(
-                () -> new INIToObjectMapper<>(MyBeanPrivateConstructor.class, ObjectFactory.CLASSIC)
+                () -> new INIToObjectMapper<>(MyBeanPrivateConstructor.class, ObjectFactory.CONSTRUCTOR_BASED)
                         .apply(toInputStream(VALID_INI_1)),
                 throwsException(ConfigurationException.class)
                         .withCause(ReflectiveOperationException.class));
     }
 
     @Test
-    void apply_beanWithPrivateConstructorAndEnhancedFactory_success() throws IOException
+    void apply_beanWithPrivateConstructorAndObjectFactoryFast_success() throws IOException
     {
         MyBeanPrivateConstructor bean = new INIToObjectMapper<>(MyBeanPrivateConstructor.class,
-                ObjectFactory.UNSAFE).apply(toInputStream(VALID_INI_1));
+                ObjectFactory.FAST).apply(toInputStream(VALID_INI_1));
         assertThat(bean.myString, equalTo("myRootValue"));
     }
 
     @Test
-    void apply_beanWithPrivateConstructorInSectionAndClassicFactory_configurationException()
+    void apply_beanWithPrivateConstructorInSectionAndObjectFactoryClassic_configurationException()
     {
         assertThat(
-                () -> new INIToObjectMapper<>(MyBeanPrivateSection.class, ObjectFactory.CLASSIC)
+                () -> new INIToObjectMapper<>(MyBeanPrivateSection.class, ObjectFactory.CONSTRUCTOR_BASED)
                         .apply(toInputStream(VALID_INI_1)),
                 throwsException(ConfigurationException.class)
                         .withCause(ReflectiveOperationException.class));
@@ -334,7 +334,7 @@ class INIToObjectMapperTest
     void apply_beanWithPrivateConstructorInSectionAndEnhancedFactory_success() throws IOException
     {
         MyBeanPrivateSection bean = new INIToObjectMapper<>(MyBeanPrivateSection.class,
-                ObjectFactory.UNSAFE).apply(toInputStream(VALID_INI_1));
+                ObjectFactory.FAST).apply(toInputStream(VALID_INI_1));
         assertThat(bean.section1.myString, equalTo("mySection1Value"));
     }
 

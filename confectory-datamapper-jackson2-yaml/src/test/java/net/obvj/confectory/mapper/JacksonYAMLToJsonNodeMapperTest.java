@@ -35,7 +35,7 @@ import net.obvj.confectory.internal.helper.JacksonJsonNodeHelper;
 /**
  * Unit tests for the {@link JacksonYAMLToJsonNodeMapper} class.
  *
- * @author oswaldo.bapvic.jr
+ * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 0.3.0
  */
 @ExtendWith(MockitoExtension.class)

@@ -17,14 +17,15 @@
 package net.obvj.confectory.mapper;
 
 import com.google.gson.JsonObject;
-import com.jayway.jsonpath.internal.filter.ValueNodes.JsonNode;
 
 import net.obvj.confectory.internal.helper.ConfigurationHelper;
 import net.obvj.confectory.internal.helper.GsonJsonObjectHelper;
 
 /**
  * A specialized {@code Mapper} that loads the contents of a valid JSON {@code Source}
- * (e.g.: file, URL, string) as a {@link JsonNode}, using Gson.
+ * (e.g.: file, URL, string) as a {@link JsonObject}, using Gson.
+ * <p>
+ * This allows fetching the contents using <b>JSONPath</b> expressions.
  * <p>
  * Additional details may be found at Gson's official documentation.
  *

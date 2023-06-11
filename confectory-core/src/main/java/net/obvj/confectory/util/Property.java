@@ -59,7 +59,6 @@ public @interface Property
      * Defines the property key from the source file/URL to be associated with this field.
      * <p>
      * <b>NOTE:</b> The name "{@code value}" is used here to allow the following notation:
-     * <p>
      * <blockquote>
      *
      * <pre>
@@ -68,7 +67,6 @@ public @interface Property
      *
      * </blockquote> which is supposed to have the same effect of the following (when no other
      * attribute is present):
-     * <p>
      * <blockquote>
      *
      * <pre>
@@ -76,8 +74,7 @@ public @interface Property
      * </pre>
      *
      * </blockquote>
-     *
-     *
+     * 
      * @return the key from the source file/URL to be associated with the annotated field
      */
     String value() default "";
@@ -89,7 +86,6 @@ public @interface Property
      * other attributes (such as the converter) are present in the annotation.
      * <p>
      * For example:
-     * <p>
      * <blockquote>
      *
      * <pre>
@@ -104,15 +100,14 @@ public @interface Property
     String key() default "";
 
     /**
-     * Optionally specify a {@link TypeConverter} class to convert this property value into a
-     * strongly typed object.
+     * An optional {@link TypeConverter} to convert this property value into a strongly typed
+     * object.
      * <p>
      * This is useful when a particular field should use a custom conversion that is different
      * from the normal conversion for the field's type (which is applied by the
      * {@link TypeFactory}).
      * <p>
      * Examples:
-     * <p>
      * <blockquote>
      *
      * <pre>

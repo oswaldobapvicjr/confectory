@@ -24,8 +24,9 @@ import org.apache.commons.io.IOUtils;
 
 /**
  * A specialized {@code Mapper} that loads the contents of a {@code Source} (e.g.: file,
- * URL) as a {@code String} using the JVM default {@code Charset}, typically for
- * testing/troubleshooting or manual handling purposes.
+ * URL) as a {@code String} using the JVM default {@code Charset}.
+ * <p>
+ * This is typically intended for testing/troubleshooting or manual handling purposes.
  *
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 0.1.0

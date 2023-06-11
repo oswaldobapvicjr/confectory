@@ -25,8 +25,11 @@ import net.obvj.confectory.internal.helper.ConfigurationHelper;
 import net.obvj.confectory.internal.helper.JsonSmartConfigurationHelper;
 
 /**
- * A specialized {@code Mapper} that loads the contents of a valid INI {@code Source}
- * (e.g.: file, URL) as a {@link JSONObject}.
+ * A specialized {@code Mapper} that loads the contents of a valid INI {@code Source} as a
+ * {@link JSONObject}.
+ * <p>
+ * This allows fetching the contents using <b>JSONPath</b> expressions such as:
+ * {@code "$.section1.property1"}
  *
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 2.0.0

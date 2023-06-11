@@ -25,7 +25,7 @@ import java.util.Date;
 /**
  * Common methods for working with dates.
  *
- * @author oswaldo.bapvic.jr
+ * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 2.5.0
  */
 public class DateUtils
@@ -69,8 +69,8 @@ public class DateUtils
     }
 
     /**
-     * Parses the given date-time representation string based in RFC-3339 format, producing a
-     * {@link Date}.
+     * Parses the given date-time representation string based in RFC-3339 format, producing an
+     * {@link Instant}.
      * <p>
      * Either of the following examples are acceptable:
      * <ul>

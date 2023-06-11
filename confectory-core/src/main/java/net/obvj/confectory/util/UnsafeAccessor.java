@@ -29,6 +29,9 @@ import sun.misc.Unsafe;
 @SuppressWarnings("restriction")
 public final class UnsafeAccessor
 {
+    /**
+     * A object with capabilities to performs low-level operations in the JVM.
+     */
     public static final Unsafe UNSAFE = getUnsafe();
 
     private static Unsafe getUnsafe()

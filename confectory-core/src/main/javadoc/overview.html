@@ -25,11 +25,35 @@
        This is the API specification for the core part of the <strong>Confectory</strong> project.
     </p>
     <p>
+    <img src="https://raw.githubusercontent.com/oswaldobapvicjr/confectory/master/resources/confectory-logo.svg"
+         alt="Confectory logo" />
+    </p>
+    <p>
        <strong>Confectory</strong> is a modular framework, designed to hide the complexity of handling
        configuration files for Java applications in general, providing a reliable and fast API for parsing
-       data from different <b>sources</b> (e.g.: file or URL) in a variety of formats and querying data
-       transparently, using a <b>unified data query language</b>: JSONPath.
+       data from different <b>sources</b> (e.g.: file or URL) in a variety of formats, and allowing data
+       access using a <b>unified data query language</b>.
     </p>
+    <p>
+       Main features:
+    </p>
+    <ul>
+       <li style="margin-bottom:6px">
+          Easy configuration setup, using a fluent API
+       </li>
+       <li style="margin-bottom:6px">
+          Data query using <b>JSONPath</b>, <b>XPath</b> or user-defined beans 
+       </li>
+       <li style="margin-bottom:6px">
+          Support for the best JSON providers available in the community (see additional modules) 
+       </li>
+       <li style="margin-bottom:6px">
+          Lazy loading of configuration sources
+       </li>
+       <li style="margin-bottom:6px">
+          Merge of configuration data from different sources
+       </li>
+    </ul>
     <p>
        The core part of the project defines the base API and provides basic standard functionality, including:
     </p>
@@ -39,20 +63,25 @@
           and a <code>Mapper</code>, producing configuration data that can be retrieved in a variety of formats 
        </li>
        <li style="margin-bottom:6px">
-          The <code>ConfigurationContainer</code> class, for management of multiple configuration objects
+          The <code>ConfigurationContainer</code> class, for management of multiple configuration objects using
+          <b>namespaces</b> and precendence levels in case of key/path collision
        </li>
        <li style="margin-bottom:6px">
           Built-in <code>Source</code> implementations for loading local resources from file system and classpath 
        </li>
        <li style="margin-bottom:6px">
           Built-in <code>Mapper</code> implementations for delivering contents as <code>String</code>,
-          <code>Properties</code>, <code>JSONObject</code> (using <code>smart-json</code> as default provider)
-          or POJO (user-defined beans)
+          <code>Properties</code>, <code>JSONObject</code> (using <code>smart-json</code> as default provider),
+          <code>Document</code> (XML) and POJO (user-defined beans)
        </li>
     </ul>
     <p>
-       For additional modules, refer to the <strong>Confectory</strong> project home
-       <a href="http://obvj.net/confectory">here</a>.
+       For additional modules, refer to the <strong>Confectory</strong> project
+       <a href="http://github.com/oswaldobapvicjr/confectory" target="_blank">Home</a>.
+    </p>
+    <p>
+       For code samples, refer to the <strong>Confectory</strong> project
+       <a href="http://github.com/oswaldobapvicjr/confectory/wiki/Examples" target="_blank">Wiki</a>.
     </p>
   </body>
 </html>

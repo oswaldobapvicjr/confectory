@@ -281,14 +281,12 @@ public final class Configuration<T>
      * Combines this {@code Configuration} with another one, producing a new
      * {@code Configuration}.
      * <p>
-     * <ul>
-     * <li>The resulting {@code Configuration} will receive all the elements from both
-     * {@code Configuration} objects</li>
-     * <li>In case of conflicting keys, the values at the highest-precedence
-     * {@code Configuration} will be selected</li>
-     * <li>The metadata of the highest-precedence {@code Configuration} (namespace and
-     * precedence) will be applied to the new {@code Configuration}</li>
-     * </ul>
+     * The resulting {@code Configuration} will receive all the elements from both objects. In
+     * case of conflicting keys, the values at the highest-precedence {@code Configuration}
+     * will be selected.
+     * <p>
+     * The metadata of the highest-precedence {@code Configuration} (namespace and precedence)
+     * will be applied to the new {@code Configuration}.
      * <p>
      * <strong>Note: </strong> The other {@link Configuration} must be of the same type as the
      * current one.
@@ -311,14 +309,12 @@ public final class Configuration<T>
      * Combines this {@code Configuration} with another one, producing a new
      * {@code Configuration}, using advanced options.
      * <p>
-     * <ul>
-     * <li>The resulting {@code Configuration} will receive all the elements from both
-     * {@code Configuration} objects</li>
-     * <li>In case of conflicting keys, the values at the highest-precedence
-     * {@code Configuration} will be selected</li>
-     * <li>The metadata of the highest-precedence {@code Configuration} (namespace and
-     * precedence) will be applied to the new {@code Configuration}</li>
-     * </ul>
+     * The resulting {@code Configuration} will receive all the elements from both objects. In
+     * case of conflicting keys, the values at the highest-precedence {@code Configuration}
+     * will be selected.
+     * <p>
+     * The metadata of the highest-precedence {@code Configuration} (namespace and precedence)
+     * will be applied to the new {@code Configuration}.
      * <p>
      * <strong>Note: </strong> The other {@link Configuration} must be of the same type as the
      * current one.
