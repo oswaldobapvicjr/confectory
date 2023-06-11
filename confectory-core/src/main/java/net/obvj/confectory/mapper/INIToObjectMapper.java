@@ -62,8 +62,8 @@ import net.obvj.confectory.util.*;
  * constructor:
  * <blockquote>
  * <pre>
- * new PropertiesToObjectMapper(MyType.class, ObjectFatory.FAST); // Default
- * new PropertiesToObjectMapper(MyType.class, ObjectFatory.CONSTRUCTOR_BASED);
+ * new INIToObjectMapper(MyType.class, ObjectFactory.FAST); // Default
+ * new INIToObjectMapper(MyType.class, ObjectFactory.CONSTRUCTOR_BASED);
  * </pre>
  * </blockquote>
  *
