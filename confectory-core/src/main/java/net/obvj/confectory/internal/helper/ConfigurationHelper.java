@@ -41,6 +41,7 @@ public interface ConfigurationHelper<T> extends ConfigurationDataRetriever<T>
      * If the specified {@code bean} is {@code null}, a {@link NullConfigurationHelper} will
      * be instantiated.
      *
+     * @param <T>    the bean type which configuration data is to be retrieved
      * @param bean   the bean to be evaluated; may be {@code null}
      * @param mapper the {@link Mapper} whose helper should be instantiated; not {@code null}
      *

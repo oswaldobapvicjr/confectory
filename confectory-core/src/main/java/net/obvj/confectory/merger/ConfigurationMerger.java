@@ -33,14 +33,12 @@ public interface ConfigurationMerger<T>
     /**
      * Combines two {@code Configuration} objects into a new {@code Configuration}.
      * <p>
-     * <ul>
-     * <li>The resulting object will receive all the elements of the input
-     * {@code Configuration} objects</li>
-     * <li>In case of conflicting keys, the values at the highest-precedence
-     * {@code Configuration} will be selected</li>
-     * <li>The metadata of the highest-precedence {@code Configuration} (namespace and
-     * precedence) will be applied to the new {@code Configuration}</li>
-     * </ul>
+     * The resulting object will receive all the elements of both input objects. In case of
+     * conflicting keys, the values at the highest-precedence {@code Configuration} will be
+     * selected.
+     * <p>
+     * The metadata of the highest-precedence {@code Configuration} (namespace and precedence)
+     * will be applied to the new {@code Configuration}.
      *
      * @param config1      the first {@code Configuration}; not null
      * @param config2      the second {@code Configuration}; not null

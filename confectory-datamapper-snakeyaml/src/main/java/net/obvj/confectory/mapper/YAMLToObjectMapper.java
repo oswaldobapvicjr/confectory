@@ -27,6 +27,8 @@ import net.obvj.confectory.internal.helper.ConfigurationHelper;
 /**
  * A specialized {@code Mapper} that loads the contents of a valid YAML {@code Source}
  * (e.g.: file, URL, string) into POJO (Plain Old Java Object), using SnakeYAML.
+ * <p>
+ * This allows fetching the contents using <b>JSONPath</b> expressions.
  *
  * @param <T> the target type to be produced by this {@code Mapper}
  *

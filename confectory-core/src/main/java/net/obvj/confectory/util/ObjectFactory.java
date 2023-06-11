@@ -23,7 +23,7 @@ import org.objenesis.ObjenesisStd;
  * A factory that encapsulates the logic to reflectively produce new objects depending on
  * the desired strategy.
  *
- * @author oswaldo.bapvic.jr
+ * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 2.5.0
  */
 public enum ObjectFactory
@@ -31,10 +31,10 @@ public enum ObjectFactory
     /**
      * Constructor-based object factory.
      * <p>
-     * It's safer but requires the existence of a public, default constructor available in the
-     * class to allow the instantiation.
+     * It's safer but it requires the existence of a default (public and no-arguments)
+     * constructor in the class to allow the instantiation.
      */
-    CLASSIC
+    CONSTRUCTOR_BASED
     {
         @Override
         public <T> T newObject(Class<T> type) throws ReflectiveOperationException
@@ -44,16 +44,18 @@ public enum ObjectFactory
     },
 
     /**
-     * Object factory that builds objects by allocating an instance directly on the heap,
-     * without any constructor being called.
+     * A factory that builds objects by allocating an instance directly on the heap, without
+     * any constructor being called.
      * <p>
-     * Final fields are assigned with
+     * Final fields are assigned with default values as specified by
      * <a href="https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html">
-     * default values</a>.
+     * Java<sup>TM</sup> Tutorials &gt; Language Basics &gt; Variables &gt; Primitive Data
+     * Types</a>, i.e., zero for numeric types, {@code false} for {@code boolean}, and
+     * {@code null} for String (or any object type).
      * <p>
      * <b>Note:</b> This is the default strategy since 2.5.0.
      */
-    UNSAFE
+    FAST
     {
         @Override
         @SuppressWarnings("restriction")

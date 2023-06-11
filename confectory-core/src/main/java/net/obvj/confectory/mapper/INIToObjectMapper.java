@@ -46,12 +46,26 @@ import net.obvj.confectory.util.*;
  * <ul>
  * <li>The fields in the target object can be {@code private} (recommended)</li>
  * <li>Fields marked {@code transient} are ignored</li>
- * <li>If the associated property is missing in the source, the corresponding field will
- * assume a default value, i.e.: {@code null} for object types, zero for numeric types,
- * and {@code false} for booleans.</li>
+ * <li>If the associated property is missing in the source, the corresponding field
+ * assumes a default value as specified by
+ * <a href="https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html"> The
+ * Java<sup>TM</sup> Tutorials &gt; Language Basics &gt; Variables &gt; Primitive Data
+ * Types</a>, i.e., zero for numeric types, {@code false} for {@code boolean}, and
+ * {@code null} for String (or any object type).</li>
  * <li>If the a section is not mapped to dedicated object in the target class, the whole
  * section will be skipped</li>
  * </ul>
+ * <p>
+ * By default, new objects will be created by allocating a new instance directly in the
+ * heap, without calling a constructor, then assigning each field via reflection. To
+ * change this behavior, you may specify a different {@link ObjectFactory} in the
+ * constructor:
+ * <blockquote>
+ * <pre>
+ * new INIToObjectMapper(MyType.class, ObjectFactory.FAST); // Default
+ * new INIToObjectMapper(MyType.class, ObjectFactory.CONSTRUCTOR_BASED);
+ * </pre>
+ * </blockquote>
  *
  * @param <T> the target type to be produced by this {@code Mapper}
  *

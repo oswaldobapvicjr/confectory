@@ -28,6 +28,8 @@ import net.obvj.confectory.internal.helper.JsonOrgJSONObjectHelper;
 /**
  * A specialized {@code Mapper} that loads the contents of a valid JSON {@code Source}
  * (e.g.: file, URL) as a {@link JSONObject} ({@code json.org} reference implementation).
+ * <p>
+ * This allows fetching the contents using <b>JSONPath</b> expressions.
  *
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 2.0.0 (<b>note:</b> since 0.2.0 as {@code JSONObjectMapper})

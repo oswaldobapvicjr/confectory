@@ -26,6 +26,8 @@ import net.obvj.confectory.internal.helper.JacksonJsonNodeHelper;
  * A specialized {@code Mapper} that loads the contents of a valid JSON {@code Source}
  * (e.g.: file, URL, string) as a {@link JsonNode}, using Jackson's {@link JsonMapper}.
  * <p>
+ * This allows fetching the contents using <b>JSONPath</b> expressions.
+ * <p>
  * Additional details may be found at Jackson's official documentation.
  * <p>
  * <b>Note:</b> Support for Jackson modules lookup is disabled for this type of mapper.

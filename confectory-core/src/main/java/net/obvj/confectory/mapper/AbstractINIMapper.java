@@ -25,8 +25,9 @@ import net.obvj.confectory.ConfigurationSourceException;
 
 /**
  * An abstract {@code Mapper} that defines a template of how to parse the contents of a
- * valid INI {@code Source} (e.g.: file, URL), and delegates the final object type
- * population to a concrete implementation.
+ * valid INI {@code Source} (e.g.: file, URL).
+ * <p>
+ * It delegates the final object type population to a concrete implementation.
  *
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 2.0.0

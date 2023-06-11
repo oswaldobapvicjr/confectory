@@ -38,7 +38,7 @@ public class ConfectorySettings
     /**
      * The initial {@link ObjectFactory} applied by default
      */
-    static final ObjectFactory INITIAL_OBJECT_FACTORY = ObjectFactory.UNSAFE;
+    static final ObjectFactory INITIAL_OBJECT_FACTORY = ObjectFactory.FAST;
 
     private static final ConfectorySettings INSTANCE = new ConfectorySettings();
 

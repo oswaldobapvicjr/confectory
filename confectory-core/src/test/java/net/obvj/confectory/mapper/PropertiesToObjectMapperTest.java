@@ -218,20 +218,20 @@ class PropertiesToObjectMapperTest
     }
 
     @Test
-    void apply_beanWithPrivateConstructorAndClassicObjectFactory_configurationException()
+    void apply_beanWithPrivateConstructorAndObjectFactoryClassic_configurationException()
     {
         assertThat(
-                () -> new PropertiesToObjectMapper<>(MyBeanPrivateConstructor.class, ObjectFactory.CLASSIC)
+                () -> new PropertiesToObjectMapper<>(MyBeanPrivateConstructor.class, ObjectFactory.CONSTRUCTOR_BASED)
                         .apply(newInputStream()),
                 throwsException(ConfigurationException.class)
                         .withCause(ReflectiveOperationException.class));
     }
 
     @Test
-    void apply_beanWithPrivateConstructorAndUnsafedObjectFactory_success() throws IOException
+    void apply_beanWithPrivateConstructorAndObjectFactoryFast_success() throws IOException
     {
         MyBeanPrivateConstructor bean = new PropertiesToObjectMapper<>(
-                MyBeanPrivateConstructor.class, ObjectFactory.UNSAFE).apply(newInputStream());
+                MyBeanPrivateConstructor.class, ObjectFactory.FAST).apply(newInputStream());
         assertThat(bean.booleanValue, equalTo(true));
         assertThat(bean.stringValue, equalTo("string1"));
         assertThat(bean.intValue, equalTo(1910));
@@ -239,7 +239,7 @@ class PropertiesToObjectMapperTest
     }
 
     @Test
-    void apply_beanWithPrivateConstructorAndObjenesisObjectFactory_success() throws IOException
+    void apply_beanWithPrivateConstructorAndObjectFactoryObjenesis_success() throws IOException
     {
         MyBeanPrivateConstructor bean = new PropertiesToObjectMapper<>(
                 MyBeanPrivateConstructor.class, ObjectFactory.OBJENESIS).apply(newInputStream());

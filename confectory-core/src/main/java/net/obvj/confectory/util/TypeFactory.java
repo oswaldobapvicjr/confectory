@@ -98,7 +98,6 @@ import org.apache.commons.lang3.function.Failable;
  * <p>
  * <b><i>Enum</i></b> elements can also be retrieved based on their constant names (and
  * performs case-insensitive matching). For example:
- * <p>
  * <blockquote>
  *
  * <pre>
@@ -108,7 +107,7 @@ import org.apache.commons.lang3.function.Failable;
  *
  * </blockquote>
  *
- * @author oswaldo.bapvic.jr
+ * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 2.5.0
  */
 public class TypeFactory

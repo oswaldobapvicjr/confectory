@@ -38,7 +38,7 @@ import net.obvj.confectory.mapper.model.MyBeanWithDate;
 /**
  * Unit tests for the {@link JacksonTOMLToObjectMapper} class.
  *
- * @author oswaldo.bapvic.jr
+ * @author oswaldo.bapvic.jr (Oswaldo Junior)
  * @since 1.1.0
  */
 class JacksonTOMLToObjectMapperTest

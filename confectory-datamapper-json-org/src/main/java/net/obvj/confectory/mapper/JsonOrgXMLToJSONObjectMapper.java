@@ -29,6 +29,8 @@ import org.json.XML;
  * (e.g.: file, URL) and converts it into a {@link JSONObject} (using {@code json.org}
  * reference implementation).
  * <p>
+ * This allows fetching the contents using <b>JSONPath</b> expressions.
+ * <p>
  * Because of differences between XML and JSON formats, the document structure may suffer
  * modifications in this transformation:
  * <ul>

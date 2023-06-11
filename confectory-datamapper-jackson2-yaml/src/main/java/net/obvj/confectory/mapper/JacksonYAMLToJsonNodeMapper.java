@@ -27,6 +27,8 @@ import net.obvj.confectory.internal.helper.JacksonJsonNodeHelper;
  * (e.g.: file, URL, string) and converts it into a {@link JsonNode}, using Jackson's
  * {@link YAMLMapper}.
  * <p>
+ * This allows fetching the contents using <b>JSONPath</b> expressions.
+ * <p>
  * Additional details may be found at Jackson's official documentation.
  * <p>
  * <b>Note:</b> Support for Jackson modules lookup is disabled for this type of mapper.
