@@ -16,6 +16,8 @@ The modular, multi-format configuration framework for Java applications.
 
 **Confectory** is a modular framework designed to hide the complexity of handling multiple configuration files for Java applications in general, providing a **reliable** and **fast** API for parsing data from different **sources** (file or URL) in a variety of formats, and allowing data access using a **unified query language**.
 
+### ![Overview diagram](https://raw.githubusercontent.com/oswaldobapvicjr/confectory/master/resources/confectory-overview2.svg)
+
 ## Features
 
 - Easy configuration setup via **intuitive API**
