@@ -50,7 +50,6 @@ import net.obvj.confectory.util.XMLUtils;
  */
 public class DocumentConfigurationHelper implements ConfigurationHelper<Document>
 {
-    private static final String YES = "yes";
 
     protected final Document document;
 
@@ -80,59 +79,7 @@ public class DocumentConfigurationHelper implements ConfigurationHelper<Document
     @Override
     public String getAsString()
     {
-        return getAsString(document);
-    }
-
-    /**
-     * Returns a string representation of the specified XML {@link Node}.
-     * <p>
-     * If the XML node is either an attribute or a text node, the text content will be
-     * returned. For all other node types (e.g.: document, or element), the node will be
-     * transformed/encoded as string.
-     *
-     * @param node the {@link Node} to be converted
-     * @return the node value as string
-     * @throws ConfigurationException if unable to convert the document node into string
-     *
-     * @since 2.5.0
-     */
-    public static String getAsString(Node node)
-    {
-        switch (node.getNodeType())
-        {
-        case Node.ATTRIBUTE_NODE:
-        case Node.TEXT_NODE:
-            return node.getTextContent();
-        default:
-            return transformToString(node);
-        }
-    }
-
-    /**
-     * Transform the XML node into a String.
-     *
-     * @param node the {@link Node} to be transformed
-     * @return the node as an XML string
-     * @since 2.5.0
-     */
-    private static String transformToString(Node node)
-    {
-        DOMSource domSource = new DOMSource(node);
-        StringWriter writer = new StringWriter();
-        StreamResult result = new StreamResult(writer);
-        try
-        {
-            Transformer transformer = XMLUtils.transformerFactory().newTransformer();
-            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, YES);
-            transformer.setOutputProperty(OutputKeys.INDENT, YES);
-            transformer.transform(domSource, result);
-            return writer.toString().trim();
-        }
-        catch (TransformerException exception)
-        {
-            throw new ConfigurationException("Unable to convert document node into string",
-                    exception);
-        }
+        return XMLUtils.toString(document);
     }
 
     /**
@@ -496,10 +443,7 @@ public class DocumentConfigurationHelper implements ConfigurationHelper<Document
         @Override
         public String toString()
         {
-            return IntStream.range(0, nodeList.getLength())
-                    .mapToObj(nodeList::item)
-                    .map(DocumentConfigurationHelper::getAsString)
-                    .collect(Collectors.joining("\n"));
+            return XMLUtils.toString(nodeList);
         }
 
     }
