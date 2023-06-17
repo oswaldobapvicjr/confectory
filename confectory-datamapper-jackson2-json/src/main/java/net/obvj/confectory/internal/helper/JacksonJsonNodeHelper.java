@@ -49,4 +49,10 @@ public class JacksonJsonNodeHelper extends GenericJsonConfigurationHelper<JsonNo
         return new JacksonJsonNodeConfigurationMerger();
     }
 
+    @Override
+    public String getAsString()
+    {
+        return json.toPrettyString();
+    }
+
 }

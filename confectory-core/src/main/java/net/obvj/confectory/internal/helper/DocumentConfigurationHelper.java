@@ -16,6 +16,16 @@
 
 package net.obvj.confectory.internal.helper;
 
+import java.io.StringWriter;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
@@ -29,6 +39,7 @@ import net.obvj.confectory.ConfigurationException;
 import net.obvj.confectory.merger.ConfigurationMerger;
 import net.obvj.confectory.util.ParseException;
 import net.obvj.confectory.util.TypeFactory;
+import net.obvj.confectory.util.XMLUtils;
 
 /**
  * A generic Configuration Helper that retrieves data from an XML {@link Document} using
@@ -39,6 +50,8 @@ import net.obvj.confectory.util.TypeFactory;
  */
 public class DocumentConfigurationHelper implements ConfigurationHelper<Document>
 {
+    private static final String YES = "yes";
+
     protected final Document document;
 
     /**
@@ -58,6 +71,68 @@ public class DocumentConfigurationHelper implements ConfigurationHelper<Document
     public Document getBean()
     {
         return document;
+    }
+
+    /**
+     * @return the XML {@link Document} in context, transformed/encoded as string
+     * @since 2.5.0
+     */
+    @Override
+    public String getAsString()
+    {
+        return getAsString(document);
+    }
+
+    /**
+     * Returns a string representation of the specified XML {@link Node}.
+     * <p>
+     * If the XML node is either an attribute or a text node, the text content will be
+     * returned. For all other node types (e.g.: document, or element), the node will be
+     * transformed/encoded as string.
+     *
+     * @param node the {@link Node} to be converted
+     * @return the node value as string
+     * @throws ConfigurationException if unable to convert the document node into string
+     *
+     * @since 2.5.0
+     */
+    public static String getAsString(Node node)
+    {
+        switch (node.getNodeType())
+        {
+        case Node.ATTRIBUTE_NODE:
+        case Node.TEXT_NODE:
+            return node.getTextContent();
+        default:
+            return transformToString(node);
+        }
+    }
+
+    /**
+     * Transform the XML node into a String.
+     *
+     * @param node the {@link Node} to be transformed
+     * @return the node as an XML string
+     * @since 2.5.0
+     */
+    private static String transformToString(Node node)
+    {
+        DOMSource domSource = new DOMSource(node);
+        StringWriter writer = new StringWriter();
+        StreamResult result = new StreamResult(writer);
+        try
+        {
+            Transformer transformer = XMLUtils.transformerFactory().newTransformer();
+            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, YES);
+            transformer.setOutputProperty(OutputKeys.INDENT, YES);
+            transformer.transform(domSource, result);
+            return writer.toString().trim();
+        }
+        catch (TransformerException exception)
+        {
+            throw new ConfigurationException("Unable to convert document node into string",
+                    exception);
+        }
     }
 
     /**
@@ -327,7 +402,7 @@ public class DocumentConfigurationHelper implements ConfigurationHelper<Document
      */
     protected <T> T getValue(String xpath, Class<T> targetType, boolean mandatory)
     {
-        NodeList result = get(xpath);
+        NodeList result = get(xpath).getNodeList();
         switch (result.getLength())
         {
         case 0:
@@ -365,11 +440,12 @@ public class DocumentConfigurationHelper implements ConfigurationHelper<Document
      * @throws ConfigurationException if the {@code XPath} expression is not valid
      */
     @Override
-    public NodeList get(String xpath)
+    public NodeListHolder get(String xpath)
     {
         try
         {
-            return (NodeList) compileXPath(xpath).evaluate(document, XPathConstants.NODESET);
+            NodeList nodeList = (NodeList) compileXPath(xpath).evaluate(document, XPathConstants.NODESET);
+            return new NodeListHolder(nodeList);
         }
         catch (XPathExpressionException exception)
         {
@@ -393,6 +469,39 @@ public class DocumentConfigurationHelper implements ConfigurationHelper<Document
     public ConfigurationMerger<Document> configurationMerger()
     {
         throw new UnsupportedOperationException("Merge not supported for XML");
+    }
+
+    /**
+     * This holds a {@link NodeList} and provides a better way to display it as string.
+     *
+     * @since 2.5.0
+     */
+    static class NodeListHolder
+    {
+        private final NodeList nodeList;
+
+        NodeListHolder(final NodeList nodeList)
+        {
+            this.nodeList = Objects.requireNonNull(nodeList, "The node list is null");
+        }
+
+        /**
+         * @return the XML node list
+         */
+        public NodeList getNodeList()
+        {
+            return nodeList;
+        }
+
+        @Override
+        public String toString()
+        {
+            return IntStream.range(0, nodeList.getLength())
+                    .mapToObj(nodeList::item)
+                    .map(DocumentConfigurationHelper::getAsString)
+                    .collect(Collectors.joining("\n"));
+        }
+
     }
 
 }

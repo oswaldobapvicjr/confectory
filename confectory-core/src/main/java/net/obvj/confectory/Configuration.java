@@ -174,6 +174,12 @@ public final class Configuration<T>
     }
 
     @Override
+    public String getAsString()
+    {
+        return getService().getAsString();
+    }
+
+    @Override
     public Boolean getBoolean(String key)
     {
         return getService().getBoolean(key);
@@ -402,6 +408,12 @@ final class ConfigurationService<T> implements ConfigurationDataRetriever<T>
     public T getBean()
     {
         return bean;
+    }
+
+    @Override
+    public String getAsString()
+    {
+        return helper.getAsString();
     }
 
     @Override

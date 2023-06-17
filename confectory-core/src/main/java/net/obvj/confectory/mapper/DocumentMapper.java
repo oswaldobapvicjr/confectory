@@ -29,6 +29,7 @@ import org.xml.sax.SAXException;
 import net.obvj.confectory.ConfigurationException;
 import net.obvj.confectory.internal.helper.ConfigurationHelper;
 import net.obvj.confectory.internal.helper.DocumentConfigurationHelper;
+import net.obvj.confectory.util.XMLUtils;
 
 /**
  * A specialized {@code Mapper} that loads the contents of a valid XML {@code Source}
@@ -50,8 +51,7 @@ public class DocumentMapper implements Mapper<Document>
     {
         try
         {
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+            DocumentBuilderFactory factory = XMLUtils.documentBuilderFactory();
             DocumentBuilder builder = factory.newDocumentBuilder();
             return builder.parse(inputStream);
         }

@@ -49,4 +49,10 @@ public class JsonSmartConfigurationHelper extends GenericJsonConfigurationHelper
         return new JSONObjectConfigurationMerger();
     }
 
+    @Override
+    public String getAsString()
+    {
+        return json.toJSONString();
+    }
+
 }

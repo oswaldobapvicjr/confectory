@@ -72,4 +72,10 @@ public class JsonOrgJSONObjectHelper extends GenericJsonConfigurationHelper<JSON
         return new JsonOrgJSONObjectConfigurationMerger();
     }
 
+    @Override
+    public String getAsString()
+    {
+        return json.toString(2);
+    }
+
 }

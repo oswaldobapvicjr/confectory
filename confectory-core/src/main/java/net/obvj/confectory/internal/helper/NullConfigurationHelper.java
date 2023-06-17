@@ -71,6 +71,15 @@ public class NullConfigurationHelper<T> implements ConfigurationHelper<T>
      * @return {@code null}, always
      */
     @Override
+    public String getAsString()
+    {
+        return null;
+    }
+
+    /**
+     * @return {@code null}, always
+     */
+    @Override
     public Object get(String key)
     {
         return null;

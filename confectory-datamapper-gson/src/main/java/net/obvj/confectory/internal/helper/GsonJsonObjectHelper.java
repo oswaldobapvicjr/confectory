@@ -16,6 +16,7 @@
 
 package net.obvj.confectory.internal.helper;
 
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.jayway.jsonpath.spi.json.GsonJsonProvider;
 import com.jayway.jsonpath.spi.mapper.GsonMappingProvider;
@@ -47,6 +48,12 @@ public class GsonJsonObjectHelper extends GenericJsonConfigurationHelper<JsonObj
     public ConfigurationMerger<JsonObject> configurationMerger()
     {
         return new GsonJsonObjectConfigurationMerger();
+    }
+
+    @Override
+    public String getAsString()
+    {
+        return new GsonBuilder().setPrettyPrinting().create().toJson(json);
     }
 
 }

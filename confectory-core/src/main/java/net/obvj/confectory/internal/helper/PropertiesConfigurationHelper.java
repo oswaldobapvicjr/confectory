@@ -16,8 +16,10 @@
 
 package net.obvj.confectory.internal.helper;
 
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 import net.obvj.confectory.ConfigurationException;
 import net.obvj.confectory.merger.ConfigurationMerger;
@@ -40,6 +42,13 @@ public class PropertiesConfigurationHelper extends BasicConfigurationHelper<Prop
     public PropertiesConfigurationHelper(Properties properties)
     {
         super(properties);
+    }
+
+    @Override
+    public String getAsString()
+    {
+        return super.bean.entrySet().stream().map(Entry::toString)
+                .collect(Collectors.joining("\n"));
     }
 
     @Override
