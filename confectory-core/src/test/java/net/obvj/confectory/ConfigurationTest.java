@@ -73,8 +73,11 @@ class ConfigurationTest
     private static final Configuration<String> CONFIG_NS2_STRING_1 = Configuration.<String>builder()
             .namespace(NAMESPACE2).source(SOURCE_STRING1).mapper(new StringMapper()).build();
 
+    private static final String CONFIG_PROPERTIES_1_AS_STR =
+            "myKey=myValue\nmyBool=true\nmyInt=9\nmyLong=9876543210\nmyDouble=7.89";
+
     private static final Configuration<Properties> CONFIG_PROPERTIES_1 = Configuration.<Properties>builder()
-            .source(new StringSource<>("myKey=myValue\nmyBool=true\nmyInt=9\nmyLong=9876543210\nmyDouble=7.89"))
+            .source(new StringSource<>(CONFIG_PROPERTIES_1_AS_STR))
             .precedence(1).mapper(new PropertiesMapper()).build();
 
     private static final Configuration<Properties> CONFIG_PROPERTIES_2 = Configuration.<Properties>builder()
@@ -133,6 +136,19 @@ class ConfigurationTest
 
         assertThat(config.toString().replaceAll("\"", ""),
                 containsAll("namespace:" + NAMESPACE1, source.toString(), "precedence:999"));
+    }
+
+    private static String[] sortedLines(String string)
+    {
+        return Arrays.stream(string.split("\n")).sorted().toArray(String[]::new);
+    }
+
+    @Test
+    void getAsString_validString()
+    {
+        // The entries in the resulting string may be unsorted
+        assertThat(sortedLines(CONFIG_PROPERTIES_1.getAsString()),
+                equalTo(sortedLines(CONFIG_PROPERTIES_1_AS_STR)));
     }
 
     @Test

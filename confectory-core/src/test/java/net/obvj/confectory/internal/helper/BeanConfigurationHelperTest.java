@@ -17,8 +17,7 @@
 package net.obvj.confectory.internal.helper;
 
 import static net.obvj.junit.utils.matchers.AdvancedMatchers.throwsException;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import org.hamcrest.Matcher;
@@ -46,6 +45,12 @@ class BeanConfigurationHelperTest
     void getBean_notEmpty()
     {
         assertThat(HELPER.getBean(), is(sameInstance(OBJECT)));
+    }
+
+    @Test
+    void getAsString_sameAsToString()
+    {
+        assertThat(HELPER.getAsString(), is(equalTo(OBJECT.toString())));
     }
 
     @Test
