@@ -25,13 +25,12 @@ import java.util.stream.IntStream;
 
 import javax.xml.xpath.XPathExpressionException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.Matcher;
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
 
 import net.obvj.confectory.ConfigurationException;
-import net.obvj.confectory.internal.helper.DocumentConfigurationHelper.NodeListHolder;
 import net.obvj.confectory.mapper.DocumentMapper;
 import net.obvj.confectory.source.StringSource;
 import net.obvj.confectory.util.ParseException;
@@ -107,7 +106,8 @@ class DocumentConfigurationHelperTest
 
     private static String[] getLinesTrimmed(String string)
     {
-        return Arrays.stream(string.split("\n")).map(String::trim).toArray(String[]::new);
+        return Arrays.stream(string.split("\n")).map(String::trim)
+                .filter(StringUtils::isNotEmpty).toArray(String[]::new);
     }
 
     @Test
@@ -350,7 +350,7 @@ class DocumentConfigurationHelperTest
 
         assertThat(elementsAsStringLines, equalTo(expectedElementsAsStringLines));
     }
-    
+
     @Test
     void get_pathPointsToTextList_success()
     {
