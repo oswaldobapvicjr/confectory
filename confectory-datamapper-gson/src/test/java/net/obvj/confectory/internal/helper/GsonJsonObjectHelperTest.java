@@ -43,28 +43,28 @@ import net.obvj.confectory.source.StringSource;
 @ExtendWith(MockitoExtension.class)
 class GsonJsonObjectHelperTest
 {
-    private static final String STR_TEST_JSON_SAMPLE1 = "{\r\n"
-            + "  \"intValue\": 9,\r\n"
-            + "  \"longValue\": 9876543210,\r\n"
-            + "  \"booleanValue\": true,\r\n"
-            + "  \"store\": {\r\n"
-            + "    \"books\": [ \r\n"
-            + "      { \"category\": \"children\",\r\n"
-            + "        \"author\": \"Julia Donaldson\",\r\n"
-            + "        \"title\": \"The Gruffalo\",\r\n"
-            + "        \"price\": 8.99\r\n"
-            + "      },\r\n"
-            + "      { \"category\": \"fiction\",\r\n"
-            + "        \"author\": \"J. R. R. Tolkien\",\r\n"
-            + "        \"title\": \"The Lord of the Rings\",\r\n"
-            + "        \"price\": 22.99\r\n"
-            + "      }\r\n"
-            + "    ],\r\n"
-            + "    \"attributes\": {\r\n"
-            + "      \"color\": \"yellow\",\r\n"
-            + "      \"shape\": \"square\"\r\n"
-            + "    }\r\n"
-            + "  }\r\n"
+    private static final String STR_TEST_JSON_SAMPLE1 = "{\n"
+            + "  \"intValue\": 9,\n"
+            + "  \"longValue\": 9876543210,\n"
+            + "  \"booleanValue\": true,\n"
+            + "  \"store\": {\n"
+            + "    \"books\": [ \n"
+            + "      { \"category\": \"children\",\n"
+            + "        \"author\": \"Julia Donaldson\",\n"
+            + "        \"title\": \"The Gruffalo\",\n"
+            + "        \"price\": 8.99\n"
+            + "      },\n"
+            + "      { \"category\": \"fiction\",\n"
+            + "        \"author\": \"J. R. R. Tolkien\",\n"
+            + "        \"title\": \"The Lord of the Rings\",\n"
+            + "        \"price\": 22.99\n"
+            + "      }\n"
+            + "    ],\n"
+            + "    \"attributes\": {\n"
+            + "      \"color\": \"yellow\",\n"
+            + "      \"shape\": \"square\"\n"
+            + "    }\n"
+            + "  }\n"
             + "}";
 
     private static final JsonObject TEST_JSON_SAMPLE1 = new ConfigurationBuilder<JsonObject>()
@@ -79,6 +79,17 @@ class GsonJsonObjectHelperTest
     void getBean_sameInstance()
     {
         assertThat(HELPER.getBean(), is(sameInstance(TEST_JSON_SAMPLE1)));
+    }
+
+    private static String trimmed(String string)
+    {
+        return string.replaceAll("\\n| ", "");
+    }
+
+    @Test
+    void getAsString_success()
+    {
+        assertThat(trimmed(HELPER.getAsString()), is(equalTo(trimmed(STR_TEST_JSON_SAMPLE1))));
     }
 
     @Test

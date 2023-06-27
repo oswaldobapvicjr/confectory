@@ -82,6 +82,12 @@ class JacksonJsonNodeHelperTest
     }
 
     @Test
+    void getAsString_success()
+    {
+        assertThat(HELPER.getAsString(), is(equalTo(TEST_JSON_SAMPLE1.toPrettyString())));
+    }
+
+    @Test
     void getBoolean_existingKey_success()
     {
         assertThat(HELPER.getBoolean("$.booleanValue"), equalTo(true));

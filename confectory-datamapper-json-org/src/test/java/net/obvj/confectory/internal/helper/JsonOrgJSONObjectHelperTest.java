@@ -76,6 +76,12 @@ class JsonOrgJSONObjectHelperTest
     }
 
     @Test
+    void getAsString_success()
+    {
+        assertThat(HELPER.getAsString(), is(equalTo(TEST_JSON_SAMPLE1.toString(2))));
+    }
+
+    @Test
     void getBoolean_existingKey_success()
     {
         assertThat(HELPER.getBoolean("$.booleanValue"), equalTo(true));
