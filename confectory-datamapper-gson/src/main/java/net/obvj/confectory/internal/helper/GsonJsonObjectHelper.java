@@ -50,6 +50,10 @@ public class GsonJsonObjectHelper extends GenericJsonConfigurationHelper<JsonObj
         return new GsonJsonObjectConfigurationMerger();
     }
 
+    /**
+     * @return a pretty-printed representation of the {@link JsonObject} in context
+     * @since 2.5.0
+     */
     @Override
     public String getAsString()
     {

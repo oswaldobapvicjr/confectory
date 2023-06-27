@@ -49,6 +49,10 @@ public class JacksonJsonNodeHelper extends GenericJsonConfigurationHelper<JsonNo
         return new JacksonJsonNodeConfigurationMerger();
     }
 
+    /**
+     * @return a pretty-printed representation of the {@link JsonNode} in context
+     * @since 2.5.0
+     */
     @Override
     public String getAsString()
     {

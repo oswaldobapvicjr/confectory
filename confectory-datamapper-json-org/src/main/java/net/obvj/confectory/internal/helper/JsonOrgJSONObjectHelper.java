@@ -72,6 +72,10 @@ public class JsonOrgJSONObjectHelper extends GenericJsonConfigurationHelper<JSON
         return new JsonOrgJSONObjectConfigurationMerger();
     }
 
+    /**
+     * @return a pretty-printed representation of the {@link JSONObject} in context
+     * @since 2.5.0
+     */
     @Override
     public String getAsString()
     {

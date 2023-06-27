@@ -49,6 +49,10 @@ public class JsonSmartConfigurationHelper extends GenericJsonConfigurationHelper
         return new JSONObjectConfigurationMerger();
     }
 
+    /**
+     * @return a compact string representation of the {@link JSONObject} in context
+     * @since 2.5.0
+     */
     @Override
     public String getAsString()
     {
