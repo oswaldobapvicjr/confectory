@@ -20,13 +20,18 @@ import static net.obvj.junit.utils.matchers.AdvancedMatchers.throwsException;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
+import java.util.Arrays;
+import java.util.stream.IntStream;
+
 import javax.xml.xpath.XPathExpressionException;
 
 import org.hamcrest.Matcher;
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 
 import net.obvj.confectory.ConfigurationException;
+import net.obvj.confectory.internal.helper.DocumentConfigurationHelper.NodeListHolder;
 import net.obvj.confectory.mapper.DocumentMapper;
 import net.obvj.confectory.source.StringSource;
 import net.obvj.confectory.util.ParseException;
@@ -40,7 +45,7 @@ import net.obvj.junit.utils.Procedure;
  */
 class DocumentConfigurationHelperTest
 {
-    private static final Document BOOKS_XML = parseXml(
+    private static final String BOOKS_XML_AS_STR =
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
             + "<bookstore>\n"
             + "    <book category=\"cooking\">\n"
@@ -73,7 +78,9 @@ class DocumentConfigurationHelperTest
             + "        <year>2003</year>\n"
             + "        <price>39.95</price>\n"
             + "    </book>\n"
-            + "</bookstore>");
+            + "</bookstore>\n";
+
+    private static final Document BOOKS_XML = parseXml(BOOKS_XML_AS_STR);
 
     private static final ConfigurationHelper<Document> HELPER = new DocumentConfigurationHelper(BOOKS_XML);
 
@@ -96,6 +103,25 @@ class DocumentConfigurationHelperTest
     void getBean_validDocument()
     {
         assertThat(HELPER.getBean(), equalTo(BOOKS_XML));
+    }
+
+    private static String[] getLinesTrimmed(String string)
+    {
+        return Arrays.stream(string.split("\n")).map(String::trim).toArray(String[]::new);
+    }
+
+    @Test
+    void getAsString_validXml()
+    {
+        String[] expectedXmlLines = getLinesTrimmed(BOOKS_XML_AS_STR);
+        String[] xmlAsStringLines = getLinesTrimmed(HELPER.getAsString());
+
+        IntStream.range(0, xmlAsStringLines.length).forEach(i ->
+        {
+            // The first line "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+            // is ignored thus not returned in the actual output
+            assertThat(xmlAsStringLines[i], equalTo(expectedXmlLines[i + 1]));
+        });
     }
 
     @Test
@@ -290,5 +316,54 @@ class DocumentConfigurationHelperTest
         assertThat(() -> HELPER.getMandatoryBoolean(PATH_UNKNOWN),
                 EXCEPTION_NO_VALUE_FOUND_PATH_UNKNOWN);
     }
+
+    @Test
+    void get_pathPointsToSinlgeElementNode_success()
+    {
+        String expectedElementAsString = "<book category=\"cooking\">\n"
+                                       + "<title lang=\"en\">Everyday Italian</title>\n"
+                                       + "<author>Giada De Laurentiis</author>\n"
+                                       + "<year>2005</year>\n"
+                                       + "<price>30.00</price>\n"
+                                       + "<active>True</active>\n"
+                                       + "<isbn>9876543210999</isbn>\n"
+                                       + "</book>\n";
+
+        String elementAsString = HELPER.get("/bookstore/book[1]").toString();
+
+        String[] expectedElementAsStringLines = getLinesTrimmed(expectedElementAsString);
+        String[] elementAsStringLines = getLinesTrimmed(elementAsString);
+
+        assertThat(elementAsStringLines, equalTo(expectedElementAsStringLines));
+    }
+
+    @Test
+    void get_pathPointsToElementsNodeList_success()
+    {
+        String expectedElementsAsString = "<title lang=\"en\">XQuery Kick Start</title>\n"
+                                        + "<title lang=\"en\">Learning XML</title>\n";
+
+        String elementsAsString = HELPER.get("/bookstore/book[@category='web']/title").toString();
+
+        String[] expectedElementsAsStringLines = getLinesTrimmed(expectedElementsAsString);
+        String[] elementsAsStringLines = getLinesTrimmed(elementsAsString);
+
+        assertThat(elementsAsStringLines, equalTo(expectedElementsAsStringLines));
+    }
+    
+    @Test
+    void get_pathPointsToTextList_success()
+    {
+        String expectedElementsAsString = "XQuery Kick Start\n"
+                                        + "Learning XML\n";
+
+        String elementsAsString = HELPER.get("/bookstore/book[@category='web']/title/text()").toString();
+
+        String[] expectedElementsAsStringLines = getLinesTrimmed(expectedElementsAsString);
+        String[] elementsAsStringLines = getLinesTrimmed(elementsAsString);
+
+        assertThat(elementsAsStringLines, equalTo(expectedElementsAsStringLines));
+    }
+
 
 }
