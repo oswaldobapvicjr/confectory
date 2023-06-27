@@ -37,6 +37,16 @@ public interface ConfigurationDataRetriever<T>
     T getBean();
 
     /**
+     * Returns a string representation of the bean used by this data retriever, typically for
+     * manual handling and/or troubleshooting purposes.
+     *
+     * @return a string representation of the configuration bean (<b>Note: </b> it can be
+     *         {@code null} if the {@code Configuration} is marked as optional)
+     * @since 2.5.0
+     */
+    String getAsString();
+
+    /**
      * Returns the object associated with the specified {@code key}.
      * <p>
      * <b>Notes:</b>

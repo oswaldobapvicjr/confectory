@@ -55,6 +55,12 @@ class NullConfigurationHelperTest
     }
 
     @Test
+    void getAsString_null()
+    {
+        assertNull(helper.getAsString());
+    }
+
+    @Test
     void get_anyKey_null()
     {
         assertNull(helper.get(KEY1));

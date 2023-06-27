@@ -39,6 +39,12 @@ public class BeanConfigurationHelper<T> extends BasicConfigurationHelper<T>
         super(source);
     }
 
+    @Override
+    public String getAsString()
+    {
+        return bean.toString();
+    }
+
     /**
      * @param key not used since this method implementation is a "no-op"
      * @throws ConfigurationException always, since the data for this type of helper should be

@@ -16,6 +16,8 @@
 
 package net.obvj.confectory.internal.helper;
 
+import java.util.Objects;
+
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
@@ -29,6 +31,7 @@ import net.obvj.confectory.ConfigurationException;
 import net.obvj.confectory.merger.ConfigurationMerger;
 import net.obvj.confectory.util.ParseException;
 import net.obvj.confectory.util.TypeFactory;
+import net.obvj.confectory.util.XMLUtils;
 
 /**
  * A generic Configuration Helper that retrieves data from an XML {@link Document} using
@@ -39,6 +42,7 @@ import net.obvj.confectory.util.TypeFactory;
  */
 public class DocumentConfigurationHelper implements ConfigurationHelper<Document>
 {
+
     protected final Document document;
 
     /**
@@ -58,6 +62,16 @@ public class DocumentConfigurationHelper implements ConfigurationHelper<Document
     public Document getBean()
     {
         return document;
+    }
+
+    /**
+     * @return the XML {@link Document} in context, transformed/encoded as string
+     * @since 2.5.0
+     */
+    @Override
+    public String getAsString()
+    {
+        return XMLUtils.toString(document);
     }
 
     /**
@@ -327,7 +341,7 @@ public class DocumentConfigurationHelper implements ConfigurationHelper<Document
      */
     protected <T> T getValue(String xpath, Class<T> targetType, boolean mandatory)
     {
-        NodeList result = get(xpath);
+        NodeList result = get(xpath).getNodeList();
         switch (result.getLength())
         {
         case 0:
@@ -365,11 +379,12 @@ public class DocumentConfigurationHelper implements ConfigurationHelper<Document
      * @throws ConfigurationException if the {@code XPath} expression is not valid
      */
     @Override
-    public NodeList get(String xpath)
+    public NodeListHolder get(String xpath)
     {
         try
         {
-            return (NodeList) compileXPath(xpath).evaluate(document, XPathConstants.NODESET);
+            NodeList nodeList = (NodeList) compileXPath(xpath).evaluate(document, XPathConstants.NODESET);
+            return new NodeListHolder(nodeList);
         }
         catch (XPathExpressionException exception)
         {
@@ -393,6 +408,36 @@ public class DocumentConfigurationHelper implements ConfigurationHelper<Document
     public ConfigurationMerger<Document> configurationMerger()
     {
         throw new UnsupportedOperationException("Merge not supported for XML");
+    }
+
+    /**
+     * This holds a {@link NodeList} and provides a better way to display it as string.
+     *
+     * @since 2.5.0
+     */
+    static class NodeListHolder
+    {
+        private final NodeList nodeList;
+
+        NodeListHolder(final NodeList nodeList)
+        {
+            this.nodeList = Objects.requireNonNull(nodeList, "The node list is null");
+        }
+
+        /**
+         * @return the XML node list
+         */
+        public NodeList getNodeList()
+        {
+            return nodeList;
+        }
+
+        @Override
+        public String toString()
+        {
+            return XMLUtils.toString(nodeList);
+        }
+
     }
 
 }

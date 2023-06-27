@@ -57,9 +57,17 @@ class PropertiesConfigurationHelperTest
     }
 
     @Test
-    void getBean_null()
+    void getBean_sameInstance()
     {
         assertThat(HELPER.getBean(), is(sameInstance(PROPERTIES)));
+    }
+
+    @Test
+    void getAsString_success()
+    {
+        assertThat(HELPER.getAsString(), is(equalTo(
+                PROPERTIES.toString().replaceAll("\\{|\\}", "")
+                                     .replace(", ", "\n"))));
     }
 
     @Test

@@ -72,6 +72,12 @@ class JsonSmartConfigurationHelperTest
     }
 
     @Test
+    void getAsString_validString()
+    {
+        assertThat(HELPER.getAsString(), is(equalTo(TEST_JSON_SAMPLE1.toJSONString())));
+    }
+
+    @Test
     void get_existingKey_success()
     {
         assertThat(HELPER.get("$.array[*]"), equalTo(TEST_JSON_ARRAY1));

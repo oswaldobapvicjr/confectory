@@ -27,28 +27,34 @@ public class ConfectoryTestDriveXmlDocumentXPath
     public static void main(String[] args)
     {
         String xml = "<root xmlns:foo=\"http://www.foo.org/\" xmlns:bar=\"http://www.bar.org\">\r\n"
-                + "    <employees>\r\n"
-                + "        <employee id=\"1\">Johnny Dapp</employee>\r\n"
-                + "        <employee id=\"2\">Al Pacino</employee>\r\n"
-                + "        <employee id=\"3\">Robert De Niro</employee>\r\n"
-                + "        <employee id=\"4\">Kevin Spacey</employee>\r\n"
-                + "        <employee id=\"5\">Denzel Washington</employee>\r\n"
-                + "    </employees>\r\n"
-                + "    <foo:companies>\r\n"
-                + "        <foo:company id=\"9\">Microsoft</foo:company>\r\n"
-                + "        <foo:company id=\"10\">IBM</foo:company>\r\n"
-                + "        <foo:company id=\"11\">Apple</foo:company>\r\n"
-                + "        <foo:company id=\"12\">Oracle</foo:company>\r\n"
-                + "        <foo:company id=\"13\"></foo:company>\r\n"
-                + "    </foo:companies>\r\n"
-                + "</root>";
+                   + "    <employees>\r\n"
+                   + "        <employee id=\"1\">Johnny Dapp</employee>\r\n"
+                   + "        <employee id=\"2\">Al Pacino</employee>\r\n"
+                   + "        <employee id=\"3\">Robert De Niro</employee>\r\n"
+                   + "        <employee id=\"4\">Kevin Spacey</employee>\r\n"
+                   + "        <employee id=\"5\">Denzel Washington</employee>\r\n"
+                   + "    </employees>\r\n"
+                   + "    <foo:companies>\r\n"
+                   + "        <foo:company id=\"9\">Microsoft</foo:company>\r\n"
+                   + "        <foo:company id=\"10\">IBM</foo:company>\r\n"
+                   + "        <foo:company id=\"11\">Apple</foo:company>\r\n"
+                   + "        <foo:company id=\"12\">Oracle</foo:company>\r\n"
+                   + "        <foo:company id=\"13\"></foo:company>\r\n"
+                   + "    </foo:companies>\r\n"
+                   + "</root>";
 
         Configuration<Document> config = Configuration.<Document>builder()
                 .source(SourceFactory.stringSource(xml))
                 .mapper(new DocumentMapper())
                 .build();
 
-        System.out.println(config.getString("//employee[last()]"));
+        System.out.println(config.getAsString());
+        System.out.println();
+        System.out.println(config.get("//employee[@id>2]"));
+        System.out.println();
+        System.out.println(config.get("//employee[last()]"));
+        System.out.println(config.get("//employee[last()]/text()"));
+        System.out.println(config.getInteger("//employee[last()]/@id"));
         System.out.println(config.getString("//employee[@id=3]"));
         System.out.println(config.getString("//company[last()]"));
         System.out.println(config.getString("//company[last()-1]"));
