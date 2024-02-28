@@ -52,7 +52,7 @@
 
         <!-- Compile dependencies -->
         <jackson2.version>2.16.1</jackson2.version>
-        <slf4j.version>2.0.11</slf4j.version>
+        <slf4j.version>2.0.12</slf4j.version>
 
         <!-- Test dependencies -->
         <junit.version>5.9.3</junit.version>
