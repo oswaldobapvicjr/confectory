@@ -41,7 +41,7 @@ class ParseExceptionTest
         },
         throwsException(ParseException.class)
                 .withMessage(DETAILED_MESSAGE1)
-                .withCause(null));
+                .withNoCause());
     }
 
     @Test
