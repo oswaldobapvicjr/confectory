@@ -55,10 +55,10 @@
         <slf4j.version>2.0.12</slf4j.version>
 
         <!-- Test dependencies -->
-        <junit.version>5.9.3</junit.version>
-        <junit-utils.version>1.5.0</junit-utils.version>
+        <junit.version>5.10.1</junit.version>
+        <junit-utils.version>1.7.0</junit-utils.version>
         <!-- Newer versions of Mockito do not support JDK8s -->
-        <mockito.version>4.8.1</mockito.version>
+        <mockito.version>5.10.0</mockito.version>
         <tinylog.version>2.6.1</tinylog.version>
         
     </properties>
