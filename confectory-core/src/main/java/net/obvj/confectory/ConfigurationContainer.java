@@ -21,7 +21,6 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
 
 import net.obvj.confectory.settings.ConfectorySettings;
 
@@ -359,7 +358,7 @@ public class ConfigurationContainer
      */
     private String parseNamespace(String namespace)
     {
-        return StringUtils.defaultString(namespace, DEFAULT_NAMESPACE);
+        return Objects.toString(namespace, DEFAULT_NAMESPACE);
     }
 
     /**

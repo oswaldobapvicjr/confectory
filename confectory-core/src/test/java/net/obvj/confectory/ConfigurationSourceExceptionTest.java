@@ -41,7 +41,7 @@ class ConfigurationSourceExceptionTest
         },
         throwsException(ConfigurationSourceException.class)
                 .withMessage(DETAILED_MESSAGE1)
-                .withCause(null));
+                        .withNoCause());
     }
 
     @Test

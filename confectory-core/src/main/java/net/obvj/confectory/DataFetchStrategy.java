@@ -16,10 +16,7 @@
 
 package net.obvj.confectory;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
@@ -147,6 +144,6 @@ public enum DataFetchStrategy
      */
     private static String parseNamespace(String namespace)
     {
-        return StringUtils.defaultString(namespace, ConfigurationContainer.DEFAULT_NAMESPACE);
+        return Objects.toString(namespace, ConfigurationContainer.DEFAULT_NAMESPACE);
     }
 }

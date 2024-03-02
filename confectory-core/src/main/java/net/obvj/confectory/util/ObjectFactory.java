@@ -58,7 +58,6 @@ public enum ObjectFactory
     FAST
     {
         @Override
-        @SuppressWarnings("restriction")
         public <T> T newObject(Class<T> type) throws ReflectiveOperationException
         {
             return type.cast(UnsafeAccessor.UNSAFE.allocateInstance(type));

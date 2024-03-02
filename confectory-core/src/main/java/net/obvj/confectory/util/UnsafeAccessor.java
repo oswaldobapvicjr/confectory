@@ -26,7 +26,6 @@ import sun.misc.Unsafe;
  * @author oswaldo.bapvic.jr
  * @since 2.5.0
  */
-@SuppressWarnings("restriction")
 public final class UnsafeAccessor
 {
     /**
