@@ -37,7 +37,7 @@
         <json-path.version>2.9.0</json-path.version>
         <json-smart.version>2.5.1</json-smart.version>
         <performetrics.version>2.5.3</performetrics.version>
-        <objenesis.version>3.3</objenesis.version>
+        <objenesis.version>3.4</objenesis.version>
     </properties>
 
     <dependencies>
