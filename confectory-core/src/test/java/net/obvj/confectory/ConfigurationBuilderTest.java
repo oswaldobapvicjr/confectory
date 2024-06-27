@@ -19,6 +19,7 @@ package net.obvj.confectory;
 import static net.obvj.junit.utils.matchers.AdvancedMatchers.containsAll;
 import static net.obvj.junit.utils.matchers.AdvancedMatchers.throwsException;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.Mockito.mock;
@@ -31,7 +32,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import net.obvj.confectory.internal.helper.ConfigurationHelper;
+import net.obvj.confectory.mapper.DynamicMapper;
 import net.obvj.confectory.mapper.Mapper;
+import net.obvj.confectory.mapper.PropertiesMapper;
 import net.obvj.confectory.source.AbstractSource;
 import net.obvj.confectory.source.DynamicSource;
 import net.obvj.confectory.source.Source;
@@ -97,20 +100,31 @@ class ConfigurationBuilderTest
     }
 
     @Test
-    void build_nullSource_nullPointerException()
+    void build_nullSource_illegalStateException()
     {
         ConfigurationBuilder<Object> builder = new ConfigurationBuilder<>();
         assertThat(() -> builder.build(),
-                throwsException(NullPointerException.class).withMessage("The configuration source must not be null"));
+                throwsException(IllegalStateException.class).withMessage("The configuration source must not be null"));
     }
 
     @Test
-    void build_nullMapper_nullPointerException()
+    void build_nullMapperAndCouldNotBeInferred_illegalStateException()
     {
         ConfigurationBuilder<Object> builder = new ConfigurationBuilder<>()
                 .source(source);
         assertThat(() -> builder.build(),
-                throwsException(NullPointerException.class).withMessage("The configuration mapper must not be null"));
+                throwsException(IllegalStateException.class).withMessage("The mapper could not be inferred. Please specify a concrete mapper."));
+    }
+
+    @Test
+    void build_nullMapperButCouldBeInferred_dynamicMapperAssignedBasedOnExtension()
+    {
+        ConfigurationBuilder<Object> builder = new ConfigurationBuilder<>()
+                .source("testfiles/my.properties").lazy();
+        Configuration<?> config = builder.build();
+
+        DynamicMapper assignedMapper = (DynamicMapper) config.getMapper();
+        assertThat(assignedMapper.getActualMapper().getClass(), is(PropertiesMapper.class));
     }
 
     @Test

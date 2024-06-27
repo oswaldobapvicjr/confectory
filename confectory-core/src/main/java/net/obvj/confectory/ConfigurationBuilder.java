@@ -16,10 +16,9 @@
 
 package net.obvj.confectory;
 
-import java.util.Objects;
+import static org.apache.commons.lang3.StringUtils.*;
 
-import org.apache.commons.lang3.StringUtils;
-
+import net.obvj.confectory.mapper.DynamicMapper;
 import net.obvj.confectory.mapper.Mapper;
 import net.obvj.confectory.source.DynamicSource;
 import net.obvj.confectory.source.Source;
@@ -31,7 +30,7 @@ import net.obvj.confectory.source.SourceFactory;
  * For example:
  *
  * <blockquote>
- *
+ * <b><i>Example 1: Combining a source and a mapper (type-safe):</i></b>
  * <pre>
  * {@code Configuration<Properties> config = new ConfigurationBuilder<Properties>()}
  * {@code         .source(new ClasspathFileSource<>("my.properties"))}
@@ -43,6 +42,18 @@ import net.obvj.confectory.source.SourceFactory;
  * </pre>
  *
  * </blockquote>
+ * <blockquote>
+ * <b><i>Example 2: Building a generic configuration</i></b>
+ * (the actual mapper will be inferred based on the source file extension):
+ * <pre>
+ * {@code Configuration<?> config = Configuration.builder()}
+ * {@code         .source("my.properties")}
+ * {@code         .lazy()}
+ * {@code         .build();}
+ * </pre>
+ *
+ * </blockquote>
+
  *
  * @param <T> the target configuration type
  *
@@ -55,6 +66,7 @@ public class ConfigurationBuilder<T> implements ConfigurationMetadataRetriever<T
 {
     private String namespace;
     private int precedence;
+    private String path;
     private Source<T> source;
     private Mapper<T> mapper;
     private boolean optional;
@@ -145,12 +157,16 @@ public class ConfigurationBuilder<T> implements ConfigurationMetadataRetriever<T
      */
     public ConfigurationBuilder<T> source(String path)
     {
+        this.path = path;
         this.source = SourceFactory.dynamicSource(path);
         return this;
     }
 
     /**
      * Defines the {@link Mapper} of the new {@code Configuration}.
+     * <p>
+     * <b>Note:</b> Since 2.6.0, if not specified, a default mapper will be defined
+     * dynamically, based on the source file extension, if present.
      *
      * @param mapper the {@link Mapper} to be set; <strong>not</strong> null
      * @return a reference to this same {@code ConfigurationBuilder} for chained calls
@@ -237,19 +253,40 @@ public class ConfigurationBuilder<T> implements ConfigurationMetadataRetriever<T
      * Builds the target {@code Configuration}.
      *
      * @return a new {@link Configuration} object
-     * @throws NullPointerException         if either the {@code Source} or {@code Mapper}
-     *                                      configuration parameters are missing
+     * @throws IllegalStateException        if the {@code Source} parameter is missing; or the
+     *                                      {@code Mapper} is missing; or the {@code Mapper}
+     *                                      could not be inferred
      * @throws ConfigurationSourceException in the event of a failure loading the
      *                                      configuration source
      */
     public Configuration<T> build()
     {
-        Objects.requireNonNull(source, "The configuration source must not be null");
-        Objects.requireNonNull(mapper, "The configuration mapper must not be null");
+        requireNonNullForBuild(source, "The configuration source must not be null");
+        evaluateMapper();
 
-        namespace = StringUtils.defaultString(namespace);
+        namespace = defaultString(namespace);
 
         return new Configuration<>(this);
+    }
+
+    /**
+     * Secure the existence of a {@link Mapper}. Try to infer one if not specified.
+     *
+     * @throws IllegalStateException if the {@link Mapper} is null and could not be inferred
+     * @since 2.6.0
+     */
+    private void evaluateMapper()
+    {
+        if (mapper == null)
+        {
+            // Try to infer based on the file extension if present
+            String extension = substringAfterLast(path, ".");
+            if (isEmpty(extension))
+            {
+                throw new IllegalStateException("The mapper could not be inferred. Please specify a concrete mapper.");
+            }
+            mapper = (Mapper<T>) new DynamicMapper(extension);
+        }
     }
 
     @Override
@@ -291,6 +328,15 @@ public class ConfigurationBuilder<T> implements ConfigurationMetadataRetriever<T
     public T getBean()
     {
         return bean;
+    }
+
+    private static <T> T requireNonNullForBuild(T object, String message)
+    {
+        if (object == null)
+        {
+            throw new IllegalStateException(message);
+        }
+        return object;
     }
 
 }
