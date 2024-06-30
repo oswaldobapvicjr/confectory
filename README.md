@@ -16,7 +16,19 @@ The modular, multi-format configuration framework for Java applications.
 
 **Confectory** is a modular framework designed to hide the complexity of handling multiple configuration files for Java applications in general, providing a **reliable** and **fast** API for parsing data from different **sources** (file or URL) in a variety of formats, and allowing data access using a **unified query language**.
 
-### ![Overview diagram](https://raw.githubusercontent.com/oswaldobapvicjr/confectory/master/resources/confectory-overview2.svg)
+````mermaid
+flowchart TD
+    User(["User"]) -->|"property"| c((("<b>Confectory</b>")))
+    User -->|"xpath"| c
+    User -->|"jsonpath"| c
+
+    c-->properties("Properties")
+    c-->ini("INI")
+    c-->xml("XML")
+    c-->json("JSON")
+    c-->yaml("YAML")
+    c-->toml("TOML")
+````
 
 ## Features
 
@@ -29,11 +41,24 @@ The modular, multi-format configuration framework for Java applications.
 
 ## Examples
 
-#### 1. Load data from a local Properties file in the classpath:
+### 1. Load data from a local Properties file in the classpath:
+
+```mermaid
+flowchart LR
+  subgraph Configuration
+    direction TB
+    subgraph Properties
+        direction RL
+    end
+  end
+  u([User]) -- 1️⃣ build --> Configuration
+  Properties -- 2️⃣ load --> my-application.properties
+  u -- 3️⃣ get...(key) --> Configuration
+```
 
 ````java
 Configuration<Properties> config = Configuration.<Properties>builder()
-        .source(SourceFactory.classpathFileSource("myapp.properties"))
+        .source("classpath://myapplication.properties")
         .mapper(new PropertiesMapper())
         .build();
 ````
@@ -43,7 +68,21 @@ Then access document data using one of the *getter* methods, using keys:
 System.out.println(config.getBoolean("web.enable"));
 ````
 
-#### 2. Load data from a JSON document in a Web server:
+
+### 2. Load data from a JSON document in a Web server:
+
+```mermaid
+flowchart LR
+  subgraph Configuration
+    direction TB
+    subgraph JSONObject
+        direction RL
+    end
+  end
+  u([User]) -- 1️⃣ build --> Configuration
+  JSONObject -- 2️⃣ load JSON --> url["http://time.jsontest.com"]
+  u -- 3️⃣ get...(jsonpath) --> Configuration
+```
 
 ````java
 Configuration<JSONObject> config = Configuration.<JSONObject>builder()
