@@ -71,6 +71,7 @@
         <module>confectory-datamapper-jackson2-toml</module>
         <module>confectory-datamapper-json-org</module>
         <module>confectory-datamapper-gson</module>
+        <module>confectory-datamapper-saxon12</module>
         <module>confectory-datamapper-snakeyaml</module>
     </modules>
 
