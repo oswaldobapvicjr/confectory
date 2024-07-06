@@ -20,6 +20,13 @@ import net.sf.saxon.s9api.Processor;
 import net.sf.saxon.s9api.UnprefixedElementMatchingPolicy;
 import net.sf.saxon.s9api.XPathCompiler;
 
+/**
+ * Holds a global {@link Processor} and common methods for use in operations involving the
+ * Saxon-HE XML provider.
+ *
+ * @author oswaldo.bapvic.jr
+ * @since 2.6.0
+ */
 public class SaxonProvider
 {
     private static final Processor PROCESSOR = new Processor(false);
@@ -29,6 +36,11 @@ public class SaxonProvider
         throw new IllegalStateException("Instantiation not allowed");
     }
 
+    /**
+     * Return the global {@link Process} for working with Saxon-HE operations.
+     *
+     * @return the {@link Processor}
+     */
     public static Processor getProcessor()
     {
         return PROCESSOR;

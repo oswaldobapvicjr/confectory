@@ -275,7 +275,7 @@ public abstract class AbstractConfigurationHelper<T> implements ConfigurationHel
     }
 
     /**
-     * Returns the value associated with the specified path expression in the XML document in
+     * Returns the value associated with the specified path expression in the object in
      * context, provided that the expression returns a single element that can be mapped to
      * the specified class type.
      * <p>
