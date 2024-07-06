@@ -116,7 +116,7 @@ Confectory was designed to work with the lowest-possible number of transitive de
 | [**confectory-datamapper-jackson2-toml**](https://maven-badges.herokuapp.com/maven-central/net.obvj/confectory-datamapper-jackson2-toml) | Jackson 2         |            |         | &#9745; |         | &#9745; |
 | [**confectory-datamapper-jackson2-xml**](https://maven-badges.herokuapp.com/maven-central/net.obvj/confectory-datamapper-jackson2-xml)   | Jackson 2         |            | &#9745; | &#9745; |         |         |
 | [**confectory-datamapper-jackson2-yaml**](https://maven-badges.herokuapp.com/maven-central/net.obvj/confectory-datamapper-jackson2-yaml) | Jackson 2         |            |         | &#9745; | &#9745; |         |
-| [**confectory-datamapper-saxon12**] (https://maven-badges.herokuapp.com/maven-central/net.obvj/confectory-datamapper-saxon12)            | Saxon-HE 12       |            | &#9745; |         |         |         |
+| [**confectory-datamapper-saxon12**](https://maven-badges.herokuapp.com/maven-central/net.obvj/confectory-datamapper-saxon12)             | Saxon-HE 12       |            | &#9745; |         |         |         |
 | [**confectory-datamapper-snakeyaml**](https://maven-badges.herokuapp.com/maven-central/net.obvj/confectory-datamapper-snakeyaml)         | SnakeYAML         |            |         | &#9745; | &#9745; |         |
 
 
