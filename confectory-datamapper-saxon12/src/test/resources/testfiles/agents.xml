@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<conf>
+    <enabled>true</enabled>
+    <agents>
+        <agent>
+            <class>Agent1</class>
+            <interval>*/2 * * * *</interval>
+        </agent>
+        <agent>
+            <class>Agent2</class>
+            <interval>10s</interval>
+        </agent>
+        <agent>
+            <class>Agent3</class>
+            <interval>1h</interval>
+        </agent>
+    </agents>
+</conf>

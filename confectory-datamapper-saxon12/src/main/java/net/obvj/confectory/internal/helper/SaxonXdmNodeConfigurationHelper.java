@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 obvj.net
+ * Copyright 2024 obvj.net
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,62 +16,46 @@
 
 package net.obvj.confectory.internal.helper;
 
-import java.util.Objects;
-
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
 import net.obvj.confectory.ConfigurationException;
+import net.obvj.confectory.SaxonProvider;
 import net.obvj.confectory.merger.ConfigurationMerger;
 import net.obvj.confectory.util.ParseException;
 import net.obvj.confectory.util.TypeFactory;
-import net.obvj.confectory.util.XMLUtils;
+import net.sf.saxon.s9api.*;
 
 /**
- * A generic Configuration Helper that retrieves data from an XML {@link Document} using
- * XPath.
+ * A specialized Configuration Helper that retrieves data from Saxon-HE's
+ * {@link XdmNode}, with XPath capabilities.
  *
  * @author oswaldo.bapvic.jr (Oswaldo Junior)
- * @since 2.4.0
+ * @since 2.6.0
  */
-public class DocumentConfigurationHelper extends AbstractConfigurationHelper<Document> implements ConfigurationHelper<Document>
+public class SaxonXdmNodeConfigurationHelper extends AbstractConfigurationHelper<XdmNode> implements ConfigurationHelper<XdmNode>
 {
 
-    protected final Document document;
+    private final XdmNode document;
+    private final XPathCompiler compiler = SaxonProvider.newXPathCompiler();
 
     /**
-     * Creates a new helper for the given XML {@link Document}.
+     * Creates a new helper for the given {@link XdmNode}.
      *
-     * @param document the JSON document to set
+     * @param document the {@link XdmNode} to set
      */
-    public DocumentConfigurationHelper(Document document)
+    public SaxonXdmNodeConfigurationHelper(XdmNode document)
     {
         this.document = document;
     }
 
-    /**
-     * @return the XML {@link Document} in context
-     */
     @Override
-    public Document getBean()
+    public XdmNode getBean()
     {
         return document;
     }
 
-    /**
-     * @return the XML {@link Document} in context, transformed/encoded as string
-     * @since 2.5.0
-     */
     @Override
     public String getAsString()
     {
-        return XMLUtils.toString(document);
+        return document.toString();
     }
 
     /**
@@ -100,8 +84,8 @@ public class DocumentConfigurationHelper extends AbstractConfigurationHelper<Doc
     @Override
     protected <T> T getValue(String xpath, Class<T> targetType, boolean mandatory)
     {
-        NodeList result = get(xpath).getNodeList();
-        switch (result.getLength())
+        XdmValue result = get(xpath);
+        switch (result.size())
         {
         case 0:
             if (mandatory)
@@ -112,8 +96,9 @@ public class DocumentConfigurationHelper extends AbstractConfigurationHelper<Doc
         case 1:
             try
             {
-                Node node = result.item(0);
-                return TypeFactory.parse(targetType, node.getTextContent());
+                XdmItem item = result.itemAt(0);
+
+                return TypeFactory.parse(targetType, item.getStringValue());
             }
             catch (ParseException parseException)
             {
@@ -126,77 +111,24 @@ public class DocumentConfigurationHelper extends AbstractConfigurationHelper<Doc
         }
     }
 
-    /**
-     * Returns the {@link NodeList} object associated with the specified @{code XPath} in the
-     * XML document in context.
-     *
-     * @param xpath the {@code XPath} expression to read
-     *
-     * @return the {@link NodeList} object associated with the specified {@code XPath}
-     *
-     * @throws NullPointerException   if the {@code XPath} expression is null
-     * @throws ConfigurationException if the {@code XPath} expression is not valid
-     */
     @Override
-    public NodeListHolder get(String xpath)
-    {
-        try
-        {
-            NodeList nodeList = (NodeList) compileXPath(xpath).evaluate(document, XPathConstants.NODESET);
-            return new NodeListHolder(nodeList);
-        }
-        catch (XPathExpressionException exception)
-        {
-            throw new ConfigurationException(exception);
-        }
-    }
-
-    /**
-     * Compiles the given XPath expression.
-     *
-     * @param expression the XPath expression to be compiled
-     * @return an {@code XPathExpression} object that can be used for further evaluation
-     * @throws XPathExpressionException if the expression cannot be compiled
-     */
-    public static XPathExpression compileXPath(String expression) throws XPathExpressionException
-    {
-        return XPathFactory.newInstance().newXPath().compile(expression);
-    }
-
-    @Override
-    public ConfigurationMerger<Document> configurationMerger()
+    public ConfigurationMerger<XdmNode> configurationMerger()
     {
         throw new UnsupportedOperationException("Merge not supported for XML");
     }
 
-    /**
-     * This holds a {@link NodeList} and provides a better way to display it as string.
-     *
-     * @since 2.5.0
-     */
-    static class NodeListHolder
+    @Override
+    public XdmValue get(String xpath)
     {
-        private final NodeList nodeList;
-
-        NodeListHolder(final NodeList nodeList)
+        try
         {
-            this.nodeList = Objects.requireNonNull(nodeList, "The node list is null");
+            XPathSelector selector = compiler.compile(xpath).load();
+            selector.setContextItem(document);
+            return selector.evaluate();
         }
-
-        /**
-         * @return the XML node list
-         */
-        public NodeList getNodeList()
+        catch (SaxonApiException e)
         {
-            return nodeList;
+            throw new ConfigurationException(e);
         }
-
-        @Override
-        public String toString()
-        {
-            return XMLUtils.toString(nodeList);
-        }
-
     }
-
 }
