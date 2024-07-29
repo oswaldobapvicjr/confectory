@@ -50,20 +50,17 @@ flowchart TD
 ```mermaid
 flowchart LR
   subgraph Configuration
-    direction TB
-    subgraph Properties
-        direction RL
-    end
+    direction LR
+    object["☕ Properties"]
   end
-  u([User]) -- 1️⃣ build --> Configuration
-  Properties -- 2️⃣ load --> my-application.properties
+  u(["User"]) -- 1️⃣ build --> Configuration
+  object -- 2️⃣ load --> file["📄 application.properties"]
   u -- 3️⃣ get...(key) --> Configuration
 ```
 
 ````java
-Configuration<Properties> config = Configuration.<Properties>builder()
-        .source("classpath://myapplication.properties")
-        .mapper(new PropertiesMapper())
+Configuration config = Configuration.builder()
+        .source("classpath://application.properties")
         .build();
 ````
 
@@ -78,13 +75,11 @@ System.out.println(config.getBoolean("web.enable"));
 ```mermaid
 flowchart LR
   subgraph Configuration
-    direction TB
-    subgraph JSONObject
-        direction RL
-    end
+    direction LR
+    object["⭕ JSONObject"]
   end
-  u([User]) -- 1️⃣ build --> Configuration
-  JSONObject -- 2️⃣ load JSON --> url["http://time.jsontest.com"]
+  u(["User"]) -- 1️⃣ build --> Configuration
+  object -- 2️⃣ load --> file["🌍 http://time.jsontest.com"]
   u -- 3️⃣ get...(jsonpath) --> Configuration
 ```
 
@@ -105,7 +100,7 @@ System.out.println(config.getString("$.time"));
 
 ## How to include it
 
-Confectory was designed to work with the lowest-possible number of transitive dependencies. So, we offer separate modules that can be selected according to the client needs, optimizing your application:
+Confectory was designed to work with the lowest possible number of transitive dependencies. So, we offer separate modules that can be selected according to the client's needs, optimizing your application:
 
 | Module                                                                                                                                   | Providers         | Properties | XML     | JSON    | YAML    | TOML    |
 |------------------------------------------------------------------------------------------------------------------------------------------|-------------------|:----------:|:-------:|:-------:|:-------:|:-------:|
