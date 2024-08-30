@@ -30,7 +30,7 @@
     </description>
 
     <properties>
-        <commons-lang.version>3.14.0</commons-lang.version>
+        <commons-lang.version>3.15.0</commons-lang.version>
         <commons-text.version>1.12.0</commons-text.version>
         <commons-io.version>2.16.1</commons-io.version>
         <jsonmerge.version>1.2.3</jsonmerge.version>
