@@ -30,7 +30,7 @@
     </description>
 
     <properties>
-        <snakeyaml.version>2.2</snakeyaml.version>
+        <snakeyaml.version>2.3</snakeyaml.version>
     </properties>
 
     <dependencies>
