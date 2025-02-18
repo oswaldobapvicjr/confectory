@@ -79,7 +79,7 @@ flowchart LR
     object["⭕ JSONObject"]
   end
   u(["User"]) -- 1️⃣ build --> Configuration
-  object -- 2️⃣ load --> file["🌍 http://time.jsontest.com"]
+  object -- 2️⃣ load --> file["🌍 URL(time.jsontest.com)"]
   u -- 3️⃣ get...(jsonpath) --> Configuration
 ```
 
