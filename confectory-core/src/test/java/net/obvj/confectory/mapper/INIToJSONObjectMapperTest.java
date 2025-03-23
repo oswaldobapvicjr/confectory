@@ -62,9 +62,9 @@ class INIToJSONObjectMapperTest
 
     private static final String INVALID_INI_3  = "=value\n";
 
-    private static final String INVALID_INI_4  = "invalid line\n";
+    private static final String INVALID_INI_4  = "invalid_line\n";
 
-    private static final String VALID_INI_2    = "empty value = \n"; // this is OK
+    private static final String VALID_INI_2    = "empty_value = \n"; // this is OK
 
     private Mapper<JSONObject> mapper = new INIToJSONObjectMapper();
 
@@ -87,7 +87,7 @@ class INIToJSONObjectMapperTest
     }
 
     @Test
-    void apply_validIni_validJSONObject() throws IOException
+    void apply_validIni_validJSONObject()
     {
         JSONObject result = testWithString(VALID_INI_1);
         assertThat(result.size(), equalTo(3));
@@ -107,39 +107,39 @@ class INIToJSONObjectMapperTest
     }
 
     @Test
-    void apply_validIni2_validJSONObject() throws IOException
+    void apply_validIni2_validJSONObject()
     {
         JSONObject result = testWithString(VALID_INI_2);
         assertThat(result.size(), equalTo(1));
-        assertThat(result.get("empty value"), equalTo(""));
+        assertThat(result.get("empty_value"), equalTo(""));
     }
 
     @Test
-    void apply_missingTokenInSectionDeclaration_exception() throws IOException
+    void apply_missingTokenInSectionDeclaration_exception()
     {
         assertThat(() -> testWithString(INVALID_INI_1), throwsException(ConfigurationSourceException.class)
                 .withMessage(equalTo("Malformed INI: expected token ']' at line 2: \"[section1\"")));
     }
 
     @Test
-    void apply_sectionDeclarationNoName_exception() throws IOException
+    void apply_sectionDeclarationNoName_exception()
     {
         assertThat(() -> testWithString(INVALID_INI_2), throwsException(ConfigurationSourceException.class)
                 .withMessage(equalTo("Malformed INI: expected section name at line 2: \"[]\"")));
     }
 
     @Test
-    void apply_valueWithoutProperty_exception() throws IOException
+    void apply_valueWithoutProperty_exception()
     {
         assertThat(() -> testWithString(INVALID_INI_3), throwsException(ConfigurationSourceException.class)
                 .withMessage(equalTo("Malformed INI: expected property key at line 1: \"=value\"")));
     }
 
     @Test
-    void apply_invalidLine_exception() throws IOException
+    void apply_invalidLine_exception()
     {
         assertThat(() -> testWithString(INVALID_INI_4), throwsException(ConfigurationSourceException.class)
-                .withMessage(equalTo("Malformed INI: expected property at line 1: \"invalid line\"")));
+                .withMessage(equalTo("Malformed INI: expected property at line 1: \"invalid_line\"")));
     }
 
     @Test

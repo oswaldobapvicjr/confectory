@@ -34,6 +34,7 @@ import net.obvj.confectory.ConfigurationSourceException;
  */
 public abstract class AbstractINIMapper<T> implements Mapper<T>
 {
+
     /**
      * An object that holds context variables for each mapping operation, with the purpose to
      * secure thread-safety for this mapper.
@@ -50,7 +51,7 @@ public abstract class AbstractINIMapper<T> implements Mapper<T>
     private static final char TOKEN_COMMENT_START_ALT = '#';
     private static final char TOKEN_SECTION_NAME_START = '[';
     private static final char TOKEN_SECTION_NAME_END = ']';
-    private static final String TOKEN_KEY_VALUE_DELIMITER = "=";
+    private static final String REGEX_KEY_VALUE_SEPARATOR = "[=\\s]+";
     private static final String MSG_MALFORMED_INI = "Malformed INI: expected %s at line %s: \"%s\"";
     private static final String ARG_SECTION_NAME = "section name";
     private static final String ARG_PROPERTY_KEY = "property key";
@@ -101,19 +102,13 @@ public abstract class AbstractINIMapper<T> implements Mapper<T>
                     put(out, context.currentSectionName, currentSection);
                 }
             }
-            else if (isPropertyLine(context.currentLine))
+            else
             {
                 if (!skipSection)
                 {
-                    context.currentKey = parseKey(context);
-                    Object value = parseValue(context);
-                    put(currentSection, context.currentKey, value);
+                    parseProperty(context, currentSection);
                 }
                 // Do not process any property until the next section declaration
-            }
-            else
-            {
-                throw malformedIniException(context, ARG_PROPERTY);
             }
 
             context.currentLine = reader.readLine();
@@ -162,38 +157,21 @@ public abstract class AbstractINIMapper<T> implements Mapper<T>
         return name;
     }
 
-    /**
-     * @return true if the current line contains the {@link #TOKEN_KEY_VALUE_DELIMITER}
-     */
-    private static final boolean isPropertyLine(String line)
+    private void parseProperty(Context context, Object currentSection)
     {
-        return line.contains(TOKEN_KEY_VALUE_DELIMITER);
-    }
-
-    /**
-     * @param context the {@link Context}
-     * @return the key part of the current line, provided that it's a property line
-     */
-    private static final String parseKey(Context context)
-    {
-        int endIndex = context.currentLine.indexOf(TOKEN_KEY_VALUE_DELIMITER);
-        String key = context.currentLine.substring(0, endIndex).trim();
-        if (key.isEmpty())
+        // Split by equals sign or blank characters
+        String[] parts = context.currentLine.trim().split(REGEX_KEY_VALUE_SEPARATOR, 2);
+        context.currentKey = parts[0];
+        if (context.currentKey.isEmpty())
         {
             throw malformedIniException(context, ARG_PROPERTY_KEY);
         }
-        return key;
-    }
-
-    /**
-     * @param context the {@link Context}
-     * @return the value part of the current line, provided that it's a propertly line
-     */
-    private final Object parseValue(Context context)
-    {
-        int beginIndex = context.currentLine.indexOf(TOKEN_KEY_VALUE_DELIMITER) + 1;
-        String value = context.currentLine.substring(beginIndex).trim();
-        return parseValue(context, value);
+        if (parts.length < 2)
+        {
+            throw malformedIniException(context, ARG_PROPERTY);
+        }
+        String value = parts[1];
+        put(currentSection, context.currentKey, parseValue(context, value));
     }
 
     /**
