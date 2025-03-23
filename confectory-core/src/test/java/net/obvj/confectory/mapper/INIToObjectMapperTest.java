@@ -80,7 +80,7 @@ class INIToObjectMapperTest
 
     private static final String INVALID_INI_3 = "=value\n";
 
-    private static final String INVALID_INI_4 = "invalid line\n";
+    private static final String INVALID_INI_4 = "invalid_line\n";
 
     private static final String INVALID_INI_5  = ";Test with invalid type\n"
                                                + "number = abc\n"; // exception
@@ -102,6 +102,20 @@ class INIToObjectMapperTest
                                               + "section_string = mySection2Value\n"
                                               + "section_number = 2\n"
                                               + "section_bool = true\n";
+
+    private static final String VALID_INI_2_S = ";ALternative style: key-value pairs separated by space\n"
+                                              + "rootProperty   myRootValue\n"
+                                              + "\n"
+                                              + "[section3]\n" // Unmapped, the children properties shall be skipped
+                                              + "# Alternative comment\n"
+                                              + "section_string mySection1Value\n"
+                                              + "section_number 1\n"
+                                              + "section_bool   false\n"
+                                              + "\n"
+                                              + "[section2]\n"
+                                              + "section_string mySection2Value\n"
+                                              + "section_number 2\n"
+                                              + "section_bool   true\n";
 
     private static final LocalDate DATE = LocalDate.of(2023, 5, 15);
     private static final String VALID_INI_DATE = "my_date = 2023-05-15\n";
@@ -190,7 +204,7 @@ class INIToObjectMapperTest
     }
 
     @Test
-    void apply_validIniAndObjectFactoryClassic_validObject() throws IOException
+    void apply_validIniAndObjectFactoryClassic_validObject()
     {
         MyIni result = applyString(mapperClassic, VALID_INI_1);
         assertThat(result.getRootProperty(), is(equalTo("myRootValue")));
@@ -207,7 +221,7 @@ class INIToObjectMapperTest
     }
 
     @Test
-    void apply_validIniAndObjectFactoryUnsafe_validObject() throws IOException
+    void apply_validIniAndObjectFactoryUnsafe_validObject()
     {
         MyIni result = applyString(mapperFast, VALID_INI_1);
         assertThat(result.getRootProperty(), is(equalTo("myRootValue")));
@@ -224,7 +238,7 @@ class INIToObjectMapperTest
     }
 
     @Test
-    void apply_missingTokenInSectionDeclaration_exception() throws IOException
+    void apply_missingTokenInSectionDeclaration_exception()
     {
         assertThat(() -> applyString(mapper, INVALID_INI_1),
                 throwsException(ConfigurationSourceException.class)
@@ -232,7 +246,7 @@ class INIToObjectMapperTest
     }
 
     @Test
-    void apply_sectionDeclarationNoName_exception() throws IOException
+    void apply_sectionDeclarationNoName_exception()
     {
         assertThat(() -> applyString(mapper, INVALID_INI_2),
                 throwsException(ConfigurationSourceException.class)
@@ -240,7 +254,7 @@ class INIToObjectMapperTest
     }
 
     @Test
-    void apply_valueWithoutProperty_exception() throws IOException
+    void apply_valueWithoutProperty_exception()
     {
         assertThat(() -> applyString(mapper, INVALID_INI_3),
                 throwsException(ConfigurationSourceException.class)
@@ -248,15 +262,15 @@ class INIToObjectMapperTest
     }
 
     @Test
-    void apply_invalidLine_exception() throws IOException
+    void apply_invalidLine_exception()
     {
         assertThat(() -> applyString(mapper, INVALID_INI_4),
                 throwsException(ConfigurationSourceException.class)
-                .withMessage(equalTo("Malformed INI: expected property at line 1: \"invalid line\"")));
+                .withMessage(equalTo("Malformed INI: expected property at line 1: \"invalid_line\"")));
     }
 
     @Test
-    void apply_invalidType_exception() throws IOException
+    void apply_invalidType_exception()
     {
         ConfigurationException exception = assertThrows(ConfigurationException.class,
                 () -> applyString(mapper, INVALID_INI_5));
@@ -274,7 +288,7 @@ class INIToObjectMapperTest
     }
 
     @Test
-    void apply_invalidTypeInsideSection_exception() throws IOException
+    void apply_invalidTypeInsideSection_exception()
     {
         ConfigurationException exception = assertThrows(ConfigurationException.class,
                 () -> applyString(mapper, INVALID_INI_6));
@@ -292,9 +306,20 @@ class INIToObjectMapperTest
     }
 
     @Test
-    void apply_sectionNotMapped_sectionSkipped() throws IOException
+    void apply_sectionNotMapped_sectionSkipped()
     {
         MyIni result = applyString(mapper, VALID_INI_2);
+        assertThat(result.getRootProperty(), is(equalTo("myRootValue")));
+        assertThat(result.getSection1(), is(equalTo(null)));
+        assertThat(result.getSection2().getSectionString(), is(equalTo("mySection2Value")));
+        assertThat(result.getSection2().getSectionNumber(), is(equalTo(2)));
+        assertThat(result.getSection2().isSectionBoolean(), is(equalTo(true)));
+    }
+
+    @Test
+    void apply_keyValueSeparatedBySpace()
+    {
+        MyIni result = applyString(mapper, VALID_INI_2_S);
         assertThat(result.getRootProperty(), is(equalTo("myRootValue")));
         assertThat(result.getSection1(), is(equalTo(null)));
         assertThat(result.getSection2().getSectionString(), is(equalTo("mySection2Value")));
