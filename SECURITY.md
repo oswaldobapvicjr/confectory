@@ -4,8 +4,8 @@
 
 | Version | JDK version(s) | Supported          |
 | ------- | -------------- | ------------------ |
-| 2.5.0   | 11, 17, 21     | :white_check_mark: |
-| < 2.5.0 | n/a            | :x:                |
+| 2.6.0   | 11, 17, 21     | :white_check_mark: |
+| < 2.6.0 | n/a            | :x:                |
 
 ## Reporting a Vulnerability
 
