@@ -108,15 +108,6 @@ class ConfigurationBuilderTest
     }
 
     @Test
-    void build_nullMapperAndCouldNotBeInferred_illegalStateException()
-    {
-        ConfigurationBuilder<Object> builder = new ConfigurationBuilder<>()
-                .source(source);
-        assertThat(() -> builder.build(),
-                throwsException(IllegalStateException.class).withMessage("The mapper could not be inferred. Please specify a concrete mapper."));
-    }
-
-    @Test
     void build_nullMapperButCouldBeInferred_dynamicMapperAssignedBasedOnExtension()
     {
         ConfigurationBuilder<Object> builder = new ConfigurationBuilder<>()

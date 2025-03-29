@@ -18,7 +18,6 @@ package net.obvj.confectory.testdrive;
 
 import net.minidev.json.JSONObject;
 import net.obvj.confectory.Configuration;
-import net.obvj.confectory.mapper.INIToJSONObjectMapper;
 
 public class ConfectoryTestDriveINIToJSONObject
 {
@@ -26,7 +25,6 @@ public class ConfectoryTestDriveINIToJSONObject
     {
         Configuration<JSONObject> config = Configuration.<JSONObject>builder()
                 .source("testfiles/my-app.ini")
-                .mapper(new INIToJSONObjectMapper())
                 .build();
 
         System.out.println(config.getBean());

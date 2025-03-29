@@ -19,7 +19,6 @@ package net.obvj.confectory.testdrive;
 import org.w3c.dom.Document;
 
 import net.obvj.confectory.Configuration;
-import net.obvj.confectory.mapper.DocumentMapper;
 import net.obvj.confectory.source.SourceFactory;
 
 public class ConfectoryTestDriveXmlDocumentXPath
@@ -45,7 +44,6 @@ public class ConfectoryTestDriveXmlDocumentXPath
 
         Configuration<Document> config = Configuration.<Document>builder()
                 .source(SourceFactory.stringSource(xml))
-                .mapper(new DocumentMapper())
                 .build();
 
         System.out.println(config.getAsString());
