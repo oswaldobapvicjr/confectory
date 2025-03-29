@@ -1,4 +1,5 @@
 /*
+
  * Copyright 2021 obvj.net
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -283,9 +284,13 @@ public class ConfigurationBuilder<T> implements ConfigurationMetadataRetriever<T
             String extension = substringAfterLast(path, ".");
             if (isEmpty(extension))
             {
-                throw new IllegalStateException("The mapper could not be inferred. Please specify a concrete mapper.");
+                // If not able to infer by extension, let it be inferred during read time.
+                mapper = (Mapper<T>) new DynamicMapper();
             }
-            mapper = (Mapper<T>) new DynamicMapper(extension);
+            else
+            {
+                mapper = (Mapper<T>) new DynamicMapper(extension);
+            }
         }
     }
 
