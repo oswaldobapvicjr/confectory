@@ -119,8 +119,16 @@ Confectory was designed to work with the lowest possible number of transitive de
 
 If you want to contribute to the **Confectory** project, check the [issues](http://obvj.net/confectory/issues) page, or write an e-mail to [oswaldo@obvj.net](mailto:oswaldo@obvj.net).
 
-**Confectory** uses [GitHub Actions](https://docs.github.com/actions) for CI/CD.
+Thanks to all the people who have already contributed!
+
+<a href="https://github.com/oswaldobapvicjr/confectory/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=oswaldobapvicjr/confectory" />
+</a>
+
+<sup>Made with [contrib.rocks](https://contrib.rocks)</sup>
 
 ---
+
+**Confectory** uses [GitHub Actions](https://docs.github.com/actions) for CI/CD.
 
 The Confectory logo and the file-factory animation were created with [Inkscape](http://www.inkscape.org) and [Natron](https://natrongithub.github.io), both **free and open-source** Software tools.
