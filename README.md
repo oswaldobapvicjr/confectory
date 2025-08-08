@@ -1,5 +1,6 @@
 ![confectory-logo](resources/confectory-logo.svg)
 
+[![Java 11+](https://img.shields.io/badge/Java-11%2B-blue.svg)](https://openjdk.java.net/)
 [![Contributors](https://img.shields.io/github/contributors-anon/oswaldobapvicjr/confectory)](https://github.com/oswaldobapvicjr/confectory/graphs/contributors)
 [![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/oswaldobapvicjr/confectory/maven.yml?branch=master)](https://github.com/oswaldobapvicjr/confectory/actions/workflows/maven.yml)
 [![Coverage](https://img.shields.io/codecov/c/github/oswaldobapvicjr/confectory)](https://codecov.io/gh/oswaldobapvicjr/confectory)
