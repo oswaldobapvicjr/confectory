@@ -18,14 +18,14 @@ package net.obvj.confectory.internal.helper;
 
 import java.util.Objects;
 
-import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathEvaluationResult;
+import javax.xml.xpath.XPathEvaluationResult.XPathResultType;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
+import javax.xml.xpath.XPathNodes;
 
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import net.obvj.confectory.ConfigurationException;
 import net.obvj.confectory.merger.ConfigurationMerger;
@@ -48,7 +48,7 @@ public class DocumentConfigurationHelper extends AbstractConfigurationHelper<Doc
     /**
      * Creates a new helper for the given XML {@link Document}.
      *
-     * @param document the JSON document to set
+     * @param document the XML document to set
      */
     public DocumentConfigurationHelper(Document document)
     {
@@ -82,6 +82,12 @@ public class DocumentConfigurationHelper extends AbstractConfigurationHelper<Doc
      * If no value is found for the given expression and the {@code mandatory} flag is
      * {@code true}, an exception will be thrown; if the flag is not set, then the method
      * returns {@code null}.
+     * <p>
+     * <strong>Note:</strong> An expression that does not return a node set, such as
+     * {@code number(...)}, {@code count(...)}, {@code string(...)} or {@code boolean(...)},
+     * always produces a single value, so the {@code mandatory} flag has no effect on it. For
+     * example, {@code count(/unknown)} evaluates to zero and {@code boolean(/unknown)}
+     * evaluates to {@code false}.
      *
      * @param xpath      the {@code XPath} expression to evaluate
      * @param targetType the type the evaluation result should be converted to
@@ -100,8 +106,15 @@ public class DocumentConfigurationHelper extends AbstractConfigurationHelper<Doc
     @Override
     protected <T> T getValue(String xpath, Class<T> targetType, boolean mandatory)
     {
-        NodeList result = get(xpath).getNodeList();
-        switch (result.getLength())
+        XPathEvaluationResult<?> result = evaluate(xpath, XPathEvaluationResult.class);
+        if (result.type() != XPathResultType.NODESET)
+        {
+            // Expressions such as number(...) or count(...) produce a single, atomic value:
+            // let the engine apply the XPath string conversion rules on it
+            return parse(xpath, targetType, evaluate(xpath, String.class));
+        }
+        XPathNodes nodes = (XPathNodes) result.value();
+        switch (nodes.size())
         {
         case 0:
             if (mandatory)
@@ -110,45 +123,35 @@ public class DocumentConfigurationHelper extends AbstractConfigurationHelper<Doc
             }
             return null;
         case 1:
-            try
-            {
-                Node node = result.item(0);
-                return TypeFactory.parse(targetType, node.getTextContent());
-            }
-            catch (ParseException parseException)
-            {
-                throw new ConfigurationException(parseException,
-                        "The path %s was found but the object can not be converted into %s",
-                        xpath, targetType);
-            }
+            return parse(xpath, targetType, nodes.iterator().next().getTextContent());
         default:
             throw new ConfigurationException("Multiple values found for path: %s", xpath);
         }
     }
 
     /**
-     * Returns the {@link NodeList} object associated with the specified @{code XPath} in the
-     * XML document in context.
+     * Returns the object associated with the specified {@code XPath} expression in the XML
+     * document in context.
+     * <p>
+     * <b>Note:</b> The actual return type may vary depending on the expression: one that
+     * selects nodes produces an object holding those nodes, whereas the expressions
+     * {@code number(...)}, {@code string(...)} and {@code boolean(...)} produce a
+     * {@link Double}, a {@link String}, and a {@link Boolean}, respectively.
      *
      * @param xpath the {@code XPath} expression to read
      *
-     * @return the {@link NodeList} object associated with the specified {@code XPath}
+     * @return the object associated with the specified {@code XPath}
      *
      * @throws NullPointerException   if the {@code XPath} expression is null
      * @throws ConfigurationException if the {@code XPath} expression is not valid
      */
     @Override
-    public NodeListHolder get(String xpath)
+    public Object get(String xpath)
     {
-        try
-        {
-            NodeList nodeList = (NodeList) compileXPath(xpath).evaluate(document, XPathConstants.NODESET);
-            return new NodeListHolder(nodeList);
-        }
-        catch (XPathExpressionException exception)
-        {
-            throw new ConfigurationException(exception);
-        }
+        XPathEvaluationResult<?> result = evaluate(xpath, XPathEvaluationResult.class);
+        return result.type() == XPathResultType.NODESET
+                ? new NodeListHolder((XPathNodes) result.value())
+                : result.value();
     }
 
     /**
@@ -170,31 +173,73 @@ public class DocumentConfigurationHelper extends AbstractConfigurationHelper<Doc
     }
 
     /**
-     * This holds a {@link NodeList} and provides a better way to display it as string.
+     * Evaluates the specified {@code XPath} expression on the XML document in context.
+     *
+     * @param xpath      the {@code XPath} expression to evaluate
+     * @param resultType one of the types accepted by
+     *                   {@link XPathExpression#evaluateExpression(Object, Class)}; in
+     *                   particular, {@code XPathEvaluationResult.class} preserves the result
+     *                   type defined by the expression itself
+     *
+     * @return the evaluation result, converted to the specified {@code resultType}
+     * @throws ConfigurationException if the {@code XPath} expression is not valid
+     */
+    private <T> T evaluate(String xpath, Class<T> resultType)
+    {
+        try
+        {
+            return compileXPath(xpath).evaluateExpression(document, resultType);
+        }
+        catch (XPathExpressionException exception)
+        {
+            throw new ConfigurationException(exception);
+        }
+    }
+
+    /**
+     * Converts the specified value into the specified type.
+     *
+     * @param xpath      the {@code XPath} expression that produced the value, for reporting
+     *                   purposes
+     * @param targetType the type the value should be converted to
+     * @param value      the value to be converted
+     *
+     * @return the value converted into the specified {@code targetType}
+     * @throws ConfigurationException if the value can not be converted
+     */
+    private <T> T parse(String xpath, Class<T> targetType, String value)
+    {
+        try
+        {
+            return TypeFactory.parse(targetType, value);
+        }
+        catch (ParseException parseException)
+        {
+            throw new ConfigurationException(parseException,
+                    "The path %s was found but the object can not be converted into %s",
+                    xpath, targetType);
+        }
+    }
+
+    /**
+     * This holds the nodes selected by an {@code XPath} expression and provides a better way
+     * to display them as string.
      *
      * @since 2.5.0
      */
     static class NodeListHolder
     {
-        private final NodeList nodeList;
+        private final XPathNodes nodes;
 
-        NodeListHolder(final NodeList nodeList)
+        NodeListHolder(final XPathNodes nodes)
         {
-            this.nodeList = Objects.requireNonNull(nodeList, "The node list is null");
-        }
-
-        /**
-         * @return the XML node list
-         */
-        public NodeList getNodeList()
-        {
-            return nodeList;
+            this.nodes = Objects.requireNonNull(nodes, "The node list is null");
         }
 
         @Override
         public String toString()
         {
-            return XMLUtils.toString(nodeList);
+            return XMLUtils.toString(nodes);
         }
 
     }
