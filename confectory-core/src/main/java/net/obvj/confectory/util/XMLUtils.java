@@ -19,6 +19,7 @@ package net.obvj.confectory.util;
 import java.io.StringWriter;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.StreamSupport;
 
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -95,6 +96,21 @@ public class XMLUtils
     {
         return IntStream.range(0, nodeList.getLength())
                 .mapToObj(nodeList::item)
+                .map(XMLUtils::toString)
+                .collect(Collectors.joining("\n"));
+    }
+
+    /**
+     * Returns a string representation of the specified XML nodes.
+     *
+     * @param nodes the nodes to be converted
+     * @return the nodes as string
+     * @throws ConfigurationException if unable to convert a document node into string
+     * @since 2.6.1
+     */
+    public static String toString(Iterable<Node> nodes)
+    {
+        return StreamSupport.stream(nodes.spliterator(), false)
                 .map(XMLUtils::toString)
                 .collect(Collectors.joining("\n"));
     }

@@ -318,6 +318,65 @@ class DocumentConfigurationHelperTest
     }
 
     @Test
+    void getInteger_numberFunction_success()
+    {
+        assertThat(HELPER.getInteger("number(/bookstore/book[1]/year)"), equalTo(2005));
+    }
+
+    @Test
+    void getInteger_countFunction_success()
+    {
+        assertThat(HELPER.getInteger("count(/bookstore/book)"), equalTo(4));
+    }
+
+    @Test
+    void getMandatoryInteger_countFunctionPathNotFound_zero()
+    {
+        assertThat(HELPER.getMandatoryInteger("count(" + PATH_UNKNOWN + ")"), equalTo(0));
+    }
+
+    @Test
+    void getInteger_notANumberFunction_exception()
+    {
+        assertThat(() -> HELPER.getInteger("number(/bookstore/book[1]/title)"),
+                throwsException(ConfigurationException.class)
+                        .withMessageContaining(
+                                "was found but the object can not be converted into class java.lang.Integer")
+                        .withCause(ParseException.class));
+    }
+
+    @Test
+    void getDouble_numberFunction_success()
+    {
+        assertThat(HELPER.getDouble("number(/bookstore/book[2]/price)"), equalTo(29.99));
+    }
+
+    @Test
+    void getString_stringFunction_success()
+    {
+        assertThat(HELPER.getString("string(/bookstore/book[1]/title)"),
+                equalTo("Everyday Italian"));
+    }
+
+    @Test
+    void getString_stringFunctionPathNotFound_emptyString()
+    {
+        assertThat(HELPER.getString("string(" + PATH_UNKNOWN + ")"), equalTo(""));
+    }
+
+    @Test
+    void getBoolean_booleanFunction_success()
+    {
+        assertThat(HELPER.getBoolean("boolean(/bookstore/book)"), equalTo(true));
+    }
+
+    @Test
+    void getBoolean_booleanFunctionPathNotFound_false()
+    {
+        assertThat(HELPER.getBoolean("boolean(" + PATH_UNKNOWN + ")"), equalTo(false));
+    }
+
+    @Test
     void get_pathPointsToSinlgeElementNode_success()
     {
         String expectedElementAsString = "<book category=\"cooking\">\n"
@@ -365,5 +424,23 @@ class DocumentConfigurationHelperTest
         assertThat(elementsAsStringLines, equalTo(expectedElementsAsStringLines));
     }
 
+    @Test
+    void get_numberFunction_number()
+    {
+        assertThat(HELPER.get("count(/bookstore/book)"), equalTo((Object) 4.0));
+    }
+
+    @Test
+    void get_stringFunction_string()
+    {
+        assertThat(HELPER.get("string(/bookstore/book[1]/title)"),
+                equalTo((Object) "Everyday Italian"));
+    }
+
+    @Test
+    void get_booleanFunction_boolean()
+    {
+        assertThat(HELPER.get("boolean(/bookstore/book)"), equalTo((Object) true));
+    }
 
 }

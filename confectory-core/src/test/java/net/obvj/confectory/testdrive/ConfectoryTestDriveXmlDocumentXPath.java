@@ -58,6 +58,10 @@ public class ConfectoryTestDriveXmlDocumentXPath
         System.out.println(config.getString("//company[last()-1]"));
         System.out.println(config.getString("//company[@id=8]"));
         System.out.println(config.getInteger("//company[1]/@id"));
+        System.out.println(config.getInteger("number(//employee[last()]/@id)"));
+        System.out.println(config.getInteger("count(//employee)"));
+        System.out.println(config.getString("string(//employee[1])"));
+        System.out.println(config.getBoolean("boolean(//employee[@id=1])"));
 
     }
 }

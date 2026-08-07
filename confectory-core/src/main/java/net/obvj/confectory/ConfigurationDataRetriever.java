@@ -53,6 +53,8 @@ public interface ConfigurationDataRetriever<T>
      * <ul>
      * <li>The actual return type may vary depending on the underlying implementation</li>
      * <li>On a JSON implementation, the return will usually be an array</li>
+     * <li>On an XML implementation, the return will vary depending on the result type of the
+     * {@code XPath} expression: nodes, number, string, or boolean</li>
      * </ul>
      *
      * @param key the object key (some implementations may also accept a path expression, e.g:
