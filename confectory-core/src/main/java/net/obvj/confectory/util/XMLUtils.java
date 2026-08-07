@@ -106,7 +106,7 @@ public class XMLUtils
      * @param nodes the nodes to be converted
      * @return the nodes as string
      * @throws ConfigurationException if unable to convert a document node into string
-     * @since 2.6.1
+     * @since 2.7.0
      */
     public static String toString(Iterable<Node> nodes)
     {
