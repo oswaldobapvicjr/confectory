@@ -19,6 +19,7 @@ package net.obvj.confectory.source;
 import java.io.FileNotFoundException;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -101,7 +102,7 @@ public class DynamicSource<T> extends AbstractSource<T> implements Source<T>
             String pathPart = extractPath(path, CLASSPATH_PREFIX);
             return SourceFactory.classpathFileSource(pathPart);
         }
-        if (StringUtils.startsWithAny(path, FILE_PREFIX, HTTP_PREFIX))
+        if (Strings.CS.startsWithAny(path, FILE_PREFIX, HTTP_PREFIX))
         {
             return SourceFactory.urlSource(path);
         }
