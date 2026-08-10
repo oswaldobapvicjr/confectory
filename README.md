@@ -15,11 +15,12 @@ The modular, multi-format configuration framework for Java applications.
 
 ## Overview
 
-**Confectory** is a modular framework designed to hide the complexity of handling multiple configuration files for Java applications in general, providing a **reliable** and **fast** API for parsing data from different **sources** (file or URL) in a variety of formats, and allowing data access using a **unified query language**.
+**Confectory** is a modular framework designed to hide the complexity of handling multiple configuration files for Java applications in general, providing a **reliable** and **fast** API for parsing data from different **sources** (file or URL) in a variety of formats, and allowing simplified data access using **standard query languages**.
 
 ````mermaid
 flowchart TD
-    User(["User"]) -->|"property"| c((("`**confectory**`"))):::larger
+    User@{ shape: stadium, label: ["👤\nUser"]}
+    User -->|"property"| c("`**confectory**`"):::larger
     User -->|"xpath"| c
     User -->|"jsonpath"| c
 
@@ -31,8 +32,8 @@ flowchart TD
     c-->toml("TOML"):::expanded
 
     classDef larger font-size:18pt
-    classDef condensed letter-spacing:-0.8px
-    classDef expanded letter-spacing:1.2px
+    classDef condensed letter-spacing:-0.9px
+    classDef expanded letter-spacing:1.3px
 ````
 
 ## Features
@@ -54,9 +55,9 @@ flowchart LR
     direction LR
     object["☕ Properties"]
   end
-  u(["User"]) -- 1️⃣ build --> Configuration
-  object -- 2️⃣ load --> file["📄 application.properties"]
-  u -- 3️⃣ get...(key) --> Configuration
+  u@{ shape: text, label: ["👤\nUser"]} -- 1️⃣ build --> Configuration
+  object -- 2️⃣ load -->  file@{ shape: doc, label: "📄 application.properties"}
+  u -- 3️⃣ get(key) --> Configuration
 ```
 
 ````java
@@ -79,9 +80,9 @@ flowchart LR
     direction LR
     object["⭕ JSONObject"]
   end
-  u(["User"]) -- 1️⃣ build --> Configuration
-  object -- 2️⃣ load --> file["🌍 URL(time.jsontest.com)"]
-  u -- 3️⃣ get...(jsonpath) --> Configuration
+  u@{ shape: text, label: ["👤\nUser"]} -- 1️⃣ build --> Configuration
+  object -- 2️⃣ load --> file@{ shape: cloud, label: "🌍 time.jsontest.com"}
+  u -- 3️⃣ get(jsonpath) --> Configuration
 ```
 
 ````java
