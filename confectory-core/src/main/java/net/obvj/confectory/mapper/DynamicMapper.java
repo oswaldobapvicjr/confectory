@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -126,7 +127,7 @@ public final class DynamicMapper extends AbstractBeanMapper<Object> implements M
 
             String content = new String(buffer, 0, bytesRead).trim();
 
-            if (StringUtils.startsWithAny(content, "<?xml", "<"))
+            if (Strings.CS.startsWithAny(content, "<?xml", "<"))
             {
                 return "xml";
             }

@@ -4,7 +4,7 @@
 
     <groupId>net.obvj</groupId>
     <artifactId>confectory</artifactId>
-    <version>2.6.1-SNAPSHOT</version>
+    <version>2.7.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Confectory</name>
