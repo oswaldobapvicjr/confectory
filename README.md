@@ -19,21 +19,21 @@ The modular, multi-format configuration framework for Java applications.
 
 ````mermaid
 flowchart TD
-    User@{ shape: stadium, label: ["👤\nUser"]}
-    User -->|"property"| c("`**confectory**`"):::larger
+    User@{ shape: stadium, label: ["👤\n**User**"]}
+    c@{ shape: procs, label: ["**confectory**"]}
+    User -->|"property"| c
     User -->|"xpath"| c
     User -->|"jsonpath"| c
 
-    c-->properties("properties"):::condensed
-    c-->ini("INI"):::expanded
-    c-->xml("XML"):::expanded
-    c-->json("JSON"):::expanded
-    c-->yaml("YAML"):::expanded
-    c-->toml("TOML"):::expanded
+    c-->properties@{shape: data-store, label: "properties"}
+    c-->ini@{shape: data-store}
+    c-->xml@{shape: data-store}
+    c-->json@{shape: data-store}
+    c-->yaml@{shape: data-store}
+    c-->toml@{shape: data-store}
 
-    classDef larger font-size:18pt
-    classDef condensed letter-spacing:-0.9px
-    classDef expanded letter-spacing:1.3px
+    classDef larger font-size:24pt
+    class c larger
 ````
 
 ## Features
