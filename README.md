@@ -124,7 +124,7 @@ If you want to contribute to the **Confectory** project, check the [issues](http
 Thanks to all the people who have already contributed!
 
 <a href="https://github.com/oswaldobapvicjr/confectory/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=oswaldobapvicjr/confectory" />
+  <img src="https://contrib.rocks/image?repo=oswaldobapvicjr/confectory&anon=true" />
 </a>
 
 <sup>Made with [contrib.rocks](https://contrib.rocks)</sup>
